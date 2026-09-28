@@ -32,6 +32,8 @@ export class KnaveryActor extends Actor {
     const updates = {};
     if (this.type === "character") {
       updates["prototypeToken.actorLink"] = true;
+      // The party can see each other's portrait and name (the LIMITED view).
+      if ((data.ownership?.default ?? 0) === 0) updates["ownership.default"] = CONST.DOCUMENT_OWNERSHIP_LEVELS.LIMITED;
       updates["prototypeToken.disposition"] = CONST.TOKEN_DISPOSITIONS.FRIENDLY;
       if (!data.img) updates.img = `${SYS_PATH}/icons/background.svg`;
     } else {
