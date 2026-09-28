@@ -336,6 +336,88 @@ macro("Marketplace Manager", "icons/svg/chest.svg", "game.knavery.openMarketplac
 macro("Import a Table", "icons/svg/scroll.svg", "game.knavery.openTableImporter();");
 
 /* -------------------------------------------- */
+/*  The guide (this project's own writing)       */
+/* -------------------------------------------- */
+
+const journal = (name, pages) => {
+  const _id = id("guide", name);
+  add("guide", {
+    _id, _key: `!journal!${_id}`, name, categories: [],
+    pages: pages.map(([title, html], i) => {
+      const pid = id("guide", name, title);
+      return {
+        _id: pid, _key: `!journal.pages!${_id}.${pid}`, name: title, type: "text", sort: (i + 1) * 100000,
+        title: { show: true, level: 1 }, text: { format: 1, content: html }, flags: {}, ownership: { default: -1 },
+      };
+    }),
+    flags: {}, _stats: STATS,
+  });
+};
+journal("Base Knavery Guide", [
+  ["Getting Started (GM)", `
+<p>Base Knavery runs Knave 2e's rules. Its tables are empty shells: you fill them with your own copies.</p>
+<ol>
+<li><b>Fill the tables.</b> Open the <b>Game Master's Dashboard</b>, either from the clipboard button in the token controls or from the Actors sidebar. On <b>Tables</b>, click <i>Import</i> beside Careers, Spells, Names and the traits, and paste your rows.</li>
+<li><b>Set the rules.</b> In <i>Configure Settings → Base Knavery</i>:
+<ul>
+<li>choose how advantage works (Knave 2e's ±5, or 2d20 keep-high/low);</li>
+<li>set the lowest and highest starting levels;</li>
+<li>switch hacks on or off.</li>
+</ul></li>
+<li><b>Let players in.</b> Players click <b>Create Character</b> in the Actors sidebar and pick a random knave or a blank sheet. Players who may not create actors have the GM's client create one for them.</li>
+<li><b>Stock the market.</b> In the <b>Marketplace Manager</b>, <i>Customize</i> an aisle to change its prices, drop items in, or add new aisles.</li>
+</ol>
+<p>The <b>GM Macros</b> compendium turns the player marketplace, character creation, the creation tools and the change log on and off. Drag the macros to your hotbar.</p>`],
+  ["Filling the Tables", `
+<p>A world table always wins over the shipped shell with the same name. The importer creates or replaces that world table from pasted rows, one per line:</p>
+<ul>
+<li><code>01-05 Some text</code>: a range (<code>00</code> reads as 100).</li>
+<li><code>7. Some text</code> or <code>7 Some text</code>: a single number.</li>
+<li>Plain lines are numbered in order.</li>
+<li><code>@UUID[Item.abc]{Name}</code> links a document, such as a career item or a spellbook.</li>
+</ul>
+<p><b>Careers</b> rows written <code>Name: item, item, item</code> become careers with those starting items. Item names that match gear in the compendia arrive with their real statistics.</p>
+<p><b>Spells</b> rows become spellbooks. Put the spell's text in the book's description.</p>`],
+  ["Custom Careers", `
+<p>A career is an Item that can carry mechanics as well as a name:</p>
+<ul>
+<li><b>Starting items</b> are granted when the career is added in Character Creation Mode.</li>
+<li><b>Features</b> are extra fields on the character sheet: text, number, checkbox, track (pips up to a maximum) or die (a rollable formula).</li>
+<li><b>Effects</b> are Active Effects that apply to whoever holds the career, e.g. <code>system.hp.max</code> +2.</li>
+</ul>
+<p>Duplicate <i>Example Career</i> from the Careers compendium to start. Drop a career on a sheet to add it, or put linked careers in your Careers table so they can be rolled.</p>`],
+  ["Rolls and Damage", `
+<ul>
+<li><b>Checks</b>: d20 + ability against 11 + difficulty (5 by default, so 16).</li>
+<li><b>Saves</b> from other games use the matching ability: paralysis STR, breath and blast DEX, poison and death CON, magic device INT, spells WIS.</li>
+<li><b>Attacks</b>: d20 + STR (melee) or WIS (ranged) against the target's AC.
+<ul>
+<li>A total of 21 or more also earns a free maneuver.</li>
+<li>A natural 1 breaks the weapon.</li>
+<li>A power attack doubles the damage dice and breaks the weapon.</li>
+</ul></li>
+<li><b>Damage</b> comes off HP first. Each point past 0 fills an item slot with a wound, from the highest slot down, and whatever sits there must be dropped. When every slot is wounded, the character dies. <b>Direct</b> damage skips HP. Monsters take direct damage tripled and die at 0 HP.</li>
+<li>The <b>Die of Fate</b> is a d6 for when fate, not skill, decides.</li>
+</ul>`],
+  ["Levels", `
+<p>XP is earned the Knave way. Once a character's XP reaches the next threshold and <b>Character Creation Mode</b> is on, <b>Level Up</b> appears on the sheet. Levelling up:</p>
+<ul>
+<li>raises three different abilities by one (you choose them, or the dice do);</li>
+<li>rerolls max HP with one d6 per level. If the roll isn't higher, max HP goes up by one.</li>
+</ul>
+<p>The GM sets the lowest and highest levels a new character may start at.</p>`],
+  ["The GLOG Grimoire (hack)", `
+<p>Turn it on in <i>Settings → Hacks</i>. A character starts a <b>grimoire</b> from the Items tab and binds spellbooks into it. Bound books take no slots.</p>
+<p>To cast a bound spell, invest Magic Dice. The pool equals the character's level, at least 1 and at most 4, and a rest refills it. Roll the dice as d6s:</p>
+<ul>
+<li>Dice showing 1–3 come back; 4–6 are spent for the day.</li>
+<li><code>[dice]</code> and <code>[sum]</code> in the spell's text are filled in on the chat card.</li>
+<li>Doubles draw from the <i>GLOG Mishaps</i> table.</li>
+<li>Triples mean doom.</li>
+</ul>`],
+]);
+
+/* -------------------------------------------- */
 /*  Write                                        */
 /* -------------------------------------------- */
 

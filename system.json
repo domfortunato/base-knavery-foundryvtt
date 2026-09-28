@@ -155,6 +155,19 @@
         "ASSISTANT": "OWNER"
       },
       "flags": {}
+    },
+    {
+      "name": "guide",
+      "label": "Base Knavery Guide",
+      "path": "packs/guide",
+      "type": "JournalEntry",
+      "system": "base-knavery",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "TRUSTED": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
     }
   ],
   "packFolders": [
@@ -163,6 +176,7 @@
       "sorting": "m",
       "color": "#12a3b4",
       "packs": [
+        "guide",
         "gear",
         "careers",
         "marketplace",

@@ -1,0 +1,77 @@
+name: Release Creation
+
+# Triggered by the annotated tag `npm run release X.Y.Z` pushes to Gitea, which
+# push-mirrors it here. Never tag or release on GitHub directly: the mirror
+# prunes GitHub-only refs and the release would silently become a draft.
+
+on:
+  push:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing release tag to (re)build and attach system.json + system.zip to (e.g. 0.1.0)"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+      - run: npm ci --ignore-scripts
+
+      - run: npm run build:packs -- --force
+      - run: npm run check
+      - run: npm run lint
+
+      - name: Substitute Manifest and Download Links For Versioned Ones
+        env:
+          REPO: ${{ github.repository }}
+        run: |
+          node -e '
+            const fs = require("node:fs");
+            const m = JSON.parse(fs.readFileSync("system.json", "utf8"));
+            m.version = process.env.RELEASE_TAG;
+            m.manifest = `https://github.com/${process.env.REPO}/releases/latest/download/system.json`;
+            m.download = `https://github.com/${process.env.REPO}/releases/download/${process.env.RELEASE_TAG}/system.zip`;
+            fs.writeFileSync("system.json", JSON.stringify(m, null, 2) + "\n");
+            console.log(`system.json: version ${m.version}, download ${m.download}`);
+          '
+
+      - run: zip -r ./system.zip README.md LICENSE.txt CHANGELOG.md system.json art/ css/ fonts/ icons/ lang/ logo/ module/ packs/ templates/
+
+      - name: Read the release notes from the tag
+        run: |
+          git tag -l --format='%(contents:body)' "$RELEASE_TAG" > release-notes.md
+          if grep -q '[^[:space:]]' release-notes.md; then
+            echo "release notes: $(wc -l < release-notes.md) lines from the body of tag $RELEASE_TAG"
+          else
+            echo "release notes: tag $RELEASE_TAG carries none"
+          fi
+
+      - name: Update Release with Files
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          omitNameDuringUpdate: true
+          bodyFile: release-notes.md
+          omitBodyDuringUpdate: true
+          draft: false
+          prerelease: false
+          omitPrereleaseDuringUpdate: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: "./system.json, ./system.zip"
+          tag: ${{ env.RELEASE_TAG }}
