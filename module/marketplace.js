@@ -113,7 +113,7 @@ export const openMarketplace = async (actor) => {
     return `<div class="mkt-row" data-idx="${idx}" data-cost="${row.price}" data-name="${esc(row.name.toLowerCase())}">
       <div class="mkt-line">
         <div class="mkt-row-main"><img class="mkt-img" src="${esc(row.img)}" alt="" /><span class="mkt-name">${esc(row.name)}</span></div>
-        <span class="mkt-slots">${esc(F("KNAVERY.NSlots", { n: row.slots }))}</span>
+        <span class="mkt-slots">${esc(F(row.slots === 1 ? "KNAVERY.NSlot" : "KNAVERY.NSlots", { n: row.slots }))}</span>
         <span class="mkt-cost"><i class="fas fa-coins"></i> ${row.price}</span>
         <span class="mkt-actions">
           <button type="button" class="mkt-buy" data-idx="${idx}">${L("KNAVERY.Market.Buy")}</button>

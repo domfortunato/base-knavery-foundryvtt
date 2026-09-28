@@ -4150,7 +4150,8 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
     grid-template-columns: 1fr;
     grid-template-rows: 46px auto auto 1fr;
 }
-.knavery-name-section .name-line { grid-column: 1; }
+.knavery-name-section > * { grid-column: 1 / -1; }
+.knavery-name-section .name-line { grid-row: 1; }
 .knavery-name-section .name-input { flex: 1 1 auto; min-width: 0; }
 .knavery .pronouns-input {
     flex: 0 0 110px;
