@@ -72,7 +72,10 @@ const answerersFor = (actor) => game.users.filter((u) => !u.isGM && actor.testUs
 export const promptOfferTarget = async (item) => {
   const giver = item.actor;
   if (!canOfferItem(item)) return ui.notifications.warn("KNAVERY.Offer.CannotGive", { localize: true });
-  const targets = game.actors.filter((a) => canReceiveOffer(a, giver) && a.visible)
+  // Player characters are always offered (the party knows who is in it);
+  // anything else only when this user can see it.
+  const targets = game.actors.filter((a) => canReceiveOffer(a, giver)
+    && (a.visible || (a.type === "character" && a.hasPlayerOwner)))
     .sort((a, b) => a.name.localeCompare(b.name));
   if (!targets.length) return ui.notifications.warn("KNAVERY.Offer.NoTargets", { localize: true });
   const groups = [
