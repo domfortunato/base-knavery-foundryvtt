@@ -2,7 +2,7 @@
   "id": "base-knavery",
   "title": "Base Knavery",
   "description": "A Foundry VTT system compatible with Knave 2e, built for running OSR modules and Knave hacks. Base Knavery is an independent production of Dom Bosco and is not affiliated with Questing Beast LLC.",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "authors": [
     {
       "name": "Dom Bosco",
