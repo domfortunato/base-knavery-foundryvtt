@@ -83,7 +83,7 @@ const acquire = async (actor, data, pay) => {
     ui.notifications.warn(F("KNAVERY.Notify.NotEnoughCoins", { name: data.name, cost }));
     return false;
   }
-  await actor.createEmbeddedDocuments("Item", [data], { knNoLog: pay });
+  await actor.addItems([data], { knNoLog: pay });
   if (pay) {
     await actor.update({ "system.coins": actor.system.coins - cost }, { knNoLog: true });
     await ChatMessage.create({

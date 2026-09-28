@@ -4417,3 +4417,16 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-item-sheet .effect-row span { flex: 1; }
 .knavery-item-sheet .effect-row.disabled span { opacity: 0.5; text-decoration: line-through; }
 .knavery-item-sheet prose-mirror { min-height: 200px; }
+
+/* Air Bladder pins an NPC's HP counter to row 4 of its name grid; inside the
+   counter row every counter simply flows. */
+.knavery-counter-row > .resource-counter { grid-row: auto; grid-column: auto; }
+.knavery-counter-row { grid-template-columns: 1.25fr 0.85fr 1.35fr 1fr; }
+.knavery-counter-row .resource-counter > label,
+.knavery-counter-row .resource-counter > a { font-size: 15px; }
+.knavery-counter-row .wounds-counter > label { width: 56%; }
+.knavery-counter-row .wounds-counter .resource-input-wrapper { width: 44%; }
+.knavery-item-sheet h3 {
+    font-family: "Alegreya", Times, serif; font-size: 17px; font-variant: small-caps;
+    border-bottom: 1px solid var(--kn-rule); padding-bottom: 2px;
+}

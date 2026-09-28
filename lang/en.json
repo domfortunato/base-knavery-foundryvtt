@@ -105,7 +105,7 @@
     "LevelUp": "Level Up",
     "LevelUpTitle": "Level Up: {name}",
     "LevelUpBody": "Reaching level {level}. Choose {n} different abilities to raise by one, or let the dice choose.",
-    "LevelUpHpHint": "Max HP is rerolled with {level}d6. If the roll is not above {max}, max HP becomes {max} + 1.",
+    "LevelUpHpHint": "Max HP is rerolled with {level}d6. If the roll is not above {max}, max HP becomes {next}.",
     "LevelUpRandom": "Random",
     "LevelUpCard": "{name} reaches level {level}: {title}",
     "LevelUpAbilities": "Raised: {abilities}",

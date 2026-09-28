@@ -85,7 +85,7 @@ export class CharacterData extends KnaveryActorData {
     this.ac = this.acOverride ?? this.acDerived;
     this.acOverridden = this.acOverride !== null && this.acOverride !== this.acDerived;
     this.slotsMax = SLOT_BASE + (a.CON?.value ?? 0);
-    this.coinSlots = coinsTakeSlots() ? Math.ceil(this.coins / COINS_PER_SLOT) : 0;
+    this.coinSlots = coinsTakeSlots() ? Math.floor(this.coins / COINS_PER_SLOT) : 0;
     this.levelFromXp = levelForXp(this.xp);
     this.nextXp = nextLevelXp(this.level);
     this.canLevelUp = this.nextXp !== null && this.xp >= this.nextXp;
@@ -126,7 +126,7 @@ export class NpcData extends KnaveryActorData {
     this.ap = Math.max(0, this.armorClass - AC_BASE) + worn;
     this.ac = this.armorClass + worn;
     this.slotsMax = this.role === "monster" ? 0 : HIRELING_SLOTS;
-    this.coinSlots = coinsTakeSlots() ? Math.ceil(this.coins / COINS_PER_SLOT) : 0;
+    this.coinSlots = coinsTakeSlots() ? Math.floor(this.coins / COINS_PER_SLOT) : 0;
     this.dead = this.hp.value <= 0 && this.hp.max > 0;
     for (const k of ABILITIES) {
       this.abilities[k].defense = 11 + this.abilities[k].value;

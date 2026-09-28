@@ -91,6 +91,30 @@ export class KnaveryActor extends Actor {
     return layout;
   }
 
+  /**
+   * Add items, stacking plain items onto an identical unequipped row (same
+   * name, image and bundle) instead of adding a second row.
+   */
+  async addItems(dataList, options = {}) {
+    const create = [];
+    const bump = new Map();
+    for (const data of dataList) {
+      const qty = Number(data.system?.quantity ?? 1) || 1;
+      const same = data.type === "item" && this.items.find((i) => i.type === "item" && i.name === data.name
+        && i.img === data.img && !i.system.equipped && (i.system.bundle ?? 1) === (data.system?.bundle ?? 1));
+      if (same) bump.set(same.id, (bump.get(same.id) ?? same.system.quantity ?? 1) + qty);
+      else {
+        const pending = create.find((c) => c.type === "item" && data.type === "item" && c.name === data.name && c.img === data.img);
+        if (pending) pending.system.quantity = (pending.system.quantity ?? 1) + qty;
+        else create.push(foundry.utils.deepClone(data));
+      }
+    }
+    if (bump.size) {
+      await this.updateEmbeddedDocuments("Item", [...bump].map(([_id, q]) => ({ _id, "system.quantity": q })), options);
+    }
+    return create.length ? this.createEmbeddedDocuments("Item", create, options) : [];
+  }
+
   get overburdened() {
     return this.type === "character" && this.calcSlotsUsed() > (this.system.slotsMax ?? 0);
   }
