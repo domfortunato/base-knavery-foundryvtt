@@ -1,0 +1,18 @@
+_id: F5TRHzK8BvgmyUp2
+_key: '!items!F5TRHzK8BvgmyUp2'
+name: Caravel
+type: transport
+img: systems/base-knavery/icons/smallcraft.svg
+system:
+  slots: 0
+  quantity: 1
+  cost: 25000
+  capacity: 40000
+  crew: 50
+  speed: ''
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

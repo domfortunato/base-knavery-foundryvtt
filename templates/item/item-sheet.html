@@ -1,0 +1,114 @@
+<div class="knavery-item-sheet">
+  <header class="item-header">
+    <img class="item-img" src="{{item.img}}" data-action="editImage" data-tooltip="KNAVERY.ChooseImage" alt="" />
+    <div class="item-header-fields">
+      <input class="name-input" type="text" name="name" value="{{item.name}}" placeholder="{{localize 'KNAVERY.Name'}}" />
+      <div class="item-type-line">{{localize (concat "TYPES.Item." item.type)}}</div>
+    </div>
+  </header>
+
+  {{#if isInventory}}
+  <div class="item-stats">
+    <div class="form-group"><label>{{localize "KNAVERY.Slots"}}</label><input type="number" name="system.slots" value="{{system.slots}}" min="0" step="0.5" data-dtype="Number" /></div>
+    <div class="form-group"><label>{{localize "KNAVERY.Quantity"}}</label><input type="number" name="system.quantity" value="{{system.quantity}}" min="0" step="1" data-dtype="Number" /></div>
+    <div class="form-group"><label>{{localize "KNAVERY.Price"}}</label><input type="number" name="system.cost" value="{{system.cost}}" min="0" data-dtype="Number" /></div>
+    <div class="form-group"><label>{{localize "KNAVERY.Broken"}}</label><input type="checkbox" name="system.broken" {{checked system.broken}} /></div>
+    {{#if isType.item}}
+    <div class="form-group" data-tooltip="KNAVERY.BundleTip"><label>{{localize "KNAVERY.Bundle"}}</label><input type="number" name="system.bundle" value="{{system.bundle}}" min="1" step="1" data-dtype="Number" /></div>
+    <div class="form-group"><label>{{localize "KNAVERY.Weightless"}}</label><input type="checkbox" name="system.weightless" {{checked system.weightless}} /></div>
+    <div class="form-group"><label>{{localize "KNAVERY.Uses"}}</label>
+      <input type="number" name="system.uses.value" value="{{system.uses.value}}" min="0" data-dtype="Number" class="short" /> /
+      <input type="number" name="system.uses.max" value="{{system.uses.max}}" min="0" data-dtype="Number" class="short" /></div>
+    {{/if}}
+  </div>
+  {{/if}}
+
+  {{#if isType.weapon}}
+  <div class="item-stats">
+    <div class="form-group"><label>{{localize "KNAVERY.DamageDie"}}</label><input type="text" name="system.damage" value="{{system.damage}}" /></div>
+    <div class="form-group"><label>{{localize "KNAVERY.AttackType"}}</label>
+      <select name="system.attackType">
+        <option value="melee" {{#if (eq system.attackType "melee")}}selected{{/if}}>{{localize "KNAVERY.Melee"}} (STR)</option>
+        <option value="ranged" {{#if (eq system.attackType "ranged")}}selected{{/if}}>{{localize "KNAVERY.Ranged"}} (WIS)</option>
+      </select></div>
+    <div class="form-group"><label>{{localize "KNAVERY.Hands"}}</label><input type="number" name="system.hands" value="{{system.hands}}" min="1" max="2" data-dtype="Number" /></div>
+    <div class="form-group"><label>{{localize "KNAVERY.Range"}}</label><input type="text" name="system.range" value="{{system.range}}" /></div>
+    <div class="form-group"><label>{{localize "KNAVERY.Equipped"}}</label><input type="checkbox" name="system.equipped" {{checked system.equipped}} /></div>
+  </div>
+  {{/if}}
+
+  {{#if isType.armor}}
+  <div class="item-stats">
+    <div class="form-group"><label>{{localize "KNAVERY.ArmorTypeLabel"}}</label>
+      <select name="system.armorType">{{#each armorTypes}}<option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>{{/each}}</select></div>
+    <div class="form-group"><label>{{localize "KNAVERY.ArmorPoints"}}</label><input type="number" name="system.points" value="{{system.points}}" min="0" max="7" data-dtype="Number" /></div>
+    <div class="form-group"><label>{{localize "KNAVERY.Equipped"}}</label><input type="checkbox" name="system.equipped" {{checked system.equipped}} /></div>
+  </div>
+  {{/if}}
+
+  {{#if isType.spellbook}}
+  <div class="item-stats">
+    <div class="form-group"><label>{{localize "KNAVERY.Scroll"}}</label><input type="checkbox" name="system.scroll" {{checked system.scroll}} /></div>
+    <div class="form-group"><label>{{localize "KNAVERY.Chaos"}}</label><input type="checkbox" name="system.chaos" {{checked system.chaos}} /></div>
+    <div class="form-group"><label>{{localize "KNAVERY.CastToday"}}</label><input type="checkbox" name="system.castToday" {{checked system.castToday}} /></div>
+  </div>
+  {{/if}}
+
+  {{#if isType.transport}}
+  <div class="item-stats">
+    <div class="form-group"><label>{{localize "KNAVERY.Capacity"}}</label><input type="number" name="system.capacity" value="{{system.capacity}}" min="0" data-dtype="Number" /></div>
+    <div class="form-group"><label>{{localize "KNAVERY.Crew"}}</label><input type="number" name="system.crew" value="{{system.crew}}" min="0" data-dtype="Number" /></div>
+    <div class="form-group"><label>{{localize "KNAVERY.Speed"}}</label><input type="text" name="system.speed" value="{{system.speed}}" /></div>
+  </div>
+  {{/if}}
+
+  {{#if isType.career}}
+  <section class="career-editor">
+    <div class="form-group"><label data-tooltip="KNAVERY.CareerKeyTip">{{localize "KNAVERY.CareerKey"}}</label><input type="text" name="system.key" value="{{system.key}}" /></div>
+    <div class="form-group"><label>{{localize "KNAVERY.Attribution"}}</label><input type="text" name="system.attribution" value="{{system.attribution}}" /></div>
+
+    <h3>{{localize "KNAVERY.StartingItems"}}</h3>
+    <div class="starting-items">
+      {{#each startingItems}}
+      <div class="starting-item"><span>{{this.label}}</span>{{#if ../editable}}<a data-action="removeStartingItem" data-index="{{this.index}}"><i class="fas fa-xmark"></i></a>{{/if}}</div>
+      {{/each}}
+      {{#if editable}}<input type="text" class="starting-item-input" placeholder="{{localize 'KNAVERY.StartingItemsHint'}}" />{{/if}}
+    </div>
+
+    <h3>{{localize "KNAVERY.Features"}} {{#if editable}}<a data-action="addFeature" data-tooltip="KNAVERY.AddFeature"><i class="fas fa-plus"></i></a>{{/if}}</h3>
+    <p class="hint">{{localize "KNAVERY.FeaturesHint"}}</p>
+    {{#each features as |f|}}
+    <div class="feature-editor-row">
+      <input type="text" name="system.features.{{f.index}}.label" value="{{f.label}}" placeholder="{{localize 'KNAVERY.FeatureLabel'}}" />
+      <input type="text" name="system.features.{{f.index}}.key" value="{{f.key}}" placeholder="key" class="short" />
+      <select name="system.features.{{f.index}}.type">{{#each ../featureTypes}}<option value="{{this.value}}" {{#if (eq this.value f.type)}}selected{{/if}}>{{this.label}}</option>{{/each}}</select>
+      <input type="text" name="system.features.{{f.index}}.initial" value="{{f.initial}}" placeholder="{{localize 'KNAVERY.FeatureInitial'}}" class="short" />
+      <input type="number" name="system.features.{{f.index}}.max" value="{{f.max}}" class="short" data-tooltip="KNAVERY.FeatureMax" data-dtype="Number" />
+      <input type="text" name="system.features.{{f.index}}.hint" value="{{f.hint}}" placeholder="{{localize 'KNAVERY.FeatureHint'}}" />
+      {{#if ../editable}}<a data-action="removeFeature" data-index="{{f.index}}"><i class="fas fa-trash"></i></a>{{/if}}
+    </div>
+    {{/each}}
+  </section>
+  {{/if}}
+
+  <section class="item-effects">
+    <h3>{{localize "KNAVERY.Effects"}} {{#if editable}}<a data-action="createEffect" data-tooltip="KNAVERY.CreateEffect"><i class="fas fa-plus"></i></a>{{/if}}</h3>
+    {{#if isType.career}}<p class="hint">{{localize "KNAVERY.EffectsHint"}}</p>{{/if}}
+    {{#each effects}}
+    <div class="effect-row {{#if this.disabled}}disabled{{/if}}" data-effect-id="{{this.id}}">
+      <img src="{{this.img}}" alt="" /><span>{{this.name}}</span>
+      {{#if ../editable}}
+      <a data-action="toggleEffect"><i class="fas {{#if this.disabled}}fa-toggle-off{{else}}fa-toggle-on{{/if}}"></i></a>
+      <a data-action="editEffect"><i class="fas fa-edit"></i></a>
+      <a data-action="deleteEffect"><i class="fas fa-trash"></i></a>
+      {{/if}}
+    </div>
+    {{/each}}
+  </section>
+
+  <section class="item-description">
+    <h3>{{localize "KNAVERY.Description"}}</h3>
+    <prose-mirror name="system.description" value="{{system.description}}" toggled collaborate relative
+      data-document-uuid="{{item.uuid}}">{{#if system.description}}{{{enrichedDescription}}}{{else}}<p class="knavery-editor-placeholder">{{localize "KNAVERY.DescriptionPlaceholder"}}</p>{{/if}}</prose-mirror>
+  </section>
+</div>

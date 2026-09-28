@@ -1,0 +1,52 @@
+_id: Qa2MiH3gogGYmwID
+_key: '!actors!Qa2MiH3gogGYmwID'
+name: Ghost
+type: npc
+img: systems/base-knavery/art/game-icons/creatures/ghost.svg
+system:
+  role: monster
+  level: 10
+  hp:
+    value: 40
+    max: 40
+  armorClass: 19
+  morale: 10
+  movement: 30'
+  numberAppearing: 1 (1)
+  attacksText: life drain (d6)
+  description: ''
+  notes: ''
+prototypeToken:
+  name: Ghost
+  actorLink: false
+  disposition: -1
+  texture:
+    src: systems/base-knavery/art/game-icons/creatures/ghost.svg
+  bar1:
+    attribute: hp
+items:
+  - _id: DkC1GLJq1iTjJKDh
+    _key: '!actors.items!Qa2MiH3gogGYmwID.DkC1GLJq1iTjJKDh'
+    name: Life drain
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: d6
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

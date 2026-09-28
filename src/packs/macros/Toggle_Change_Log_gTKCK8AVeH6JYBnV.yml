@@ -1,0 +1,15 @@
+_id: gTKCK8AVeH6JYBnV
+_key: '!macros!gTKCK8AVeH6JYBnV'
+name: Toggle Change Log
+type: script
+img: icons/svg/book.svg
+scope: global
+command: game.knavery.toggle("change-log");
+author: null
+ownership:
+  default: 0
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

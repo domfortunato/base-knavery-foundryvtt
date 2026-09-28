@@ -1,0 +1,15 @@
+_id: KlHcgtcB2iQL6Itk
+_key: '!macros!KlHcgtcB2iQL6Itk'
+name: Import a Table
+type: script
+img: icons/svg/scroll.svg
+scope: global
+command: game.knavery.openTableImporter();
+author: null
+ownership:
+  default: 0
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

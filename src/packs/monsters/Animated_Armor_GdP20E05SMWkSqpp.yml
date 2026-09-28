@@ -1,0 +1,52 @@
+_id: GdP20E05SMWkSqpp
+_key: '!actors!GdP20E05SMWkSqpp'
+name: Animated Armor
+type: npc
+img: systems/base-knavery/art/game-icons/armor/breastplate.svg
+system:
+  role: monster
+  level: 6
+  hp:
+    value: 24
+    max: 24
+  armorClass: 18
+  morale: 12
+  movement: 20'
+  numberAppearing: d6 (0)
+  attacksText: weapon (d8)
+  description: ''
+  notes: ''
+prototypeToken:
+  name: Animated Armor
+  actorLink: false
+  disposition: -1
+  texture:
+    src: systems/base-knavery/art/game-icons/armor/breastplate.svg
+  bar1:
+    attribute: hp
+items:
+  - _id: eNtl0vslXqpR7wF1
+    _key: '!actors.items!GdP20E05SMWkSqpp.eNtl0vslXqpR7wF1'
+    name: Weapon
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: d8
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

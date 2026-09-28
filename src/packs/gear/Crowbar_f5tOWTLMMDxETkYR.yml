@@ -1,0 +1,16 @@
+_id: f5tOWTLMMDxETkYR
+_key: '!items!f5tOWTLMMDxETkYR'
+name: Crowbar
+type: item
+img: systems/base-knavery/icons/tools.svg
+system:
+  slots: 1
+  quantity: 1
+  bundle: 1
+  cost: 5
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

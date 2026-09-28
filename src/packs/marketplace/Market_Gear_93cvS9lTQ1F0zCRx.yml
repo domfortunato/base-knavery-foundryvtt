@@ -1,0 +1,313 @@
+_id: 93cvS9lTQ1F0zCRx
+_key: '!tables!93cvS9lTQ1F0zCRx'
+name: 'Market: Gear'
+img: icons/svg/coins.svg
+description: ''
+formula: 1d23
+replacement: true
+displayRoll: true
+results:
+  - _id: spwIPylYlhUWMKwA
+    _key: '!tables.results!93cvS9lTQ1F0zCRx.spwIPylYlhUWMKwA'
+    type: document
+    name: Common Item
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear.Item.1ACPOBsMB0G4QW8w
+    weight: 1
+    range:
+      - 1
+      - 1
+    drawn: false
+    flags: {}
+  - _id: gR4MLKB2w1ss1mFv
+    _key: '!tables.results!93cvS9lTQ1F0zCRx.gR4MLKB2w1ss1mFv'
+    type: document
+    name: Uncommon Item
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear.Item.dWK8sWgMnZmd1VU8
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    flags: {}
+  - _id: hgAbFaDX8i0ZtpnM
+    _key: '!tables.results!93cvS9lTQ1F0zCRx.hgAbFaDX8i0ZtpnM'
+    type: document
+    name: Rare Item
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear.Item.Q40CpOwJEGHE6QRt
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    flags: {}
+  - _id: JfBzhEjZEeNzxeJH
+    _key: '!tables.results!93cvS9lTQ1F0zCRx.JfBzhEjZEeNzxeJH'
+    type: document
+    name: Rations
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear.Item.RddTw9Jdh6ylt2yu
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    flags: {}
+  - _id: uuOItCauiWa6mlwa
+    _key: '!tables.results!93cvS9lTQ1F0zCRx.uuOItCauiWa6mlwa'
+    type: document
+    name: Rope (50')
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear.Item.zZkmDgsXxGyxhLAH
+    weight: 1
+    range:
+      - 5
+      - 5
+    drawn: false
+    flags: {}
+  - _id: Om7rSHkruumGWFvu
+    _key: '!tables.results!93cvS9lTQ1F0zCRx.Om7rSHkruumGWFvu'
+    type: document
+    name: Torch
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear.Item.98HCUAtI63BIU6qE
+    weight: 1
+    range:
+      - 6
+      - 6
+    drawn: false
+    flags: {}
+  - _id: 9flIKS2FlFSO4IL5
+    _key: '!tables.results!93cvS9lTQ1F0zCRx.9flIKS2FlFSO4IL5'
+    type: document
+    name: Candles
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear.Item.16RYOBcVw62KbHUy
+    weight: 1
+    range:
+      - 7
+      - 7
+    drawn: false
+    flags: {}
+  - _id: 9LG4DzI37bmFaO1y
+    _key: '!tables.results!93cvS9lTQ1F0zCRx.9LG4DzI37bmFaO1y'
+    type: document
+    name: Lantern
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear.Item.9AhALzm1VsG3BuV6
+    weight: 1
+    range:
+      - 8
+      - 8
+    drawn: false
+    flags: {}
+  - _id: iJvGtFmwnDzRJAQ9
+    _key: '!tables.results!93cvS9lTQ1F0zCRx.iJvGtFmwnDzRJAQ9'
+    type: document
+    name: Oil Flask
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear.Item.3TB7jBfnA53PUybJ
+    weight: 1
+    range:
+      - 9
+      - 9
+    drawn: false
+    flags: {}
+  - _id: xDRMSkqxSSLp6H2l
+    _key: '!tables.results!93cvS9lTQ1F0zCRx.xDRMSkqxSSLp6H2l'
+    type: document
+    name: Arrows
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear.Item.OvjcQCjb1y5bwiRL
+    weight: 1
+    range:
+      - 10
+      - 10
+    drawn: false
+    flags: {}
+  - _id: r0fmVBydK9fFDuz6
+    _key: '!tables.results!93cvS9lTQ1F0zCRx.r0fmVBydK9fFDuz6'
+    type: document
+    name: Sling Stones
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear.Item.uyJEDG6j7W8oNccL
+    weight: 1
+    range:
+      - 11
+      - 11
+    drawn: false
+    flags: {}
+  - _id: MetgdRo7kViaVaGy
+    _key: '!tables.results!93cvS9lTQ1F0zCRx.MetgdRo7kViaVaGy'
+    type: document
+    name: Crowbar
+    description: ''
+    img: systems/base-knavery/icons/tools.svg
+    documentUuid: Compendium.base-knavery.gear.Item.f5tOWTLMMDxETkYR
+    weight: 1
+    range:
+      - 12
+      - 12
+    drawn: false
+    flags: {}
+  - _id: Q4FPYivb0YyGTczd
+    _key: '!tables.results!93cvS9lTQ1F0zCRx.Q4FPYivb0YyGTczd'
+    type: document
+    name: Pole (10')
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear.Item.MguG2lvQRpy8UMEp
+    weight: 1
+    range:
+      - 13
+      - 13
+    drawn: false
+    flags: {}
+  - _id: YEvxyyJFqnET0kmx
+    _key: '!tables.results!93cvS9lTQ1F0zCRx.YEvxyyJFqnET0kmx'
+    type: document
+    name: Backpack
+    description: ''
+    img: systems/base-knavery/icons/backpack.svg
+    documentUuid: Compendium.base-knavery.gear.Item.MoXXXToH2yo4gopA
+    weight: 1
+    range:
+      - 14
+      - 14
+    drawn: false
+    flags: {}
+  - _id: 76wm0xt4e00mbuHo
+    _key: '!tables.results!93cvS9lTQ1F0zCRx.76wm0xt4e00mbuHo'
+    type: document
+    name: Sack
+    description: ''
+    img: systems/base-knavery/icons/sack.svg
+    documentUuid: Compendium.base-knavery.gear.Item.2NJGyyLAiLyZ8TJe
+    weight: 1
+    range:
+      - 15
+      - 15
+    drawn: false
+    flags: {}
+  - _id: 5Q9J4aoPsvpGOPGC
+    _key: '!tables.results!93cvS9lTQ1F0zCRx.5Q9J4aoPsvpGOPGC'
+    type: document
+    name: Chalk
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear.Item.FZ5qaTlYyftmfm4f
+    weight: 1
+    range:
+      - 16
+      - 16
+    drawn: false
+    flags: {}
+  - _id: 6XQQ1DOTuEud8hfH
+    _key: '!tables.results!93cvS9lTQ1F0zCRx.6XQQ1DOTuEud8hfH'
+    type: document
+    name: Waterskin
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear.Item.IxwLPMSXvgxuEwX9
+    weight: 1
+    range:
+      - 17
+      - 17
+    drawn: false
+    flags: {}
+  - _id: qEzENdND6nJgCpu2
+    _key: '!tables.results!93cvS9lTQ1F0zCRx.qEzENdND6nJgCpu2'
+    type: document
+    name: Tinderbox
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear.Item.K8N6AkYOAb9g3KY1
+    weight: 1
+    range:
+      - 18
+      - 18
+    drawn: false
+    flags: {}
+  - _id: LubqxgV7Xn3z1Hme
+    _key: '!tables.results!93cvS9lTQ1F0zCRx.LubqxgV7Xn3z1Hme'
+    type: document
+    name: Bedroll
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear.Item.onRPD2zF7XbQA8hW
+    weight: 1
+    range:
+      - 19
+      - 19
+    drawn: false
+    flags: {}
+  - _id: 04BtQgC5wWVSDM5f
+    _key: '!tables.results!93cvS9lTQ1F0zCRx.04BtQgC5wWVSDM5f'
+    type: document
+    name: Tent
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear.Item.afKeT8Zdmfy8GqEy
+    weight: 1
+    range:
+      - 20
+      - 20
+    drawn: false
+    flags: {}
+  - _id: I4H1b2Yc1dcQAsLe
+    _key: '!tables.results!93cvS9lTQ1F0zCRx.I4H1b2Yc1dcQAsLe'
+    type: document
+    name: Grappling Hook
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear.Item.xeX3Ewe4yqn8mIbs
+    weight: 1
+    range:
+      - 21
+      - 21
+    drawn: false
+    flags: {}
+  - _id: 2WTpX2fbTqBuoOJo
+    _key: '!tables.results!93cvS9lTQ1F0zCRx.2WTpX2fbTqBuoOJo'
+    type: document
+    name: Manacles
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear.Item.eo3YgbvDoK7gmq6U
+    weight: 1
+    range:
+      - 22
+      - 22
+    drawn: false
+    flags: {}
+  - _id: 52CACZ1tHnunsgY4
+    _key: '!tables.results!93cvS9lTQ1F0zCRx.52CACZ1tHnunsgY4'
+    type: document
+    name: Spyglass
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear.Item.1GOVSnQmpqFaBkWp
+    weight: 1
+    range:
+      - 23
+      - 23
+    drawn: false
+    flags: {}
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

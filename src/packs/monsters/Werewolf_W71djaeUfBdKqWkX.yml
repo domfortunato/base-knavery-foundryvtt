@@ -1,0 +1,52 @@
+_id: W71djaeUfBdKqWkX
+_key: '!actors!W71djaeUfBdKqWkX'
+name: Werewolf
+type: npc
+img: systems/base-knavery/art/game-icons/creatures/werewolf.svg
+system:
+  role: monster
+  level: 4
+  hp:
+    value: 18
+    max: 18
+  armorClass: 14
+  morale: 8
+  movement: 60'
+  numberAppearing: d6
+  attacksText: bite (2d4)
+  description: ''
+  notes: ''
+prototypeToken:
+  name: Werewolf
+  actorLink: false
+  disposition: -1
+  texture:
+    src: systems/base-knavery/art/game-icons/creatures/werewolf.svg
+  bar1:
+    attribute: hp
+items:
+  - _id: 6PKjpeSk2CQKikVG
+    _key: '!actors.items!W71djaeUfBdKqWkX.6PKjpeSk2CQKikVG'
+    name: Bite
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: 2d4
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

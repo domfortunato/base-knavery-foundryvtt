@@ -1,0 +1,15 @@
+_id: dBMCJfUkVKRMnp8L
+_key: '!macros!dBMCJfUkVKRMnp8L'
+name: Game Master's Dashboard
+type: script
+img: icons/svg/eye.svg
+scope: global
+command: game.knavery.openDashboard();
+author: null
+ownership:
+  default: 0
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

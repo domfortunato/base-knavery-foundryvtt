@@ -1,0 +1,17 @@
+_id: IvnbuSC41SgQEoZE
+_key: '!items!IvnbuSC41SgQEoZE'
+name: Leg Plate
+type: armor
+img: systems/base-knavery/icons/armor.svg
+system:
+  slots: 1
+  quantity: 1
+  armorType: legPlate
+  points: 1
+  cost: 500
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

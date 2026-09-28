@@ -1,0 +1,66 @@
+_id: AEaJCwaHAmE4Es3k
+_key: '!tables!AEaJCwaHAmE4Es3k'
+name: 'Market: Weapons'
+img: icons/svg/coins.svg
+description: ''
+formula: 1d4
+replacement: true
+displayRoll: true
+results:
+  - _id: 1Ma4v1e1KtQWgGAZ
+    _key: '!tables.results!AEaJCwaHAmE4Es3k.1Ma4v1e1KtQWgGAZ'
+    type: document
+    name: One-Handed Weapon
+    description: ''
+    img: systems/base-knavery/art/game-icons/blade/broadsword.svg
+    documentUuid: Compendium.base-knavery.gear.Item.lVdDqPEWReaC9yi5
+    weight: 1
+    range:
+      - 1
+      - 1
+    drawn: false
+    flags: {}
+  - _id: 9c1LQQRlSP66M9Ev
+    _key: '!tables.results!AEaJCwaHAmE4Es3k.9c1LQQRlSP66M9Ev'
+    type: document
+    name: Two-Handed Weapon
+    description: ''
+    img: systems/base-knavery/art/game-icons/blade/two-handed-sword.svg
+    documentUuid: Compendium.base-knavery.gear.Item.thjT32rChxpSS5Bl
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    flags: {}
+  - _id: EDBNo65nMMwquHfU
+    _key: '!tables.results!AEaJCwaHAmE4Es3k.EDBNo65nMMwquHfU'
+    type: document
+    name: Sling
+    description: ''
+    img: systems/base-knavery/icons/weapons.svg
+    documentUuid: Compendium.base-knavery.gear.Item.nWZ9AwQ8LhupDCDK
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    flags: {}
+  - _id: S3TV6CFt8Py4EEHr
+    _key: '!tables.results!AEaJCwaHAmE4Es3k.S3TV6CFt8Py4EEHr'
+    type: document
+    name: Bow
+    description: ''
+    img: systems/base-knavery/icons/weapons.svg
+    documentUuid: Compendium.base-knavery.gear.Item.P7tEgdaRXoB9YrDV
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    flags: {}
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

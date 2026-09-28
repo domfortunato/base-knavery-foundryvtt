@@ -1,0 +1,16 @@
+_id: 16RYOBcVw62KbHUy
+_key: '!items!16RYOBcVw62KbHUy'
+name: Candles
+type: item
+img: systems/base-knavery/icons/generic-item.svg
+system:
+  slots: 1
+  quantity: 10
+  bundle: 10
+  cost: 5
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

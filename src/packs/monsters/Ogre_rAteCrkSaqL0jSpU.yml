@@ -1,0 +1,52 @@
+_id: rAteCrkSaqL0jSpU
+_key: '!actors!rAteCrkSaqL0jSpU'
+name: Ogre
+type: npc
+img: systems/base-knavery/art/game-icons/creatures/ogre.svg
+system:
+  role: monster
+  level: 4
+  hp:
+    value: 16
+    max: 16
+  armorClass: 14
+  morale: 10
+  movement: 30'
+  numberAppearing: d6
+  attacksText: weapon (d10)
+  description: ''
+  notes: ''
+prototypeToken:
+  name: Ogre
+  actorLink: false
+  disposition: -1
+  texture:
+    src: systems/base-knavery/art/game-icons/creatures/ogre.svg
+  bar1:
+    attribute: hp
+items:
+  - _id: J5ML7vdrCEKfuZ1L
+    _key: '!actors.items!rAteCrkSaqL0jSpU.J5ML7vdrCEKfuZ1L'
+    name: Weapon
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: d10
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

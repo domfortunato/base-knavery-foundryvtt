@@ -1,0 +1,18 @@
+_id: rifYe5SEKWBreheh
+_key: '!items!rifYe5SEKWBreheh'
+name: Wagon
+type: transport
+img: systems/base-knavery/icons/wagon.svg
+system:
+  slots: 0
+  quantity: 1
+  cost: 120
+  capacity: 800
+  crew: 0
+  speed: ''
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

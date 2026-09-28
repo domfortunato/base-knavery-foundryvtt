@@ -1,0 +1,16 @@
+_id: afKeT8Zdmfy8GqEy
+_key: '!items!afKeT8Zdmfy8GqEy'
+name: Tent
+type: item
+img: systems/base-knavery/icons/generic-item.svg
+system:
+  slots: 1
+  quantity: 1
+  bundle: 1
+  cost: 20
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

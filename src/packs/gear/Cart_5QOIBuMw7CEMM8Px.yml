@@ -1,0 +1,18 @@
+_id: 5QOIBuMw7CEMM8Px
+_key: '!items!5QOIBuMw7CEMM8Px'
+name: Cart
+type: transport
+img: systems/base-knavery/icons/handcart.svg
+system:
+  slots: 0
+  quantity: 1
+  cost: 50
+  capacity: 200
+  crew: 0
+  speed: ''
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

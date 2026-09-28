@@ -1,0 +1,52 @@
+_id: R7LRTwNz9YBIyL9m
+_key: '!actors!R7LRTwNz9YBIyL9m'
+name: Harpy
+type: npc
+img: systems/base-knavery/art/game-icons/creatures/harpy.svg
+system:
+  role: monster
+  level: 3
+  hp:
+    value: 12
+    max: 12
+  armorClass: 12
+  morale: 7
+  movement: 20' (50' flying)
+  numberAppearing: d6 (2d4)
+  attacksText: 2 claw (d4)
+  description: ''
+  notes: ''
+prototypeToken:
+  name: Harpy
+  actorLink: false
+  disposition: -1
+  texture:
+    src: systems/base-knavery/art/game-icons/creatures/harpy.svg
+  bar1:
+    attribute: hp
+items:
+  - _id: SHaUI93HFY1VFdf5
+    _key: '!actors.items!R7LRTwNz9YBIyL9m.SHaUI93HFY1VFdf5'
+    name: Claw
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: d4
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

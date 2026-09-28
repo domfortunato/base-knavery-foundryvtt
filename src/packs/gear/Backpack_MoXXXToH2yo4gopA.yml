@@ -1,0 +1,16 @@
+_id: MoXXXToH2yo4gopA
+_key: '!items!MoXXXToH2yo4gopA'
+name: Backpack
+type: item
+img: systems/base-knavery/icons/backpack.svg
+system:
+  slots: 1
+  quantity: 1
+  bundle: 1
+  cost: 5
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

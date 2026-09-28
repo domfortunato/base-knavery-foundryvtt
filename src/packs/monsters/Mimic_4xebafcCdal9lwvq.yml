@@ -1,0 +1,52 @@
+_id: 4xebafcCdal9lwvq
+_key: '!actors!4xebafcCdal9lwvq'
+name: Mimic
+type: npc
+img: systems/base-knavery/art/game-icons/creatures/mimic-chest.svg
+system:
+  role: monster
+  level: 7
+  hp:
+    value: 28
+    max: 28
+  armorClass: 13
+  morale: 9
+  movement: 30'
+  numberAppearing: '1'
+  attacksText: pseudopod (3d4)
+  description: ''
+  notes: ''
+prototypeToken:
+  name: Mimic
+  actorLink: false
+  disposition: -1
+  texture:
+    src: systems/base-knavery/art/game-icons/creatures/mimic-chest.svg
+  bar1:
+    attribute: hp
+items:
+  - _id: L6v8iLe0a384Q4Lh
+    _key: '!actors.items!4xebafcCdal9lwvq.L6v8iLe0a384Q4Lh'
+    name: Pseudopod
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: 3d4
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

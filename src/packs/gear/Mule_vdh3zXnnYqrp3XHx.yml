@@ -1,0 +1,18 @@
+_id: vdh3zXnnYqrp3XHx
+_key: '!items!vdh3zXnnYqrp3XHx'
+name: Mule
+type: transport
+img: systems/base-knavery/icons/donkey.svg
+system:
+  slots: 0
+  quantity: 1
+  cost: 30
+  capacity: 50
+  crew: 0
+  speed: ''
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

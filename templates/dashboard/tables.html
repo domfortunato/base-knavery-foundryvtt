@@ -1,0 +1,27 @@
+<section class="tab {{tab.cssClass}}" data-tab="tables" data-group="primary">
+  <h3>{{localize "KNAVERY.Dashboard.PlayerTools"}}</h3>
+  <div class="dash-toggles">
+    {{#each toggles}}
+    <button type="button" class="dash-toggle {{#if this.on}}on{{/if}}" data-action="toggleSetting" data-key="{{this.key}}">
+      <i class="fas {{this.icon}}"></i> {{localize this.label}} <i class="fas {{#if this.on}}fa-toggle-on{{else}}fa-toggle-off{{/if}}"></i>
+    </button>
+    {{/each}}
+  </div>
+  <div class="dash-buttons">
+    <button type="button" data-action="marketManager"><i class="fas fa-store"></i> {{localize "KNAVERY.Market.ManagerTitle"}}</button>
+    <button type="button" data-action="importTable" data-table=""><i class="fas fa-file-import"></i> {{localize "KNAVERY.Import.Title"}}</button>
+  </div>
+  <h3>{{localize "KNAVERY.Dashboard.Tables"}}</h3>
+  <p class="hint">{{localize "KNAVERY.Dashboard.TablesHint"}}</p>
+  <div class="table-list">
+    {{#each tables}}
+    <div class="dash-table" data-table="{{this.name}}">
+      <span class="dash-table-name">{{this.name}}</span>
+      {{#if this.world}}<span class="knavery-item-tag">{{localize "KNAVERY.Dashboard.WorldCopy"}}</span>{{else}}<span class="knavery-item-tag">{{localize "KNAVERY.Dashboard.Shell"}}</span>{{/if}}
+      <span class="dash-table-rows">{{this.rows}}</span>
+      <a data-action="rollTable" data-tooltip="KNAVERY.Dashboard.RollTable"><i class="fas fa-dice-d20"></i></a>
+      <a data-action="importTable" data-tooltip="KNAVERY.Import.Title"><i class="fas fa-file-import"></i></a>
+    </div>
+    {{/each}}
+  </div>
+</section>

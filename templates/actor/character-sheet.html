@@ -1,0 +1,212 @@
+{{!-- No <form> here: ApplicationV2 supplies it. --}}
+{{#if limitedView}}
+<div class="knavery-limited-sheet">
+  <img class="portrait" src="{{actor.img}}" alt="" />
+  <h1 class="knavery-limited-name">{{actor.name}}</h1>
+</div>
+{{else}}
+<div class="charater-sheet-grid knavery-character-grid">
+  <!-- Portrait: click to pick from the galleries; the die rolls one -->
+  <div class="portrait-wrap">
+    <img class="portrait" src="{{actor.img}}" data-action="editPortrait" data-tooltip="KNAVERY.ChoosePortrait" alt="" />
+    {{#if generationEnabled}}
+    <a class="portrait-roll" data-action="rollPortrait" data-tooltip="KNAVERY.RollPortrait" aria-label="{{localize 'KNAVERY.RollPortrait'}}"><i class="fas fa-dice-d20"></i></a>
+    <a class="portrait-pick" data-action="editPortrait" data-tooltip="KNAVERY.ChoosePortrait" aria-label="{{localize 'KNAVERY.ChoosePortrait'}}"><i class="fas fa-list-ul"></i></a>
+    {{/if}}
+  </div>
+
+  <!-- Name + pronouns, careers and level, then the counters -->
+  <div class="character-sheet-section-name knavery-name-section">
+    <div class="name-line">
+      <input class="name-input" type="text" name="name" value="{{actor.name}}" placeholder="{{localize 'KNAVERY.Name'}}" />
+      {{#if generationEnabled}}
+      <a class="name-roll" data-action="rollName" data-tooltip="KNAVERY.RollName" aria-label="{{localize 'KNAVERY.RollName'}}"><i class="fas fa-dice-d20"></i></a>
+      <a class="name-pick" data-action="pickName" data-tooltip="KNAVERY.PickName" aria-label="{{localize 'KNAVERY.PickName'}}"><i class="fas fa-list-ul"></i></a>
+      {{/if}}
+      <input class="pronouns-input" type="text" name="system.pronouns" value="{{system.pronouns}}" maxlength="24"
+        placeholder="{{localize 'KNAVERY.Pronouns'}}" data-tooltip="KNAVERY.Pronouns" aria-label="{{localize 'KNAVERY.Pronouns'}}" />
+    </div>
+
+    <div class="background-line career-line">
+      <span class="background-label">{{localize "KNAVERY.Careers"}}</span>
+      {{#each careers}}
+      <span class="career-chip" data-career-id="{{this.id}}"><a data-action="openCareer">{{this.name}}</a></span>
+      {{else}}
+      <span class="career-none">{{localize "KNAVERY.NoCareers"}}</span>
+      {{/each}}
+      {{#if generationEnabled}}
+      <a class="background-roll" data-action="rollCareer" data-tooltip="KNAVERY.RollCareer" aria-label="{{localize 'KNAVERY.RollCareer'}}"><i class="fas fa-dice-d20"></i></a>
+      <a class="background-pick" data-action="pickCareer" data-tooltip="KNAVERY.PickCareer" aria-label="{{localize 'KNAVERY.PickCareer'}}"><i class="fas fa-list-ul"></i></a>
+      {{/if}}
+    </div>
+
+    <div class="level-line">
+      <label for="{{idp}}-level">{{localize "KNAVERY.Level"}}</label>
+      <input type="number" id="{{idp}}-level" class="level-input" name="system.level" value="{{system.level}}" min="1" max="10" step="1" data-dtype="Number" />
+      <span class="level-title">{{levelTitle}}</span>
+      <label for="{{idp}}-xp">{{localize "KNAVERY.XP"}}</label>
+      <input type="number" id="{{idp}}-xp" class="xp-input" name="system.xp" value="{{system.xp}}" min="0" step="1" data-dtype="Number" />
+      {{#if system.nextXp}}<span class="xp-next" data-tooltip="KNAVERY.NextLevelTip">/ {{system.nextXp}}</span>{{/if}}
+      {{#if showLevelUp}}
+      <button type="button" class="level-up-button" data-action="levelUp"><i class="fas fa-angles-up"></i> {{localize "KNAVERY.LevelUp"}}</button>
+      {{/if}}
+    </div>
+
+    <div class="knavery-counter-row">
+      <div class="resource-counter hp-counter {{#if hpLow}}low{{/if}} {{#if hpPeril}}peril{{/if}}">
+        <label for="{{idp}}-hp" data-tooltip="KNAVERY.HPTip">{{localize "KNAVERY.HP"}}</label>
+        <div class="resource-input-wrapper">
+          <input type="number" min="0" step="1" class="stat-input" id="{{idp}}-hp" name="system.hp.value" value="{{system.hp.value}}" data-dtype="Number" />
+          <span> / </span>
+          <input type="number" min="0" step="1" class="stat-input" name="system.hp.max" value="{{system.hp.max}}" data-dtype="Number" />
+        </div>
+      </div>
+      <div class="resource-counter ac-counter {{#if system.acOverridden}}armor-overridden{{/if}}">
+        <label data-tooltip="{{localize 'KNAVERY.ACTip' ap=system.ap}}">{{localize "KNAVERY.AC"}}</label>
+        <div class="resource-input-wrapper">
+          <input type="number" min="0" step="1" class="ac-input" id="{{idp}}-ac" value="{{system.ac}}"
+            data-tooltip="{{#if system.acOverridden}}KNAVERY.ACOverrideActive{{else}}KNAVERY.ACAuto{{/if}}" />
+          {{#if system.acOverridden}}<a class="armor-reset" data-action="acReset" data-tooltip="KNAVERY.ACReset"><i class="fas fa-rotate-left"></i></a>{{/if}}
+        </div>
+      </div>
+      <div class="resource-counter wounds-counter {{#if woundPeril}}peril{{/if}}">
+        <label for="{{idp}}-wounds" data-tooltip="KNAVERY.WoundsTip">{{localize "KNAVERY.Wounds"}}</label>
+        <div class="resource-input-wrapper">
+          <input type="number" min="0" step="1" class="stat-input" id="{{idp}}-wounds" name="system.wounds" value="{{system.wounds}}" data-dtype="Number" />
+          <span> / {{slotsMax}}</span>
+        </div>
+      </div>
+      <div class="resource-counter coins-counter">
+        <label for="{{idp}}-coins" data-tooltip="KNAVERY.CoinsTip">{{localize "KNAVERY.Coins"}}</label>
+        <div class="resource-input-wrapper">
+          <input type="number" min="0" step="1" id="{{idp}}-coins" name="system.coins" value="{{system.coins}}" data-dtype="Number" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="character-sheet-section-buttons">
+    <button id="rest-button" type="button" data-action="rest" class="strict-size-button" data-tooltip="KNAVERY.RestTip"><i class="fas fa-campground"></i> {{localize "KNAVERY.Rest"}}</button>
+    <button id="heal-wound-button" type="button" data-action="healWound" class="strict-size-button" data-tooltip="KNAVERY.HealWoundTip" {{#unless system.wounds}}disabled{{/unless}}><i class="fas fa-heart-pulse"></i> {{localize "KNAVERY.HealWound"}}</button>
+    <button id="die-of-fate-button" type="button" data-action="dieOfFate" data-always-live class="strict-size-button" data-tooltip="KNAVERY.DieOfFateTip"><i class="fas fa-dice-d6"></i> {{localize "KNAVERY.DieOfFate"}}</button>
+  </div>
+
+  <!-- Abilities, two columns of three -->
+  {{#each abilityRows as |row|}}
+  <div class="character-sheet-section-abilities">
+    {{#each row as |ability|}}
+    <div class="resource-counter {{ability.key}}-counter">
+      <a class="resource-roll" data-action="rollAbility" data-ability="{{ability.key}}" data-always-live data-tooltip="{{ability.tip}}"><i class="fas fa-dice-d20 roll-icon"></i> {{ability.label}}</a>
+      <div class="resource-input-wrapper">
+        <input type="number" min="0" max="10" step="1" class="stat-input" name="system.abilities.{{ability.key}}.value" value="{{ability.value}}" data-dtype="Number" />
+        <span class="ability-defense" data-tooltip="KNAVERY.DefenseTip">({{ability.defense}})</span>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+  {{/each}}
+
+  <div class="character-sheet-section-tabs">
+    <div class="critical-banner">
+      {{#each banners}}
+      <div class="status-banner status-{{this.key}}"><i class="fas {{this.icon}}"></i> <span><strong>{{this.label}}</strong> {{this.text}}</span></div>
+      {{/each}}
+    </div>
+    <nav class="tabs" data-group="primary">
+      <a class="item {{tabs.items.cssClass}}" data-action="tab" data-group="primary" data-tab="items">{{localize "KNAVERY.Tab.Items"}} ({{slotsUsed}} / {{slotsMax}})</a>
+      <a class="item {{tabs.description.cssClass}}" data-action="tab" data-group="primary" data-tab="description">{{localize "KNAVERY.Tab.Description"}}</a>
+      <a class="item {{tabs.notes.cssClass}}" data-action="tab" data-group="primary" data-tab="notes">{{localize "KNAVERY.Tab.Notes"}}</a>
+    </nav>
+    <section class="content">
+      <div class="tab {{tabs.items.cssClass}}" data-group="primary" data-tab="items">
+        <div class="knavery-saves-strip">
+          <span class="saves-label" data-tooltip="KNAVERY.SavesTip">{{localize "KNAVERY.Saves"}}</span>
+          {{#each saves}}
+          <a class="save-roll" data-action="rollSave" data-save="{{this.key}}" data-always-live data-tooltip="{{this.ability}}"><i class="fas fa-dice-d20"></i> {{this.label}}</a>
+          {{/each}}
+        </div>
+        {{#if attacks.length}}
+        <div class="knavery-attacks">
+          <div class="knavery-items-list-header"><div>{{localize "KNAVERY.Attacks"}}</div></div>
+          {{#each attacks}}
+          <div class="knavery-attack-row {{#if this.broken}}broken{{/if}}" data-item-id="{{this.id}}">
+            <a class="attack-roll" data-action="attack" data-always-live data-tooltip="KNAVERY.AttackTip"><i class="fas fa-dice-d20"></i> <strong>{{this.name}}</strong></a>
+            <span class="knavery-item-tag">{{this.kind}} {{this.ability}} {{this.bonus}}</span>
+            <span class="knavery-item-tag">{{this.damage}}</span>
+            {{#if this.range}}<span class="knavery-item-tag">{{this.range}}</span>{{/if}}
+            {{#if this.broken}}<span class="knavery-item-tag broken-tag">{{localize "KNAVERY.Broken"}}</span>{{/if}}
+            <a class="roll-control damage-roll" data-action="rollWeaponDamage" data-tooltip="KNAVERY.RollDamage"><i class="fas fa-dice-d6"></i></a>
+          </div>
+          {{/each}}
+        </div>
+        {{/if}}
+        {{#if grimoire}}
+        <div class="knavery-grimoire">
+          <div class="knavery-items-list-header">
+            <div><i class="fas fa-book-skull"></i> {{#if grimoire.exists}}{{grimoire.name}}{{else}}{{localize "KNAVERY.Glog.Grimoire"}}{{/if}}</div>
+            {{#if grimoire.exists}}
+            <span class="glog-md" data-tooltip="KNAVERY.Glog.MdTip"><i class="fas fa-dice-d6"></i> {{localize "KNAVERY.Glog.MdCount" n=grimoire.mdLeft max=grimoire.mdMax}}</span>
+            {{else if editable}}
+            <a class="item-control" data-action="createGrimoire"><i class="fas fa-plus"></i> {{localize "KNAVERY.Glog.Create"}}</a>
+            {{/if}}
+          </div>
+          {{#each grimoire.pages}}
+          <div class="knavery-attack-row grimoire-page" data-item-id="{{this.id}}">
+            <a class="attack-roll" data-action="castGlog" data-tooltip="KNAVERY.Glog.CastHint"><i class="fas fa-hand-sparkles"></i> {{this.name}}</a>
+            <a class="item-control" data-action="itemEdit" data-tooltip="KNAVERY.EditItem"><i class="fas fa-edit"></i></a>
+            <a class="item-control" data-action="unbindSpell" data-tooltip="KNAVERY.Glog.Unbind"><i class="fas fa-book-open"></i></a>
+          </div>
+          {{/each}}
+        </div>
+        {{/if}}
+        {{> "systems/base-knavery/templates/parts/items-list.html"}}
+      </div>
+
+      <div class="tab {{tabs.description.cssClass}}" data-group="primary" data-tab="description">
+        <div class="description">
+          {{> "systems/base-knavery/templates/parts/careers-block.html"}}
+          {{#if showTraits}}
+          <div class="character-traits">
+            <div class="trait-picklist-section">
+              <div class="trait-picklist-header">
+                <label class="trait-picklist-label">{{localize "KNAVERY.Traits"}}</label>
+                <a class="trait-toggle" data-action="toggleTraits"><i class="fas {{#if traitsCollapsed}}fa-plus-square{{else}}fa-minus-square{{/if}}"></i></a>
+              </div>
+              <div class="trait-grid">
+                {{#each traitRows}}
+                {{#if (or this.value (not @root.traitsCollapsed))}}
+                <div class="trait-row">
+                  <label class="trait-label">{{this.label}}</label>
+                  {{#if @root.generationEnabled}}
+                  <a class="trait-roll" data-action="rollTrait" data-key="{{this.key}}" data-tooltip="KNAVERY.RollTrait"><i class="fas fa-dice-d20"></i></a>
+                  <a class="trait-pick" data-action="pickTrait" data-key="{{this.key}}" data-tooltip="KNAVERY.PickTrait"><i class="fas fa-list-ul"></i></a>
+                  {{/if}}
+                  <input class="trait-input" type="text" name="system.traits.{{this.key}}" value="{{this.value}}" />
+                </div>
+                {{/if}}
+                {{/each}}
+              </div>
+            </div>
+          </div>
+          {{/if}}
+          <div class="knavery-bio">
+            <label class="trait-picklist-label">{{localize "KNAVERY.Biography"}}</label>
+            <prose-mirror name="system.biography" value="{{system.biography}}" toggled collaborate relative
+              data-document-uuid="{{actor.uuid}}">{{#if system.biography}}{{{enrichedBio}}}{{else}}<p class="knavery-editor-placeholder">{{localize "KNAVERY.BiographyPlaceholder"}}</p>{{/if}}</prose-mirror>
+          </div>
+          <div class="knavery-compat-footer">
+            <img src="{{logo}}" alt="{{localize 'KNAVERY.MadeForKnave'}}" />
+            <div class="knavery-compat-caption">{{disclaimer}}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab {{tabs.notes.cssClass}}" data-group="primary" data-tab="notes">
+        <prose-mirror name="system.notes" value="{{system.notes}}" toggled collaborate relative
+          data-document-uuid="{{actor.uuid}}">{{#if system.notes}}{{{enrichedNotes}}}{{else}}<p class="knavery-editor-placeholder">{{localize "KNAVERY.NotesPlaceholder"}}</p>{{/if}}</prose-mirror>
+      </div>
+    </section>
+  </div>
+</div>
+{{/if}}

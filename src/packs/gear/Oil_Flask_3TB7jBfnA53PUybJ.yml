@@ -1,0 +1,16 @@
+_id: 3TB7jBfnA53PUybJ
+_key: '!items!3TB7jBfnA53PUybJ'
+name: Oil Flask
+type: item
+img: systems/base-knavery/icons/generic-item.svg
+system:
+  slots: 1
+  quantity: 1
+  bundle: 1
+  cost: 5
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

@@ -1,0 +1,58 @@
+<section class="tab {{tab.cssClass}}" data-tab="requests" data-group="primary">
+  <fieldset>
+    <legend>{{localize "KNAVERY.Dashboard.Who"}} <a data-action="selectAll" data-field="pc" data-tooltip="KNAVERY.Dashboard.SelectAll"><i class="fas fa-check-double"></i></a></legend>
+    <div class="dash-pcs">
+      {{#each characters}}
+      <label class="dash-pc {{#unless this.online}}offline{{/unless}}">
+        <input type="checkbox" name="pc" value="{{this.id}}" />
+        <img src="{{this.img}}" alt="" /><span>{{this.name}}</span>
+        <em>{{this.players}}{{#unless this.online}} · {{localize "KNAVERY.Dashboard.Offline"}}{{/unless}}</em>
+      </label>
+      {{else}}
+      <p class="hint">{{localize "KNAVERY.Dashboard.NoCharacters"}}</p>
+      {{/each}}
+    </div>
+  </fieldset>
+  <div class="form-group">
+    <label>{{localize "KNAVERY.Dashboard.What"}}</label>
+    <select name="check">
+      <optgroup label="{{localize 'KNAVERY.Dashboard.Checks'}}">{{#each abilities}}<option value="{{this.value}}">{{this.label}}</option>{{/each}}</optgroup>
+      <optgroup label="{{localize 'KNAVERY.Saves'}}">{{#each saves}}<option value="{{this.value}}">{{this.label}}</option>{{/each}}</optgroup>
+    </select>
+  </div>
+  <div class="form-group">
+    <label>{{localize "KNAVERY.Roll.Difficulty"}}</label>
+    <input type="number" name="difficulty" value="{{difficulty}}" min="0" max="20" step="1" />
+    <span class="hint">{{localize "KNAVERY.Dashboard.TargetIs"}} <strong class="request-target">{{target}}</strong></span>
+  </div>
+  <div class="form-group">
+    <label>{{localize "KNAVERY.Dashboard.Reason"}}</label>
+    <input type="text" name="reason" maxlength="300" placeholder="{{localize 'KNAVERY.Dashboard.ReasonHint'}}" />
+  </div>
+  <button type="button" data-action="sendRequest"><i class="fas fa-bullhorn"></i> {{localize "KNAVERY.Dashboard.Send"}}</button>
+
+  <h3>{{localize "KNAVERY.Dashboard.Results"}} <a data-action="clearLog" data-tooltip="KNAVERY.Dashboard.ClearLog"><i class="fas fa-broom"></i></a></h3>
+  <div class="request-log">
+    {{#each log as |req|}}
+    <div class="request">
+      <div class="request-head"><strong>{{req.label}}</strong> <span>({{localize "KNAVERY.Roll.VsTarget" target=req.target}})</span>{{#if req.reason}} — <em>{{req.reason}}</em>{{/if}}</div>
+      <ul>
+        {{#each req.entries}}
+        <li class="state-{{this.state}}">
+          <span class="request-name">{{this.name}}</span>
+          {{#if (eq this.state "success")}}<i class="fas fa-check"></i> {{this.total}}{{/if}}
+          {{#if (eq this.state "failure")}}<i class="fas fa-xmark"></i> {{this.total}}{{/if}}
+          {{#if (eq this.state "waiting")}}<i class="fas fa-hourglass-half"></i> {{localize "KNAVERY.Dashboard.Waiting"}}{{/if}}
+          {{#if (eq this.state "offline")}}<i class="fas fa-plug-circle-xmark"></i> {{localize "KNAVERY.Dashboard.Offline"}}{{/if}}
+          {{#if (or (eq this.state "waiting") (eq this.state "offline"))}}
+          <a data-action="rollForThem" data-request="{{req.id}}" data-actor="{{this.actorId}}" data-tooltip="KNAVERY.Dashboard.RollForThem"><i class="fas fa-dice-d20"></i></a>
+          {{/if}}
+        </li>
+        {{/each}}
+      </ul>
+    </div>
+    {{else}}
+    <p class="hint">{{localize "KNAVERY.Dashboard.NoRequests"}}</p>
+    {{/each}}
+  </div>
+</section>

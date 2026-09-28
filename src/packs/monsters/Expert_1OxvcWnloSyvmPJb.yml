@@ -1,0 +1,53 @@
+_id: 1OxvcWnloSyvmPJb
+_key: '!actors!1OxvcWnloSyvmPJb'
+name: Expert
+type: npc
+img: systems/base-knavery/icons/thought-bubble.svg
+system:
+  role: hireling
+  level: 1
+  hp:
+    value: 3
+    max: 3
+  armorClass: 11
+  morale: 7
+  movement: 40'
+  numberAppearing: ''
+  attacksText: punch (d2)
+  wage: 600
+  description: ''
+  notes: ''
+prototypeToken:
+  name: Expert
+  actorLink: false
+  disposition: 1
+  texture:
+    src: systems/base-knavery/icons/thought-bubble.svg
+  bar1:
+    attribute: hp
+items:
+  - _id: 67cjtxOcUbxXNFc0
+    _key: '!actors.items!1OxvcWnloSyvmPJb.67cjtxOcUbxXNFc0'
+    name: Punch
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: d2
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

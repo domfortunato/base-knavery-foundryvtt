@@ -1,0 +1,71 @@
+_id: 5WfRjMVo0lIGddA1
+_key: '!actors!5WfRjMVo0lIGddA1'
+name: Dragon
+type: npc
+img: systems/base-knavery/art/game-icons/creatures/dragon-head-lorc.svg
+system:
+  role: monster
+  level: 10
+  hp:
+    value: 40
+    max: 40
+  armorClass: 20
+  morale: 10
+  movement: 30' (80' flying)
+  numberAppearing: d4
+  attacksText: 2 claw (d8), bite (4d8)
+  description: ''
+  notes: ''
+prototypeToken:
+  name: Dragon
+  actorLink: false
+  disposition: -1
+  texture:
+    src: systems/base-knavery/art/game-icons/creatures/dragon-head-lorc.svg
+  bar1:
+    attribute: hp
+items:
+  - _id: nnxFf9KTxArusfb3
+    _key: '!actors.items!5WfRjMVo0lIGddA1.nnxFf9KTxArusfb3'
+    name: Claw
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: d8
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+  - _id: QJYi8bSDhW9Ynsdf
+    _key: '!actors.items!5WfRjMVo0lIGddA1.QJYi8bSDhW9Ynsdf'
+    name: Bite
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: 4d8
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

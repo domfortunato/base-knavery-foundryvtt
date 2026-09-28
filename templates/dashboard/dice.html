@@ -1,0 +1,17 @@
+<section class="tab {{tab.cssClass}}" data-tab="dice" data-group="primary">
+  {{#if showHazard}}
+  <h3>{{localize "KNAVERY.Dashboard.HazardDice"}}</h3>
+  <div class="dash-buttons">
+    <button type="button" data-action="hazard" data-kind="dungeon"><i class="fas fa-dungeon"></i> {{localize "KNAVERY.Hazard.dungeon"}}</button>
+    <button type="button" data-action="hazard" data-kind="travel"><i class="fas fa-route"></i> {{localize "KNAVERY.Hazard.travel"}}</button>
+  </div>
+  {{/if}}
+  <h3>{{localize "KNAVERY.Dashboard.Encounters"}}</h3>
+  <div class="dash-buttons">
+    <button type="button" data-action="reaction"><i class="fas fa-face-meh"></i> {{localize "KNAVERY.Dashboard.Reaction"}}</button>
+    <button type="button" data-action="encounterDistance" data-where="dungeon"><i class="fas fa-ruler"></i> {{localize "KNAVERY.Dashboard.DistanceDungeon"}}</button>
+    <button type="button" data-action="encounterDistance" data-where="wilderness"><i class="fas fa-ruler-combined"></i> {{localize "KNAVERY.Dashboard.DistanceWilderness"}}</button>
+    <button type="button" data-action="morale"><i class="fas fa-flag"></i> {{localize "KNAVERY.Dashboard.MoraleSelected"}}</button>
+  </div>
+  <p class="hint">{{localize "KNAVERY.Dashboard.DiceHint"}}</p>
+</section>

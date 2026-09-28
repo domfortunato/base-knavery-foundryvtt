@@ -1,0 +1,18 @@
+_id: OJkpBVd9vBMb6kRI
+_key: '!items!OJkpBVd9vBMb6kRI'
+name: Rowboat
+type: transport
+img: systems/base-knavery/icons/smallcraft.svg
+system:
+  slots: 0
+  quantity: 1
+  cost: 50
+  capacity: 320
+  crew: 0
+  speed: ''
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

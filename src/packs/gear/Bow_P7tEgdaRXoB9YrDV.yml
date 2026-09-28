@@ -1,0 +1,19 @@
+_id: P7tEgdaRXoB9YrDV
+_key: '!items!P7tEgdaRXoB9YrDV'
+name: Bow
+type: weapon
+img: systems/base-knavery/icons/weapons.svg
+system:
+  slots: 2
+  quantity: 1
+  damage: d6
+  hands: 2
+  attackType: ranged
+  range: 120'
+  cost: 100
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

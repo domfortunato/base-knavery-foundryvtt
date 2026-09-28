@@ -1,0 +1,18 @@
+_id: 12NxBpOiBhG8TNg0
+_key: '!items!12NxBpOiBhG8TNg0'
+name: War Horse
+type: transport
+img: systems/base-knavery/icons/horse.svg
+system:
+  slots: 0
+  quantity: 1
+  cost: 10000
+  capacity: 80
+  crew: 0
+  speed: ''
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

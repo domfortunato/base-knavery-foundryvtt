@@ -32,35 +32,146 @@
   "documentTypes": {
     "Actor": {
       "character": {
-        "htmlFields": ["biography", "notes"]
+        "htmlFields": [
+          "biography",
+          "notes"
+        ]
       },
       "npc": {
-        "htmlFields": ["description", "notes"]
+        "htmlFields": [
+          "description",
+          "notes"
+        ]
       }
     },
     "Item": {
       "item": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "weapon": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "armor": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "spellbook": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "career": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "transport": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       }
     }
   },
-  "packs": [],
-  "packFolders": [],
+  "packs": [
+    {
+      "name": "gear",
+      "label": "Gear & Prices",
+      "path": "packs/gear",
+      "type": "Item",
+      "system": "base-knavery",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "TRUSTED": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "careers",
+      "label": "Careers",
+      "path": "packs/careers",
+      "type": "Item",
+      "system": "base-knavery",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "TRUSTED": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "marketplace",
+      "label": "Marketplace",
+      "path": "packs/marketplace",
+      "type": "RollTable",
+      "system": "base-knavery",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "TRUSTED": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "tables",
+      "label": "Tables (shells)",
+      "path": "packs/tables",
+      "type": "RollTable",
+      "system": "base-knavery",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "TRUSTED": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "monsters",
+      "label": "Bestiary",
+      "path": "packs/monsters",
+      "type": "Actor",
+      "system": "base-knavery",
+      "ownership": {
+        "PLAYER": "NONE",
+        "TRUSTED": "NONE",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "macros",
+      "label": "GM Macros",
+      "path": "packs/macros",
+      "type": "Macro",
+      "system": "base-knavery",
+      "ownership": {
+        "PLAYER": "NONE",
+        "TRUSTED": "NONE",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    }
+  ],
+  "packFolders": [
+    {
+      "name": "Base Knavery",
+      "sorting": "m",
+      "color": "#12a3b4",
+      "packs": [
+        "gear",
+        "careers",
+        "marketplace",
+        "tables",
+        "monsters",
+        "macros"
+      ]
+    }
+  ],
   "languages": [
     {
       "lang": "en",
@@ -76,8 +187,17 @@
   "secondaryTokenAttribute": null,
   "flags": {
     "hotReload": {
-      "extensions": ["css", "html", "hbs", "json"],
-      "paths": ["css", "templates", "lang"]
+      "extensions": [
+        "css",
+        "html",
+        "hbs",
+        "json"
+      ],
+      "paths": [
+        "css",
+        "templates",
+        "lang"
+      ]
     }
   }
 }

@@ -1,0 +1,52 @@
+_id: lW5fPWFgRKsQ2fX6
+_key: '!actors!lW5fPWFgRKsQ2fX6'
+name: Doppelganger
+type: npc
+img: systems/base-knavery/art/game-icons/masks/duality-mask.svg
+system:
+  role: monster
+  level: 4
+  hp:
+    value: 16
+    max: 16
+  armorClass: 14
+  morale: 10
+  movement: 30'
+  numberAppearing: ''
+  attacksText: bite (d12)
+  description: ''
+  notes: ''
+prototypeToken:
+  name: Doppelganger
+  actorLink: false
+  disposition: -1
+  texture:
+    src: systems/base-knavery/art/game-icons/masks/duality-mask.svg
+  bar1:
+    attribute: hp
+items:
+  - _id: ZPh3ajZzmsujEnXj
+    _key: '!actors.items!lW5fPWFgRKsQ2fX6.ZPh3ajZzmsujEnXj'
+    name: Bite
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: d12
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

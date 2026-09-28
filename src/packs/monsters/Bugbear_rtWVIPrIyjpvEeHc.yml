@@ -1,0 +1,52 @@
+_id: rtWVIPrIyjpvEeHc
+_key: '!actors!rtWVIPrIyjpvEeHc'
+name: Bugbear
+type: npc
+img: systems/base-knavery/art/game-icons/creatures/brute.svg
+system:
+  role: monster
+  level: 3
+  hp:
+    value: 12
+    max: 12
+  armorClass: 14
+  morale: 9
+  movement: 30'
+  numberAppearing: 2d4
+  attacksText: weapon (d6)
+  description: ''
+  notes: ''
+prototypeToken:
+  name: Bugbear
+  actorLink: false
+  disposition: -1
+  texture:
+    src: systems/base-knavery/art/game-icons/creatures/brute.svg
+  bar1:
+    attribute: hp
+items:
+  - _id: qCBlYoFFPxZuz9az
+    _key: '!actors.items!rtWVIPrIyjpvEeHc.qCBlYoFFPxZuz9az'
+    name: Weapon
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: d6
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

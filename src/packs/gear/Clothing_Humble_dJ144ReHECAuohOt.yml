@@ -1,0 +1,15 @@
+_id: dJ144ReHECAuohOt
+_key: '!items!dJ144ReHECAuohOt'
+name: Clothing (Humble)
+type: item
+img: systems/base-knavery/icons/generic-item.svg
+system:
+  slots: 1
+  quantity: 1
+  cost: 120
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

@@ -1,0 +1,85 @@
+{{!-- The inventory, slot by slot. Wounds fill slots from the top down, so a
+      row in a wounded slot is marked and must be dropped. --}}
+<div class="knavery-items-list-header">
+  <div>{{localize "KNAVERY.Name"}} <i>{{localize "KNAVERY.BoldMeansEquipped"}}</i>
+    {{#if isCharacter}}<span class="spells-left" data-tooltip="KNAVERY.SpellsLeftTip">· {{localize "KNAVERY.SpellsLeft" n=spellsLeft max=system.spellsPerDay}}</span>{{/if}}
+  </div>
+  <span class="items-header-controls">
+    {{#if showShop}}
+    <a class="item-control item-shop" data-action="itemShop" data-tooltip="KNAVERY.MarketplaceHint"><i class="fas fa-store"></i>&nbsp;{{localize "KNAVERY.Marketplace"}}</a>
+    {{/if}}
+    {{#if editable}}
+    <a class="item-control item-create" data-action="itemCreate" data-type="item" data-tooltip="KNAVERY.CreateItem"><i class="fas fa-plus"></i>&nbsp;{{localize "KNAVERY.AddItem"}}</a>
+    {{/if}}
+  </span>
+</div>
+<div class="knavery-items-rows">
+{{#each items as |item|}}
+<div class="knavery-items-list-row{{#if item.wounded}} wounded-row{{/if}}{{#if item.broken}} broken-row{{/if}}" data-item-id="{{item.id}}">
+  <div class="knavery-items-list-row-header">
+    <div class="knavery-item-name-and-tags">
+      <span class="knavery-slot-index" data-tooltip="KNAVERY.SlotIndexTip">{{item.slotLabel}}</span>
+      <a class="knavery-item-title" data-action="itemDescription">
+        {{#if item.system.equipped}}<strong>{{item.name}}</strong>{{else}}{{item.name}}{{/if}}
+      </a>
+      {{#each item.tags}}<span class="knavery-item-tag">{{this}}</span>{{/each}}
+      {{#if item.broken}}<span class="knavery-item-tag broken-tag">{{localize "KNAVERY.Broken"}}</span>{{/if}}
+      {{#if item.wounded}}<span class="knavery-item-tag wounded-tag">{{localize "KNAVERY.MustDrop"}}</span>{{/if}}
+      {{#if item.castToday}}<span class="knavery-item-tag">{{localize "KNAVERY.CastToday"}}</span>{{/if}}
+    </div>
+    <div class="knavery-item-controls">
+      {{#if (and @root.editable item.system.hasPlusMinus)}}
+      <a class="item-control" data-action="itemRemoveQty" data-tooltip="KNAVERY.ItemRemoveQuantity"><i class="fas fa-minus"></i></a>
+      <a class="item-control" data-action="itemAddQty" data-tooltip="KNAVERY.ItemAddQuantity"><i class="fas fa-plus"></i></a>
+      {{/if}}
+      {{#if item.canAttack}}
+      <a class="roll-control" data-action="attack" data-always-live data-tooltip="KNAVERY.AttackTip"><i class="fas fa-dice-d20"></i></a>
+      {{/if}}
+      {{#if item.canBind}}
+      <a class="item-control" data-action="bindSpell" data-tooltip="KNAVERY.Glog.Bind"><i class="fas fa-book-medical"></i></a>
+      {{/if}}
+      {{#if item.canCast}}
+      <a class="item-control" data-action="castSpell" data-tooltip="KNAVERY.CastHint"><i class="fas fa-hand-sparkles"></i></a>
+      {{/if}}
+      {{#if (and @root.editable item.system.isEquipable)}}
+      <a class="item-control item-toggle-equipped {{#if item.system.equipped}}equipped{{/if}}" data-action="itemToggleEquipped"
+        data-tooltip="{{#if item.system.equipped}}KNAVERY.ItemUnequip{{else}}KNAVERY.ItemEquip{{/if}}"><i class="fas fa-hand-paper"></i></a>
+      {{/if}}
+      {{#if item.canGive}}
+      <a class="item-control item-give" data-action="itemGive" data-tooltip="KNAVERY.GiveHint"><i class="fas fa-hand-holding"></i></a>
+      {{/if}}
+      <a class="item-control item-edit" data-action="itemEdit" data-tooltip="KNAVERY.EditItem"><i class="fas fa-edit"></i></a>
+      {{#if @root.editable}}
+      <a class="item-control item-delete" data-action="itemDelete" data-tooltip="KNAVERY.DeleteItem"><i class="fas fa-trash"></i></a>
+      {{/if}}
+    </div>
+  </div>
+  {{#if item.expanded}}
+  <div class="knavery-item-description">{{#if item.enriched}}{{{item.enriched}}}{{else}}<em>{{localize "KNAVERY.NoDescription"}}</em>{{/if}}</div>
+  {{/if}}
+</div>
+{{/each}}
+</div>
+{{#each coinRows}}
+<div class="knavery-items-list-row gold-slot-row">
+  <div class="knavery-items-list-row-header">
+    <div class="knavery-item-name-and-tags">
+      <i class="fas fa-coins gold-slot-icon"></i>
+      <span class="knavery-item-title">{{localize "KNAVERY.CoinSlot"}}</span>
+    </div>
+  </div>
+</div>
+{{/each}}
+{{#each woundRows}}
+<div class="knavery-items-list-row wound-slot-row">
+  <div class="knavery-items-list-row-header">
+    <div class="knavery-item-name-and-tags">
+      <i class="fas fa-droplet wound-slot-icon"></i>
+      <span class="knavery-item-title">{{localize "KNAVERY.WoundSlot"}}</span>
+    </div>
+  </div>
+</div>
+{{/each}}
+{{#if items.length}}
+<div class="knavery-reorder-hint"><i class="fas fa-up-down"></i> {{localize "KNAVERY.ReorderHint"}}</div>
+{{/if}}

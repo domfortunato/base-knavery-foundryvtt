@@ -1,0 +1,61 @@
+{{!-- One card for every roll kind: check, attack, damage, spell, hazard.
+      Buttons are bound in damage.js#bindRollCard. --}}
+<div class="knavery-roll-card kind-{{kind}}">
+  <header class="card-title">
+    <h3>{{title}}</h3>
+    {{#if edge}}<span class="card-edge">{{edge}}</span>{{/if}}
+  </header>
+  {{#if reason}}<p class="roll-reason"><i class="fas fa-bullhorn"></i> {{reason}}</p>{{/if}}
+
+  {{#if rollHtml}}{{{rollHtml}}}{{/if}}
+
+  {{#if (eq kind "check")}}
+  <div class="card-result {{#if success}}success{{else}}failure{{/if}}">
+    {{resultLabel}}{{#if target}} <span class="card-target">({{localize "KNAVERY.Roll.VsTarget" target=target}})</span>{{/if}}
+  </div>
+  {{/if}}
+
+  {{#if (eq kind "hazard")}}
+  <div class="card-result hazard">{{resultLabel}}</div>
+  {{/if}}
+
+  {{#if (eq kind "attack")}}
+  {{#if targets.length}}
+  <ul class="card-targets">
+    {{#each targets}}
+    <li class="{{this.cls}}"><span class="target-name">{{this.name}}</span>
+      {{#if this.ac}}<span class="target-ac">{{localize "KNAVERY.ACShort"}} {{this.ac}}</span>{{/if}}
+      <strong>{{this.label}}</strong></li>
+    {{/each}}
+  </ul>
+  {{/if}}
+  {{#if maneuver}}<p class="card-note maneuver"><i class="fas fa-person-running"></i> {{localize "KNAVERY.Roll.FreeManeuver"}}</p>{{/if}}
+  {{#if power}}<p class="card-note power"><i class="fas fa-hammer"></i> {{localize "KNAVERY.Roll.PowerAttackUsed"}}</p>{{/if}}
+  {{#if fumble}}<p class="card-note fumble"><i class="fas fa-heart-crack"></i> {{localize "KNAVERY.Roll.Natural1"}}</p>{{/if}}
+  {{#if broke}}<p class="card-note broke"><i class="fas fa-link-slash"></i> {{localize "KNAVERY.Roll.WeaponBroken"}}</p>{{/if}}
+  {{#if canRollDamage}}
+  <button type="button" class="kn-roll-damage" data-kn-roll-damage data-weapon="{{weaponUuid}}" data-actor="{{actorUuid}}"
+    data-power="{{powerFlag}}" data-targets='{{applyTargets}}'><i class="fas fa-dice-d6"></i> {{localize "KNAVERY.Roll.RollDamage"}}</button>
+  {{/if}}
+  {{/if}}
+
+  {{#if damage}}
+  <div class="card-damage">
+    <h4>{{localize "KNAVERY.Roll.Damage"}}</h4>
+    {{{damage.html}}}
+    <div class="card-apply">
+      <button type="button" data-kn-apply="normal" data-amount="{{damage.total}}" data-targets='{{applyTargets}}'
+        data-tooltip="KNAVERY.Roll.ApplyHint"><i class="fas fa-burst"></i> {{localize "KNAVERY.Roll.Apply"}}</button>
+      <button type="button" data-kn-apply="direct" data-amount="{{damage.total}}" data-targets='{{applyTargets}}'
+        data-tooltip="KNAVERY.Roll.ApplyDirectHint"><i class="fas fa-skull-crossbones"></i> {{localize "KNAVERY.Roll.ApplyDirect"}}</button>
+    </div>
+  </div>
+  {{/if}}
+
+  {{#if (eq kind "spell")}}
+  <p class="card-note">{{localize "KNAVERY.Spell.CastAtLevel" level=level}}</p>
+  {{#if scroll}}<p class="card-note">{{localize "KNAVERY.Spell.ScrollUsed"}}</p>{{/if}}
+  {{#if chaos}}<p class="card-note">{{localize "KNAVERY.Spell.ChaosNote"}}</p>{{/if}}
+  <div class="card-spell-text">{{{description}}}</div>
+  {{/if}}
+</div>

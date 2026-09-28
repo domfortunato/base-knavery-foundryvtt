@@ -1,0 +1,29 @@
+_id: wpz0co0laJ7cjVYt
+_key: '!tables!wpz0co0laJ7cjVYt'
+name: Clothing
+img: icons/svg/d20-grey.svg
+description: '<p>Empty. The Game Master fills this table: GM Dashboard → Tables → Import.</p>'
+formula: 1d20
+replacement: true
+displayRoll: true
+results:
+  - _id: TqSkbr1kXPMzw9S9
+    _key: '!tables.results!wpz0co0laJ7cjVYt.TqSkbr1kXPMzw9S9'
+    type: text
+    name: 'Empty. The Game Master fills this table: GM Dashboard → Tables → Import.'
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 1
+      - 20
+    drawn: false
+    flags:
+      base-knavery:
+        placeholder: true
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

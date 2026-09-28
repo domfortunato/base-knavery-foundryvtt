@@ -1,0 +1,33 @@
+<section class="tab {{tab.cssClass}}" data-tab="damage" data-group="primary">
+  <p class="hint">{{localize "KNAVERY.Dashboard.DamageHint"}}</p>
+  <div class="form-group">
+    <label>{{localize "KNAVERY.Dashboard.Formula"}}</label>
+    <input type="text" name="dmgFormula" value="1d6" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "KNAVERY.Dashboard.Source"}}</label>
+    <input type="text" name="dmgSource" maxlength="200" placeholder="{{localize 'KNAVERY.Dashboard.SourceHint'}}" />
+  </div>
+  <div class="form-group">
+    <label>{{localize "KNAVERY.Roll.ApplyDirect"}}</label>
+    <input type="checkbox" name="dmgDirect" />
+    <span class="hint">{{localize "KNAVERY.Roll.ApplyDirectHint"}}</span>
+  </div>
+  <div class="form-group">
+    <label>{{localize "KNAVERY.Dashboard.ApplyTo"}}</label>
+    <select name="dmgTargets">
+      <option value="controlled">{{localize "KNAVERY.Dashboard.Selected"}}</option>
+      <option value="targeted">{{localize "KNAVERY.Dashboard.Targeted"}}</option>
+      <option value="pcs">{{localize "KNAVERY.Dashboard.ChosenPcs"}}</option>
+    </select>
+  </div>
+  <fieldset>
+    <legend>{{localize "KNAVERY.Dashboard.ChosenPcs"}} <a data-action="selectAll" data-field="dmgPc"><i class="fas fa-check-double"></i></a></legend>
+    <div class="dash-pcs">
+      {{#each characters}}
+      <label class="dash-pc"><input type="checkbox" name="dmgPc" value="{{this.id}}" /><img src="{{this.img}}" alt="" /><span>{{this.name}}</span></label>
+      {{/each}}
+    </div>
+  </fieldset>
+  <button type="button" data-action="applyDamage"><i class="fas fa-skull-crossbones"></i> {{localize "KNAVERY.Dashboard.RollAndApply"}}</button>
+</section>

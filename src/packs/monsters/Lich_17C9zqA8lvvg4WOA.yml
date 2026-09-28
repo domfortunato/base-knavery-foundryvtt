@@ -1,0 +1,52 @@
+_id: 17C9zqA8lvvg4WOA
+_key: '!actors!17C9zqA8lvvg4WOA'
+name: Lich
+type: npc
+img: systems/base-knavery/art/game-icons/creatures/grim-reaper.svg
+system:
+  role: monster
+  level: 11
+  hp:
+    value: 44
+    max: 44
+  armorClass: 19
+  morale: 10
+  movement: 20'
+  numberAppearing: 1 (1)
+  attacksText: touch (d10)
+  description: ''
+  notes: ''
+prototypeToken:
+  name: Lich
+  actorLink: false
+  disposition: -1
+  texture:
+    src: systems/base-knavery/art/game-icons/creatures/grim-reaper.svg
+  bar1:
+    attribute: hp
+items:
+  - _id: e8AZ1juTsBpE0Olf
+    _key: '!actors.items!17C9zqA8lvvg4WOA.e8AZ1juTsBpE0Olf'
+    name: Touch
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: d10
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

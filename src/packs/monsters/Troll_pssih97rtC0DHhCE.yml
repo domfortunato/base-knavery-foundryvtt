@@ -1,0 +1,71 @@
+_id: pssih97rtC0DHhCE
+_key: '!actors!pssih97rtC0DHhCE'
+name: Troll
+type: npc
+img: systems/base-knavery/art/game-icons/creatures/troll.svg
+system:
+  role: monster
+  level: 7
+  hp:
+    value: 28
+    max: 28
+  armorClass: 15
+  morale: 10
+  movement: 40'
+  numberAppearing: d8 (d8)
+  attacksText: 2 claw (d6), bite (d10)
+  description: ''
+  notes: ''
+prototypeToken:
+  name: Troll
+  actorLink: false
+  disposition: -1
+  texture:
+    src: systems/base-knavery/art/game-icons/creatures/troll.svg
+  bar1:
+    attribute: hp
+items:
+  - _id: LfORxqwpYfqBoRbp
+    _key: '!actors.items!pssih97rtC0DHhCE.LfORxqwpYfqBoRbp'
+    name: Claw
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: d6
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+  - _id: aCDqjVLBWnlLsg0O
+    _key: '!actors.items!pssih97rtC0DHhCE.aCDqjVLBWnlLsg0O'
+    name: Bite
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: d10
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

@@ -1,0 +1,18 @@
+_id: VzO2FR9Ku9AS19Ri
+_key: '!items!VzO2FR9Ku9AS19Ri'
+name: Dog
+type: transport
+img: systems/base-knavery/icons/stack.svg
+system:
+  slots: 0
+  quantity: 1
+  cost: 20
+  capacity: 0
+  crew: 0
+  speed: ''
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

@@ -1,0 +1,17 @@
+_id: e4WVqWAUEqXtfMQR
+_key: '!items!e4WVqWAUEqXtfMQR'
+name: Helmet
+type: armor
+img: systems/base-knavery/icons/armor.svg
+system:
+  slots: 1
+  quantity: 1
+  armorType: helmet
+  points: 1
+  cost: 100
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

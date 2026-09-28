@@ -1,0 +1,15 @@
+_id: UXlDQJH0jBCA9Xww
+_key: '!items!UXlDQJH0jBCA9Xww'
+name: Clothing (Wealthy)
+type: item
+img: systems/base-knavery/icons/generic-item.svg
+system:
+  slots: 1
+  quantity: 1
+  cost: 600
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

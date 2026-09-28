@@ -1,0 +1,15 @@
+_id: bwcINwdi7X4ovmDB
+_key: '!items!bwcINwdi7X4ovmDB'
+name: Clothing (Minor Noble)
+type: item
+img: systems/base-knavery/icons/generic-item.svg
+system:
+  slots: 1
+  quantity: 1
+  cost: 2400
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

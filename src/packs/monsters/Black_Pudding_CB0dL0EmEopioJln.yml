@@ -1,0 +1,52 @@
+_id: CB0dL0EmEopioJln
+_key: '!actors!CB0dL0EmEopioJln'
+name: Black Pudding
+type: npc
+img: systems/base-knavery/art/game-icons/creatures/slime.svg
+system:
+  role: monster
+  level: 10
+  hp:
+    value: 40
+    max: 40
+  armorClass: 13
+  morale: 12
+  movement: 20'
+  numberAppearing: ''
+  attacksText: touch (3d8)
+  description: ''
+  notes: ''
+prototypeToken:
+  name: Black Pudding
+  actorLink: false
+  disposition: -1
+  texture:
+    src: systems/base-knavery/art/game-icons/creatures/slime.svg
+  bar1:
+    attribute: hp
+items:
+  - _id: fBtWf2mb87XYKebT
+    _key: '!actors.items!CB0dL0EmEopioJln.fBtWf2mb87XYKebT'
+    name: Touch
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: 3d8
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

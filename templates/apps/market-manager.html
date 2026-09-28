@@ -1,0 +1,53 @@
+<div class="mm-layout">
+  <aside class="mm-aisles">
+    <h3>{{localize "KNAVERY.Market.Aisles"}}</h3>
+    <ul>
+      {{#each aisles}}
+      <li class="mm-aisle {{#if this.selected}}active{{/if}} {{#if this.hidden}}hidden-aisle{{/if}}" data-uuid="{{this.uuid}}" data-name="{{this.name}}">
+        <a data-action="selectAisle" data-uuid="{{this.uuid}}">{{this.name}}</a>
+        <span class="mm-count">{{this.count}}</span>
+        {{#unless this.world}}<span class="mm-badge" data-tooltip="KNAVERY.Market.ShippedHint">{{localize "KNAVERY.Market.Shipped"}}</span>{{/unless}}
+        <a data-action="toggleHidden" data-tooltip="{{#if this.hidden}}KNAVERY.Market.Show{{else}}KNAVERY.Market.Hide{{/if}}"><i class="fas {{#if this.hidden}}fa-eye-slash{{else}}fa-eye{{/if}}"></i></a>
+      </li>
+      {{else}}
+      <li class="hint">{{localize "KNAVERY.Market.NoAisles"}}</li>
+      {{/each}}
+    </ul>
+    <button type="button" data-action="newAisle"><i class="fas fa-plus"></i> {{localize "KNAVERY.Market.NewAisle"}}</button>
+    <p class="hint">{{localize "KNAVERY.Market.ManagerHint"}}</p>
+  </aside>
+  <section class="mm-detail">
+    {{#if table}}
+    <header class="mm-head" data-uuid="{{table.uuid}}">
+      <h3>{{table.name}}</h3>
+      {{#if table.world}}
+      <a data-action="renameAisle" data-tooltip="KNAVERY.Market.RenameAisle"><i class="fas fa-pen"></i></a>
+      <a data-action="openTable" data-tooltip="KNAVERY.Market.OpenTable"><i class="fas fa-table-list"></i></a>
+      <a data-action="deleteAisle" data-tooltip="KNAVERY.Market.DeleteAisle"><i class="fas fa-trash"></i></a>
+      {{else}}
+      <button type="button" data-action="customize"><i class="fas fa-copy"></i> {{localize "KNAVERY.Market.Customize"}}</button>
+      {{/if}}
+    </header>
+    <div class="mm-rows">
+      <div class="mm-row mm-row-head">
+        <span></span><span>{{localize "KNAVERY.Name"}}</span><span>{{localize "KNAVERY.Market.BasePrice"}}</span><span>{{localize "KNAVERY.Market.Override"}}</span><span></span>
+      </div>
+      {{#each rows}}
+      <div class="mm-row" data-row-id="{{this.id}}">
+        <img src="{{this.img}}" alt="" />
+        <span class="mm-name">{{this.name}}{{#unless this.linked}} <em>({{localize "KNAVERY.Market.TextRow"}})</em>{{/unless}}</span>
+        <span class="mm-base">{{#if this.linked}}{{this.base}}{{else}}—{{/if}}</span>
+        <input type="number" class="mm-price" min="0" data-row-id="{{this.id}}" value="{{this.override}}" {{#unless ../table.world}}disabled{{/unless}} placeholder="—" />
+        {{#if ../table.world}}<a data-action="removeRow" data-tooltip="KNAVERY.Market.RemoveRow"><i class="fas fa-xmark"></i></a>{{else}}<span></span>{{/if}}
+      </div>
+      {{/each}}
+    </div>
+    {{#if table.world}}
+    <div class="mm-drop"><i class="fas fa-arrow-down"></i> {{localize "KNAVERY.Market.DropHint"}}</div>
+    <button type="button" data-action="addTextRow"><i class="fas fa-plus"></i> {{localize "KNAVERY.Market.AddTextRow"}}</button>
+    {{else}}
+    <p class="hint">{{localize "KNAVERY.Market.CustomizeFirst"}}</p>
+    {{/if}}
+    {{/if}}
+  </section>
+</div>

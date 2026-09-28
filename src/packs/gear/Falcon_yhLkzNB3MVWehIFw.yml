@@ -1,0 +1,18 @@
+_id: yhLkzNB3MVWehIFw
+_key: '!items!yhLkzNB3MVWehIFw'
+name: Falcon
+type: transport
+img: systems/base-knavery/icons/falcon.svg
+system:
+  slots: 0
+  quantity: 1
+  cost: 1000
+  capacity: 0
+  crew: 0
+  speed: ''
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

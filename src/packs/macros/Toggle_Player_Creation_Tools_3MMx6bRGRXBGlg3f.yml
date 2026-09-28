@@ -1,0 +1,15 @@
+_id: 3MMx6bRGRXBGlg3f
+_key: '!macros!3MMx6bRGRXBGlg3f'
+name: Toggle Player Creation Tools
+type: script
+img: icons/svg/dice-target.svg
+scope: global
+command: game.knavery.toggle("allow-player-randomization");
+author: null
+ownership:
+  default: 0
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

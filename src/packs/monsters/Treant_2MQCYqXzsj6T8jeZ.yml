@@ -1,0 +1,52 @@
+_id: 2MQCYqXzsj6T8jeZ
+_key: '!actors!2MQCYqXzsj6T8jeZ'
+name: Treant
+type: npc
+img: systems/base-knavery/art/game-icons/creatures/evil-tree.svg
+system:
+  role: monster
+  level: 8
+  hp:
+    value: 32
+    max: 32
+  armorClass: 17
+  morale: 9
+  movement: 20'
+  numberAppearing: 0 (d8)
+  attacksText: 2 fist (2d6)
+  description: ''
+  notes: ''
+prototypeToken:
+  name: Treant
+  actorLink: false
+  disposition: -1
+  texture:
+    src: systems/base-knavery/art/game-icons/creatures/evil-tree.svg
+  bar1:
+    attribute: hp
+items:
+  - _id: aWgTLo3hSli8O6Gi
+    _key: '!actors.items!2MQCYqXzsj6T8jeZ.aWgTLo3hSli8O6Gi'
+    name: Fist
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: 2d6
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

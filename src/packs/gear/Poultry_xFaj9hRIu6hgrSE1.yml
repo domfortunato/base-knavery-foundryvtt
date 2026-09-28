@@ -1,0 +1,18 @@
+_id: xFaj9hRIu6hgrSE1
+_key: '!items!xFaj9hRIu6hgrSE1'
+name: Poultry
+type: transport
+img: systems/base-knavery/icons/raven.svg
+system:
+  slots: 0
+  quantity: 1
+  cost: 5
+  capacity: 0
+  crew: 0
+  speed: ''
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

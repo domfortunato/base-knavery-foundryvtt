@@ -1,0 +1,53 @@
+_id: KGBgcvNFYxaSxQHo
+_key: '!actors!KGBgcvNFYxaSxQHo'
+name: Mercenary
+type: npc
+img: systems/base-knavery/icons/thought-bubble.svg
+system:
+  role: hireling
+  level: 1
+  hp:
+    value: 3
+    max: 3
+  armorClass: 15
+  morale: 8
+  movement: 40'
+  numberAppearing: ''
+  attacksText: weapon (d6)
+  wage: 600
+  description: ''
+  notes: ''
+prototypeToken:
+  name: Mercenary
+  actorLink: false
+  disposition: 1
+  texture:
+    src: systems/base-knavery/icons/thought-bubble.svg
+  bar1:
+    attribute: hp
+items:
+  - _id: h9SPE4SFEIR4L7na
+    _key: '!actors.items!KGBgcvNFYxaSxQHo.h9SPE4SFEIR4L7na'
+    name: Weapon
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: d6
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

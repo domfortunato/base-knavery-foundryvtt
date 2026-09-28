@@ -1,0 +1,52 @@
+_id: MFo80MXanbhz6M7A
+_key: '!actors!MFo80MXanbhz6M7A'
+name: Giant Spider
+type: npc
+img: systems/base-knavery/art/game-icons/insects/long-legged-spider.svg
+system:
+  role: monster
+  level: 3
+  hp:
+    value: 12
+    max: 12
+  armorClass: 13
+  morale: 8
+  movement: 20'
+  numberAppearing: d3
+  attacksText: bite (d6)
+  description: ''
+  notes: ''
+prototypeToken:
+  name: Giant Spider
+  actorLink: false
+  disposition: -1
+  texture:
+    src: systems/base-knavery/art/game-icons/insects/long-legged-spider.svg
+  bar1:
+    attribute: hp
+items:
+  - _id: DRVZ9PzwBQfmtg1Y
+    _key: '!actors.items!MFo80MXanbhz6M7A.DRVZ9PzwBQfmtg1Y'
+    name: Bite
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: d6
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

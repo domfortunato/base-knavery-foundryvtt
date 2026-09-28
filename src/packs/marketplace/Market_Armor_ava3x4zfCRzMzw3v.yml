@@ -1,0 +1,105 @@
+_id: ava3x4zfCRzMzw3v
+_key: '!tables!ava3x4zfCRzMzw3v'
+name: 'Market: Armor'
+img: icons/svg/coins.svg
+description: ''
+formula: 1d7
+replacement: true
+displayRoll: true
+results:
+  - _id: qAYqhCojmSOWQh5D
+    _key: '!tables.results!ava3x4zfCRzMzw3v.qAYqhCojmSOWQh5D'
+    type: document
+    name: Shield
+    description: ''
+    img: systems/base-knavery/icons/armor.svg
+    documentUuid: Compendium.base-knavery.gear.Item.HmAl9cwf0xwCmI7C
+    weight: 1
+    range:
+      - 1
+      - 1
+    drawn: false
+    flags: {}
+  - _id: 8xeEWEv0tvbycjtS
+    _key: '!tables.results!ava3x4zfCRzMzw3v.8xeEWEv0tvbycjtS'
+    type: document
+    name: Helmet
+    description: ''
+    img: systems/base-knavery/icons/armor.svg
+    documentUuid: Compendium.base-knavery.gear.Item.e4WVqWAUEqXtfMQR
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    flags: {}
+  - _id: dbKw14aZwwSCvb1K
+    _key: '!tables.results!ava3x4zfCRzMzw3v.dbKw14aZwwSCvb1K'
+    type: document
+    name: Gambeson
+    description: ''
+    img: systems/base-knavery/icons/armor.svg
+    documentUuid: Compendium.base-knavery.gear.Item.Yfc6qD8EWDRNyyEl
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    flags: {}
+  - _id: R1QRt7RuQ3r4jj8I
+    _key: '!tables.results!ava3x4zfCRzMzw3v.R1QRt7RuQ3r4jj8I'
+    type: document
+    name: Mail Shirt
+    description: ''
+    img: systems/base-knavery/icons/armor.svg
+    documentUuid: Compendium.base-knavery.gear.Item.fEiACF1uGGqbB60U
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    flags: {}
+  - _id: g0QPTIdzWjHlxFNJ
+    _key: '!tables.results!ava3x4zfCRzMzw3v.g0QPTIdzWjHlxFNJ'
+    type: document
+    name: Breastplate
+    description: ''
+    img: systems/base-knavery/icons/armor.svg
+    documentUuid: Compendium.base-knavery.gear.Item.Ygk0kw2LC0ImNHIF
+    weight: 1
+    range:
+      - 5
+      - 5
+    drawn: false
+    flags: {}
+  - _id: 7vXTFIhpX0ZBH4Sp
+    _key: '!tables.results!ava3x4zfCRzMzw3v.7vXTFIhpX0ZBH4Sp'
+    type: document
+    name: Arm Plate
+    description: ''
+    img: systems/base-knavery/icons/armor.svg
+    documentUuid: Compendium.base-knavery.gear.Item.RTMKFopg7A9bsd86
+    weight: 1
+    range:
+      - 6
+      - 6
+    drawn: false
+    flags: {}
+  - _id: 5gaVMY1NXPzEd841
+    _key: '!tables.results!ava3x4zfCRzMzw3v.5gaVMY1NXPzEd841'
+    type: document
+    name: Leg Plate
+    description: ''
+    img: systems/base-knavery/icons/armor.svg
+    documentUuid: Compendium.base-knavery.gear.Item.IvnbuSC41SgQEoZE
+    weight: 1
+    range:
+      - 7
+      - 7
+    drawn: false
+    flags: {}
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

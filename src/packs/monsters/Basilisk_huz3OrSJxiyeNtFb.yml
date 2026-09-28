@@ -1,0 +1,52 @@
+_id: huz3OrSJxiyeNtFb
+_key: '!actors!huz3OrSJxiyeNtFb'
+name: Basilisk
+type: npc
+img: systems/base-knavery/art/game-icons/creatures/horned-reptile.svg
+system:
+  role: monster
+  level: 6
+  hp:
+    value: 24
+    max: 24
+  armorClass: 15
+  morale: 9
+  movement: 20'
+  numberAppearing: d6 (d6)
+  attacksText: bite (d10)
+  description: ''
+  notes: ''
+prototypeToken:
+  name: Basilisk
+  actorLink: false
+  disposition: -1
+  texture:
+    src: systems/base-knavery/art/game-icons/creatures/horned-reptile.svg
+  bar1:
+    attribute: hp
+items:
+  - _id: QtDOMvj6dSvM83F6
+    _key: '!actors.items!huz3OrSJxiyeNtFb.QtDOMvj6dSvM83F6'
+    name: Bite
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: d10
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

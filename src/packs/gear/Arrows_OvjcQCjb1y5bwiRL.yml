@@ -1,0 +1,16 @@
+_id: OvjcQCjb1y5bwiRL
+_key: '!items!OvjcQCjb1y5bwiRL'
+name: Arrows
+type: item
+img: systems/base-knavery/icons/generic-item.svg
+system:
+  slots: 1
+  quantity: 20
+  bundle: 20
+  cost: 5
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

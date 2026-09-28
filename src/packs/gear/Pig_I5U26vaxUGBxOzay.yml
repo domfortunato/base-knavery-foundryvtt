@@ -1,0 +1,18 @@
+_id: I5U26vaxUGBxOzay
+_key: '!items!I5U26vaxUGBxOzay'
+name: Pig
+type: transport
+img: systems/base-knavery/icons/stack.svg
+system:
+  slots: 0
+  quantity: 1
+  cost: 20
+  capacity: 0
+  crew: 0
+  speed: ''
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

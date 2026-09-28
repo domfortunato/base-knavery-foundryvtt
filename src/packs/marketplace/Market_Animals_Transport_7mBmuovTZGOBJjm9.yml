@@ -1,0 +1,235 @@
+_id: 7mBmuovTZGOBJjm9
+_key: '!tables!7mBmuovTZGOBJjm9'
+name: 'Market: Animals & Transport'
+img: icons/svg/coins.svg
+description: ''
+formula: 1d17
+replacement: true
+displayRoll: true
+results:
+  - _id: W53NieXYGhvykAvp
+    _key: '!tables.results!7mBmuovTZGOBJjm9.W53NieXYGhvykAvp'
+    type: document
+    name: Poultry
+    description: ''
+    img: systems/base-knavery/icons/raven.svg
+    documentUuid: Compendium.base-knavery.gear.Item.xFaj9hRIu6hgrSE1
+    weight: 1
+    range:
+      - 1
+      - 1
+    drawn: false
+    flags: {}
+  - _id: tvm1MLc2xe0th2RH
+    _key: '!tables.results!7mBmuovTZGOBJjm9.tvm1MLc2xe0th2RH'
+    type: document
+    name: Dog
+    description: ''
+    img: systems/base-knavery/icons/stack.svg
+    documentUuid: Compendium.base-knavery.gear.Item.VzO2FR9Ku9AS19Ri
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    flags: {}
+  - _id: KXqRFj9tmQNATQjG
+    _key: '!tables.results!7mBmuovTZGOBJjm9.KXqRFj9tmQNATQjG'
+    type: document
+    name: Pig
+    description: ''
+    img: systems/base-knavery/icons/stack.svg
+    documentUuid: Compendium.base-knavery.gear.Item.I5U26vaxUGBxOzay
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    flags: {}
+  - _id: ZnH5oY1WuKFLBRFD
+    _key: '!tables.results!7mBmuovTZGOBJjm9.ZnH5oY1WuKFLBRFD'
+    type: document
+    name: Goat
+    description: ''
+    img: systems/base-knavery/icons/stack.svg
+    documentUuid: Compendium.base-knavery.gear.Item.fdwmgA4ruE9l5kWB
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    flags: {}
+  - _id: OZcxjpmcosfZVAxd
+    _key: '!tables.results!7mBmuovTZGOBJjm9.OZcxjpmcosfZVAxd'
+    type: document
+    name: Cow
+    description: ''
+    img: systems/base-knavery/icons/stack.svg
+    documentUuid: Compendium.base-knavery.gear.Item.yrEfZEDLQmcJUCjJ
+    weight: 1
+    range:
+      - 5
+      - 5
+    drawn: false
+    flags: {}
+  - _id: xDa4dI2E1i4D4VIY
+    _key: '!tables.results!7mBmuovTZGOBJjm9.xDa4dI2E1i4D4VIY'
+    type: document
+    name: Falcon
+    description: ''
+    img: systems/base-knavery/icons/falcon.svg
+    documentUuid: Compendium.base-knavery.gear.Item.yhLkzNB3MVWehIFw
+    weight: 1
+    range:
+      - 6
+      - 6
+    drawn: false
+    flags: {}
+  - _id: BTPKWqpEXNNAeKGe
+    _key: '!tables.results!7mBmuovTZGOBJjm9.BTPKWqpEXNNAeKGe'
+    type: document
+    name: Mule
+    description: ''
+    img: systems/base-knavery/icons/donkey.svg
+    documentUuid: Compendium.base-knavery.gear.Item.vdh3zXnnYqrp3XHx
+    weight: 1
+    range:
+      - 7
+      - 7
+    drawn: false
+    flags: {}
+  - _id: CtCzHN3jWRQPMwUT
+    _key: '!tables.results!7mBmuovTZGOBJjm9.CtCzHN3jWRQPMwUT'
+    type: document
+    name: Riding Horse
+    description: ''
+    img: systems/base-knavery/icons/horse.svg
+    documentUuid: Compendium.base-knavery.gear.Item.IMS30aZuAqqKTd6G
+    weight: 1
+    range:
+      - 8
+      - 8
+    drawn: false
+    flags: {}
+  - _id: EkqgReLr4qLpUFWs
+    _key: '!tables.results!7mBmuovTZGOBJjm9.EkqgReLr4qLpUFWs'
+    type: document
+    name: War Horse
+    description: ''
+    img: systems/base-knavery/icons/horse.svg
+    documentUuid: Compendium.base-knavery.gear.Item.12NxBpOiBhG8TNg0
+    weight: 1
+    range:
+      - 9
+      - 9
+    drawn: false
+    flags: {}
+  - _id: 5bv26BQepvIaCAs0
+    _key: '!tables.results!7mBmuovTZGOBJjm9.5bv26BQepvIaCAs0'
+    type: document
+    name: Cart
+    description: ''
+    img: systems/base-knavery/icons/handcart.svg
+    documentUuid: Compendium.base-knavery.gear.Item.5QOIBuMw7CEMM8Px
+    weight: 1
+    range:
+      - 10
+      - 10
+    drawn: false
+    flags: {}
+  - _id: lYiWLgifNhL0AMZH
+    _key: '!tables.results!7mBmuovTZGOBJjm9.lYiWLgifNhL0AMZH'
+    type: document
+    name: Carriage
+    description: ''
+    img: systems/base-knavery/icons/wagon.svg
+    documentUuid: Compendium.base-knavery.gear.Item.7cfDcJAIcnsONf81
+    weight: 1
+    range:
+      - 11
+      - 11
+    drawn: false
+    flags: {}
+  - _id: 9T91fZQNIQizqwCU
+    _key: '!tables.results!7mBmuovTZGOBJjm9.9T91fZQNIQizqwCU'
+    type: document
+    name: Wagon
+    description: ''
+    img: systems/base-knavery/icons/wagon.svg
+    documentUuid: Compendium.base-knavery.gear.Item.rifYe5SEKWBreheh
+    weight: 1
+    range:
+      - 12
+      - 12
+    drawn: false
+    flags: {}
+  - _id: S7yCbLX8uIP9eJtz
+    _key: '!tables.results!7mBmuovTZGOBJjm9.S7yCbLX8uIP9eJtz'
+    type: document
+    name: Rowboat
+    description: ''
+    img: systems/base-knavery/icons/smallcraft.svg
+    documentUuid: Compendium.base-knavery.gear.Item.OJkpBVd9vBMb6kRI
+    weight: 1
+    range:
+      - 13
+      - 13
+    drawn: false
+    flags: {}
+  - _id: e8eMST6fj4y9fyrD
+    _key: '!tables.results!7mBmuovTZGOBJjm9.e8eMST6fj4y9fyrD'
+    type: document
+    name: Fishing Boat
+    description: ''
+    img: systems/base-knavery/icons/smallcraft.svg
+    documentUuid: Compendium.base-knavery.gear.Item.wi3d8A9NHtdVBWHf
+    weight: 1
+    range:
+      - 14
+      - 14
+    drawn: false
+    flags: {}
+  - _id: Vpvq28QtkcgIJeQi
+    _key: '!tables.results!7mBmuovTZGOBJjm9.Vpvq28QtkcgIJeQi'
+    type: document
+    name: Sloop
+    description: ''
+    img: systems/base-knavery/icons/smallcraft.svg
+    documentUuid: Compendium.base-knavery.gear.Item.6EWkCfe7B13yjDgb
+    weight: 1
+    range:
+      - 15
+      - 15
+    drawn: false
+    flags: {}
+  - _id: dSa1iNIKexYTHFO0
+    _key: '!tables.results!7mBmuovTZGOBJjm9.dSa1iNIKexYTHFO0'
+    type: document
+    name: Caravel
+    description: ''
+    img: systems/base-knavery/icons/smallcraft.svg
+    documentUuid: Compendium.base-knavery.gear.Item.F5TRHzK8BvgmyUp2
+    weight: 1
+    range:
+      - 16
+      - 16
+    drawn: false
+    flags: {}
+  - _id: C3Ey9HD7nchQFXOw
+    _key: '!tables.results!7mBmuovTZGOBJjm9.C3Ey9HD7nchQFXOw'
+    type: document
+    name: Galleon
+    description: ''
+    img: systems/base-knavery/icons/smallcraft.svg
+    documentUuid: Compendium.base-knavery.gear.Item.4hzkqMQSYdAVkppa
+    weight: 1
+    range:
+      - 17
+      - 17
+    drawn: false
+    flags: {}
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

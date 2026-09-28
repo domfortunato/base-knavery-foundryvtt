@@ -1,0 +1,52 @@
+_id: kzkIbA9jDfuNoVv0
+_key: '!actors!kzkIbA9jDfuNoVv0'
+name: Blink Dog
+type: npc
+img: systems/base-knavery/art/game-icons/mammals/hound.svg
+system:
+  role: monster
+  level: 4
+  hp:
+    value: 16
+    max: 16
+  armorClass: 14
+  morale: 6
+  movement: 40'
+  numberAppearing: d6 (d6)
+  attacksText: bite (d6)
+  description: ''
+  notes: ''
+prototypeToken:
+  name: Blink Dog
+  actorLink: false
+  disposition: -1
+  texture:
+    src: systems/base-knavery/art/game-icons/mammals/hound.svg
+  bar1:
+    attribute: hp
+items:
+  - _id: RQE86tm9JfRmysHk
+    _key: '!actors.items!kzkIbA9jDfuNoVv0.RQE86tm9JfRmysHk'
+    name: Bite
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: d6
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

@@ -1,0 +1,41 @@
+{{!-- The edge prompt: DialogV2 content. The three buttons (Disadvantage /
+      Normal / Advantage) are the dialog's own footer. --}}
+<div class="knavery-roll-prompt-body">
+  {{#if reason}}
+  <p class="roll-reason"><i class="fas fa-bullhorn"></i> {{reason}}</p>
+  {{/if}}
+  <p class="roll-mode-hint">{{modeHint}}</p>
+  {{#if difficulty}}
+  <div class="form-group">
+    <label for="kn-roll-difficulty">{{localize "KNAVERY.Roll.Difficulty"}}</label>
+    <div class="form-fields">
+      <input type="number" id="kn-roll-difficulty" name="difficulty" min="0" max="20" step="1"
+        value="{{defaultDifficulty}}" {{#if lockDifficulty}}readonly{{/if}} />
+    </div>
+    <p class="hint">{{localize "KNAVERY.Roll.DifficultyHint" target=target}}</p>
+  </div>
+  {{/if}}
+  <div class="form-group">
+    <label for="kn-roll-modifier">{{localize "KNAVERY.Roll.Modifier"}}</label>
+    <div class="form-fields">
+      <input type="number" id="kn-roll-modifier" name="modifier" step="1" value="0" />
+    </div>
+  </div>
+  {{#if attack}}
+  <div class="form-group">
+    <label for="kn-roll-damage">{{localize "KNAVERY.Roll.RollDamageToo"}}</label>
+    <div class="form-fields">
+      <input type="checkbox" id="kn-roll-damage" name="rollDamage" {{checked rollDamage}} />
+    </div>
+  </div>
+  {{#if melee}}
+  <div class="form-group">
+    <label for="kn-roll-power">{{localize "KNAVERY.Roll.PowerAttack"}}</label>
+    <div class="form-fields">
+      <input type="checkbox" id="kn-roll-power" name="power" />
+    </div>
+    <p class="hint">{{localize "KNAVERY.Roll.PowerAttackHint"}}</p>
+  </div>
+  {{/if}}
+  {{/if}}
+</div>

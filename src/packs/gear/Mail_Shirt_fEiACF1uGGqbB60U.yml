@@ -1,0 +1,17 @@
+_id: fEiACF1uGGqbB60U
+_key: '!items!fEiACF1uGGqbB60U'
+name: Mail Shirt
+type: armor
+img: systems/base-knavery/icons/armor.svg
+system:
+  slots: 1
+  quantity: 1
+  armorType: mail
+  points: 1
+  cost: 200
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

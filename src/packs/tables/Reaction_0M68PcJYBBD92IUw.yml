@@ -1,0 +1,29 @@
+_id: 0M68PcJYBBD92IUw
+_key: '!tables!0M68PcJYBBD92IUw'
+name: Reaction
+img: icons/svg/d20-grey.svg
+description: '<p>Empty. The Game Master fills this table: GM Dashboard → Tables → Import.</p>'
+formula: 2d6
+replacement: true
+displayRoll: true
+results:
+  - _id: Onw5mkhDpyEAk8s9
+    _key: '!tables.results!0M68PcJYBBD92IUw.Onw5mkhDpyEAk8s9'
+    type: text
+    name: 'Empty. The Game Master fills this table: GM Dashboard → Tables → Import.'
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 2
+      - 12
+    drawn: false
+    flags:
+      base-knavery:
+        placeholder: true
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+{{!-- The printable sheet. Paper is white: this page is exempt from the
+      theme tokens. Self-contained: styles inline, images absolute. Text
+      fields render escaped; only enriched (server-sanitized) HTML is
+      triple-stashed. --}}
+<html lang="{{lang}}">
+<head>
+<meta charset="utf-8">
+<title>{{name}}</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: Georgia, "Times New Roman", serif; color: #000; background: #fff; max-width: 46rem;
+    margin: 0 auto; padding: 2rem 1.5rem; font-size: 12pt; line-height: 1.45; }
+  header.pc { display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1.5rem; }
+  header.pc .who { flex: 1; min-width: 0; }
+  header.pc img.portrait { width: 90px; height: 90px; object-fit: cover; border-radius: 50%; border: 2px solid #000; }
+  header.pc img.compat { width: 110px; height: auto; margin-left: auto; }
+  header.pc h1 { font-size: 2rem; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.1; }
+  header.pc .pronouns { font-size: 0.9rem; color: #444; font-style: italic; }
+  header.pc .level { font-size: 1.05rem; letter-spacing: 0.12em; text-transform: uppercase; color: #333; }
+  section { margin-bottom: 1.3rem; break-inside: avoid; }
+  h2 { font-size: 0.95rem; letter-spacing: 0.14em; text-transform: uppercase; border-bottom: 1px solid #000;
+    padding-bottom: 0.15rem; margin-bottom: 0.5rem; }
+  .band { display: grid; grid-template-columns: 11fr 9fr; column-gap: 2rem; align-items: start; }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0.2rem 2rem; }
+  .stats .row { display: flex; justify-content: space-between; border-bottom: 1px dotted #999; }
+  .stats .row b { font-style: italic; }
+  ul.inv, ul.plain { list-style: none; }
+  ul.inv li { border-bottom: 1px dashed #999; padding: 0.1rem 0; display: flex; gap: 0.6rem; break-inside: avoid; }
+  ul.inv li .slot { width: 2.4rem; color: #555; }
+  ul.inv li .tags { color: #333; font-style: italic; margin-left: auto; }
+  ul.plain li { margin-bottom: 0.3rem; }
+  .prose p { margin-bottom: 0.5rem; }
+  a { color: inherit; text-decoration: none; }
+  footer { margin-top: 2rem; font-size: 8.5pt; color: #444; border-top: 1px solid #999; padding-top: 0.4rem; }
+  @page { margin: 1.5cm; }
+</style>
+</head>
+<body class="pc-print">
+<header class="pc">
+  {{#if portrait}}<img class="portrait" src="{{portrait}}" alt="">{{/if}}
+  <div class="who">
+    <h1>{{name}}</h1>
+    {{#if pronouns}}<div class="pronouns">{{pronouns}}</div>{{/if}}
+    {{#if isChar}}<div class="level">{{localize "KNAVERY.Level"}} {{level}} · {{levelTitle}}</div>{{/if}}
+  </div>
+  <img class="compat" src="{{logo}}" alt="{{localize 'KNAVERY.MadeForKnave'}}">
+</header>
+
+<div class="band">
+  <div>
+    <section>
+      <h2>{{localize "KNAVERY.Abilities"}}</h2>
+      <div class="stats">
+        {{#each abilities}}<div class="row"><b>{{this.label}}</b><span>+{{this.value}} ({{this.defense}})</span></div>{{/each}}
+      </div>
+    </section>
+    <section>
+      <div class="stats">
+        <div class="row"><b>{{localize "KNAVERY.HP"}}</b><span>{{hp.value}} / {{hp.max}}</span></div>
+        <div class="row"><b>{{localize "KNAVERY.AC"}}</b><span>{{ac}}</span></div>
+        {{#if isChar}}
+        <div class="row"><b>{{localize "KNAVERY.Wounds"}}</b><span>{{wounds}}</span></div>
+        <div class="row"><b>{{localize "KNAVERY.Coins"}}</b><span>{{coins}}</span></div>
+        <div class="row"><b>{{localize "KNAVERY.XP"}}</b><span>{{xp}}{{#if nextXp}} / {{nextXp}}{{/if}}</span></div>
+        <div class="row"><b>{{localize "KNAVERY.Slots"}}</b><span>{{slotsUsed}} / {{slotsMax}}</span></div>
+        {{/if}}
+      </div>
+    </section>
+    <section>
+      <h2>{{localize "KNAVERY.Tab.Items"}}</h2>
+      <ul class="inv">
+        {{#each items}}<li><span class="slot">{{this.slot}}</span><span>{{#if this.equipped}}<b>{{this.name}}</b>{{else}}{{this.name}}{{/if}}</span><span class="tags">{{this.tags}}</span></li>{{/each}}
+      </ul>
+    </section>
+  </div>
+  <div>
+    {{#if careers.length}}
+    <section>
+      <h2>{{localize "KNAVERY.Careers"}}</h2>
+      {{#each careers}}
+      <p><b>{{this.name}}</b></p>
+      {{#if this.description}}<div class="prose">{{{this.description}}}</div>{{/if}}
+      {{#if this.features.length}}<ul class="plain">{{#each this.features}}<li><i>{{this.label}}:</i> {{this.value}}</li>{{/each}}</ul>{{/if}}
+      {{/each}}
+    </section>
+    {{/if}}
+    {{#if isChar}}
+    <section>
+      <h2>{{localize "KNAVERY.Saves"}}</h2>
+      <ul class="plain">{{#each saves}}<li>{{this.label}} — {{this.ability}}</li>{{/each}}</ul>
+    </section>
+    {{/if}}
+    {{#if traits.length}}
+    <section>
+      <h2>{{localize "KNAVERY.Traits"}}</h2>
+      <ul class="plain">{{#each traits}}<li><i>{{this.label}}:</i> {{this.value}}</li>{{/each}}</ul>
+    </section>
+    {{/if}}
+  </div>
+</div>
+
+{{#if biography}}<section><h2>{{localize "KNAVERY.Biography"}}</h2><div class="prose">{{{biography}}}</div></section>{{/if}}
+{{#if notes}}<section class="notes-section"><h2>{{localize "KNAVERY.Tab.Notes"}}</h2><div class="prose">{{{notes}}}</div></section>{{/if}}
+<footer>{{disclaimer}}</footer>
+</body>
+</html>

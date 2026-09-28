@@ -1,0 +1,52 @@
+_id: fA6TwELfa7vwO9Sa
+_key: '!actors!fA6TwELfa7vwO9Sa'
+name: Gnoll
+type: npc
+img: systems/base-knavery/art/game-icons/heads/wolf-head.svg
+system:
+  role: monster
+  level: 2
+  hp:
+    value: 8
+    max: 8
+  armorClass: 14
+  morale: 8
+  movement: 30'
+  numberAppearing: d6
+  attacksText: weapon (2d4)
+  description: ''
+  notes: ''
+prototypeToken:
+  name: Gnoll
+  actorLink: false
+  disposition: -1
+  texture:
+    src: systems/base-knavery/art/game-icons/heads/wolf-head.svg
+  bar1:
+    attribute: hp
+items:
+  - _id: 5OzKs3ZSxRIzUc7J
+    _key: '!actors.items!fA6TwELfa7vwO9Sa.5OzKs3ZSxRIzUc7J'
+    name: Weapon
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: 2d4
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

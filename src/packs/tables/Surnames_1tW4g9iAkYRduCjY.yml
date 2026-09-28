@@ -1,0 +1,29 @@
+_id: 1tW4g9iAkYRduCjY
+_key: '!tables!1tW4g9iAkYRduCjY'
+name: Surnames
+img: icons/svg/d20-grey.svg
+description: '<p>Empty. The Game Master fills this table: GM Dashboard → Tables → Import.</p>'
+formula: 1d100
+replacement: true
+displayRoll: true
+results:
+  - _id: 5JdztIFlbrBTfW1u
+    _key: '!tables.results!1tW4g9iAkYRduCjY.5JdztIFlbrBTfW1u'
+    type: text
+    name: 'Empty. The Game Master fills this table: GM Dashboard → Tables → Import.'
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 1
+      - 100
+    drawn: false
+    flags:
+      base-knavery:
+        placeholder: true
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

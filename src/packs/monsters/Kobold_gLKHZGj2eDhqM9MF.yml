@@ -1,0 +1,52 @@
+_id: gLKHZGj2eDhqM9MF
+_key: '!actors!gLKHZGj2eDhqM9MF'
+name: Kobold
+type: npc
+img: systems/base-knavery/art/game-icons/creatures/lizardman.svg
+system:
+  role: monster
+  level: 1
+  hp:
+    value: 4
+    max: 4
+  armorClass: 12
+  morale: 6
+  movement: 20'
+  numberAppearing: 4d4
+  attacksText: weapon (d4)
+  description: ''
+  notes: ''
+prototypeToken:
+  name: Kobold
+  actorLink: false
+  disposition: -1
+  texture:
+    src: systems/base-knavery/art/game-icons/creatures/lizardman.svg
+  bar1:
+    attribute: hp
+items:
+  - _id: MYsPtTNVLDPL4YAO
+    _key: '!actors.items!gLKHZGj2eDhqM9MF.MYsPtTNVLDPL4YAO'
+    name: Weapon
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: d4
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

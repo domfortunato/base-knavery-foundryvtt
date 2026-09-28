@@ -1,0 +1,18 @@
+_id: thjT32rChxpSS5Bl
+_key: '!items!thjT32rChxpSS5Bl'
+name: Two-Handed Weapon
+type: weapon
+img: systems/base-knavery/art/game-icons/blade/two-handed-sword.svg
+system:
+  slots: 2
+  quantity: 1
+  damage: d8
+  hands: 2
+  attackType: melee
+  cost: 100
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

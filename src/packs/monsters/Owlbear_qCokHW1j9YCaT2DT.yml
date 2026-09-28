@@ -1,0 +1,71 @@
+_id: qCokHW1j9YCaT2DT
+_key: '!actors!qCokHW1j9YCaT2DT'
+name: Owlbear
+type: npc
+img: systems/base-knavery/art/game-icons/mammals/bear-head.svg
+system:
+  role: monster
+  level: 5
+  hp:
+    value: 20
+    max: 20
+  armorClass: 14
+  morale: 9
+  movement: 40'
+  numberAppearing: d4 (d4)
+  attacksText: 2 claw (d8), bite (d8)
+  description: ''
+  notes: ''
+prototypeToken:
+  name: Owlbear
+  actorLink: false
+  disposition: -1
+  texture:
+    src: systems/base-knavery/art/game-icons/mammals/bear-head.svg
+  bar1:
+    attribute: hp
+items:
+  - _id: FmmJjm1HptWT1XUE
+    _key: '!actors.items!qCokHW1j9YCaT2DT.FmmJjm1HptWT1XUE'
+    name: Claw
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: d8
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+  - _id: lwnX1L8jE5cH3B3B
+    _key: '!actors.items!qCokHW1j9YCaT2DT.lwnX1L8jE5cH3B3B'
+    name: Bite
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: d8
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

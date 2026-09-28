@@ -1,0 +1,52 @@
+_id: IqDtvCBA9RAy33tv
+_key: '!actors!IqDtvCBA9RAy33tv'
+name: Vampire
+type: npc
+img: systems/base-knavery/art/game-icons/creatures/vampire-dracula.svg
+system:
+  role: monster
+  level: 8
+  hp:
+    value: 32
+    max: 32
+  armorClass: 17
+  morale: 11
+  movement: 40'
+  numberAppearing: d4 (d6)
+  attacksText: touch (d10)
+  description: ''
+  notes: ''
+prototypeToken:
+  name: Vampire
+  actorLink: false
+  disposition: -1
+  texture:
+    src: systems/base-knavery/art/game-icons/creatures/vampire-dracula.svg
+  bar1:
+    attribute: hp
+items:
+  - _id: f579XCtV0HuFVsRD
+    _key: '!actors.items!IqDtvCBA9RAy33tv.f579XCtV0HuFVsRD'
+    name: Touch
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: d10
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

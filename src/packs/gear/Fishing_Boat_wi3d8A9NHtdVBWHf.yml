@@ -1,0 +1,18 @@
+_id: wi3d8A9NHtdVBWHf
+_key: '!items!wi3d8A9NHtdVBWHf'
+name: Fishing Boat
+type: transport
+img: systems/base-knavery/icons/smallcraft.svg
+system:
+  slots: 0
+  quantity: 1
+  cost: 500
+  capacity: 2000
+  crew: 2
+  speed: ''
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

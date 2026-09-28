@@ -1,0 +1,17 @@
+_id: RTMKFopg7A9bsd86
+_key: '!items!RTMKFopg7A9bsd86'
+name: Arm Plate
+type: armor
+img: systems/base-knavery/icons/armor.svg
+system:
+  slots: 1
+  quantity: 1
+  armorType: armPlate
+  points: 1
+  cost: 500
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

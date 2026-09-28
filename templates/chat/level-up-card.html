@@ -1,0 +1,6 @@
+<div class="knavery-roll-card kind-levelup">
+  <header class="card-title"><h3><i class="fas fa-angles-up"></i> {{localize "KNAVERY.LevelUpCard" name=name level=level title=title}}</h3></header>
+  <p>{{localize "KNAVERY.LevelUpAbilities" abilities=abilities}}</p>
+  {{{rollHtml}}}
+  <p class="card-note">{{#if kept}}{{localize "KNAVERY.LevelUpHpKept" rolled=rolled max=max}}{{else}}{{localize "KNAVERY.LevelUpHpNew" max=max}}{{/if}}</p>
+</div>

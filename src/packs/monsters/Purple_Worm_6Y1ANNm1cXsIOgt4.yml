@@ -1,0 +1,71 @@
+_id: 6Y1ANNm1cXsIOgt4
+_key: '!actors!6Y1ANNm1cXsIOgt4'
+name: Purple Worm
+type: npc
+img: systems/base-knavery/art/game-icons/creatures/purple-tentacle.svg
+system:
+  role: monster
+  level: 15
+  hp:
+    value: 60
+    max: 60
+  armorClass: 13
+  morale: 10
+  movement: 20'
+  numberAppearing: d2 (d4)
+  attacksText: bite (2d8), sting (d8)
+  description: ''
+  notes: ''
+prototypeToken:
+  name: Purple Worm
+  actorLink: false
+  disposition: -1
+  texture:
+    src: systems/base-knavery/art/game-icons/creatures/purple-tentacle.svg
+  bar1:
+    attribute: hp
+items:
+  - _id: pdI3whh1BCOBKeKS
+    _key: '!actors.items!6Y1ANNm1cXsIOgt4.pdI3whh1BCOBKeKS'
+    name: Bite
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: 2d8
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+  - _id: PcIuiuO9EwfBOjQT
+    _key: '!actors.items!6Y1ANNm1cXsIOgt4.PcIuiuO9EwfBOjQT'
+    name: Sting
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: d8
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

@@ -1,0 +1,16 @@
+{
+  "root": true,
+  "env": { "browser": true, "es2024": true },
+  "parserOptions": { "ecmaVersion": "latest", "sourceType": "module" },
+  "extends": "eslint:recommended",
+  "globals": {
+    "foundry": "readonly", "game": "readonly", "ui": "readonly", "canvas": "readonly", "CONFIG": "readonly", "CONST": "readonly",
+    "Hooks": "readonly", "Actor": "readonly", "Item": "readonly", "ChatMessage": "readonly", "Roll": "readonly",
+    "RollTable": "readonly", "Macro": "readonly", "fromUuid": "readonly", "fromUuidSync": "readonly", "getDocumentClass": "readonly"
+  },
+  "rules": {
+    "no-unused-vars": ["warn", { "args": "none" }],
+    "prefer-const": "error",
+    "no-return-await": "error"
+  }
+}

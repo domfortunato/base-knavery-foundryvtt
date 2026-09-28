@@ -1,0 +1,52 @@
+_id: jXLvnbhDvOqjPRoC
+_key: '!actors!jXLvnbhDvOqjPRoC'
+name: Bandit
+type: npc
+img: systems/base-knavery/art/game-icons/heads/bandit.svg
+system:
+  role: monster
+  level: 1
+  hp:
+    value: 4
+    max: 4
+  armorClass: 13
+  morale: 8
+  movement: 40'
+  numberAppearing: d8
+  attacksText: weapon (d6)
+  description: ''
+  notes: ''
+prototypeToken:
+  name: Bandit
+  actorLink: false
+  disposition: -1
+  texture:
+    src: systems/base-knavery/art/game-icons/heads/bandit.svg
+  bar1:
+    attribute: hp
+items:
+  - _id: BbRaRYkUzZ6gmvrJ
+    _key: '!actors.items!jXLvnbhDvOqjPRoC.BbRaRYkUzZ6gmvrJ'
+    name: Weapon
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: d6
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

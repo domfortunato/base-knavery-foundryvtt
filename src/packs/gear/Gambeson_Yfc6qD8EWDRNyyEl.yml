@@ -1,0 +1,17 @@
+_id: Yfc6qD8EWDRNyyEl
+_key: '!items!Yfc6qD8EWDRNyyEl'
+name: Gambeson
+type: armor
+img: systems/base-knavery/icons/armor.svg
+system:
+  slots: 1
+  quantity: 1
+  armorType: gambeson
+  points: 1
+  cost: 100
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

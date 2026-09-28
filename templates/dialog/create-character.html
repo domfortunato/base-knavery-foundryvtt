@@ -1,0 +1,20 @@
+<div class="knavery-create-body">
+  <p>{{localize "KNAVERY.Gen.Intro"}}</p>
+  <div class="form-group">
+    <label for="kn-create-name">{{localize "KNAVERY.Name"}}</label>
+    <div class="form-fields"><input type="text" id="kn-create-name" name="name" placeholder="{{localize 'KNAVERY.Gen.NameHint'}}" /></div>
+  </div>
+  <div class="form-group">
+    <label for="kn-create-level">{{localize "KNAVERY.Level"}}</label>
+    <div class="form-fields">
+      <select id="kn-create-level" name="level">
+        {{#each levels}}<option value="{{this.level}}" {{#if (eq this.level ../min)}}selected{{/if}}>{{this.level}} — {{this.title}}</option>{{/each}}
+      </select>
+    </div>
+    <p class="hint">{{localize "KNAVERY.Gen.LevelHint"}}</p>
+  </div>
+  <ul class="knavery-create-branches">
+    <li><i class="fas fa-dice-d6"></i> <strong>{{localize "KNAVERY.Gen.Random"}}</strong> — {{localize "KNAVERY.Gen.RandomHint"}}</li>
+    <li><i class="fas fa-file"></i> <strong>{{localize "KNAVERY.Gen.Blank"}}</strong> — {{localize "KNAVERY.Gen.BlankHint"}}</li>
+  </ul>
+</div>

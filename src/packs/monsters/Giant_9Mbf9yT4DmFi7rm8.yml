@@ -1,0 +1,71 @@
+_id: 9Mbf9yT4DmFi7rm8
+_key: '!actors!9Mbf9yT4DmFi7rm8'
+name: Giant
+type: npc
+img: systems/base-knavery/art/game-icons/creatures/giant.svg
+system:
+  role: monster
+  level: 8
+  hp:
+    value: 32
+    max: 32
+  armorClass: 15
+  morale: 8
+  movement: 40'
+  numberAppearing: d4 (2d4)
+  attacksText: weapon (2d8), boulder (3d6)
+  description: ''
+  notes: ''
+prototypeToken:
+  name: Giant
+  actorLink: false
+  disposition: -1
+  texture:
+    src: systems/base-knavery/art/game-icons/creatures/giant.svg
+  bar1:
+    attribute: hp
+items:
+  - _id: 2TtFPT8PAbcr14L1
+    _key: '!actors.items!9Mbf9yT4DmFi7rm8.2TtFPT8PAbcr14L1'
+    name: Weapon
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: 2d8
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+  - _id: IMGvg17MKU1VPC9u
+    _key: '!actors.items!9Mbf9yT4DmFi7rm8.IMGvg17MKU1VPC9u'
+    name: Boulder
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: 3d6
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

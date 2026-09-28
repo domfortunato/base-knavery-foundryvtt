@@ -1,0 +1,52 @@
+_id: nrSLadtdD3Ebwfoo
+_key: '!actors!nrSLadtdD3Ebwfoo'
+name: Skeleton
+type: npc
+img: systems/base-knavery/art/game-icons/heads/dead-head.svg
+system:
+  role: monster
+  level: 1
+  hp:
+    value: 4
+    max: 4
+  armorClass: 12
+  morale: 12
+  movement: 20'
+  numberAppearing: 3d4
+  attacksText: weapon (d6)
+  description: ''
+  notes: ''
+prototypeToken:
+  name: Skeleton
+  actorLink: false
+  disposition: -1
+  texture:
+    src: systems/base-knavery/art/game-icons/heads/dead-head.svg
+  bar1:
+    attribute: hp
+items:
+  - _id: CYbM04ILQ2sxicaU
+    _key: '!actors.items!nrSLadtdD3Ebwfoo.CYbM04ILQ2sxicaU'
+    name: Weapon
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: d6
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

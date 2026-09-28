@@ -1,0 +1,105 @@
+_id: iCwRmMTXx4e05OAD
+_key: '!tables!iCwRmMTXx4e05OAD'
+name: 'Market: Clothing'
+img: icons/svg/coins.svg
+description: ''
+formula: 1d7
+replacement: true
+displayRoll: true
+results:
+  - _id: 68pVWLF5SOxdbeo4
+    _key: '!tables.results!iCwRmMTXx4e05OAD.68pVWLF5SOxdbeo4'
+    type: document
+    name: Clothing (Poor)
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear.Item.lbEC8xoeKUzHFeNp
+    weight: 1
+    range:
+      - 1
+      - 1
+    drawn: false
+    flags: {}
+  - _id: WWw3Nw9lhOlKNa0P
+    _key: '!tables.results!iCwRmMTXx4e05OAD.WWw3Nw9lhOlKNa0P'
+    type: document
+    name: Clothing (Humble)
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear.Item.dJ144ReHECAuohOt
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    flags: {}
+  - _id: o5eF9ZJ7LJaD64XU
+    _key: '!tables.results!iCwRmMTXx4e05OAD.o5eF9ZJ7LJaD64XU'
+    type: document
+    name: Clothing (Respectable)
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear.Item.nA2mm2xdwASvbBX5
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    flags: {}
+  - _id: FF3XBtHfnowkDaV4
+    _key: '!tables.results!iCwRmMTXx4e05OAD.FF3XBtHfnowkDaV4'
+    type: document
+    name: Clothing (Wealthy)
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear.Item.UXlDQJH0jBCA9Xww
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    flags: {}
+  - _id: wolhZVigj23XeZSg
+    _key: '!tables.results!iCwRmMTXx4e05OAD.wolhZVigj23XeZSg'
+    type: document
+    name: Clothing (Minor Noble)
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear.Item.bwcINwdi7X4ovmDB
+    weight: 1
+    range:
+      - 5
+      - 5
+    drawn: false
+    flags: {}
+  - _id: sq3iMSLR8pSF4pC1
+    _key: '!tables.results!iCwRmMTXx4e05OAD.sq3iMSLR8pSF4pC1'
+    type: document
+    name: Clothing (Major Noble)
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear.Item.ySI53eyduNy1164l
+    weight: 1
+    range:
+      - 6
+      - 6
+    drawn: false
+    flags: {}
+  - _id: aeau2ZKsvaY0hqyT
+    _key: '!tables.results!iCwRmMTXx4e05OAD.aeau2ZKsvaY0hqyT'
+    type: document
+    name: Clothing (Royal)
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear.Item.CjIPwL39JM8UH2hl
+    weight: 1
+    range:
+      - 7
+      - 7
+    drawn: false
+    flags: {}
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

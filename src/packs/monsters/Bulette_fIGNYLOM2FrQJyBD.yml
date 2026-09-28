@@ -1,0 +1,71 @@
+_id: fIGNYLOM2FrQJyBD
+_key: '!actors!fIGNYLOM2FrQJyBD'
+name: Bulette
+type: npc
+img: systems/base-knavery/art/game-icons/creatures/swallower.svg
+system:
+  role: monster
+  level: 9
+  hp:
+    value: 36
+    max: 36
+  armorClass: 19
+  morale: 11
+  movement: 50'
+  numberAppearing: 0 (d2)
+  attacksText: bite (4d12), 2 claw (3d6)
+  description: ''
+  notes: ''
+prototypeToken:
+  name: Bulette
+  actorLink: false
+  disposition: -1
+  texture:
+    src: systems/base-knavery/art/game-icons/creatures/swallower.svg
+  bar1:
+    attribute: hp
+items:
+  - _id: wg0FmkNbYsfpEqyX
+    _key: '!actors.items!fIGNYLOM2FrQJyBD.wg0FmkNbYsfpEqyX'
+    name: Bite
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: 4d12
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+  - _id: wD29rVUqaB2VzNxv
+    _key: '!actors.items!fIGNYLOM2FrQJyBD.wD29rVUqaB2VzNxv'
+    name: Claw
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: 3d6
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0

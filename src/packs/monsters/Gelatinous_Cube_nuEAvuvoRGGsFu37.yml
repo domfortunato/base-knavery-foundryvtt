@@ -1,0 +1,52 @@
+_id: nuEAvuvoRGGsFu37
+_key: '!actors!nuEAvuvoRGGsFu37'
+name: Gelatinous Cube
+type: npc
+img: systems/base-knavery/art/game-icons/creatures/transparent-slime.svg
+system:
+  role: monster
+  level: 4
+  hp:
+    value: 16
+    max: 16
+  armorClass: 11
+  morale: 12
+  movement: 10'
+  numberAppearing: ''
+  attacksText: touch (2d4)
+  description: ''
+  notes: ''
+prototypeToken:
+  name: Gelatinous Cube
+  actorLink: false
+  disposition: -1
+  texture:
+    src: systems/base-knavery/art/game-icons/creatures/transparent-slime.svg
+  bar1:
+    attribute: hp
+items:
+  - _id: ArYnS7mhFPHHmkEg
+    _key: '!actors.items!nuEAvuvoRGGsFu37.ArYnS7mhFPHHmkEg'
+    name: Touch
+    type: weapon
+    img: systems/base-knavery/icons/weapons.svg
+    system:
+      damage: 2d4
+      attackType: melee
+      slots: 0
+      quantity: 1
+      equipped: true
+      hands: 1
+      cost: 0
+    effects: []
+    flags: {}
+    _stats:
+      coreVersion: '14.367'
+      systemId: base-knavery
+      systemVersion: 0.1.0
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.367'
+  systemId: base-knavery
+  systemVersion: 0.1.0
