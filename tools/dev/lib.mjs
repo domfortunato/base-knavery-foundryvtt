@@ -235,89 +235,40 @@ export function watchErrors(page) {
 }
 
 /** Join the world as the first available user (the Gamemaster on a fresh world). */
+/**
+ * Join through /join. Foundry v14 shows either a user <select> or, when the
+ * world hides its user list, a plain username field; both are handled.
+ */
+async function joinWith(page, name) {
+  await page.goto(`${FOUNDRY_URL}/join`, { waitUntil: "networkidle", timeout: 60000 });
+  const text = page.locator('input[name="username"]');
+  if (await text.count()) {
+    await text.fill(name ?? "Gamemaster");
+  } else {
+    await page.waitForSelector('select[name="userid"] option[value]:not([value=""])', { state: "attached", timeout: 30000 });
+    const picked = await page.evaluate((name) => {
+      const s = document.querySelector('select[name="userid"]');
+      const opt = [...s.options].find((o) => o.value && (!name || o.textContent.trim() === name));
+      if (!opt) return null;
+      s.value = opt.value;
+      s.dispatchEvent(new Event("change", { bubbles: true }));
+      return opt.value;
+    }, name);
+    if (!picked) throw new Error(`join: no user named "${name}"`);
+  }
+  await page.locator('button[type="submit"][name="join"]').first().click({ timeout: 15000 });
+  await page.waitForFunction(() => globalThis.game?.ready === true, null, { timeout: 90000 });
+  await dismissChrome(page);
+}
+
 export async function joinAsGM(page) {
-  await page.goto(`${FOUNDRY_URL}/join`, { waitUntil: "networkidle", timeout: 60000 });
-
-  // Wait for the CONTROL, not the network — the join form is rendered
-  // client-side and is routinely still absent at networkidle. This wait used to
-  // be missing here (it has always been in `joinAs` below), and the two silent
-  // `return`s underneath turned that into a 90-second hang with a useless
-  // message: no user got selected, the submit posted an empty form, and the
-  // probe sat on `game.ready` until the timeout. It survived because the FIRST
-  // join of a run is slow enough to have rendered by itself; the failure only
-  // appears when a probe closes a GM context and re-joins mid-run, which
-  // `dev:connections` is the first probe to do.
-  await page.waitForSelector('select[name="userid"] option[value]:not([value=""])', {
-    state: "attached", timeout: 30000,
-  });
-
-  // Foundry v14 hides <select> behind custom elements, so Playwright's
-  // selectOption() sees it as invisible. Drive the underlying element directly.
-  const picked = await page.evaluate(() => {
-    const s = document.querySelector('select[name="userid"]');
-    if (!s) return null;
-    const opt = [...s.options].find(o => o.value);
-    if (!opt) return null;
-    s.value = opt.value;
-    s.dispatchEvent(new Event("change", { bubbles: true }));
-    return opt.textContent.trim();
-  });
-  // Fail LOUDLY and immediately. Returning quietly here is what bought the
-  // 90-second timeout above; a thrown error names the real problem.
-  if (!picked) throw new Error("joinAsGM: the join form never offered a user");
-  await page.locator('button[type="submit"][name="join"], form#join-game button[type="submit"]')
-    .first().click({ timeout: 15000 });
-
-  await page.waitForFunction(() => globalThis.game?.ready === true, null, { timeout: 90000 });
-  await dismissChrome(page);
+  return joinWith(page, process.env.FOUNDRY_GM ?? "Gamemaster");
 }
 
-/**
- * Join the world as a NAMED user — the only way to exercise permission behaviour,
- * since a GM passes every ownership check and so can never reproduce a player's
- * failure. Pair with `create-players.mjs`, which seeds Alice and Bob.
- *
- * Give each session its own browser CONTEXT: Foundry keys the session cookie per
- * origin, so two pages in one context are the same logged-in user.
- *
- * @param {import("playwright").Page} page
- * @param {String} name  a User name that already exists in the world
- */
 export async function joinAs(page, name) {
-  await page.goto(`${FOUNDRY_URL}/join`, { waitUntil: "networkidle", timeout: 60000 });
-  // The join form is rendered client-side, so it can still be absent at
-  // networkidle. Wait for the control itself rather than the network.
-  await page.waitForSelector('select[name="userid"] option[value]:not([value=""])', {
-    state: "attached", timeout: 30000,
-  });
-
-  const picked = await page.evaluate((name) => {
-    // v14 hides <select> behind custom elements — drive the underlying element.
-    const s = document.querySelector('select[name="userid"]');
-    if (!s) return null;
-    const opt = [...s.options].find((o) => o.textContent.trim() === name);
-    if (!opt) return null;
-    s.value = opt.value;
-    s.dispatchEvent(new Event("change", { bubbles: true }));
-    return opt.value;
-  }, name);
-  if (!picked) throw new Error(`joinAs: no user named "${name}" — run \`npm run dev:players\` first`);
-
-  await page.locator('button[type="submit"][name="join"], form#join-game button[type="submit"]')
-    .first().click({ timeout: 15000 });
-  await page.waitForFunction(() => globalThis.game?.ready === true, null, { timeout: 90000 });
-  await dismissChrome(page);
+  return joinWith(page, name);
 }
 
-/**
- * Answer the Kettlewright importer's options dialog, which opens between the
- * import button and the file picker. Informational since the background gate
- * retired (2026-09-01, user ruling), so answering it is pressing the button
- * that opens the picker.
- *
- * Shared, because several e2es drive this flow and a dialog nobody dismisses
- * looks exactly like an importer that silently did nothing.
- */
 export async function confirmImportOptions(page) {
   await page.waitForSelector(".kwi-options", { timeout: 15000 });
   await page.evaluate(() => {

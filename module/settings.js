@@ -77,9 +77,7 @@ export const registerSettings = () => {
   reg("min-creation-level", { label: "MinCreationLevel", type: Number, choices: levels, default: 1 });
   reg("max-creation-level", { label: "MaxCreationLevel", type: Number, choices: levels, default: MAX_LEVEL });
   reg("custom-portrait-folder", {
-    label: "CustomPortraitFolder",
-    type: new foundry.data.fields.FilePathField({ categories: [], blank: true, initial: "knavery-portraits" }),
-    default: "knavery-portraits",
+    label: "CustomPortraitFolder", type: String, filePicker: "folder", default: "knavery-portraits",
   });
 
   /* Inventory */
