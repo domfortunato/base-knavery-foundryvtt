@@ -1,0 +1,81 @@
+Base Knavery — licensing
+========================
+
+THIS DISTRIBUTION IS NOT UNDER A SINGLE LICENCE.
+
+The MIT text at the bottom of this file covers the SOFTWARE ONLY. The art, the
+icons, the fonts and the "Made for Knave" logos are licensed separately by their
+own authors, on terms MIT neither restates nor overrides.
+
+
+Knave 2e compatibility
+----------------------
+
+Base Knavery is an independent production of Dom Bosco and is not affiliated
+with Questing Beast LLC.
+
+It is compatible with Knave 2e under the Knave: Second Edition Third Party
+License, Version 1.0. That licence permits reuse of the general concepts, rules
+and game mechanics of Knave: Second Edition. It does not permit verbatim
+passages of its text or its art, and this system ships none: every rollable
+table ships as an empty shell for the Game Master to fill, and the bestiary
+carries statistics only. The Knave: Second Edition logo and the Questing Beast
+logo are not used anywhere in this system.
+
+This system contains no text from Dungeon Crawl Classics.
+
+
+What ships under which licence
+------------------------------
+
+Code — MIT
+    module/  templates/  css/  tools/  lang/  src/packs/macros/  system.json
+    Descends from Air Bladder (MIT, © Dom Bosco), itself descended from
+    Cairn-FoundryVTT by Yochai Gal & Oskar Świda (MIT).
+
+"Made for Knave" logos — logo/
+    © Questing Beast LLC, used as permitted by section 3 of the Knave: Second
+    Edition Third Party License. Not covered by MIT.
+
+Icons and the Game-Icons gallery — CC BY 3.0
+    icons/ and art/game-icons/, from https://game-icons.net. Every author is
+    credited in icons/CREDITS.md and art/game-icons/CREDITS.md.
+
+Jon Aspeheim portraits — CC BY 4.0
+    art/jon-aspeheim/. See art/jon-aspeheim/license.txt.
+
+Tlomdev's Tokens — CC BY-SA 4.0
+    art/tlomdev/. See art/tlomdev/license.txt and CREDITS.md.
+
+Lydia Comer galleries — CC BY-NC-SA 4.0
+    art/lydia-comer/. See art/lydia-comer/license.txt. NonCommercial: while
+    these galleries ship with it, this system as a whole may not be sold.
+
+Alegreya fonts — SIL Open Font License 1.1
+    fonts/. See fonts/OFL.txt.
+
+
+MIT License (code only)
+-----------------------
+
+Copyright (c) 2026 Dom Bosco
+Copyright (c) Air Bladder contributors
+Copyright (c) Yochai Gal & Oskar Świda (Cairn-FoundryVTT)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

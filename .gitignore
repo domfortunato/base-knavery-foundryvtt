@@ -1,0 +1,19 @@
+node_modules/
+.idea/
+.vscode/
+.DS_Store
+
+# Generated LevelDB compendia, built from src/packs/ by `npm run build:packs`.
+# Anchored: an unanchored `packs/` would also ignore src/packs/.
+/packs/
+
+# Sync marker and scratch for the build:packs guard (local state).
+.pack-sync.json
+.pack-guard-tmp/
+
+# Probe screenshots.
+/tools/dev/out/
+
+# The Knave 2e rulebook and licence PDFs are reference material, not ours to
+# redistribute. Only the "Made for Knave" logos (copied into logo/) ship.
+/questing-beast/*.pdf

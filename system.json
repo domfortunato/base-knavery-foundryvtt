@@ -1,0 +1,83 @@
+{
+  "id": "base-knavery",
+  "title": "Base Knavery",
+  "description": "A Foundry VTT system compatible with Knave 2e, built for running OSR modules and Knave hacks. Base Knavery is an independent production of Dom Bosco and is not affiliated with Questing Beast LLC.",
+  "version": "0.0.1",
+  "authors": [
+    {
+      "name": "Dom Bosco",
+      "url": "https://github.com/domfortunato"
+    }
+  ],
+  "url": "https://github.com/domfortunato/base-knavery-foundryvtt",
+  "license": "LICENSE.txt",
+  "readme": "README.md",
+  "bugs": "https://github.com/domfortunato/base-knavery-foundryvtt/issues",
+  "changelog": "https://github.com/domfortunato/base-knavery-foundryvtt/blob/master/CHANGELOG.md",
+  "manifest": "https://github.com/domfortunato/base-knavery-foundryvtt/releases/latest/download/system.json",
+  "download": "https://github.com/domfortunato/base-knavery-foundryvtt/releases/latest/download/system.zip",
+  "compatibility": {
+    "minimum": "14.365",
+    "verified": "14.367"
+  },
+  "esmodules": [
+    "module/knavery.js"
+  ],
+  "styles": [
+    {
+      "src": "css/knavery.css"
+    }
+  ],
+  "socket": true,
+  "documentTypes": {
+    "Actor": {
+      "character": {
+        "htmlFields": ["biography", "notes"]
+      },
+      "npc": {
+        "htmlFields": ["description", "notes"]
+      }
+    },
+    "Item": {
+      "item": {
+        "htmlFields": ["description"]
+      },
+      "weapon": {
+        "htmlFields": ["description"]
+      },
+      "armor": {
+        "htmlFields": ["description"]
+      },
+      "spellbook": {
+        "htmlFields": ["description"]
+      },
+      "career": {
+        "htmlFields": ["description"]
+      },
+      "transport": {
+        "htmlFields": ["description"]
+      }
+    }
+  },
+  "packs": [],
+  "packFolders": [],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "grid": {
+    "distance": 5,
+    "units": "ft"
+  },
+  "primaryTokenAttribute": "hp",
+  "secondaryTokenAttribute": null,
+  "flags": {
+    "hotReload": {
+      "extensions": ["css", "html", "hbs", "json"],
+      "paths": ["css", "templates", "lang"]
+    }
+  }
+}

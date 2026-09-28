@@ -1,0 +1,4137 @@
+@font-face {
+    src: url("../fonts/Alegreya-Regular.woff2");
+    font-family: "Alegreya";
+}
+
+@font-face {
+    src: url("../fonts/Alegreya-Medium.woff2");
+    font-family: "Alegreya";
+    font-weight: 500;
+}
+
+@font-face {
+    src: url("../fonts/Alegreya-Bold.woff2");
+    font-family: "Alegreya";
+    font-weight: bold;
+}
+
+/******************************************************************************
+ * General style.                                                             * 
+ ******************************************************************************/
+
+/******************************************************************************
+ * PALETTE. Every colour the system chooses for itself is named here, once.
+ *
+ * DECIDED 2026-07-28: the sheets FOLLOW THE VIEWER'S COLOUR SCHEME. They are not
+ * pinned to `theme-light`. See docs/theming.md for the decision and its evidence;
+ * the short version is that ApplicationV1 force-tags every window `themed
+ * theme-light` (client/appv1/api/application-v1.mjs:79-81) and ApplicationV2 does
+ * not, so porting a sheet hands us a dark mode whether we want one or not. The
+ * only two options were to style it or to pin the light classes forever, and
+ * pinning means shipping a sheet that ignores a setting the player chose.
+ *
+ * THE RULE, and it is the whole point of this block: a colour the system picks
+ * goes in a token below. No literal colour anywhere else in this file, except a
+ * pair that carries BOTH its foreground and its background (the status banners,
+ * the black label bars) and is therefore scheme-independent by construction.
+ *
+ * The light values are the ones this sheet has always shipped, unchanged, so the
+ * default appearance is untouched. Only the dark block below is new.
+ ******************************************************************************/
+:root {
+    /* Text, darkest to faintest. */
+    --kn-ink: #191813;              /* primary sheet text */
+    --kn-muted: #4a4335;            /* secondary: hints, labels, disabled states */
+    --kn-faint: #6b6559;            /* tertiary: a counter's "/ max" */
+    --kn-on-bar: #f5f5f5;           /* text sitting ON --kn-bar */
+
+    /* Structure. */
+    --kn-bar: black;                /* the filled label bars and the name field */
+    --kn-line: black;               /* the 2px frame around counters and controls */
+    --kn-rule: #b5b3a4;             /* separator between item-list rows */
+    --kn-rule-strong: #7a7971;      /* border around a panel (scar list, tab strip) */
+    --kn-hairline: rgba(0, 0, 0, 0.15);  /* faintest divider */
+    --kn-edge: rgba(0, 0, 0, 0.2);       /* box outlines in the authoring form */
+    --kn-wash: rgba(0, 0, 0, 0.05);      /* row hover, tag fill */
+    --kn-wash-strong: rgba(0, 0, 0, 0.08);
+    --kn-chip-border: #999;
+    --kn-chip-border-strong: #555;  /* marks a grant-source chip apart */
+
+    /* A warm off-white for the sheet's custom checkboxes, so they sit IN the
+       parchment instead of glaring as cold-white patches. Deliberately NOT
+       darkened for dark mode: a control should stand out from the sheet, and
+       keeping it light keeps its tick legible on both schemes. --kn-tick is
+       COUPLED to it -- darken the surface and the tick must lighten to match, or
+       the checkbox silently stops showing whether it is checked. */
+    --kn-surface: #f1ead8;
+    --kn-tick: black;
+
+    /* Semantic accents. */
+    --kn-peril: #c62828;            /* an ability in peril, the crit-damage skull */
+    --kn-error: #a11;               /* authoring-form errors */
+    --kn-amber: #c07800;            /* a value below max, an armor override */
+    --kn-warn: #9a6a00;             /* authoring-form warnings, gold totals */
+    --kn-ok: #2a6;
+    --kn-ok-strong: #1a7a3a;
+    --kn-gold: #b8860b;             /* the coins-as-slots row icon */
+    --kn-accent: #12a3b4;           /* teal: Die of Fate, fatigue, selection */
+    --kn-accent-wash: rgba(18, 163, 180, 0.12);   /* fatigue-row tint */
+    --kn-ok-wash: rgba(34, 170, 102, 0.18);       /* snapshot chip fill */
+
+    /* The Vald calendar's season tints. FAINT on purpose: the grid has to stay
+       readable first, and the tint exists to make a MID-MONTH season boundary
+       visible at all — the glyph on the boundary day states it outright for
+       anyone who cannot see the difference. */
+    --kn-season-dead: rgba(120, 150, 190, 0.12);
+    --kn-season-dry: rgba(200, 160, 80, 0.12);
+    --kn-season-wet: rgba(80, 140, 190, 0.12);
+    --kn-season-harvest: rgba(190, 150, 60, 0.14);
+    --kn-season-reclamation: rgba(150, 120, 190, 0.14);
+
+    /* Whisper tiles. Core paints every whispered message a cool lavender
+       (--color-whisper-background #e8e8ef, foundry2.css:513) that clashes with
+       the warm parchment of every other tile. These keep a whisper distinct but
+       in the sheet's warm family; the teal stripe (--kn-accent) does the
+       "private" signalling.
+       DELIBERATELY NO DARK OVERRIDE: core's chat tiles are parchment-light in
+       BOTH client themes, and their text colour stays dark to match — so a
+       whisper surface keyed to the CLIENT theme goes near-black behind
+       still-dark text (shipped that way for one evening, user report
+       2026-08-08, illegible). The tile's colour world is always light; these
+       follow the tile, not the theme. The stripe is its own token for the
+       same reason: --kn-accent flips to the near-black-backdrop teal in dark,
+       which washes out on parchment. */
+    --kn-whisper-bg: #ece7d8;
+    --kn-whisper-border: #8a8172;
+    --kn-whisper-stripe: #12a3b4;   /* = light --kn-accent, pinned */
+
+    /* The GLOG tag on cast cards: the Die of Fate glow recast in violet --
+       magic gets its own colour beside the teal (a choice you make) and the
+       error red (a consequence). Chat-only, so PINNED like the whisper tokens
+       above: the tile is parchment in both themes and the colour follows the
+       tile, not the theme. */
+    --kn-glog: #8a2be2;
+
+    /* The whisper's Add-N-Fatigue button glows in the teal Fatigue wears in
+       the inventory (.fatigue-row's --kn-accent), so the button and the rows
+       it mints share a colour (user ask, 2026-08-10). Chat-only, so pinned at
+       the LIGHT accent for the same reason as the stripe: the dark-theme teal
+       washes out on a tile that is parchment in both themes. */
+    --kn-fatigue-chat: #12a3b4;
+
+    /* The initiative save card's outcome (user ask, 2026-09-06): a passed
+       save's total goes green, a failed one red, so "acts before the enemies"
+       reads as a success at a glance. Chat-only, so PINNED like the whisper
+       tokens above — the tile is parchment in both client themes. Same hues
+       as --kn-ok-strong / --kn-peril's light values, deliberately restated:
+       those tokens flip with the theme, these must not. */
+    --kn-save-pass-chat: #1a7a3a;
+    --kn-save-fail-chat: #c62828;
+}
+
+/* Dark scheme.
+   Set on the SURFACES Foundry has actually themed, never on <body> -- custom
+   properties inherit, and an ApplicationV1 window force-tags ITSELF theme-light
+   while still living inside a dark <body>. Tokens set on body would therefore
+   leak into a sheet that is demonstrably still on parchment. The
+   :not(.theme-light) guard is what keeps the half-migrated state honest, and it
+   can be dropped once no AppV1 sheet is left. */
+.theme-dark :is(.knavery, .application, .chat-message):not(.theme-light),
+:is(.knavery, .application, .chat-message).theme-dark {
+    --kn-ink: #efe6d8;
+    --kn-muted: #b9ad99;
+    --kn-faint: #8f8779;
+    /* --kn-on-bar and --kn-bar are unchanged: a black bar with near-white text
+       is legible on either scheme, and it is the sheet's signature. */
+
+    --kn-line: #7a7266;
+    --kn-rule: #4f483e;
+    --kn-rule-strong: #6f6659;
+    --kn-hairline: rgba(255, 255, 255, 0.15);
+    --kn-edge: rgba(255, 255, 255, 0.22);
+    --kn-wash: rgba(255, 255, 255, 0.07);
+    --kn-wash-strong: rgba(255, 255, 255, 0.1);
+    --kn-chip-border: #6e675c;
+    --kn-chip-border-strong: #8f8779;
+
+    --kn-peril: #ff6b6b;
+    --kn-error: #ff7b7b;
+    --kn-amber: #e8a33c;
+    --kn-warn: #d4a63f;
+    --kn-ok: #4fd08a;
+    --kn-ok-strong: #4fd08a;
+    --kn-gold: #d9a93a;
+    --kn-accent: #35c8da;
+    /* Both washes go up: a 12% tint that reads as a wash on parchment is
+       invisible against a near-black backdrop. */
+    --kn-accent-wash: rgba(53, 200, 218, 0.18);
+    --kn-ok-wash: rgba(79, 208, 138, 0.22);
+
+    /* The season tints go up for the same reason the washes above do. */
+    --kn-season-dead: rgba(140, 175, 215, 0.18);
+    --kn-season-dry: rgba(220, 180, 100, 0.18);
+    --kn-season-wet: rgba(100, 165, 215, 0.18);
+    --kn-season-harvest: rgba(215, 175, 80, 0.20);
+    --kn-season-reclamation: rgba(175, 145, 215, 0.20);
+
+    /* --kn-whisper-bg/border are deliberately NOT overridden here — see the
+       light block: the chat tile they paint is parchment in both themes. */
+}
+
+.knavery.sheet.actor,
+.knavery.sheet.item {
+    min-height: 480px;
+    min-width: 480px;
+}
+
+/* Sheet background: intentionally left to Foundry. Do NOT set one here -- we
+   used to force a flat #f5f5f5 (which also killed the parchment via
+   background-image: none); that override was removed 2026-07-23.
+
+   What Foundry gives a sheet, measured on 14.365 rather than assumed:
+     light   --background: url(ui/parchment.jpg)   -- an IMAGE, not a colour
+     dark    --background: rgba(11, 10, 19, 0.9)   -- over the black body
+
+   The image is why `tools/dev/probe-theme.mjs` samples the backdrop instead of
+   walking ancestors for a background-colour: the walk falls through parchment to
+   <body>'s black and reports every dark-on-parchment label as unreadable, in
+   BOTH schemes. Identical light and dark output is the tell that it happened.
+
+   Note an ApplicationV1 window keeps parchment even when tagged theme-dark --
+   its chrome is legacy CSS and only the variables flip -- so tagging an AppV1
+   sheet does not preview the post-port state. The probe paints on the measured
+   AppV2 backdrop to simulate it. */
+
+/* ApplicationV2 drops three things AppV1's window chrome supplied, and every
+   sheet grid in this file was laid out against them. Restored here rather than
+   re-tuning the grids, because the geometry is deliberate and documented:
+
+   1. `overflow: hidden auto` on .window-content (foundry2.css:6237). AppV2 uses a
+      flat `overflow: hidden`, so a sheet taller than its window is CLIPPED
+      instead of scrolling. That is not a cosmetic difference: the grid stops
+      being able to grow, its rows collapse to their minimums, and the name
+      section's HP/Gold counters end up painted on top of STR and Armor.
+   2. `padding: 8px` (foundry2.css:13146). AppV2 uses --spacer-16, i.e. double,
+      which costs 16px of height on a layout with fixed 140px/112px rows.
+   3. `.window-content > * { flex: 1 }` (foundry2.css:13150), which is what lets
+      the grid take the full height and then exceed it. Without it the grid is
+      `flex: 0 1 auto` and gets shrunk to the window instead. */
+.knavery.sheet .window-content {
+    padding: 8px;
+    overflow: hidden auto;
+}
+
+.knavery.sheet .window-content > * {
+    flex: 1;
+}
+
+/* Give the editor room. Height only -- do NOT set `display` here. Foundry lays
+   <prose-mirror> out as `display: flex; flex-direction: column` and its
+   .editor-content is `position: absolute; inset: 0` inside a `flex: 1`
+   container (foundry2.css:13548, :13581, :13589). Overriding display to block
+   leaves the container with no height, so the editable area computes to 0px:
+   the editor renders, reports contenteditable="true", holds the right value,
+   and simply cannot be clicked into. That is what "the notes editor doesn't
+   work" turned out to be. Gated by `npm run dev:notes-editor`. */
+.knavery prose-mirror {
+    height: 100%;
+    min-height: 480px;
+}
+
+/******************************************************************************
+ * Character sheet grid.                                                      * 
+ ******************************************************************************/
+
+.charater-sheet-grid {
+    display: grid;
+    column-gap: 8px;
+    /* Match the 2px gap between the ability rows (STR/DEX/WIL) so the HP/Gold
+       row sits the same distance above STR/Armor as the ability rows sit apart,
+       rather than leaving a jarring wider band between them. */
+    row-gap: 2px;
+    grid-template-columns: 140px 1fr 1fr;
+    /* Row 1 is `auto`, NOT `minmax(140px, auto)`. Both grow for a long background
+       description, but `minmax` sets the track's MINIMUM to 140px — so when the
+       sheet is short of height (a tall description plus a tall tab body), grid
+       shrinks the track back toward that minimum and the name section spills its
+       HP/Gold counters over STR and Armor. `auto` takes its minimum from the
+       content, so it can never be squeezed below what it holds. The 140px floor
+       is not lost: the portrait in column 1 is 140px tall and sets it. */
+    grid-template-rows: auto 112px 1fr;
+    height: 100%;
+}
+
+.character-sheet-section-name {
+    grid-column-start: 2;
+    grid-column-end: 4;
+
+    display: grid;
+    column-gap: 8px;
+    row-gap: 2px;
+    /* name / background line / background description (or failed career) /
+       HP + Gold. The third row is 1fr so it ABSORBS any slack when the section
+       is stretched to the portrait's 140px (a Barebones character has no
+       description), pushing the HP/Gold counters down to sit flush with the
+       portrait's bottom edge instead of leaving a floating gap below them. A 2e
+       description sizes the row to its own content (fr's auto minimum) and grows
+       row 1 of the outer grid to match. */
+    grid-template-rows: 46px 24px 1fr min-content;
+    align-content: start;
+    grid-template-columns: 1fr 1fr;
+}
+
+/* The NPC sheet shares .character-sheet-section-name with the character sheet,
+   but has one fewer child: there is no background-description block to occupy
+   row 3. Auto-placement therefore shifts everything up a row — HP lands in the
+   24px background line beside Role (where, being 36px tall, it overflows its own
+   row and crowds the name bar) and Gold is stranded alone in the 1fr slack row,
+   while the min-content row 4 collapses to 0px and goes unused. Measured
+   2026-07-29: HP top 36, Gold top 102, rows "46px 24px 64px 0px".
+
+   Pin both counters to the last row so they sit together at the foot, which is
+   where the character sheet's own auto-placement puts them. Do not "fix" this by
+   deleting the 1fr row — it is what pushes the pair flush with the portrait's
+   bottom edge. Reported as issue #7. */
+.npc-name-section .hp-counter {
+    grid-row: 4;
+    grid-column: 1;
+}
+
+.npc-name-section .deprived-counter {
+    grid-row: 4;
+    grid-column: 2;
+}
+
+/* The three buttons stack flush as one evenly-spaced set. They are a touch
+   shorter than a counter row (32px) so the fixed 112px stack has a little slack
+   at its foot rather than crowding the tabs below. */
+.character-sheet-section-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.character-sheet-section-buttons button {
+    height: 32px;
+    flex: 0 0 auto;
+}
+
+#die-of-fate-button {
+    /* Foundry's default button chrome, like Rest and Restore beside it (the
+       black-bordered cream fill all three carried was dropped 2026-07-28). What
+       still sets this one apart is deliberately NOT a box: a teal TEXT glow that
+       lights up its label + d6 icon -- the same idea as a selected tab, in teal
+       (the complement of the tabs' red) so it reads as related-but-distinct and
+       marks the deliberate action. Keep the glow if the chrome changes again. */
+    font-weight: bold;
+    text-shadow: 0 0 8px var(--kn-accent);
+}
+
+#die-of-fate-button:hover {
+    text-shadow: 0 0 12px var(--kn-accent);
+}
+
+.character-sheet-section-abilities {
+    display: grid;
+    row-gap: 2px;
+    grid-template-rows: 36px 36px 36px;
+}
+
+.character-sheet-section-others {
+    display: grid;
+    row-gap: 2px;
+    grid-template-rows: 36px 36px 36px;
+}
+
+.character-sheet-section-tabs {
+    grid-column-start: 1;
+    grid-column-end: 4;
+
+    display: grid;
+    /* First (auto) track is the status-banner wrapper: 0 height while empty,
+       grows to coloured bars when an attribute is critically wounded. */
+    grid-template-rows: auto 36px 1fr;
+}
+
+/******************************************************************************
+ * Container sheet grid.                                                      * 
+ ******************************************************************************/
+
+.container-sheet-grid {
+    display: grid;
+    gap: 8px;
+    grid-template-columns: 140px 1fr 1fr;
+    /* `auto`, not a hard 140px, for the reason spelled out on the character grid
+       above: a fixed track cannot grow for its content, so the name section spills
+       out of it. This was fine until the Type control joined the container's name
+       section (Item Piles) and pushed it to 148px inside a 140px track — an 8px
+       overflow that `npm run dev:sheet-layout` reports on the `container` type.
+       The 140px floor is not lost; the portrait in column 1 sets it. */
+    grid-template-rows: auto 1fr;
+    height: 100%;
+}
+
+/* A container's name section reuses the character grid (name / line / 1fr /
+   bottom-row), but a container only has name, owner, slots and cost — with no
+   explicit placement the Slots counter jammed into the 24px owner line at the
+   top-right. Place owner across the width and drop Slots + Cost into the bottom
+   row (row 4), like the character's HP + Gold, so the 1fr row 3 absorbs the slack
+   and they sit flush with the portrait's foot. */
+.container-sheet-grid .background-input {
+    grid-column: 1 / 3;
+    grid-row: 2;
+    align-self: center;
+}
+.container-sheet-grid .slots-counter {
+    grid-row: 4;
+    align-self: end;
+}
+
+/* Type sits in row 3 -- the 1fr slack row -- in the left column, directly under
+   the class line. Putting it in row 4 with Slots and Cost gives the two-column
+   grid an implicit THIRD column and squeezes all three, which clipped "Mount"
+   to "Moun". Its own row also lets the select take a real width, which the
+   longest option ("Item Pile") needs. */
+.container-sheet-grid .container-type-counter {
+    grid-row: 3;
+    grid-column: 1;
+    align-self: start;
+}
+
+.container-sheet-grid .container-type-counter select {
+    background: none;
+    border: none;
+    width: 100%;
+    color: inherit;
+    font-family: inherit;
+}
+
+/* What the container IS ("Horse", "Item Pile"), then who keeps it -- a pile has
+   no keeper, so the second half is simply absent rather than an empty gap. */
+.container-sheet-grid .container-class {
+    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
+    font-variant: small-caps;
+    font-size: 18px;
+}
+
+.container-sheet-grid .container-owner::before {
+    content: " · ";
+}
+
+/******************************************************************************
+ * Item sheet grid.                                                           * 
+ ******************************************************************************/
+
+.item-sheet-grid {
+    display: grid;
+    column-gap: 8px;
+    row-gap: 8px;
+    grid-template-columns: 140px 1fr 1fr;
+    grid-template-rows: 46px 36px 36px 36px 36px 36px 1fr;
+    height: 100%;
+}
+
+.item-sheet-section-portrait {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 7;
+}
+
+.item-sheet-section-name {
+    grid-column-start: 2;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 2;
+}
+
+.item-sheet-section-tabs {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 7;
+    grid-row-end: 7;
+
+    display: grid;
+    grid-template-rows: 36px 1fr;
+}
+
+/******************************************************************************
+ * Portrait and name section.                                                 * 
+ ******************************************************************************/
+
+/* Scoped under .knavery (review #9): these class names are live CORE
+   vocabulary — .description styles every RollTable draw card and the Scene
+   sidebar's placeable entries, .portrait is equally generic —
+   and Foundry's layer order (`system` after `applications`, foundry2.css:5)
+   means an unscoped system rule beats core's own regardless of specificity.
+   Unscoped, these stacked every placeables-sidebar row vertically and
+   restyled every table-draw card in the world. (.features was the fourth name
+   here until the Features UI went, 2026-08-09.) */
+.knavery .portrait {
+    border: 2px solid var(--kn-line);
+    border-radius: 5px;
+    height: 140px;
+    width: 100%;
+    object-fit: contain;
+    /* Stay 140px at the top even when row 1 grows for a tall description. */
+    align-self: start;
+    cursor: pointer;
+}
+
+/* Transports/containers get a consistent black-and-white look: the source art is
+   colour Foundry core icons, shown grayscale (display only -- nothing bundled). */
+.container-sheet-grid .portrait,
+.knavery-container-gallery .knavery-portrait-choice {
+    filter: grayscale(1);
+}
+
+/* Give a quick colour peek on hover so the picker is still easy to read. */
+.knavery-container-gallery .knavery-portrait-choice:hover {
+    filter: grayscale(0);
+}
+
+.knavery-portrait-browse {
+    align-self: center;
+    flex: 0 0 auto;
+    width: auto;
+}
+
+/* The name and its random-name die share row 1 of the name grid: the input
+   grows, the die sits at its right (present only in random-generation mode). */
+.name-line {
+    grid-column: 1 / 3;
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+}
+
+/* The name-roll <a> sits OUTSIDE the name input, on the window-content rather
+   than on the bar — so it takes the sheet's secondary ink, exactly like the
+   sibling profession-roll, and flips with the scheme. The hireling darkens it
+   below to full ink to match its profession-roll. */
+.name-line .name-roll,
+.name-line .name-pick {
+    flex: 0 0 auto;
+    cursor: pointer;
+    color: var(--kn-muted);
+}
+
+.name-line .name-roll:hover,
+.name-line .name-pick:hover {
+    color: var(--kn-ink);
+}
+
+/* Hireling: the name-roll takes the SAME dark colour as the profession-roll (both
+   dark@0.55 on the light field), so the two rollers read identically. The 0.55
+   opacity comes from the shared .knavery-npc-sheet rule below. */
+.knavery-npc-sheet .name-line .name-roll {
+    color: var(--kn-ink);
+}
+
+.knavery-npc-sheet .name-line .name-roll:hover {
+    color: var(--kn-ink);
+    opacity: 1;
+}
+
+/* Row 3 of the name grid: 2e's background description. */
+.background-description {
+    grid-column: 1 / 3;
+    grid-row: 3;
+    font-size: 13px;
+}
+
+.background-description :first-child {
+    margin-top: 0;
+}
+
+.background-description :last-child {
+    margin-bottom: 0;
+}
+
+/* Barebones "Failed career:" line. Sits in the same row-3 slot the 2e background
+   description occupies -- the two never coexist -- so it renders directly under
+   the Background line. All three header lines (Background / Failed Career /
+   Failed Career Item) render at ONE size, 17px, matching .background-name:
+   the earlier 15px/13px "quieting" was overruled 2026-08-08 by the user with
+   all three on screen -- they read as one block, so they size as one. The
+   greyed labels keep the label/value distinction. */
+.failed-career-block {
+    grid-column: 1 / 3;
+    grid-row: 3;
+    align-self: start;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.failed-career-line,
+.failed-career-item-line {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    min-width: 0;
+}
+
+.failed-career-label {
+    flex: 0 0 auto;
+    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
+    font-size: 17px;
+    font-variant: small-caps;
+    color: var(--kn-muted);
+}
+
+.failed-career-name {
+    flex: 0 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
+    font-size: 17px;
+    font-variant: small-caps;
+}
+
+/* Keepsake-item line: same size as the lines above it, per the one-size ruling
+   in the block comment at the top of this section. */
+.failed-career-item-label {
+    flex: 0 0 auto;
+    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
+    font-size: 17px;
+    font-variant: small-caps;
+    color: var(--kn-muted);
+}
+
+.failed-career-item-name {
+    flex: 0 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
+    font-size: 17px;
+    font-variant: small-caps;
+}
+
+/* Roll Character is always rendered so the Randomization toggle can show/hide it
+   in place; Foundry has renamed the header-button element across versions, so
+   match both. */
+.window-header .header-button.knavery-header-hidden,
+.header-control.knavery-header-hidden {
+    display: none;
+}
+
+/* The TOGGLED Notes editor's empty-state hint (both actor sheets): a real
+   element in the display half, put there because a toggled editor grows its
+   .editor-container only on activation, so a ::before hint anchored to that
+   container has nothing to hang off until the player has already clicked in.
+   Being part of the light-DOM display child, it can never reach a save
+   (activation swaps the child out for `value`). Gated by
+   `npm run dev:notes-editor`: it renders, it goes once there is content, and
+   clicking it opens the editor. */
+.knavery prose-mirror .knavery-editor-placeholder {
+    opacity: 0.65;
+    font-style: italic;
+    color: var(--kn-faint);
+}
+
+/* The INACTIVE Notes editor reads as a FIELD (both actor sheets, 2026-08-08):
+   players did not notice the editor at all, because an inactive toggled editor
+   is indistinguishable from static page text. Border + wash + radius say
+   "this is an input"; the click-to-edit binding in _onRender makes the empty
+   area act like one. Kept separate from the pencil block below so each
+   probe witness disables exactly one thing.
+
+   THE NPC DESCRIPTION EDITOR JOINED IT ON 2026-08-20, on the user report that
+   it "does not show up until you hover over it" — which is exactly the 08-08
+   finding, on the one toggled editor that never got the fix. A selector list
+   rather than a second copy of the block: two copies of a four-rule treatment
+   is two things to drift.
+
+   EVERY ITEM-SHEET EDITOR JOINED ON 2026-08-30 (the Tupshead Crown report,
+   third sighting of the same per-surface gap): an imported relic's empty
+   Recharge tab was a transparent, borderless editor under a hint paragraph
+   that read as content sitting outside a field. `.knavery.sheet.item` is the
+   application frame's class set, so one selector covers all seven item
+   templates' description / crit-dmg / recharge editors at once — the next new
+   editor on an item sheet is covered before it exists. */
+.knavery .tab[data-tab="notes"] prose-mirror.inactive,
+.knavery .npc-description-section prose-mirror.inactive,
+.knavery.sheet.item prose-mirror.inactive {
+    border: 1px solid var(--kn-edge);
+    background: var(--kn-wash);
+    border-radius: 6px;
+}
+.knavery .tab[data-tab="notes"] prose-mirror.inactive .editor-content,
+.knavery .npc-description-section prose-mirror.inactive .editor-content,
+.knavery.sheet.item prose-mirror.inactive .editor-content {
+    /* Core pads the display half right-only (0.5rem, unlayered —
+       foundry2.css:13592), which jams text against the new border. */
+    padding: 0 10px !important;
+}
+
+/* The pencil is core's ONLY affordance for a toggled editor, and core keeps it
+   `display: none` until the editor is HOVERED (foundry2.css:13564-13579) —
+   invisible is not an affordance. On the notes tab it shows whenever the
+   editor is inactive, in palette colours that survive dark mode. `:enabled`
+   is load-bearing: activation disables the button, and without the guard the
+   `display` override would beat core's `[disabled] { display: none }` and
+   leave a dead pencil floating over the open editor. !important throughout —
+   core's rules are unlayered, this file is @layer system. */
+.knavery .tab[data-tab="notes"] prose-mirror.inactive > button.icon.toggle:enabled,
+.knavery .npc-description-section prose-mirror.inactive > button.icon.toggle:enabled,
+.knavery.sheet.item prose-mirror.inactive > button.icon.toggle:enabled {
+    display: block !important;
+    color: var(--kn-muted) !important;
+    top: 6px !important;
+    right: 6px !important;
+}
+.knavery .tab[data-tab="notes"] prose-mirror.inactive > button.icon.toggle:enabled:hover,
+.knavery .npc-description-section prose-mirror.inactive > button.icon.toggle:enabled:hover,
+.knavery.sheet.item prose-mirror.inactive > button.icon.toggle:enabled:hover {
+    color: var(--kn-accent) !important;
+}
+
+/* The two generation buttons carry TEXT, unlike Foundry's own frame buttons.
+   This rule is COSMETIC ONLY -- measured, not assumed. Foundry's
+   `.application .window-header button.header-control` sets --button-size:1.5rem,
+   but nothing pins a width, so the button grows to fit its label with or without
+   this block (144px bare, 104px with it). What actually makes the text work is
+   dropping the `icon` class in _renderFrame. So no !important here: it was
+   written in on the assumption that @layer system would lose the cascade, and
+   the probe showed the rule was not needed at all, let alone forced. */
+.knavery.sheet .window-header button.knavery-header-button {
+    flex: none;
+    gap: 4px;
+    padding: 0 6px;
+    font-size: var(--font-size-12);
+    white-space: nowrap;
+}
+
+.name-input {
+    grid-column-start: 1;
+    grid-column-end: 3;
+
+    background: var(--kn-bar) !important;
+    border: none !important;
+    color: var(--kn-on-bar) !important;
+    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif !important;
+    font-size: 23px !important;
+    font-variant: small-caps;
+    font-weight: 500;
+    padding: 8px !important;
+    height: 100% !important;
+}
+
+.background-input {
+    background: none !important;
+    border: none !important;
+    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif !important;
+    font-size: 17px !important;
+    font-variant: small-caps;
+    /* Fill the background line so the content-source note sits at its end. */
+    flex: 1 1 auto;
+    min-width: 0;
+    height: auto !important;
+}
+
+/******************************************************************************
+ * Generic resources counters style.                                          * 
+ ******************************************************************************/
+
+.resource-counter {
+    border: 2px solid var(--kn-line);
+    border-radius: 5px;
+    display: flex;
+    height: 36px;
+}
+
+.resource-counter a,
+.resource-counter label {
+    background-color: var(--kn-bar);
+    color: var(--kn-on-bar);
+    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 32px;
+    text-align: center;
+}
+
+.resource-input-wrapper {
+    display: flex;
+}
+
+.resource-input-wrapper input {
+    background: none !important;
+    border: none !important;
+    margin: auto;
+    text-align: center !important;
+    width: 100%;
+}
+
+.resource-input-wrapper input:focus {
+    box-shadow: none;
+}
+
+.resource-input-wrapper span {
+    margin: auto;
+    text-align: center;
+}
+
+/******************************************************************************
+ * Sheet checkboxes (Deprived / Panicked / For Hire + Omen / Scars).          *
+ *                                                                            *
+ * Native checkboxes render as a stark white box that clashes with the        *
+ * parchment. Restyle them appearance:none so the box takes a flat warm       *
+ * --kn-surface -- these are now its only user, the Rest / Restore / Die of   *
+ * Fate buttons having shared it until 2026-07-28 -- with an --kn-line border *
+ * and an --kn-tick tick. That reads in three places, which is why the        *
+ * surface deliberately stays light in dark mode: on the black condition bars *
+ * (border vanishes into the bar, cream box still shows), on the parchment    *
+ * (border + tick both show), and on a dark sheet (the whole box shows).      *
+ * Purely visual; the input still toggles and fires its change handler.       *
+ ******************************************************************************/
+.knavery .deprived-check,
+.knavery .panicked-check,
+.knavery .for-hire-check,
+.knavery .omen-enable,
+.knavery .scar-enable,
+.knavery .scar-check {
+    appearance: none;
+    -webkit-appearance: none;
+    box-sizing: border-box;
+    /* width/height/background/border take !important + the .knavery prefix's extra
+       specificity to beat `.resource-input-wrapper input`, which forces the
+       Deprived/Panicked boxes to width:100% and background/border: none. */
+    width: 18px !important;
+    height: 18px !important;
+    background: var(--kn-surface) !important;
+    border: 2px solid var(--kn-line) !important;
+    border-radius: 3px;
+    cursor: pointer;
+    position: relative;
+    flex: 0 0 auto;
+    vertical-align: middle;
+}
+
+/* Deprived / Panicked sit alone in a flex .resource-input-wrapper: centre the box. */
+.knavery .deprived-check,
+.knavery .panicked-check {
+    margin: auto;
+}
+
+/* Switch OFF the glyph Foundry draws inside the box.
+   `appearance: none` removes the native widget and nothing else, and Foundry
+   draws its checkbox entirely with pseudo-elements: ::before is a Font Awesome
+   square, `\f0c8`, swapped for a check-square `\f14a` when checked
+   (foundry2.css:3887-3891). So the core checkbox kept rendering INSIDE ours --
+   a second, smaller box stacked on the first, which is exactly what it looked
+   like. Ours draws its own tick in ::after below.
+   No !important needed: those rules are in `@layer elements.forms` and this
+   file is in `@layer system`, which is declared later and so wins outright
+   (foundry2.css:5). */
+.knavery .deprived-check::before,
+.knavery .panicked-check::before,
+.knavery .for-hire-check::before,
+.knavery .omen-enable::before,
+.knavery .scar-enable::before,
+.knavery .scar-check::before {
+    content: none;
+}
+
+/* Omen / Scars checkboxes precede their label text: a small gap instead. "For Hire"
+   is NOT here on purpose -- its label is a flex row with its own `gap`, so a margin
+   would double the space. */
+.knavery .omen-enable,
+.knavery .scar-enable,
+.knavery .scar-check {
+    margin: 0 5px 0 0;
+}
+
+.knavery .deprived-check:checked::after,
+.knavery .panicked-check:checked::after,
+.knavery .for-hire-check:checked::after,
+.knavery .omen-enable:checked::after,
+.knavery .scar-enable:checked::after,
+.knavery .scar-check:checked::after {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    width: 5px;
+    height: 9px;
+    border: solid var(--kn-tick);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    pointer-events: none;
+}
+
+/******************************************************************************
+ * Stacked resources counters style.                                          * 
+ ******************************************************************************/
+
+.stacked-counter {
+    flex-direction: column;
+    height: auto;
+}
+
+.stacked-input-wrapper {
+    display: flex;
+    line-height: 19px;
+}
+
+.stacked-input-wrapper input {
+    background: none !important;
+    border: none !important;
+    margin: auto;
+    text-align: center !important;
+    height: 19px !important;
+    width: 100%;
+}
+
+.stacked-input-wrapper input:focus {
+    box-shadow: none;
+}
+
+.stacked-input-wrapper span {
+    margin: auto;
+    text-align: center;
+}
+
+/******************************************************************************
+ * Specific resources counters style.                                         * 
+ ******************************************************************************/
+
+.hp-counter label,
+.slots-counter label,
+.STR-counter a,
+.DEX-counter a,
+.WIL-counter a {
+    width: 50%;
+}
+
+.hp-counter .resource-input-wrapper,
+.slots-counter .resource-input-wrapper,
+.STR-counter .resource-input-wrapper,
+.DEX-counter .resource-input-wrapper,
+.WIL-counter .resource-input-wrapper {
+    width: 50%;
+}
+
+.long-counter label {
+    width: 70%;
+}
+
+.long-counter .resource-input-wrapper {
+    width: 30%;
+}
+
+.middle-counter label {
+    width: 50%;
+}
+
+.middle-counter .resource-input-wrapper {
+    width: 50%;
+}
+
+.short-counter label {
+    width: 45%;
+}
+
+.short-counter .resource-input-wrapper {
+    width: 55%;
+}
+
+.short-resource-label {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 45%;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+.hp-counter,
+.deprived-counter,
+.slots-counter {
+    align-self: end;
+}
+
+/* STR/DEX/WIL are three separate boxes with a 2px gap, NOT one welded stack, so
+   they each inherit border-radius:5px from .resource-counter. Do not reinstate
+   the squared-off middle corners -- DEX ends up the odd box out. */
+
+/******************************************************************************
+ * Tabs.                                                                      * 
+ ******************************************************************************/
+
+.knavery .tabs {
+    display: flex;
+}
+
+.knavery .tabs a {
+    border-bottom: 2px solid var(--kn-line);
+    border-top: 2px solid var(--kn-line);
+    flex-grow: 1;
+    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
+    font-size: 17px;
+    font-weight: bold;
+    line-height: 32px;
+}
+
+.knavery .tab {
+    height: 100%;
+}
+
+/* `.knavery-section-label` lived here and had no caller left once the NPC
+   description heading went (2026-08-20, user ask) — the Features list header,
+   its only other user, went on 2026-08-09. The Foundry fact it carried is
+   REAL and is now in docs/theming.md: a bare heading tag on an AppV2 sheet
+   renders 28px Signika, so a heading added here must state its own face. What
+   that comment got wrong is WHY — it blamed `body.game .app h1..h6`, and an
+   AppV2 sheet does not match `.app` at all (measured). */
+
+/******************************************************************************
+ * Items list.                                                                *
+ ******************************************************************************/
+
+
+.knavery-items-list-header {
+    border-bottom: 1px solid var(--kn-rule);
+    display: flex;
+    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif !important;
+    font-weight: bold;
+    justify-content: space-between;
+    line-height: 36px;
+    height: 36px;
+}
+
+.knavery-items-list-header .end {
+    margin-left: auto;
+}
+
+.knavery-items-list-row {
+    border-bottom: 1px solid var(--kn-rule);
+}
+
+.knavery-items-list-row:hover {
+    background-color: var(--kn-wash);
+}
+
+.knavery-items-list-row:hover .knavery-item-controls {
+    opacity: 1.0;
+}
+
+.knavery-items-list-row-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.knavery-item-name-and-tags {
+    display: flex;
+    line-height: 26px;
+    height: 26px;
+    gap: 4px;
+}
+
+.knavery-item-tag {
+    align-self: center;
+    background: var(--kn-wash);
+    border: 1px solid var(--kn-chip-border);
+    border-radius: 3px;
+    display: inline-block;
+    font-size: 11px;
+    line-height: 16px;
+    padding: 0 3px;
+    height: 18px;
+}
+
+.knavery-item-uses i {
+    font-size: 10px;
+}
+
+.knavery-item-controls {
+    display: flex;
+    height: 26px;
+    opacity: 0.7;
+    gap: 4px;
+}
+
+.knavery-item-controls a {
+    text-align: center;
+    width: 18px;
+}
+
+.knavery-item-name-and-tags .fas,
+.knavery-item-controls .fas {
+    line-height: 26px;
+}
+
+.item-toggle-equipped {
+    color: var(--kn-muted);
+}
+
+.item-toggle-equipped.equipped {
+    color: var(--kn-ink);
+}
+
+.crit-dmg.long-counter label {
+    width: 40%;
+}
+
+.crit-dmg.long-counter .resource-input-wrapper {
+    width: 60%;
+}
+
+/* The weapon sheet uses the BASE row set (six rows, tabs at seven). It used to
+   declare one row fewer, with the tabs at six, which was right for its eight
+   counters — until the Relic checkbox made nine. The ninth auto-placed into an
+   implicit row below the tabs, putting **Cost** at y=1059 of a 1000px viewport:
+   present in the DOM, off the bottom of the window, and impossible to set. Found
+   2026-07-29 by the counter-visibility check in dev:sheet-layout. Do not
+   re-introduce a shorter override without counting the counters. */
+
+
+/* Armor left this shared override on 2026-08-30, when Damage and Blast made
+   its counters ten: ten need the BASE five-row set (tabs at seven), which is
+   exactly the weapon's shape, so armor now simply inherits the base grid.
+   Object stays at eight counters / four rows. Count the counters before
+   moving a type between blocks — the failure mode is documented below. */
+.object.item-sheet-grid {
+    grid-template-rows: 46px 36px 36px 36px 36px 1fr;
+}
+
+.background.item-sheet-grid {
+    grid-template-rows: 46px 36px 46px 1fr;
+}
+
+.object.item-sheet-grid .item-sheet-section-tabs {
+    grid-row-start: 6;
+    grid-row-end: 6;
+}
+
+.background.item-sheet-grid .item-sheet-section-tabs {
+    grid-row-start: 4;
+    grid-row-end: 4;
+}
+
+/* The spellbook split off .background when the GLOG checkbox became its fifth
+   counter (a scroll's Uses makes six). Counters auto-place two per row, so five
+   and six both need THREE counter rows — one template covers book and scroll
+   alike, which is also why the old `.has-scroll-uses` variant (a conditional
+   class the template computed) is gone: there is nothing left to vary.
+   Row counts in this file are hand-declared per item type and the tabs section
+   is pinned to a numbered row, so a new counter needs both a new row and the
+   tabs moved down. Without that the extra counter auto-places into an IMPLICIT
+   row beneath the tabs: measured 2026-07-29 with Quantity at y=676 of a 720px
+   grid, off the bottom of the window and hit-tested to the canvas. It was in
+   the DOM, so the region count still looked right. */
+.spellbook.item-sheet-grid {
+    grid-template-rows: 46px 36px 46px 36px 1fr;
+}
+
+.spellbook.item-sheet-grid .item-sheet-section-tabs {
+    grid-row-start: 5;
+    grid-row-end: 5;
+}
+
+/* "Nothing left to vary" stopped being true the day the GLOG counter went
+   behind the hack switch (2026-09-13): a plain spellbook in a GLOG-off world —
+   the shipped default — has four counters, two rows, and the third row sat
+   empty above the tabs (review #30). The template adds `compact` for exactly
+   that case (item-sheet.js `spellbookCompact`); a scroll or a GLOG-on book
+   keeps the three rows above. */
+.spellbook.compact.item-sheet-grid {
+    /* Two 36px counter rows: the pair of text inputs that land in the second
+       fit 36px the way every plain item's do; the three-row layout's 46px
+       middle row measured as 18px of slack under them (dev:glog-flags). */
+    grid-template-rows: 46px 36px 36px 1fr;
+}
+
+.spellbook.compact.item-sheet-grid .item-sheet-section-tabs {
+    grid-row-start: 4;
+    grid-row-end: 4;
+}
+
+/* The plain-item sheet grew its own variant when the Grimoire checkbox became
+   its 11th counter (page capacity makes 12): rows 2-6 hold ten counters beside
+   the portrait, so the sixth counter row here is what keeps numbers 11 and 12
+   out of an implicit row under the tabs — the same measured failure the
+   spellbook block above records. */
+.plain-item.item-sheet-grid {
+    grid-template-rows: 46px 36px 36px 36px 36px 36px 36px 1fr;
+}
+
+.plain-item.item-sheet-grid .item-sheet-section-tabs {
+    grid-row-start: 8;
+    grid-row-end: 8;
+}
+
+/* A bound page's row sits indented under its Grimoire — the grouping is done in
+   the sheet context (pages re-inserted after the book's row); this is only the
+   visual step that says "these belong to that". */
+.knavery-items-list-row.grimoire-page {
+    margin-left: 18px;
+}
+
+.small-resource-label {
+    max-width: fit-content;
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+}
+
+.tiny-resource-label {
+    max-width: fit-content;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.container.item-sheet-grid {
+    grid-template-rows: 46px 36px 46px 1fr;
+}
+
+.container.item-sheet-grid .item-sheet-section-tabs {
+    grid-row-start: 4;
+    grid-row-end: 4;
+}
+
+/* Transport item sheet: five fields (Type / Slots / Bulky / Slow / Cost) were
+   crammed into tight 36px rows beside the portrait. Give them taller rows and a
+   roomier gap so the form breathes; the portrait spans the field rows and the
+   description takes the rest. */
+.transport.item-sheet-grid {
+    row-gap: 12px;
+    grid-template-rows: 46px 40px 40px 40px 1fr;
+}
+
+.transport.item-sheet-grid .item-sheet-section-portrait {
+    grid-row: 1 / 5;
+}
+
+.transport.item-sheet-grid .item-sheet-section-tabs {
+    grid-row-start: 5;
+    grid-row-end: 5;
+}
+
+.weapon-desc-divider {
+    font-style: italic;
+}
+
+.strict-size-button {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: left;
+    /* Slightly smaller so "Restore Abilities" + its icon fits the 140px column
+       without truncating once the label is left-aligned. */
+    font-size: 12px;
+    padding-left: 6px;
+    padding-right: 2px;
+}
+
+/* Keep a little gap between the button icon and its left-aligned label. */
+.strict-size-button i {
+    margin-right: 5px;
+}
+
+/* Rest / Restore Abilities take Foundry's default button colours, including its
+   hover. They used to share Die of Fate's cream fill + black border; that whole
+   look went 2026-07-28 in favour of the core chrome. Only the sizing/alignment
+   rules above and the disabled state below are ours now. */
+.character-sheet-section-buttons .strict-size-button:disabled {
+    opacity: 0.45;
+}
+
+.overburdened-gold {
+    border-color: var(--color-level-error-border);
+}
+
+/* .knavery scope: see the note at .knavery .portrait. */
+.knavery .description {
+    display: flex;
+    flex-direction: column;
+}
+
+/******************************************************************************
+ * Chat messages + dice rolls.                                                *
+ *                                                                            *
+ * The custom black-and-white / Alegreya re-skin was removed 2026-07-23 so     *
+ * chat cards, dice rolls and system-posted buttons fall back to Foundry's     *
+ * default (themed) styling. Only the two functional layout rules the system's *
+ * own chat content relies on are kept below.                                  *
+ ******************************************************************************/
+
+/* Chat body text one step up from core's 14px (user ask, 2026-08-06). Chat is
+   read from across the table, not leaned into, and 14px is core's density
+   choice rather than ours. Scoped to .message-content so it moves the CARD
+   TEXT only: the sender name and the generation-rolls card set their own sizes
+   below and are deliberately not dragged along by this. */
+.chat-message .message-content {
+    font-size: 15px;
+}
+
+/* The FLAVOR line is not part of .message-content and the rule above misses it
+   entirely: core renders it in the message HEADER as
+   <span class="flavor-text"> (templates/sidebar/chat-message.hbs:24), beside the
+   sender name. So the first pass at this left every flavor line at core's size
+   and the user reported "Takes a scar" as too small -- true of "Rolling damage
+   with Mace" too, which is the same element. Raised globally rather than
+   per-card for that reason. */
+.chat-message .flavor-text {
+    font-size: 15px;
+}
+
+.chat-message .flavor-dice-roll {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.chat-message .icon-action {
+    margin-left: auto;
+}
+
+/* Apply Damage. The single most consequential control in the log and it was
+   drawn at body size -- the GM is aiming at it repeatedly during a fight, so
+   it gets a real target rather than an icon-sized one. Only a GM ever sees it
+   (renderChatMessageHTML removes it for everyone else).
+   The glyph is fa-burst, an impact starburst, replacing fa-user-minus: at 20px
+   the meeple read as a roster control rather than as a hit landing, and Knavery
+   damage is as often a fall or a spell as a weapon. Glyph-agnostic rule.
+
+   It reads in the FAILURE colour (user ask, 2026-08-07) so the three
+   consequential-damage surfaces in the log agree: the word "Fail" on a save
+   card, this control, and the Mark Critical Damage button below all use the same
+   token. --color-level-error is Foundry's own and is constant across light and
+   dark, so it reads on either theme -- do NOT "simplify" it to #ce0707, which
+   would only be right for whichever theme it was checked against. */
+.chat-message .apply-dmg {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    min-height: 28px;
+    font-size: 20px;
+    line-height: 1;
+    color: var(--color-level-error, #ce0707);
+}
+
+/* Red glow, not the accent's: an accent-coloured halo around a red glyph reads
+   as two unrelated things. Same pairing .mark-critical-damage already uses. */
+.chat-message .apply-dmg:hover {
+    text-shadow: 0 0 8px var(--color-level-error, #ce0707);
+}
+
+/* Spent: the card records that the GM used it, and the control must stop
+   inviting a second click. Faded rather than removed, because "this one was
+   used" is exactly what the log needs to still show an hour later -- a control
+   that vanishes reads the same as a card that never had one. The refusal is in
+   onClickChatMessageApplyButton; this is only the affordance. */
+.chat-message .apply-dmg.spent {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+/* The encounter card's "Add to scene" (module/encounters.js), under the drawn
+   rows. Spent mirrors .apply-dmg's reasoning above; the refusal itself is the
+   message stamp, this is only the affordance. */
+.chat-message .encounter-spawn {
+    margin-top: 6px;
+}
+
+.chat-message .encounter-spawn.spent {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+/* The creature being attacked, inside the attack sentence (user ask,
+   2026-08-07): "Lisbeth attacks Feathered Carapace Creature with Crossbow!" runs
+   as one flat line, so the thing being hit is no easier to find than the
+   preposition. BOLD ONLY -- it inherits the card's colour, so there is nothing
+   to tune per theme, and the applied-damage summary below is deliberately left
+   plain. Not redundant with core's <strong>: this states the weight rather than
+   trusting whatever the chat log's reset leaves it at. */
+.chat-message .dmg-target {
+    font-weight: 700;
+}
+
+/* The applied-damage summary, on the card that was clicked. flex-basis forces
+   its own row: .flavor-dice-roll is a wrapping flex ROW, so without this the
+   line sits beside the attack sentence. */
+.chat-message .dmg-applied {
+    flex-basis: 100%;
+    font-style: italic;
+    opacity: 0.85;
+}
+
+/* Where a detail card's damage came from -- "from Lisbeth's crossbow", above the
+   numbers. Same italic-and-faded register as .dmg-applied above, because both
+   are secondary lines about a card whose subject is elsewhere; no flex-basis,
+   since this one sits in .message-content and not in the flavor's flex row. */
+.chat-message .dmg-source {
+    font-style: italic;
+    opacity: 0.85;
+    margin-bottom: 4px;
+}
+
+/* Impaired / Enhanced. Same own-row treatment as the summary above, and bold
+   because it changes what the die WAS -- a table skimming the log has to be able
+   to see that this roll was not the weapon's own damage. */
+.chat-message .dmg-quality {
+    flex-basis: 100%;
+    font-weight: 700;
+}
+
+/* "Got a scar!" on a damage card. A scar is a rules event with lasting
+   consequences and it read as one more bold label in a stack of them. Centred
+   and glowed, borrowing #die-of-fate-button's treatment (user ask) -- the same
+   idea, that a consequential moment lights up rather than boxes.
+
+   The SHAPE is the Die of Fate's glow; the COLOUR is Foundry's error token
+   (user ask, 2026-08-07), which is the distinction: a Die of Fate is a choice
+   you MAKE, a scar is something that HAPPENS to you. That put this in the same
+   set as .apply-dmg and .mark-critical-damage, whose 8px error-red glow this now
+   matches exactly -- it was the last consequential-damage surface in the log
+   still reading teal. Constant across light and dark, so it reads on either. */
+.chat-message .knavery-scar-banner {
+    font-weight: 700;
+    font-size: 17px;
+    text-align: center;
+    margin: 8px 0 4px;
+    text-shadow: 0 0 8px var(--color-level-error, #ce0707);
+}
+
+/* The "GLOG" word opening the flavor line of every GLOG cast card (the public
+   card and the caster's whisper, module/grimoire.js): each card names its
+   system, lit with the Die of Fate treatment (#die-of-fate-button) in the
+   magic violet (user ask, 2026-08-10). */
+.chat-message .glog-flavor-tag {
+    font-weight: 700;
+    text-shadow: 0 0 8px var(--kn-glog);
+}
+
+/* A dice-resolved value inside a cast card's effect text ([sum]/[dice]/[dado]
+   and their arithmetic, resolveSpellText in module/grimoire.js): bold with a
+   dotted underline in the GLOG violet, the tooltip affordance — hovering
+   shows the authored expression behind the number (user ask, 2026-08-10).
+   Bold alone would read as emphasis the author wrote; the dotted line says
+   "computed, hover me". Same pinned token as the tag above: chat tiles are
+   parchment in both themes. */
+.chat-message .grimoire-resolved {
+    font-weight: 700;
+    text-decoration: underline dotted var(--kn-glog);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 2px;
+}
+
+/* The Add-N-Fatigue button on the cast whisper: Foundry's default button
+   chrome (the Die of Fate rule's shape) with the inventory fatigue-row glow
+   on it -- the same teal on the control that mints those rows, so cause and
+   effect share a colour (user ask, 2026-08-10). Text AND box glow, matching
+   .fatigue-row's pair. */
+.chat-message .grimoire-add-fatigue {
+    font-weight: bold;
+    box-shadow: 0 0 8px var(--kn-fatigue-chat);
+    text-shadow: 0 0 8px var(--kn-fatigue-chat);
+}
+
+/* The initiative save's total, coloured by outcome (module/combat.js
+   markInitiativeOutcome adds the class per viewer off the stored flag).
+   Pinned chat tokens -- see their declaration. */
+.chat-message .dice-total.knavery-save-pass {
+    color: var(--kn-save-pass-chat);
+    border-color: var(--kn-save-pass-chat);
+}
+.chat-message .dice-total.knavery-save-fail {
+    color: var(--kn-save-fail-chat);
+    border-color: var(--kn-save-fail-chat);
+}
+
+/* The item-offer card (module/item-offer.js). Layout only -- the tile is
+   core's parchment in both client themes, so the one colour here is pinned
+   dark like every other chat-only rule (the whisper-token doctrine). */
+.chat-message .knavery-offer-card .knavery-offer-body {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.chat-message .knavery-offer-card .knavery-offer-body img {
+    width: 28px;
+    height: 28px;
+    border: none;
+    object-fit: cover;
+}
+.chat-message .knavery-offer-card .knavery-offer-state {
+    font-style: italic;
+    color: rgba(0, 0, 0, 0.6);
+    margin-top: 4px;
+}
+.chat-message .knavery-offer-card .knavery-offer-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 6px;
+}
+/* The picker reuses the bg-pick-row radio idiom; only the intro needs room. */
+.knavery-offer-picker > p {
+    margin-top: 0;
+}
+
+/* The character-generation card: HP / STR / DEX / WIL / Gold, one "LABEL: value"
+   per row, set larger than core's 14px chat body so the numbers read at a glance
+   from across the table -- this card is the result of a roll, not running text.
+   Colours come from the tokens, so it follows the viewer's scheme like every
+   other surface. */
+.chat-message .knavery-generation-rolls {
+    font-size: 18px;
+}
+.chat-message .knavery-generation-rolls .gen-rolls-title {
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+/* No rules between the rows: the five values read as one block, and separators
+   made a five-line card look like a table it is not.
+   The rows also tighten their leading. Foundry's inherited line-height is 1.25,
+   which at 18px puts each value in a 22.5px box -- five of those stacked read as
+   deliberate spacing even with zero margin between them (measured: the row gap
+   really is 0). 1.1 keeps the descenders in "Gold" clear. */
+.chat-message .knavery-generation-rolls .gen-roll-row {
+    padding: 0;
+    line-height: 1.1;
+}
+.chat-message .knavery-generation-rolls .gen-roll-label {
+    font-weight: 500;
+}
+.chat-message .knavery-generation-rolls .gen-roll-value {
+    font-weight: 700;
+}
+
+/* Speaker name on chat cards: much larger + bold so the roller reads at a glance.
+   (Foundry's default .message-sender is 14px / weight 400.) */
+.chat-message .message-sender {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* Knavery's save/attack cards tag the total "Success"/"Fail" via
+   .dice-total.success / .failure. Colour those words with Foundry's own level
+   tokens (constant across light/dark, so they read on either theme) so a
+   result registers at a glance -- green for success, red for a fail. */
+.dice-roll .dice-total.success {
+    color: var(--color-level-success, #26b231);
+    font-weight: bold;
+}
+
+.dice-roll .dice-total.failure {
+    color: var(--color-level-error, #ce0707);
+    font-weight: bold;
+}
+
+/* The "Mark Critical Damage" button posted after a failed STR save. Kept on
+   Foundry's default (theme-aware) button chrome -- only the label colour is
+   left alone so it stays readable in both themes -- but given a red border and
+   red text glow: the Die of Fate accent's idea (#die-of-fate-button) recast in
+   Foundry's error red, marking this consequential, opt-in action. */
+.mark-critical-damage {
+    font-weight: bold;
+    border-color: var(--color-level-error, #ce0707);
+    text-shadow: 0 0 8px var(--color-level-error, #ce0707);
+}
+
+.mark-critical-damage:hover {
+    text-shadow: 0 0 12px var(--color-level-error, #ce0707);
+}
+
+/* THE DAMAGE-QUALITY DIALOG -- askDamageQuality in module/utils.js, which passes
+   both class names below.
+
+   Stacked, not in a row. Core sets .standard-form .form-footer to
+   `flex-direction: row` at foundry2.css:5478, in @layer blocks.base; the layer
+   order declared at foundry2.css:5 puts `system` (8) after `blocks` (4), so this
+   file outranks it with NO !important. Vertical because each label carries its
+   die -- "Enhanced (1d12)" already wrapped to two lines in a row -- and three
+   choices are read down rather than across. */
+.knavery-damage-quality .form-footer {
+    flex-direction: column;
+    align-items: stretch;
+}
+
+/* WHICH button does Enter press? DialogV2's `default: true` emits ONLY
+   `autofocus` (dialog.mjs:242) -- no class, no attribute of its own -- and core
+   ships no `button[autofocus]` rule, so the answer was invisible and the three
+   read as equal choices. Accent border + bold, the treatment
+   #die-of-fate-button and .mark-critical-damage already use to mark the notable
+   control in a group. */
+.knavery-damage-quality .knavery-quality-default {
+    font-weight: 700;
+    border-color: var(--kn-accent);
+}
+
+/* NO OFFSET — everything centred (user ask, 2026-08-07). The three buttons stack
+   in a column, so a ⏎ pinned to the trailing edge by `margin-left: auto` left the
+   default button's contents visibly out of line with the two above and below it,
+   which is the "offset" the GM was seeing. Stated on every button rather than
+   only on the default's, because core's own rule is what governs the other two
+   and relying on its default is what let this drift in the first place. */
+.knavery-damage-quality .form-footer > button {
+    justify-content: center;
+}
+
+/* ...and the return glyph, stating outright what the border only hints at. A
+   SYMBOL, so there is nothing here for a translator to carry; the same fact
+   reaches a screen reader through the button's aria-label, which DialogV2 fills
+   from `tooltip`. It now sits directly after the label as part of the centred
+   group — do NOT restore the auto margin. */
+.knavery-damage-quality .knavery-quality-default::after {
+    content: "\23CE";
+    margin-left: 0.4em;
+    opacity: 0.7;
+}
+
+/* The "who takes this?" picker, offered when a damage roll was made with nothing
+   targeted. A checkbox list rather than a form-group grid: these are not fields,
+   they are a roster, and core's .standard-form rules assume the former. */
+.knavery-damage-targets .ab-target-group {
+    font-weight: 700;
+    margin: 8px 0 2px;
+    opacity: 0.75;
+}
+
+.knavery-damage-targets .ab-target-group:first-of-type {
+    margin-top: 4px;
+}
+
+/* A whole ROW is the hit target, not the 13px box. The GM is ticking several
+   of these mid-fight; a label that only responds on the checkbox itself is the
+   same misjudgement the Apply control was drawn with before it was enlarged. */
+.knavery-damage-targets .ab-target-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 4px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.knavery-damage-targets .ab-target-row:hover {
+    /* The palette's own row-hover token, so this flips with the scheme rather
+       than being a light-mode grey that vanishes on dark. */
+    background: var(--kn-wash);
+}
+
+.grey-comment {
+    font-size: smaller;
+    color: var(--kn-muted);
+    font-style: italic;
+}
+
+.indent {
+    margin-left: 16px;
+}
+
+.compact-check {
+    text-align: end;
+    margin-right: 8px;
+    line-height: 1em !important;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Container/transport actors (packs, mounts, vehicles) show grayscale art on
+   their sheet; the actor-directory thumbnail is grayed to match, so the same
+   actor never reads colour in the list and grey on its sheet. Set in
+   renderActorDirectory (knavery.js). */
+.actor.knavery-grayscale-portrait img {
+    filter: grayscale(1);
+}
+
+/* ---- Marketplace (buy/take gear from the reference catalog) ---- */
+.items-header-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.marketplace {
+    display: flex;
+    flex-direction: column;
+}
+
+.marketplace .mkt-header {
+    display: flex;
+    gap: 20px;
+    font-weight: bold;
+    font-size: 15px;
+    padding: 2px 4px 6px;
+    border-bottom: 2px solid var(--color-border);
+}
+
+.marketplace .mkt-header i {
+    opacity: 0.7;
+}
+
+.marketplace .mkt-hint {
+    font-style: italic;
+    opacity: 0.75;
+    font-size: 12px;
+    margin: 6px 4px 2px;
+}
+
+.marketplace .mkt-list {
+    flex: 1 1 auto;
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.marketplace .mkt-cat-name {
+    font-variant: small-caps;
+    font-weight: bold;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+    margin: 10px 0 2px;
+    padding: 2px 4px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.marketplace .mkt-row {
+    border-bottom: 1px solid var(--color-border);
+}
+
+.marketplace .mkt-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 3px 4px;
+}
+
+.marketplace .mkt-row-main {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.marketplace .mkt-name {
+    font-weight: bold;
+}
+
+.marketplace .mkt-tags {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.marketplace .mkt-chip {
+    font-size: 10px;
+    background: var(--color-data-background);
+    border: 1px solid var(--color-border);
+    border-radius: 3px;
+    padding: 0 5px;
+    line-height: 15px;
+    white-space: nowrap;
+}
+
+.marketplace .mkt-desc {
+    padding: 2px 6px 8px 6px;
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+.marketplace .mkt-desc .mkt-nodesc {
+    opacity: 0.55;
+}
+
+.marketplace .mkt-search {
+    margin-left: auto;
+    flex: 0 1 180px;
+    height: 24px;
+    font-size: 12px;
+}
+
+.marketplace .mkt-slots {
+    flex: 0 0 auto;
+    width: 54px;
+    text-align: right;
+    font-size: 11px;
+    opacity: 0.7;
+    white-space: nowrap;
+}
+
+.marketplace .mkt-cost {
+    flex: 0 0 auto;
+    width: 48px;
+    text-align: right;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.marketplace .mkt-cost i {
+    opacity: 0.6;
+    font-size: 11px;
+}
+
+.marketplace .mkt-actions {
+    flex: 0 0 auto;
+    display: flex;
+    gap: 4px;
+}
+
+.marketplace .mkt-actions button {
+    width: 48px;
+    line-height: 22px;
+    padding: 0;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.marketplace .mkt-buy:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Coins-as-slots: "100 Gold" rows shown in a character's inventory. */
+.gold-slot-row .gold-slot-icon {
+    opacity: 0.6;
+    margin-right: 2px;
+    color: var(--kn-gold);
+}
+
+.gold-slot-row .knavery-item-title {
+    font-style: italic;
+    opacity: 0.85;
+}
+
+/******************************************************************************
+ * Description tab: traits (pronouns/age/sentence/pick-lists), Omen, Scars.
+ ******************************************************************************/
+.character-traits {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Pronouns and Age side by side at the top. */
+.character-traits .bio-top {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 16px;
+    row-gap: 4px;
+}
+
+/* The constructed trait sentence — the default read view of the character's
+   traits, sitting above the (collapsed) pick-lists. */
+.character-traits .trait-sentence {
+    margin: 4px 0;
+    padding: 0;
+    font-style: italic;
+    line-height: 1.5;
+}
+
+/* Collapsible pick-list section: header + toggle, then the trait grid. */
+.character-traits .trait-picklist-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.character-traits .trait-picklist-label {
+    font-weight: bold;
+    flex: 0 0 auto;
+}
+
+.character-traits .trait-toggle {
+    flex: 0 0 auto;
+    cursor: pointer;
+}
+
+/* The 8 trait dropdowns: two columns, column-major (physical traits left). */
+.character-traits .trait-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(4, auto);
+    grid-auto-flow: column;
+    column-gap: 16px;
+    row-gap: 4px;
+    margin-top: 6px;
+}
+
+/* Separate the traits block from the Omen/Scar block below it. */
+.character-omen-scar {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--kn-rule-strong);
+}
+
+/* Disabled-state text for the Omen field (mirrors .scar-display). */
+.omen-display {
+    flex: 1 1 auto;
+    color: var(--kn-muted);
+    font-style: italic;
+}
+
+/* Label on the left, control on the right (not stacked). */
+.character-traits .trait-row,
+.character-omen-scar .omen-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+/* The grid supplies row spacing; drop the per-row margin inside it. */
+.character-traits .trait-row {
+    margin-bottom: 0;
+}
+
+.character-traits .trait-label,
+.character-omen-scar .omen-label {
+    flex: 0 0 auto;
+    min-width: 96px;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+/* Pronouns and Age hug their fields instead of reserving the 96px column. */
+.character-traits .pronouns-row .trait-label,
+.character-traits .age-row .trait-label {
+    min-width: auto;
+}
+
+.character-traits .age-row .trait-input {
+    flex: 0 0 auto;
+    width: 56px;
+}
+
+.character-omen-scar .omen-label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.character-traits .trait-input,
+.character-omen-scar .omen-input {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+/* Enabled multi-line omen textarea: top-align the label + dice against its first line. */
+.character-omen-scar .omen-row.omen-enabled {
+    align-items: flex-start;
+}
+
+.character-omen-scar .omen-row.omen-enabled .omen-label,
+.character-omen-scar .omen-row.omen-enabled .omen-roll,
+.character-omen-scar .omen-row.omen-enabled .omen-pick {
+    padding-top: 4px;
+}
+
+textarea.omen-input {
+    resize: vertical;
+    font-family: inherit;
+}
+
+.character-omen-scar .omen-roll,
+.character-omen-scar .omen-pick,
+.character-traits .age-roll,
+.character-traits .trait-roll {
+    flex: 0 0 auto;
+    cursor: pointer;
+}
+
+.character-omen-scar .scar-section {
+    margin-top: 8px;
+}
+
+.character-omen-scar .scar-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.character-omen-scar .scar-label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: bold;
+    flex: 0 0 auto;
+    min-width: 96px;
+}
+
+.character-omen-scar .scar-toggle {
+    flex: 0 0 auto;
+    cursor: pointer;
+}
+
+/* Scars: one checkbox per scar, each with its full description. */
+.scar-list {
+    max-height: 260px;
+    overflow: auto;
+    margin-top: 4px;
+    border: 1px solid var(--kn-rule-strong);
+    border-radius: 4px;
+}
+
+.scar-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 6px 8px;
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+.scar-option + .scar-option {
+    border-top: 1px solid var(--kn-rule-strong);
+}
+
+.scar-option .scar-check {
+    flex: 0 0 auto;
+    margin-top: 3px;
+}
+
+.scar-option .scar-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.scar-option .scar-name {
+    font-weight: bold;
+}
+
+.scar-option .scar-desc {
+    font-size: smaller;
+    color: var(--kn-muted);
+}
+
+.scar-display {
+    font-style: italic;
+    color: var(--kn-muted);
+}
+
+/******************************************************************************
+ * Notes tab: bonds + background questions above the free-form notes editor.
+ ******************************************************************************/
+.bond-block,
+.question-block {
+    margin: 0 0 8px 0;
+}
+
+.bond-line,
+.question-line {
+    margin: 0;
+}
+
+.bond-answer,
+.question-answer {
+    margin: 2px 0 0 0;
+}
+
+.bond-remove {
+    margin-left: 6px;
+    cursor: pointer;
+}
+
+.bond-add {
+    display: inline-block;
+    margin: 0 0 8px 0;
+    cursor: pointer;
+}
+
+/* A bare <hr> is drawn from core LITERALS, not from the palette: a #b5b3a4 top
+   and a near-white #f0f0e0 bottom border (foundry2.css:12406, @layer
+   compatibility) plus a cream --hr-gradient background in dark mode. The bottom
+   edge is invisible on parchment and the gradient ignores the scheme entirely,
+   so state the rule once in tokens. @layer system outranks compatibility, so no
+   !important is needed here. */
+.notes-divider {
+    margin: 10px 0;
+    height: 0;
+    border: none;
+    border-top: 1px solid var(--kn-rule);
+    background: none;
+}
+
+.bond-reroll,
+.bond-pick,
+.question-reroll,
+.question-pick {
+    margin-left: 6px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+/******************************************************************************
+ * Header polish, status banners, critical damage, armor override.
+ ******************************************************************************/
+/* 2e background: name reads as a header; the content source note sits at the
+   right of the same line. */
+.background-line {
+    /* Spans BOTH columns of the name grid and is pinned to row 2. Without this
+       it is a single-column auto-flow item, which pushes HP up beside it into
+       row 2 / column 2 and strands Gold alone on row 3 -- the counters must
+       instead sit together on the last row, HP above STR and Gold above Armor. */
+    grid-column: 1 / 3;
+    grid-row: 2;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    min-width: 0;
+}
+
+/* The background name reads as a header, matching the size of the free-text
+   .background-input it replaces on a hand-made character. */
+.background-name {
+    flex: 0 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
+    font-size: 17px;
+    font-variant: small-caps;
+}
+
+/* Barebones: a "Background:" label precedes the (pickable) background name. */
+.background-label {
+    flex: 0 0 auto;
+    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
+    font-size: 17px;
+    font-variant: small-caps;
+    color: var(--kn-muted);
+}
+
+.content-source-label {
+    flex: 0 0 auto;
+    margin-left: auto;
+    white-space: nowrap;
+    font-size: 12px;
+    font-variant: small-caps;
+    color: var(--kn-muted);
+}
+
+/* The background's credit line in Background & Notes. Muted like the source
+   label above: it is a citation the page owes, not something a player reads at
+   the table, and it must not compete with the bonds and questions above it.
+   No small-caps — a licence code and two proper names are not decoration. */
+.background-credit {
+    margin: 8px 0 0;
+    font-size: 11px;
+    line-height: 1.4;
+    color: var(--kn-muted);
+}
+
+/* Dice + magnifier beside the background name: re-roll it, or open the picker.
+   Sit tight against the name so they read as controls on it, not on the line. */
+.background-roll,
+.background-pick {
+    flex: 0 0 auto;
+    color: var(--kn-muted);
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.background-roll:hover,
+.background-pick:hover {
+    color: var(--color-text-hyperlink, #44191a);
+    text-shadow: none;
+}
+
+/* ---- the background picker (DialogV2) ----
+   Two columns for a source with prose (2e: list + live description); one wide
+   column for a source without it (Barebones), where each row already shows the
+   gear and a panel would only repeat it. */
+.bg-picker {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.bg-picker.single {
+    grid-template-columns: 1fr;
+}
+
+.bg-pick-list {
+    max-height: 380px;
+    overflow-y: auto;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    padding: 4px;
+}
+
+.bg-pick-group {
+    font-variant: small-caps;
+    font-weight: bold;
+    color: var(--color-text-subtle);
+    margin: 6px 4px 2px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+/* The creation dialog's "Use random generation." row. The class was set on the
+   label from the day the empty-sheet feature landed and matched no rule at all
+   (review #26), so the checkbox and its text sat flush against each other.
+   Not scoped to `.knavery` — this lives in a DialogV2, which is core chrome. */
+.ab-creation-roll {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.ab-creation-roll input[type="checkbox"] {
+    flex: 0 0 auto;
+}
+
+.bg-pick-row {
+    display: grid;
+    /* third column: the GM's per-background eye toggle */
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+    gap: 6px;
+    padding: 3px 4px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.bg-pick-row input[type="radio"],
+.bg-pick-row input[type="checkbox"] {
+    grid-column: 1;
+    grid-row: 1 / 3;
+}
+
+/* The Create Faction dialog's pick-lists (2026-09-12): six dropdowns on core's
+   own `.standard-form .form-group` rows, then the Advantages tick-list. The
+   list is capped shorter than the background picker's so the whole dialog —
+   the box, six rows, twenty ticks and two buttons — fits a 1000px viewport
+   without the window growing off the bottom of the screen. */
+.ab-faction-picks .bg-pick-list {
+    max-height: 200px;
+}
+
+.bg-pick-name {
+    grid-column: 2;
+    font-weight: bold;
+}
+
+.bg-pick-tag {
+    grid-column: 2;
+    font-size: 12px;
+    color: var(--color-text-subtle);
+}
+
+/* The GM's per-background disable toggle (2e rows only). */
+.bg-pick-eye {
+    grid-column: 3;
+    grid-row: 1 / 3;
+    align-self: center;
+    width: auto;
+    background: transparent;
+    border: none;
+    padding: 0 4px;
+    color: var(--color-text-subtle);
+    cursor: pointer;
+    line-height: 1;
+}
+
+.bg-pick-eye:hover {
+    /* inherit = the row's own text colour, correct in both themes */
+    color: inherit;
+}
+
+/* The authoring pointer under the list — spans both picker columns. */
+.bg-pick-foot {
+    grid-column: 1 / -1;
+    font-size: 12px;
+    color: var(--color-text-subtle);
+    border-top: 1px solid var(--color-border);
+    padding-top: 4px;
+    margin: 2px 4px 0;
+}
+
+/* A disabled background: visible to the GM for re-enabling, invisible to
+   players (their pool is filtered before the picker ever renders). */
+.bg-pick-off .bg-pick-name,
+.bg-pick-off .bg-pick-tag {
+    opacity: 0.45;
+}
+
+.bg-pick-off .bg-pick-name {
+    text-decoration: line-through;
+}
+
+.bg-pick-desc {
+    font-size: 13px;
+    overflow-y: auto;
+    max-height: 380px;
+    padding-right: 4px;
+}
+
+/* ---- the Roll Character checklist (DialogV2, 2026-09-02) ----
+   One column of checkboxes; children (a Background's gear and questions, a
+   failed career's keepsake) indent under their parent and gray while it is
+   checked — the gating lives in the sheet's dialog listener, this is only
+   the look. */
+.reroll-dialog .reroll-lead {
+    margin: 0 0 6px;
+}
+
+.reroll-dialog .reroll-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    padding: 6px 8px;
+    /* Tall enough for the longest list (2e with the Omen row: 15 rows) — a
+       420px cap quietly scrolled the last row out of sight, and a checklist
+       whose final option is invisible reads as complete. The vh term only
+       bites on a short screen, where scrolling beats overflowing the frame. */
+    max-height: max(60vh, 480px);
+    overflow-y: auto;
+}
+
+.reroll-dialog .reroll-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.reroll-dialog .reroll-row:has(input:disabled) {
+    opacity: 0.55;
+    cursor: default;
+}
+
+.reroll-dialog .reroll-children {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-left: 24px;
+}
+
+.reroll-dialog .reroll-note {
+    font-size: 12px;
+    color: var(--color-text-subtle);
+    margin: 6px 0 0;
+}
+
+/* Re-roll / pick controls on the failed-career line. Dimmed to match the label
+   they follow -- this is flavour, and should not compete with the background
+   controls above it. */
+.failed-career-roll,
+.failed-career-pick,
+.failed-career-item-roll {
+    flex: 0 0 auto;
+    cursor: pointer;
+    opacity: 0.55;
+    font-size: 12px;
+}
+
+.failed-career-roll:hover,
+.failed-career-pick:hover,
+.failed-career-item-roll:hover {
+    opacity: 1;
+}
+
+/* Attribute-loss status banners: one coloured bar per active condition. The
+   wrapper is always present (0-height when empty). */
+.status-banner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+    font-size: 13px;
+}
+
+.status-banner i {
+    flex: 0 0 auto;
+    font-size: 15px;
+}
+
+.status-dead { background: #1a1a1a; }
+.status-critical { background: #c62828; }
+.status-paralyzed { background: #1565c0; }
+.status-delirious { background: #6a1b9a; }
+.status-encumbered { background: #bf360c; }
+/* CHAT ONLY -- the sheet lists ACTIVE conditions and "not critical any more" is
+   not one. Material green 800, the register the five above are drawn from, so
+   the recovery bar sits in the same family as the wounds. These bars are all
+   white-on-solid and identical in chat and on a sheet: the rules-critical
+   statuses are deliberately ONE visual language wherever they appear. */
+.status-stabilized { background: #2e7d32; }
+
+/* Whisper tiles — ALL of them, not just the ledger (user ruling 2026-08-08):
+   core's cool lavender clashes with the warm parchment of every other tile, so
+   the whisper surface is the system's own warm tint, and the teal stripe does
+   the "private" signalling. */
+.chat-message.whisper {
+    /* !important is load-bearing: core sets these vars element-scoped and
+       UNLAYERED on .chat-message (foundry2.css:508-514), and this file is in
+       @layer system — unlayered normal beats layered normal, and !important
+       inverts it. */
+    --color-whisper-background: var(--kn-whisper-bg) !important;
+    --color-whisper-border: var(--kn-whisper-border) !important;
+    /* Core carries a second spelling for inline GM-roll links
+       (--color-whisper-bg, foundry2.css:127, applied :12367) — override it too
+       so a gmroll link inside a whisper tile agrees with its tile. */
+    --color-whisper-bg: var(--kn-whisper-bg) !important;
+    /* Inset shadow, NOT border-left: core's `border: 2px` shorthand on this
+       element (foundry2.css:10006) is unlayered and would win a border war;
+       core sets no box-shadow on .chat-message, so a layered declaration
+       lands. --kn-whisper-stripe, never --kn-accent: the tile under it is
+       parchment in both client themes, and the dark-scheme accent is tuned
+       for near-black backdrops — on parchment it washes out. */
+    box-shadow: inset 3px 0 0 var(--kn-whisper-stripe);
+}
+
+/* The manual-change ledger card (whispered; KnaveryActor#postChangeLog). Colours
+   are inherited on purpose — the whisper surface above is the system's own in
+   both schemes, and the ledger should read as chat, not as a status banner. */
+.chat-message .change-log .change-log-user {
+    margin: 0;
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+/* The operation naming itself ("Rest", "Restore Abilities") — a touch bolder
+   than the user line so the card leads with WHAT happened. */
+.chat-message .change-log .change-log-action {
+    margin: 0;
+    font-weight: 500;
+}
+
+.chat-message .change-log ul {
+    margin: 0.25em 0 0;
+    padding-left: 1.25em;
+}
+
+/* STR-only Critical Damage skull toggle, pinned to the right of the counter
+   (which must be positioned for the absolute skull to anchor to it). */
+.character-sheet-section-abilities .resource-counter {
+    position: relative;
+}
+
+.character-sheet-section-abilities .resource-counter a.critical-toggle {
+    position: absolute;
+    right: 3px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: auto;
+    background: none;
+    color: var(--kn-peril);
+    font-size: 11px;
+    line-height: 1;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.character-sheet-section-abilities .resource-counter:hover a.critical-toggle {
+    opacity: 0.5;
+}
+
+.character-sheet-section-abilities .resource-counter a.critical-toggle.active {
+    opacity: 1;
+}
+
+/* Below max (but not in peril): the current value shows amber. */
+.hp-counter.low .resource-input-wrapper input[name$=".value"],
+.character-sheet-section-abilities .resource-counter.low .resource-input-wrapper input[name$=".value"] {
+    color: var(--kn-amber);
+}
+
+.character-sheet-section-abilities .resource-counter.peril {
+    border-color: var(--kn-peril);
+}
+
+/* Peril's red wins over amber (listed after .low). */
+.character-sheet-section-abilities .resource-counter.peril .resource-input-wrapper input[name$=".value"] {
+    color: var(--kn-peril);
+}
+
+/* Stat inputs (HP + abilities) are numeric; hide the number spinners. */
+.stat-input {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+.stat-input::-webkit-outer-spin-button,
+.stat-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Armor is editable (override). Numeric, no spinners; an active override shows
+   amber, with a reset-to-auto icon beside it. */
+.armor-input {
+    width: 3em;
+    text-align: center;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+.armor-input::-webkit-outer-spin-button,
+.armor-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.armor-counter.armor-overridden .armor-input {
+    color: var(--kn-amber);
+    font-weight: bold;
+}
+
+.armor-reset {
+    margin-left: 4px;
+    cursor: pointer;
+    opacity: 0.7;
+}
+.armor-reset:hover { opacity: 1; }
+
+/* The d20 save-roll icon at the left of the STR/DEX/WIL labels. */
+.resource-roll .roll-icon {
+    font-size: 11px;
+    margin-right: 3px;
+    opacity: 0.9;
+}
+
+/* Save dice while Character Creation Mode is On (2026-09-01): grayed and
+   inert. The templates drop the data-action (that is what makes it dead);
+   this is only the look. NO pointer-events:none — the element must keep
+   receiving pointerenter or its "turn the mode off" tooltip never fires. */
+.resource-roll.save-roll-off {
+    opacity: 0.45;
+    cursor: default;
+}
+
+/* Confirmation dialogs: blank line before the yes/no question. */
+.knavery-confirm-q {
+    margin-top: 12px;
+    margin-bottom: 0;
+    font-weight: bold;
+}
+
+/* The GM's Damage dialog: the dice builder under the Damage field. It
+   wears the core dialog skin; these rules are layout plus a disabled state,
+   no colours of their own (docs/theming.md — inherit, don't restate). */
+.knavery-gm-damage .wd-dice-builder {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 2px 0 6px;
+}
+.knavery-gm-damage .wd-dice-row {
+    display: flex;
+    gap: 4px;
+}
+.knavery-gm-damage .wd-die,
+.knavery-gm-damage .wd-clear {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 2px 0;
+    font-size: 12px;
+    line-height: 1.6;
+}
+/* ✕ is an action on the field, not a die — it never stretches like one. */
+.knavery-gm-damage .wd-clear { flex: 0 0 2.2em; }
+.knavery-gm-damage .wd-die[disabled],
+.knavery-gm-damage .wd-mode-row input[disabled],
+.knavery-gm-damage .wd-mode-row input[disabled] + span {
+    opacity: 0.4;
+    cursor: default;
+}
+.knavery-gm-damage .wd-mode-row {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+}
+.knavery-gm-damage .wd-mode-row label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--font-size-13, 13px);
+}
+
+/* The combat tracker's Knavery buckets. The list wears core's skin; these rules
+   add only the section dividers and the bucket word that replaces the numeric
+   initiative input — no colours of their own (inherit, don't restate).
+   Scoped to the <ol> class like the drag rules below, NOT #combat (review
+   #13): #combat is the sidebar instance's id, and a POPPED-OUT tracker is a
+   different application whose root does not carry it — the popout rendered
+   the dividers as bare unstyled rows while the sidebar looked right. */
+ol.combat-tracker .knavery-bucket-divider {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 8px 0;
+    font-variant: small-caps;
+    letter-spacing: 0.5px;
+    font-size: 12px;
+    opacity: 0.75;
+}
+ol.combat-tracker .knavery-bucket-divider::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid currentColor;
+    opacity: 0.4;
+}
+ol.combat-tracker .knavery-bucket-word {
+    font-variant: small-caps;
+    letter-spacing: 0.3px;
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+/* GM drag-to-reorder within a bucket (2026-08-08). The grab cursor is the
+   affordance on rolled rows; the drop indicator is an inset accent line above
+   or below the hovered row. Cosmetic only — the drop WRITES combatSort flags
+   and the render re-asserts the order. Scoped to the <ol> class, not #combat,
+   so a popped-out tracker keeps the affordance. */
+ol.combat-tracker li.combatant[draggable="true"] {
+    cursor: grab;
+}
+ol.combat-tracker li.combatant.knavery-dragging {
+    opacity: 0.5;
+}
+ol.combat-tracker li.combatant.knavery-drop-above {
+    box-shadow: inset 0 2px 0 var(--kn-accent);
+}
+ol.combat-tracker li.combatant.knavery-drop-below {
+    box-shadow: inset 0 -2px 0 var(--kn-accent);
+}
+
+/******************************************************************************
+ * Grant-source chip + inventory drag-to-reorder.
+ ******************************************************************************/
+/* Grant-source tag (Background / Bond / Question): a monochrome chip in
+   small-caps with a darker border so a source reads distinctly from the
+   mechanical tags (Bulky, Armor, Damage) without using colour. */
+/* Grant tags share the mechanical tags' text colour (inherited) and are set apart
+   only by their stronger border -- giving them their own lighter text read as
+   washed-out, so they inherit the same ink as everything else. */
+.knavery-grant-tag {
+    font-variant: small-caps;
+    letter-spacing: 0.3px;
+    border-color: var(--kn-chip-border-strong);
+}
+
+/* Grab cursor on reorderable rows only when reorder is enabled. */
+.knavery-reorder-enabled .knavery-items-list-row[data-item-id] {
+    cursor: grab;
+}
+.knavery-reorder-enabled .knavery-items-list-row[data-item-id]:active {
+    cursor: grabbing;
+}
+
+/* Footer hint, shown only when drag-to-reorder is enabled. */
+.knavery-reorder-hint {
+    display: none;
+    padding: 8px 4px 2px;
+    font-size: 12px;
+    font-style: italic;
+    color: var(--kn-muted);
+}
+.knavery-reorder-enabled .knavery-reorder-hint {
+    display: block;
+}
+.knavery-reorder-hint i {
+    opacity: 0.7;
+    margin-right: 3px;
+}
+
+/* Footer hint explaining the grant-source chips, shown only when those tags are
+   enabled. Padded to stand clear of the item rows on its own; tightened when it
+   trails the reorder hint so the two footer lines group together. */
+.knavery-grant-hint {
+    display: none;
+    padding: 8px 4px 2px;
+    font-size: 12px;
+    font-style: italic;
+    color: var(--kn-muted);
+}
+.knavery-grant-tags-enabled .knavery-grant-hint {
+    display: block;
+}
+.knavery-reorder-enabled .knavery-grant-hint {
+    padding-top: 2px;
+}
+.knavery-grant-hint i {
+    opacity: 0.7;
+    margin-right: 3px;
+}
+
+/******************************************************************************
+ * Portrait: the sheet thumbnail, its re-roll die, and the picker gallery.     *
+ ******************************************************************************/
+
+/* Wraps the portrait so the "random portrait" die can sit on it. Occupies the
+   same first grid cell the bare <img> used to, pinned to the top of row 1. */
+.portrait-wrap {
+    position: relative;
+    align-self: start;
+    display: block;
+}
+
+.portrait-wrap .portrait {
+    display: block;
+}
+
+/* Random-portrait die, overlaid bottom-right on the portrait. Gated by
+   generationEnabled in the template, matching the background roller. The
+   pick-list twin (2026-09-03) shares the badge. */
+.portrait-roll,
+.portrait-pick {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.65);
+    color: #fff;
+    border: 1px solid #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: 0.85;
+}
+
+.portrait-roll:hover,
+.portrait-pick:hover {
+    opacity: 1;
+    background: #000;
+}
+
+/* Character sheet only: two badges, the die to the LEFT of the list button
+   (user ask — the stacked bars sit to the right of the d20). Scoped because
+   the npc sheet renders the same .portrait-roll alone at right:4px; the
+   grid class's spelling is the shipped one. */
+.charater-sheet-grid .portrait-roll {
+    right: 32px;
+}
+
+.knavery-portrait-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.knavery-portrait-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 72px);
+    gap: 6px;
+    max-height: 420px;
+    overflow-y: auto;
+    justify-content: center;
+    padding: 4px;
+}
+
+/* An EMPTY grid takes no room (2026-08-14). The custom pane carries two of
+   these — the loose top-level images above the category tiles, and the
+   drill-down's — and a GM who files every portrait into folders has no
+   loose ones at all. Without this, that pane opens with 8px of padded nothing
+   pushing the folder tiles down, which reads as a rendering fault. */
+.knavery-portrait-grid:empty {
+    display: none;
+}
+
+.knavery-portrait-choice {
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.knavery-portrait-choice:hover {
+    border-color: var(--color-shadow-primary, #ff0000);
+}
+
+.knavery-portrait-choice.selected {
+    border-color: var(--kn-accent);
+    box-shadow: 0 0 6px var(--kn-accent);
+}
+
+.knavery-portrait-url {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.knavery-portrait-url-input {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.knavery-portrait-url-set {
+    flex: 0 0 auto;
+    width: auto;
+}
+
+/* CC BY 4.0 attribution for the portrait art, shown at the foot of the picker
+   next to the art it credits. */
+.knavery-portrait-credit {
+    margin-top: 4px;
+    text-align: center;
+    font-size: 11px;
+    font-style: italic;
+    opacity: 0.7;
+}
+
+.knavery-portrait-credit a {
+    color: inherit;
+    text-decoration: underline;
+}
+
+/* Two-tab toggle: shipped Jon Aspeheim art vs the GM's custom folder. */
+.knavery-portrait-tabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid var(--kn-rule-strong);
+}
+
+.knavery-portrait-tab {
+    flex: 0 0 auto;
+    width: auto;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    padding: 4px 12px;
+    cursor: pointer;
+    opacity: 0.6;
+}
+
+.knavery-portrait-tab.active {
+    opacity: 1;
+    border-bottom-color: var(--kn-accent);
+    font-weight: bold;
+}
+
+.knavery-portrait-refresh,
+.knavery-portrait-browse {
+    flex: 0 0 auto;
+    width: auto;
+}
+
+.knavery-portrait-empty {
+    text-align: center;
+    font-size: 12px;
+    font-style: italic;
+    opacity: 0.7;
+    padding: 16px 8px;
+}
+
+/* The Game-Icons gallery browses in two steps: 23 category folders, then that
+   category's thumbnails. Both live in one pane and swap by `hidden`, so the
+   dialog never resizes between them — the grid below reuses .knavery-portrait-grid
+   so a thumbnail is the same object everywhere in the picker. */
+/* 140px, not the 112px this started at: at 112 a tile gives its caption about
+   59px of text, so an ordinary folder name ("Mercenaries", "Greek Roman") broke
+   mid-word. Three roomy columns read better than four cramped ones, and a
+   resized dialog still grows more of them. */
+.knavery-icon-folders {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 6px;
+    max-height: 420px;
+    overflow-y: auto;
+    padding: 4px;
+}
+
+/* `height`/`min-height` are !important because core pins EVERY button to
+   `var(--button-size)` (foundry2.css:4043, @layer elements.forms) and our
+   @layer system loses to it. A tile is an image beside a caption, not a control
+   of standard height: at 32px a two-line caption rendered OUTSIDE the border,
+   overlapping the tiles above and below, which is what a GM's nested folder
+   names produce. Nothing here is decoration — remove either line and the box
+   stops containing its own text. */
+.knavery-icon-folder {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: auto;
+    height: auto !important;
+    min-height: 44px !important;
+    padding: 6px 8px;
+    background: none;
+    border: 1px solid var(--kn-rule);
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: left;
+    line-height: 1.2;
+}
+
+/* The parent folder's name, once, over the tiles that sit inside it. A full-width
+   grid item so it breaks the flow of columns rather than taking a cell. */
+.knavery-folder-group {
+    grid-column: 1 / -1;
+    margin: 6px 2px 0;
+    padding-bottom: 2px;
+    border-bottom: 1px solid var(--kn-rule);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.7;
+}
+
+.knavery-folder-group:first-child {
+    margin-top: 0;
+}
+
+.knavery-icon-folder:hover {
+    border-color: var(--kn-accent);
+}
+
+/* The face is the category's first icon. These are white-on-black glyphs, so
+   they need no background of their own and must not be object-fit: cover — a
+   crop would cut the glyph rather than a photograph's edges. */
+.knavery-icon-folder img {
+    flex: 0 0 auto;
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    border-radius: 3px;
+}
+
+/* A GM's folder name can be one long unbroken word, so a caption may have to
+   break inside a word — but `break-word` only does so when the word cannot fit,
+   where `anywhere` split "Mercenaries" across lines while there was still room. */
+.knavery-icon-folder span {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 12px;
+    overflow-wrap: break-word;
+}
+
+.knavery-icon-back {
+    width: auto;
+    align-self: flex-start;
+    background: none;
+    border: none;
+    padding: 2px 4px;
+    margin-bottom: 4px;
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+.knavery-icon-back:hover {
+    opacity: 1;
+}
+
+
+/******************************************************************************
+ * The NPC sheet (serves `npc` and its `hireling` alias). A character sheet     *
+ * with the background block replaced by a name / career / for-hire / day-rate  *
+ * stack; same tab set, same counters.                                          *
+ ******************************************************************************/
+
+/* The character sheet lays this section out as a grid (name / background line /
+   counters). An NPC has none of that, so it becomes a simple stack. */
+.knavery-npc-sheet .character-sheet-section-name {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* HP and Gold share the foot row of the header, matching the character sheet. The
+   name section is a flex COLUMN, so this is a nested flex ROW rather than the grid
+   placement the character sheet uses; each counter takes an equal half so the pair
+   lines up with the 213px counters in the blocks below.
+
+   `margin-top: auto` pins the pair to the column's FOOT. The column is stretched
+   to the portrait's 140px row, and any role whose stack is shorter (a Monster:
+   name, role, vitals) left the slack at the bottom — a dead band between HP/Gold
+   and the STR/Armor row below (Round 2). The auto margin moves that slack ABOVE
+   the vitals, which is exactly what the character sheet's 1fr slack row does to
+   its own HP/Gold pair. On a hireling (the tallest stack) it resolves to ~0. */
+.knavery-npc-sheet .npc-vitals-line {
+    display: flex;
+    gap: 8px;
+    margin-top: auto;
+}
+
+.knavery-npc-sheet .npc-vitals-line .resource-counter {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+/* The connection line (2026-08-02): a person's For Hire switch, then the
+   "Hired by / Connected to / Formerly connected to" label with its break or
+   Connect control. The label takes the slack so the control hugs the line's
+   end; italic + muted, the voice the tab's keeper line spoke in before it
+   moved here. "For Hire" stays a plain inline label+checkbox, not a counter:
+   it is a switch that reveals the day rate, and dressing it as a labelled
+   value box would imply it holds one. */
+.knavery-npc-sheet .connection-line .connection-label {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-style: italic;
+    color: var(--kn-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.knavery-npc-sheet .connection-line .connection-detach,
+.knavery-npc-sheet .connection-line .connection-attach {
+    flex: 0 0 auto;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.knavery-npc-sheet .connection-line .connection-detach:hover,
+.knavery-npc-sheet .connection-line .connection-attach:hover {
+    opacity: 1;
+}
+
+.knavery-npc-sheet .for-hire-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
+    font-variant: small-caps;
+    font-size: 15px;
+    color: var(--kn-ink-muted, inherit);
+    cursor: pointer;
+}
+
+.knavery-npc-sheet .for-hire-check {
+    flex: 0 0 auto;
+    margin: 0;
+}
+
+.knavery-npc-sheet .name-line,
+.knavery-npc-sheet .profession-line,
+.knavery-npc-sheet .day-rate-line {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+}
+
+/* .name-input positions itself with grid-column on the character sheet; under
+   the flex stack above it needs to stretch instead. */
+.knavery-npc-sheet .name-input,
+.knavery-npc-sheet .profession-input {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+/* Day rate is a short number ("30") with a trailing "gp/day", so the input stays
+   narrow rather than stretching like the profession field. */
+.knavery-npc-sheet .day-rate-input {
+    flex: 0 0 auto;
+    width: 56px;
+    min-width: 0;
+}
+
+.knavery-npc-sheet .day-rate-suffix {
+    flex: 0 0 auto;
+    opacity: 0.7;
+    font-size: 12px;
+}
+
+.knavery-npc-sheet .name-roll,
+.knavery-npc-sheet .profession-roll {
+    flex: 0 0 auto;
+    cursor: pointer;
+    opacity: 0.55;
+    font-size: 12px;
+}
+
+.knavery-npc-sheet .name-roll:hover,
+.knavery-npc-sheet .profession-roll:hover {
+    opacity: 1;
+}
+
+/* LIMITED view (2026-08-21): the whole sheet for a limited viewer is portrait,
+   name, description — tokens only, both themes for free. The portrait is not
+   clickable here (no editPortrait action in the limited branch), so no cursor. */
+.knavery .knavery-limited-sheet {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    text-align: center;
+}
+
+.knavery .knavery-limited-sheet .portrait {
+    height: 200px;
+    width: auto;
+    max-width: 100%;
+    cursor: default;
+}
+
+.knavery .knavery-limited-name {
+    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
+    font-variant: small-caps;
+    color: var(--kn-ink);
+    border: none;
+    margin: 0;
+}
+
+.knavery .knavery-limited-description {
+    color: var(--kn-ink);
+    text-align: left;
+    width: 100%;
+    overflow-y: auto;
+}
+
+/* Row 1 sizes to the name stack, which is taller or shorter than a character's
+   header depending on whether "For Hire" is ticked (the day-rate row appears), so
+   it is `auto` rather than the character sheet's fixed track. */
+.knavery-npc-sheet .charater-sheet-grid {
+    grid-template-rows: auto auto 1fr;
+}
+
+/* Inanimate drops the buttons/abilities/others sections entirely, so with three
+   tracks the tab section AUTO-PLACES into row 2 — the `auto` track — and sizes
+   to its content minimum while the 1fr third row sits EMPTY below it: a ~97px
+   tab body over ~400px of dead space, no error anywhere (review #5). Two tracks
+   put the tabs in the 1fr. The template stamps the class; nothing here reads
+   document state. */
+.knavery-npc-sheet .charater-sheet-grid.inanimate-grid {
+    grid-template-rows: auto 1fr;
+}
+
+/* Three rows, not four. HP used to be a fourth box in this column and the track
+   count was never brought back down when it moved up to the vitals line, leaving
+   a 36px phantom row under WIL. */
+.knavery-npc-sheet .character-sheet-section-abilities {
+    grid-template-rows: repeat(3, 36px);
+}
+
+/* Description tab: the sheet's one description editor, UNLABELLED since
+   2026-08-20. The heading here read "Description" directly under a tab called
+   Description; it was written when a second, unlabelled notes box sat above it,
+   and that box went on 2026-08-09. What tells the reader this is a field now is
+   the border+wash the editor shares with Notes, not a word. */
+.knavery-npc-sheet .npc-description-section {
+    display: flex;
+    flex-direction: column;
+    min-height: 220px;
+}
+
+/* The description CONTENT reads two points larger than core's 14px default
+   (2026-08-02, user: the generated monster prose was hard to read). On the
+   prose-mirror element so it inherits into both halves — the enriched display
+   child and the activated .editor-content. font-size ONLY: setting `display`
+   here breaks activation (see the warning at the `.knavery prose-mirror` rule). */
+.knavery-npc-sheet .npc-description-section prose-mirror {
+    font-size: 16px;
+}
+
+
+/******************************************************************************
+ * Transports & containers.                                                    *
+ ******************************************************************************/
+
+/* A transport's slot column reads "+N" (capacity it HOLDS), not the cost-to-carry
+   every other shop row shows — bold to mark it as a gain rather than a spend.
+   (The green tint was dropped 2026-07-23 with the marketplace de-skin.) */
+.marketplace .mkt-capacity {
+    opacity: 0.9;
+    font-weight: bold;
+}
+
+/******************************************************************************
+ * Configure Settings submenus (settings-menus.js).                           *
+ ******************************************************************************/
+
+/* The four submenu apps render core's own standard-form rows — label,
+   control, hint beneath — so they need almost nothing of ours. The positional
+   headers and compact rows that used to live here (knavery-settings-header,
+   knavery-setting-compact, knavery-setting-text; 2026-07 to 2026-08-22) went with
+   the flat-list grouping: the submenus made them obsolete, hidden hints and
+   hover tooltips included. */
+
+/* Core's standard-form row gives the label a narrow column and a 32px line
+   height (sized for core's two-word labels) and the control the wider one.
+   Ours are the other way round: the label is a self-describing sentence — it
+   was the whole description while the compact rows hid the hints, and the
+   translations carry the same length — and the control is a checkbox or a
+   short box. So the label takes the row, tight-leaded; the control sits at
+   the right at its natural width; the hint keeps core's own line beneath. */
+.ab-settings-menu .form-group > label {
+    flex: 1 1 auto;
+    line-height: 1.35;
+    font-weight: 600;
+}
+
+.ab-settings-menu .form-group > .form-fields {
+    flex: 0 0 auto;
+    width: auto;
+    min-width: 0;
+}
+
+.ab-settings-menu .form-group > .form-fields input[type="number"] {
+    width: 64px;
+    text-align: center;
+}
+
+.ab-settings-menu .form-group > .form-fields input[type="text"] {
+    width: 240px;
+}
+
+/* AppV2 clamps a height:auto window to the viewport, and its .window-content
+   is a flex column that gives its children no flex and no scrolling (see the
+   restore block at the top of this file) — so a ten-row group on a short
+   screen clipped its own Save footer. The rows part scrolls; the footer stays
+   put at the bottom of the window. */
+.ab-settings-menu .ab-settings-rows {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+/* A rule beneath every row but the last (user ask, 2026-08-22). With hints
+   rendering under some rows and not others, a nine-row group read as one run
+   of text — the rule is what tells a row's hint from the next row's label.
+   --kn-rule is the item-list row separator, which is what these rows are;
+   it resolves on the app element (.application carries the dark palette).
+   `dev:settings` reads the computed border off every row. */
+.ab-settings-menu .ab-settings-rows > .form-group {
+    padding-block: 6px 8px;
+    border-bottom: 1px solid var(--kn-rule);
+}
+
+.ab-settings-menu .ab-settings-rows > .form-group:last-child {
+    border-bottom: none;
+}
+
+/* A sub-option greyed out because its master toggle is off (the Barebones
+   failed-career row while Barebones sheets are not offered). */
+.ab-settings-menu .form-group.knavery-setting-disabled {
+    opacity: 0.45;
+}
+
+/******************************************************************************
+ * Counter value vs. max, container-tab states, fatigue rows, tab padding.    *
+ ******************************************************************************/
+
+/* Current vs. max: the current value (left) is bold ink; the max (right) is
+   smaller and --kn-faint, and the "/" separator is a point LARGER than the max
+   (13px vs 12px) so it reads a touch stronger as the divider while sharing the
+   max's colour; the pair still trails the bold current value. The bump is safe
+   because the counter is a fixed 36px, so a bigger "/" does not grow the box.
+   Reinforces the left=current convention; the inputs' title tooltips name each
+   explicitly on hover. --kn-faint is deliberately a step short of a mid-grey on
+   either scheme -- legible, but clearly subordinate to the current value. */
+.hp-counter .resource-input-wrapper input[name$=".value"],
+.character-sheet-section-abilities .resource-input-wrapper input[name$=".value"] {
+    font-weight: bold;
+}
+
+.hp-counter .resource-input-wrapper input[name$=".max"],
+.character-sheet-section-abilities .resource-input-wrapper input[name$=".max"] {
+    font-size: 12px;
+    color: var(--kn-faint);
+}
+
+.hp-counter .resource-input-wrapper span,
+.character-sheet-section-abilities .resource-input-wrapper span {
+    font-size: 13px;
+    color: var(--kn-faint);
+}
+
+/* The Connect link sits as a right-hand group so the space-between header
+   keeps Name on the left. Only the keeper's Add remains here (2026-08-02):
+   the child end's keeper line and Connect control moved to the npc sheet's
+   header connection line, so the partial — and this block — is the character
+   sheet's alone. */
+.knavery-items-list-header .connection-controls {
+    display: flex;
+    gap: 12px;
+}
+
+.container-empty {
+    text-align: center;
+    padding: 20px 12px;
+    color: var(--kn-muted);
+}
+
+.container-empty p {
+    margin: 0 0 8px;
+    font-style: italic;
+}
+
+.container-empty-shop {
+    font-weight: bold;
+}
+
+/* Fatigue fills inventory slots; give those rows the Die of Fate's teal
+   signature (an --kn-accent-wash tint plus the same --kn-accent glow) so a
+   player can see at a glance how much of their load is fatigue. */
+.fatigue-row {
+    background: var(--kn-accent-wash);
+    box-shadow: 0 0 8px var(--kn-accent);
+    text-shadow: 0 0 8px var(--kn-accent);
+    border-radius: 2px;
+}
+
+/* Breathing room between the tab headers and the tab content.
+   .knavery scope: see the note at .knavery .portrait. */
+.knavery .description,
+.knavery .tab[data-tab="notes"] {
+    padding-top: 12px;
+}
+
+.character-omen-scar .omen-roll.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+    cursor: default;
+}
+
+/* "Compatible with Knavery" badge + CC BY-SA attribution at the foot of the
+   Description tab (both 2e and Barebones sheets). The badge is self-bordered
+   black-on-white, so it reads on either sheet theme. */
+.knavery-compat-footer {
+    margin-top: 18px;
+    padding-top: 12px;
+    border-top: 1px solid var(--kn-hairline);
+    text-align: center;
+}
+
+.knavery-compat-footer a {
+    display: block;
+}
+
+.knavery-compat-footer img {
+    display: block;
+    width: 150px;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+.knavery-compat-caption {
+    margin-top: 6px;
+    font-size: 11px;
+    font-style: italic;
+    opacity: 0.7;
+    text-align: center;
+}
+
+.knavery-compat-caption a {
+    color: inherit;
+    text-decoration: underline;
+}
+
+/******************************************************************************
+ * Background authoring form (editable custom 2e backgrounds).                *
+ * Read-only shipped backgrounds use .background-details above; this styles    *
+ * the editable form a GM gets on a world-pack background.                 *
+ ******************************************************************************/
+.background-editor {
+    overflow-y: auto;
+    padding: 4px 8px 12px;
+}
+
+.background-editor h3 {
+    margin: 12px 0 4px;
+    border-bottom: 1px solid var(--kn-edge);
+    font-size: 1.05em;
+}
+
+.background-editor .bg-edit-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0;
+}
+
+.background-editor .bg-edit-row label {
+    flex: 0 0 90px;
+    font-weight: bold;
+}
+
+.background-editor .bg-edit-row select {
+    flex: 1;
+}
+
+.background-editor .bg-edit-hint {
+    margin: 4px 0;
+    font-size: 0.85em;
+    font-style: italic;
+    opacity: 0.75;
+}
+
+/* The "the form is on Details" pointer above a background's description. Same
+   look as .bg-edit-hint, which cannot be reused directly: that selector is
+   scoped to .background-editor and this hint lives in the description tab,
+   outside it — and on a locked background there is no .background-editor at
+   all.
+
+   Colour is set EXPLICITLY rather than inherited-and-dimmed the way
+   .bg-edit-hint does it. The description tab inherits full-strength body text
+   (#222 light, #efe6d8 dark) — readable either way, but it makes an aside look
+   like content, which matters more now the hint sits ABOVE the description.
+   --kn-muted is the token for exactly this ("secondary: hints, labels") and
+   flips with the theme, which a hard-coded colour would not.
+
+   IT SITS ON ITS OWN SURFACE (user report 2026-08-15: "this is blending
+   together"). Italic + --kn-muted was not enough on its own — two full-size
+   paragraphs of the same measure, 10px apart, read as one document whose first
+   sentence happens to be in italics, so a Cleric's pointer looked like the
+   Cleric's own prose. Nothing in this system's CONTENT ever paints a
+   background, so a panel is a distinction the description cannot accidentally
+   acquire, and it needs no reading to work. Size, position and wording are
+   unchanged: all three are recorded decisions (see the note on font-size, and
+   the ABOVE-the-prose-mirror note in the template).
+
+   SHARED with the table banner (module/table-banner.js), the same shape one
+   sheet over: an aside sitting above the content it explains. The selector is
+   three classes deep on purpose — core's `.standard-form .hint` (the sheet's
+   content carries standard-form) sets margin, colour and size at (0,2,0), and
+   a bare class would lose to it. */
+.bg-tab-hint,
+.application.roll-table-sheet .ab-table-role,
+.application.roll-table-sheet .ab-table-duplicate {
+    margin: 0 0 10px;
+    /* Full size, NOT the 0.85em .bg-edit-hint uses. That hint sits inside a form
+       the reader is already looking at; this one has to be read by someone who
+       has not yet noticed there is anywhere else to go, and shrinking it below
+       the description it sits above made it read as fine print. Italic and
+       --kn-muted still mark it as an aside. */
+    font-size: 1em;
+    font-style: italic;
+    color: var(--kn-muted);
+    /* Flex so a wrapped second line indents under the TEXT, not under the icon. */
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 8px 10px;
+    border-radius: 3px;
+    background: var(--kn-wash);
+    /* Inset shadow, not border-left, and --kn-rule-strong, not --kn-accent —
+       both for the reasons already recorded at .chat-message.whisper above: a
+       border shorthand loses to core's unlayered one, and the teal accent is
+       tuned for near-black backdrops. This panel sits on the sheet surface,
+       which is parchment in light mode, where the accent washes out. */
+    box-shadow: inset 3px 0 0 var(--kn-rule-strong);
+}
+
+.bg-tab-hint > i,
+.application.roll-table-sheet .ab-table-role > i,
+.application.roll-table-sheet .ab-table-duplicate > i {
+    /* Optically centred on the first line rather than box-aligned to it. */
+    margin-top: 0.15em;
+    opacity: 0.8;
+}
+
+/* The table banner's own two departures. It is four sentences, not one, so it
+   is set upright: a paragraph of italic reads as fine print, and this is the
+   one thing on the sheet a GM has to read. And it sits in a flex column
+   beside a list declared `flex: 1; height: 0` (core's roll-table rules), whose
+   default shrink would squeeze the banner to nothing on a short window. */
+.application.roll-table-sheet .ab-table-role,
+.application.roll-table-sheet .ab-table-duplicate {
+    flex: 0 0 auto;
+    margin: 0 0 8px;
+    font-style: normal;
+}
+
+/* The duplicate-name line under the banner: the same panel, with the rule and
+   the glyph in the warn colour so it reads as the one thing here to act on. */
+.application.roll-table-sheet .ab-table-duplicate {
+    box-shadow: inset 3px 0 0 var(--kn-warn);
+}
+
+.application.roll-table-sheet .ab-table-duplicate > i {
+    color: var(--kn-warn);
+    opacity: 1;
+}
+
+/* Example names — a wrapping list of small pills. */
+.bg-name-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.bg-name-item {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.bg-name-item .bg-name-input {
+    width: 110px;
+}
+
+/* Starting gear rows + table-option chips. */
+.bg-gear-list {
+    border: 1px dashed var(--kn-edge);
+    border-radius: 4px;
+    padding: 4px;
+}
+
+.bg-gear-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 2px 0;
+}
+
+.bg-gear-item .bg-gear-name {
+    flex: 1;
+}
+
+.bg-gear-item .bg-gear-uses {
+    width: 56px;
+}
+
+.bg-gear-item.bg-missing .bg-gear-name {
+    color: var(--kn-error);
+}
+
+.bg-gear-tags {
+    font-size: 0.8em;
+    font-style: italic;
+    opacity: 0.7;
+    white-space: nowrap;
+}
+
+.bg-snapshot-badge {
+    color: var(--kn-ok);
+}
+
+.bg-drop-hint {
+    margin: 2px 0 0;
+    font-size: 0.8em;
+    font-style: italic;
+    opacity: 0.55;
+}
+
+.bg-drop-hint-inline {
+    display: inline;
+    margin-left: 4px;
+}
+
+.bg-name-add,
+.bg-gear-add {
+    display: inline-block;
+    margin: 4px 0 0;
+    font-size: 0.85em;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.bg-name-remove,
+.bg-gear-remove,
+.bg-option-item-remove {
+    cursor: pointer;
+    opacity: 0.55;
+}
+
+.bg-name-remove:hover,
+.bg-gear-remove:hover,
+.bg-option-item-remove:hover {
+    opacity: 1;
+    color: var(--kn-error);
+}
+
+/* The two d6 tables. */
+.bg-edit-table {
+    border: 1px solid var(--kn-edge);
+    border-radius: 4px;
+    padding: 6px;
+    margin: 6px 0;
+}
+
+.bg-table-question {
+    width: 100%;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.bg-edit-options {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.bg-edit-option {
+    margin: 6px 0;
+}
+
+.bg-option-desc {
+    width: 100%;
+    resize: vertical;
+}
+
+.bg-option-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 2px;
+}
+
+.bg-option-gold-label {
+    font-size: 0.8em;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.bg-option-gold {
+    width: 56px;
+}
+
+.bg-option-items {
+    flex: 1;
+    min-height: 24px;
+    border: 1px dashed var(--kn-edge);
+    border-radius: 4px;
+    padding: 2px 4px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+}
+
+.bg-item-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 1px 6px;
+    border-radius: 10px;
+    background: var(--kn-wash-strong);
+    font-size: 0.82em;
+    white-space: nowrap;
+}
+
+.bg-item-chip.is-snapshot {
+    background: var(--kn-ok-wash);
+}
+
+/* Background authoring toolbar (Test ×10 / Duplicate) + Test-×10 report dialog. */
+.bg-edit-toolbar {
+    display: flex;
+    gap: 12px;
+    margin: 2px 0 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--kn-edge);
+}
+
+.bg-edit-toolbar.readonly {
+    border-bottom: none;
+    margin-bottom: 4px;
+}
+
+.bg-edit-toolbar a {
+    cursor: pointer;
+    font-size: 0.85em;
+    text-decoration: underline;
+}
+
+.bg-preview {
+    font-size: 0.9em;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.bg-preview h4 {
+    margin: 10px 0 2px;
+    border-bottom: 1px solid var(--kn-hairline);
+}
+
+.bg-preview-ok {
+    color: var(--kn-ok-strong);
+    font-weight: bold;
+}
+
+.bg-preview-problems {
+    list-style: none;
+    margin: 0 0 4px;
+    padding: 0;
+}
+
+.bg-preview-problems li {
+    margin: 2px 0;
+}
+
+.bg-preview-error {
+    color: var(--kn-error);
+}
+
+.bg-preview-warn {
+    color: var(--kn-warn);
+}
+
+.bg-preview-gear,
+.bg-preview-options {
+    margin: 2px 0;
+    padding-left: 22px;
+}
+
+.bg-preview-options li {
+    margin: 4px 0;
+}
+
+.bg-preview-items {
+    font-size: 0.9em;
+    opacity: 0.85;
+    padding-left: 4px;
+}
+
+.bg-preview-fired {
+    display: inline-block;
+    min-width: 34px;
+    font-variant-numeric: tabular-nums;
+    font-weight: bold;
+    opacity: 0.7;
+}
+
+.bg-preview-gold {
+    color: var(--kn-warn);
+    font-weight: bold;
+}
+
+.bg-preview-blank {
+    opacity: 0.6;
+}
+
+.bg-preview-sample {
+    margin-top: 8px;
+    font-style: italic;
+    opacity: 0.8;
+}
+
+.bg-kind.ok {
+    color: var(--kn-ok);
+}
+
+.bg-kind.bad {
+    color: var(--kn-error);
+}
+
+.bg-kind.warn {
+    color: var(--kn-warn);
+}
+
+.bg-source-fixed {
+    font-weight: bold;
+    align-self: center;
+}
+
+/* Kettlewright import: the pre-flight options dialog. Deliberately plain — this
+   is a Foundry dialog, so it wears the core skin. The checkbox row it once
+   styled retired with the background gate (2026-09-01); the hint styling now
+   dresses the dialog's warning paragraph. */
+.kwi-options .kwi-hint {
+    margin: 0 0 4px;
+    font-size: 12px;
+    font-style: italic;
+    color: var(--kn-muted);
+}
+
+/* ---- The GM's Dashboard ---------------------------------------------
+   A launcher, so it borrows core's button chrome and adds layout only.
+
+   The grid REFLOWS rather than stretching (`auto-fill` + `minmax`), which is
+   what makes this window safe to resize where Mythic Bastionland's fixed
+   twelve-column equivalent is not. Narrow it and the buttons re-column.
+
+   The window-content's one child is `.knavery-dashboard-inner`, because an
+   ApplicationV2 part must render exactly ONE root element — several and the
+   render throws and the window never opens. So the restored
+   `.knavery.sheet .window-content > * { flex: 1 }` lands on the wrapper, which
+   is what we want, and the wrapper is the flex column that lays out the four
+   bands. The BODY takes the slack and the scrolling; the tabs, the visibility
+   row and the damage button keep their natural height, so they stay put while
+   the panel scrolls under them. */
+.knavery-dashboard .knavery-dashboard-inner {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.knavery-dashboard .knavery-dashboard-body {
+    flex: 1 1 auto;
+    overflow: hidden auto;
+    min-height: 0;   /* a flex child will not shrink below its content without this */
+}
+
+/* Six tabs will not fit a narrowed window on one line, and core's `.sheet-tabs`
+   is `flex-wrap: nowrap`, so without this the strip pushes the window's own
+   content wider than the frame and the whole thing scrolls sideways. Core's
+   rule is in @layer blocks.base and this file is @layer system, declared
+   later, so no !important is needed. */
+.knavery-dashboard .knavery-dashboard-tabs {
+    flex-wrap: wrap;
+    /* The clock band above needs to read as a separate thing from the tabs
+       (user, 2026-09-11: "there should be a line break or space between the
+       calendar functions at the top and the row of tabs"). The band supplies
+       most of that gap; this keeps the strip off the visibility row. */
+    margin-top: 4px;
+}
+
+/* WIDER CELLS AND LOOSER ROWS since 2026-09-10 (user: "very crowded and
+   difficult to read"). Rows are gapped more than columns on purpose, so a row
+   reads as a row rather than as part of a field of buttons. */
+.knavery-dashboard .knavery-dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 8px 6px;
+    margin-bottom: 14px;
+    align-items: stretch;
+}
+
+/* GLYPH, THEN A LEFT-ALIGNED LABEL. Every label on a tab starts at the same x
+   because the glyph sits in a fixed 1.1em box, which is what lets the eye run
+   down the column instead of reading each button.
+
+   THE HEIGHT OVERRIDE IS LOAD-BEARING, not tidying. Core pins every <button>
+   to `height: var(--button-size)` with a matching min-height (foundry2.css,
+   @layer elements.forms), overflow stays visible, and a label that wraps to a
+   second line is therefore DRAWN OUTSIDE its own button — no error, no
+   clipping, nothing in the console. `dev:gm-dashboard` measures
+   scrollHeight against clientHeight on every button rather than trusting this
+   rule to have applied. */
+.knavery-dashboard .knavery-dashboard-grid button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 6px;
+    width: 100%;
+    height: auto;
+    min-height: var(--button-size, 32px);
+    margin: 0;
+    padding: 4px 8px;
+    text-align: left;
+    line-height: 1.2;
+}
+
+.knavery-dashboard .knavery-dashboard-grid button > i {
+    flex: 0 0 1.1em;
+    width: 1.1em;
+    text-align: center;
+}
+
+/* Labels WRAP rather than truncate: a hidden half-label is worse than a taller
+   row, and the pair stretches so the two halves still read as one control. */
+.knavery-dashboard .knavery-dashboard-grid button > span {
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+/* A combined draw shares the tab's first grid with the table pairs, since the
+   heading it used to sit under is gone. The wrapper exists so the button fills
+   one grid cell exactly as a pair does — and so its PARENT is not the grid,
+   which `dev:gm-dashboard` scans for an eye when it checks that no set
+   button grew one. It is deliberately not `.knavery-dashboard-pair`: the same
+   probe counts those against the number of roll buttons. */
+.knavery-dashboard .knavery-dashboard-solo {
+    display: flex;
+    min-width: 0;
+}
+
+.knavery-dashboard .knavery-dashboard-solo > button {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+/* A table button is a PAIR: the name rolls it, the eye shows it to the
+   players. The pair occupies one grid cell, so the reflowing column count is
+   unchanged and a narrowed window behaves exactly as it did before. The eye is
+   fixed-width and the name takes the rest, so long labels shrink the label and
+   never the target you are aiming at. */
+.knavery-dashboard .knavery-dashboard-pair {
+    display: flex;
+    gap: 2px;
+    min-width: 0;
+}
+
+.knavery-dashboard .knavery-dashboard-pair > button:first-child {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+/* The eye loses its border and becomes a quiet glyph that lights on hover and
+   on focus. It is ALWAYS present — hiding it until hover costs discoverability
+   and does nothing at all on a touch screen. */
+.knavery-dashboard .knavery-dashboard-pair > .knavery-show-btn {
+    flex: 0 0 26px;
+    width: 26px;
+    min-height: 0;
+    padding: 0;
+    justify-content: center;
+    border: none;
+    background: none;
+    opacity: 0.6;
+}
+
+.knavery-dashboard .knavery-dashboard-pair > .knavery-show-btn > i {
+    flex: 0 0 auto;
+}
+
+.knavery-dashboard .knavery-dashboard-pair > .knavery-show-btn:hover,
+.knavery-dashboard .knavery-dashboard-pair > .knavery-show-btn:focus-visible {
+    opacity: 1;
+    background: var(--kn-wash-strong);
+}
+
+/* The popup every client opens when a table is shown, and the chat card that
+   records it. One rule set, because they render the same markup. */
+.knavery-shown-table {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.knavery-shown-table .knavery-show-title {
+    font-weight: 600;
+}
+
+/* The popup's own title bar already names the table, so the body's heading is
+   a duplicate THERE and only there. The chat card has no title bar and needs
+   it, which is why one render serves both and the CSS does the hiding. */
+.knavery-shown-table-view .knavery-show-title {
+    display: none;
+}
+
+/* THE REVEAL MUST SCROLL. The restore at the top of this file is scoped
+   `.knavery.sheet` and this window is deliberately NOT a sheet (it is a reveal,
+   not a document sheet -- see ShownTableView), so it inherited core's flat
+   `overflow: hidden` on .window-content (foundry2.css:7030) and AppV2's
+   viewport clamp on .application (:6993). Measured before the fix on the Name
+   table: a 922px window over 1401px of content, 517px of it unreachable --
+   scrollbar absent, wheel dead, no resize handle. A GM showing a table is
+   showing the odds, and a third of them were off the bottom.
+
+   The pair is deliberate: `flex: 1` lets the body take the window's height so
+   there is something for `overflow: auto` to act on. Without it the body is
+   `flex: 0 1 auto` and gets shrunk instead, which is the same trap the sheet
+   restore documents. */
+.knavery-shown-table-view .window-content {
+    overflow: hidden auto;
+}
+
+.knavery-shown-table-view .window-content > * {
+    flex: 1;
+}
+
+.knavery-shown-table .knavery-show-formula {
+    margin-bottom: 4px;
+    font-size: 12px;
+    color: var(--kn-muted);
+}
+
+.knavery-shown-table .knavery-show-row {
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+    padding: 1px 0;
+    border-top: 1px solid var(--kn-hairline);
+}
+
+.knavery-shown-table .knavery-show-range {
+    flex: 0 0 3.2em;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: var(--kn-muted);
+}
+
+.knavery-shown-table .knavery-show-text {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.knavery-dashboard .knavery-dashboard-head {
+    margin: 18px 0 8px;
+    padding-bottom: 2px;
+    border-bottom: 1px solid var(--kn-hairline);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--kn-muted);
+}
+
+/* WHO SEES THE RESULT, at 16px rather than 12 (user ruling 2026-09-11). It
+   governs all 45 buttons under it and was reading as a footnote to them.
+
+   The SELECT needs the size stated on itself: a form control does not inherit
+   font-size from its parent, so styling the row alone leaves the dropdown
+   small beside its own label — the same fact that makes core's form controls
+   look consistent whatever a sheet does around them. */
+.knavery-dashboard .knavery-dashboard-visibility {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin: 4px 0 6px;
+    font-size: 16px;
+    color: var(--kn-muted);
+}
+
+.knavery-dashboard .knavery-dashboard-visibility select {
+    flex: 1;
+    height: auto;
+    min-height: var(--input-height, 32px);
+    font-size: 16px;
+}
+
+.knavery-dashboard .knavery-dashboard-footer {
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid var(--kn-line);
+}
+
+.knavery-dashboard .knavery-dashboard-footer button {
+    width: 100%;
+    margin: 0;
+}
+
+/* ---- The offer picker's filter --------------------------------------------
+   The target list used to be every other player character, three or four
+   rows. It is now every actor the user can SEE, which in a world with an
+   imported bestiary is dozens — so the filter is part of the feature, not
+   polish on top of it. A group header hides when nothing under it survives,
+   or the list shows headings with no rows beneath them. */
+.knavery-offer-picker .knavery-offer-filter {
+    width: 100%;
+    margin-bottom: 6px;
+}
+
+.knavery-offer-picker .knavery-offer-group {
+    margin: 8px 0 2px;
+    padding-bottom: 2px;
+    border-bottom: 1px solid var(--kn-line);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--kn-muted);
+}
+
+.knavery-offer-picker .knavery-offer-group:first-of-type {
+    margin-top: 0;
+}
+
+.knavery-offer-picker .knavery-hidden {
+    display: none;
+}
+
+/* "Copy to Your World" (module/take-over.js): a headed paragraph per point, a
+   counts line, and a hint. Layout only - the dialog is core chrome and keeps
+   core's colours, so there is nothing here for either theme to get wrong. */
+.knavery-take-over p {
+    margin: 0 0 0.6em;
+}
+
+.knavery-take-over p:last-child {
+    margin-bottom: 0;
+}
+
+.knavery-take-over .take-over-counts {
+    font-size: var(--font-size-13);
+}
+
+/* Both take-over windows SCROLL. A `DialogV2.wait` window at height auto is
+   clamped to the viewport by `_updatePosition` and core hides the overflow, so
+   on a 650px screen the confirm's Copy button sat below the bottom edge with
+   no way to reach it (review #31). Same shape as the shown-table reveal above. */
+.knavery-take-over-dialog .window-content {
+    overflow: hidden auto;
+}
+
+/* The RESULT window's buttons each carry a sentence - "Show the Custom
+   Marketplace folder in Items" - because "Open Items" told the GM nothing
+   about what it opened (user, round nine). One button per row, in the door
+   rule's shape below: the label left-aligned after a glyph column, wrapping,
+   balanced. Close keeps core's centring, having no glyph to align to. Core's
+   `.standard-form .form-footer > button { flex: 1 }` sits in a layer this
+   file's outranks, so no !important. */
+.knavery-take-over-result .form-footer > button {
+    flex: 1 0 100%;
+    justify-content: flex-start;
+    gap: 8px;
+    text-align: left;
+    white-space: normal;
+    text-wrap: balance;
+    height: auto;
+    min-height: var(--button-size);
+    line-height: 1.25;
+    padding-block: 5px;
+}
+
+.knavery-take-over-result .form-footer > button > i {
+    flex: 0 0 1.1em;
+    text-align: center;
+}
+
+.knavery-take-over-result .form-footer > button[data-action="close"] {
+    justify-content: center;
+}
+
+/* One button, one job, one row: these buttons carry a whole sentence, and
+   sharing a row left them cramped and unreadable (user, round two). The row
+   wraps so each takes the sidebar's full width under it - core's .flexrow does
+   not wrap on its own.
+
+   The label is LEFT-ALIGNED after a fixed glyph column, which is the GM's
+   Dashboard ruling applied here: centred text under a glyph makes every line
+   start somewhere different, and a sentence that wraps looks broken rather
+   than merely long. `text-wrap: balance` is what stops "...to this" / "world"
+   - it splits a two-line label evenly instead of orphaning the last word. */
+header.character-generator.directory-header .header-actions {
+    flex-wrap: wrap;
+}
+
+header.character-generator.directory-header .header-actions > button.knavery-take-over {
+    flex: 1 0 100%;
+    justify-content: flex-start;
+    gap: 8px;
+    text-align: left;
+    white-space: normal;
+    text-wrap: balance;
+    height: auto;
+    min-height: var(--input-height);
+    line-height: 1.25;
+    padding-block: 5px;
+}
+
+header.character-generator.directory-header .header-actions > button.knavery-take-over > i {
+    flex: 0 0 1.1em;
+    text-align: center;
+}
+
+/* The Actor Directory's own row - Create PC, NPC, Hireling, Monster,
+   Companion, Transport, Container, Faction, Import from Kettlewright - shares
+   this header and CAUGHT the full-width rule above for a day (review #31).
+   User ruling: every label fully legible, no truncation, and a button that
+   needs the whole width may take it. So each button is at least as wide as
+   its own label, the row wraps into as many rows as that takes, and the
+   leftover space on a row is shared - core's ellipsis never gets a chance.
+   `fit-content`, not `max-content` (review #32): a label wider than the whole
+   sidebar - Import from Kettlewright at core's larger Font Size steps, longer
+   still in Spanish - was pinned wider than the 300px the sidebar has and cut
+   off mid-word, the ellipsis being exactly what this rule refuses. At
+   fit-content it is still never narrower than a label that fits, and a label
+   that does not fit takes the width there is and WRAPS, the door rule's own
+   shape - the one reading of "fully legible" that survives every font size. */
+header.character-generator.directory-header .header-actions > button:not(.knavery-take-over) {
+    flex: 1 1 auto;
+    min-width: fit-content;
+    white-space: normal;
+    text-wrap: balance;
+    height: auto;
+    min-height: var(--button-size);
+    line-height: 1.25;
+    overflow: visible;
+    text-overflow: clip;
+}

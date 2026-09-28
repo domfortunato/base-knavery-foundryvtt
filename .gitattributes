@@ -1,0 +1,10 @@
+# LevelDB packs are binary; autocrlf would corrupt CURRENT/LOG on Windows.
+packs/** -text
+
+# The Foundry CLI reads and writes pack YAML with LF.
+src/packs/** text eol=lf
+
+*.png -text
+*.webp -text
+*.jpg -text
+*.woff2 -text

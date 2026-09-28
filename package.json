@@ -1,0 +1,24 @@
+{
+  "name": "base-knavery",
+  "version": "1.0.0",
+  "description": "Base Knavery - a Foundry VTT system compatible with Knave 2e",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint --ext .js ./module",
+    "build:packs": "node tools/packs.mjs build",
+    "extract:packs": "node tools/packs.mjs extract",
+    "check:manifest": "node tools/dev/manifest-check.mjs",
+    "check:fields": "node tools/dev/field-audit.mjs",
+    "check": "npm run check:manifest && npm run check:fields",
+    "release": "node tools/release.mjs"
+  },
+  "author": "Dom Bosco (https://github.com/domfortunato)",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "@foundryvtt/foundryvtt-cli": "^3.0.4",
+    "eslint": "^8.57.0",
+    "js-yaml": "^4.1.0",
+    "playwright": "^1.49.0"
+  }
+}
