@@ -227,7 +227,9 @@ if (mode === "build" && !process.argv.includes("--force")) {
 
   if (!marker) {
     console.log("  no comparable sync marker — taking a backup before building");
-    try {
+    const backupScript = path.join(root, "tools", "dev", "backup.mjs");
+    if (!fs.existsSync(backupScript)) console.log("  (no backup script in this repo; a fresh build has nothing to lose)");
+    else try {
       const { execFileSync } = await import("node:child_process");
       execFileSync(process.execPath, [path.join(root, "tools", "dev", "backup.mjs"), "--label", "first-build"], { stdio: "inherit" });
     } catch { console.log("  (backup failed; continuing — nothing to compare against anyway)"); }
