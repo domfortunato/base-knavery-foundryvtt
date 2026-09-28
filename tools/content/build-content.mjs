@@ -32,7 +32,15 @@ const id = (...parts) => {
 const fileName = (name, _id) => `${name.replace(/[^A-Za-z0-9]+/g, "_").replace(/^_|_$/g, "")}_${_id}.yml`;
 
 const out = new Map(); // pack -> [doc]
-const add = (pack, doc) => { if (!out.has(pack)) out.set(pack, []); out.get(pack).push(doc); };
+/**
+ * Top-level documents carry the defaults Foundry itself writes on the first
+ * world launch (folder, sort, ownership). Without them the launch "migrates"
+ * the pack, and the build guard then reads that as an edit made in Foundry.
+ */
+const add = (pack, doc) => {
+  if (!out.has(pack)) out.set(pack, []);
+  out.get(pack).push({ folder: null, sort: 0, ownership: { default: 0 }, ...doc });
+};
 
 /* -------------------------------------------- */
 /*  Gear (mechanics only)                        */

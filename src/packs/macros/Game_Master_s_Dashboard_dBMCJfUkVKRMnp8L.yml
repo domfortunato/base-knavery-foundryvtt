@@ -1,3 +1,7 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
 _id: dBMCJfUkVKRMnp8L
 _key: '!macros!dBMCJfUkVKRMnp8L'
 name: Game Master's Dashboard
@@ -6,8 +10,6 @@ img: icons/svg/eye.svg
 scope: global
 command: game.knavery.openDashboard();
 author: null
-ownership:
-  default: 0
 flags: {}
 _stats:
   coreVersion: '14.367'

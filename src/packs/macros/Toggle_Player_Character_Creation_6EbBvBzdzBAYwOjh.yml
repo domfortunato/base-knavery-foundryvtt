@@ -1,3 +1,7 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
 _id: 6EbBvBzdzBAYwOjh
 _key: '!macros!6EbBvBzdzBAYwOjh'
 name: Toggle Player Character Creation
@@ -6,8 +10,6 @@ img: icons/svg/mystery-man.svg
 scope: global
 command: game.knavery.toggle("allow-player-generate");
 author: null
-ownership:
-  default: 0
 flags: {}
 _stats:
   coreVersion: '14.367'

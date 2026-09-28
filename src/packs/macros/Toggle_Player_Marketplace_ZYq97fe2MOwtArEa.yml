@@ -1,3 +1,7 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
 _id: ZYq97fe2MOwtArEa
 _key: '!macros!ZYq97fe2MOwtArEa'
 name: Toggle Player Marketplace
@@ -6,8 +10,6 @@ img: icons/svg/coins.svg
 scope: global
 command: game.knavery.toggle("allow-player-marketplace");
 author: null
-ownership:
-  default: 0
 flags: {}
 _stats:
   coreVersion: '14.367'
