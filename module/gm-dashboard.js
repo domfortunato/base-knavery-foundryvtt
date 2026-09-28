@@ -97,11 +97,15 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     });
     const tableNames = [TABLES.careers, TABLES.spells, TABLES.namesA, TABLES.surnames, ...Object.values(TABLES.traits),
       TABLES.reaction, TABLES.mishaps, TABLES.glogMishaps];
-    const tables = [];
-    for (const name of tableNames) {
-      const t = await findTable(name);
-      tables.push({ name, world: !!t && !t.pack, exists: !!t, rows: t?.results.size ?? 0 });
-    }
+    // Index lookups only: loading every compendium table to count its rows
+    // took ten seconds on a small server. World tables are already in memory.
+    const packIndex = game.packs.filter((p) => p.documentName === "RollTable").flatMap((p) => [...p.index]);
+    const tables = tableNames.map((name) => {
+      const world = game.tables.getName(name);
+      if (world) return { name, world: true, exists: true, rows: world.results.size };
+      const shipped = packIndex.some((e) => e.name === name);
+      return { name, world: false, exists: shipped, rows: shipped ? "—" : 0 };
+    });
     for (const t of game.tables.filter((x) => !tableNames.includes(x.name))) {
       tables.push({ name: t.name, world: true, exists: true, rows: t.results.size });
     }

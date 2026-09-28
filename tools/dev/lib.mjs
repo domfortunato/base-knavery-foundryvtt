@@ -241,6 +241,7 @@ export function watchErrors(page) {
  */
 async function joinWith(page, name) {
   await page.goto(`${FOUNDRY_URL}/join`, { waitUntil: "networkidle", timeout: 60000 });
+  await page.waitForSelector('input[name="username"], select[name="userid"]', { state: "attached", timeout: 30000 });
   const text = page.locator('input[name="username"]');
   if (await text.count()) {
     await text.fill(name ?? "Gamemaster");
