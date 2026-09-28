@@ -50,7 +50,7 @@
         <label data-tooltip="KNAVERY.NpcACTip">{{localize "KNAVERY.AC"}}</label>
         <div class="resource-input-wrapper">
           <input type="number" min="0" step="1" name="system.armorClass" value="{{source.armorClass}}" data-dtype="Number" />
-          {{#if system.ap}}<span class="ability-defense">({{system.ac}})</span>{{/if}}
+          {{#if (ne system.ac source.armorClass)}}<span class="ability-defense">({{system.ac}})</span>{{/if}}
         </div>
       </div>
       <div class="resource-counter level-counter">
