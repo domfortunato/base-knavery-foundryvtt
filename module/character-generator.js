@@ -104,7 +104,7 @@ export const addCareer = async (actor, career, { grantItems = null } = {}) => {
   const grant = grantItems ?? actor.system.generationEnabled === true;
   if (grant && created.system.startingItems?.length) {
     const items = (await Promise.all(created.system.startingItems.map(resolveStartingItem))).filter(Boolean);
-    if (items.length) await actor.createEmbeddedDocuments("Item", items);
+    if (items.length) await actor.addItems(items);
   }
   return created;
 };
@@ -265,7 +265,7 @@ const applyBuilt = async (actor, built) => {
     },
   }, { knNoLog: true });
   for (const c of built.careers) await addCareer(actor, c, { grantItems: true });
-  if (built.items.length) await actor.createEmbeddedDocuments("Item", built.items, { knNoLog: true });
+  if (built.items.length) await actor.addItems(built.items, { knNoLog: true });
   await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor }),
     whisper: game.users.filter((u) => u.isGM || actor.testUserPermission(u, "OWNER")).map((u) => u.id),

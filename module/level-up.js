@@ -70,7 +70,7 @@ export const openLevelUp = async (actor) => {
       + ` <strong>${L(`KNAVERY.AbilityShort.${k}`)}</strong> ${v} → ${Math.min(ABILITY_MAX, v + 1)}</label>`;
   }).join("");
   const content = `<div class="kn-levelup"><p>${F("KNAVERY.LevelUpBody", { level: s.level + 1, n: LEVEL_UP_ABILITIES })}</p>`
-    + `<div class="kn-levelup-grid">${rows}</div><p class="hint">${F("KNAVERY.LevelUpHpHint", { level: s.level + 1, max: s.hp.max })}</p></div>`;
+    + `<div class="kn-levelup-grid">${rows}</div><p class="hint">${F("KNAVERY.LevelUpHpHint", { level: s.level + 1, max: s.hp.max, next: s.hp.max + 1 })}</p></div>`;
   const picks = await foundry.applications.api.DialogV2.wait({
     window: { title: F("KNAVERY.LevelUpTitle", { name: actor.name }), icon: "fas fa-angles-up" },
     classes: ["knavery"],
