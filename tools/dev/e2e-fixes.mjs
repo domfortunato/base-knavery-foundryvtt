@@ -134,8 +134,12 @@ await withSettings(gm, async () => {
   ok(raised.join() === "CON,DEX,STR", "Enter on a ticked box raises exactly the ticked three", JSON.stringify({ abil0, abil1 }));
   // Stored max 4 (6 with the effect). A roll at or under 4 keeps 4 + 1 = 5 from the
   // stored value; working from the effect's 6 it would be 7 for any roll up to 6.
+  // The card is posted after the level changes, and other probes leave level-up
+  // cards in the world: wait for THIS character's.
+  await gm.waitForFunction((id) => game.messages.some((x) => x.getFlag("base-knavery", "levelUp") && x.speaker?.actor === id),
+    ids.a, { timeout: T(10000) });
   const hpLevel = await gm.evaluate((id) => {
-    const m = game.messages.filter((x) => x.getFlag("base-knavery", "levelUp")).at(-1);
+    const m = game.messages.filter((x) => x.getFlag("base-knavery", "levelUp") && x.speaker?.actor === id).at(-1);
     return { rolled: m?.rolls[0]?.total ?? null, max: game.actors.get(id)._source.system.hp.max };
   }, ids.a);
   ok(hpLevel.rolled !== null && hpLevel.max === (hpLevel.rolled <= 4 ? 5 : hpLevel.rolled),
