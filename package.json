@@ -15,6 +15,7 @@
     "dev:smoke": "node tools/dev/e2e-smoke.mjs",
     "dev:players": "node tools/dev/e2e-players.mjs",
     "dev:screens": "node tools/dev/e2e-screens.mjs",
+    "dev:fixes": "node tools/dev/e2e-fixes.mjs",
     "release": "node tools/release.mjs"
   },
   "author": "Dom Bosco (https://github.com/domfortunato)",
