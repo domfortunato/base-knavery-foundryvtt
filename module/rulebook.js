@@ -60,6 +60,22 @@ export const viewerUrl = (path, { page = null, offset } = {}) => {
 /*  The reader                                   */
 /* -------------------------------------------- */
 
+/**
+ * A window still fading out after close() keeps its id in core's registry until
+ * the animation ends, and its close then deletes whatever holds that id. So a
+ * window is reused only while it is not closing, and a new one with the same
+ * id renders only once the old has gone (B pressed twice quickly; a probe
+ * reopening at once, 2026-11-13).
+ */
+export const isClosing = (app) => app?.state === ApplicationV2.RENDER_STATES.CLOSING;
+export const renderWhenGone = (old, app) => {
+  if (!isClosing(old)) return app.render({ force: true });
+  return new Promise((resolve) => {
+    const wait = () => (isClosing(old) ? setTimeout(wait, 50) : resolve(app.render({ force: true })));
+    wait();
+  });
+};
+
 /** Files already warned about for a page count other than the edition's. */
 const warnedEdition = new Set();
 
@@ -241,20 +257,20 @@ export const openRulebook = ({ page = null } = {}) => {
     return null;
   }
   const open = foundry.applications.instances.get(READER_ID);
-  if (open) {
+  if (open && !isClosing(open)) {
     open.bringToFront();
     open.goToPage(page);
     return open;
   }
   const reader = new RulebookReader({ page });
-  reader.render({ force: true });
+  renderWhenGone(open, reader);
   return reader;
 };
 
 /** The B key: close an open reader, else open it (a GM with no book is sent to choose one). */
 export const toggleRulebook = () => {
   const open = foundry.applications.instances.get(READER_ID);
-  if (open) return open.close();
+  if (open && !isClosing(open)) return open.close();
   if (!hasRulebook() && game.user.isGM) return openRulebookSettings();
   return openRulebook();
 };

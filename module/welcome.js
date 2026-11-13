@@ -3,14 +3,16 @@
  * unofficial, whose game it serves, and where to buy that game.
  *
  * It opens by itself for a GM once per world per system version (setting
- * `welcome-shown-version`), unless they untick "Show when the world starts".
+ * `welcome-shown-version`), and at every GM login while the world has no
+ * rulebook PDF (the user's ask, 2026-11-13: log in, be asked for the book),
+ * unless they untick "Show after each update" (`welcome-on-start`).
  * Players are never shown it unasked; anyone opens it from the Settings
  * sidebar or `game.knavery.openWelcome()`. The wording follows the Knave 2e
  * Third Party License: the §3 disclaimer verbatim (KNAVERY.Disclaimer), only
  * the Made for Knave logo, nothing that implies approval.
  */
 import { SETTINGS_NS, SYS_PATH, SYSTEM_ID } from "./config.js";
-import { canReadRulebook, hasRulebook, openRulebook, pickLocalRulebook } from "./rulebook.js";
+import { canReadRulebook, hasRulebook, isClosing, openRulebook, pickLocalRulebook, renderWhenGone } from "./rulebook.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 const L = (k) => game.i18n.localize(k);
@@ -80,14 +82,21 @@ export class WelcomeWindow extends HandlebarsApplicationMixin(ApplicationV2) {
 
 export const openWelcome = () => {
   const open = foundry.applications.instances.get(WELCOME_ID);
-  if (open) return open.render({ force: true });
-  return new WelcomeWindow().render({ force: true });
+  if (open && !isClosing(open)) return open.render({ force: true });
+  return renderWhenGone(open, new WelcomeWindow());
 };
 
-/** From `ready`: once per world per system version, for a GM who has not turned it off. */
+/** Whether this login should open the welcome window (the probes ask too, to wait for it). */
+export const welcomeDue = () => {
+  if (!game.user.isGM || !game.settings.get(SETTINGS_NS, "welcome-on-start")) return false;
+  return game.settings.get(SETTINGS_NS, "welcome-shown-version") !== game.system.version || !hasRulebook();
+};
+
+/** From `ready`: after an update, and while the world has no rulebook, for a GM who has not turned it off. */
 export const maybeOpenWelcome = async () => {
-  if (!game.user.isGM || !game.settings.get(SETTINGS_NS, "welcome-on-start")) return;
-  if (game.settings.get(SETTINGS_NS, "welcome-shown-version") === game.system.version) return;
+  if (!welcomeDue()) return;
   await openWelcome();
-  await game.settings.set(SETTINGS_NS, "welcome-shown-version", game.system.version);
+  if (game.settings.get(SETTINGS_NS, "welcome-shown-version") !== game.system.version) {
+    await game.settings.set(SETTINGS_NS, "welcome-shown-version", game.system.version);
+  }
 };

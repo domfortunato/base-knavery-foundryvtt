@@ -638,7 +638,7 @@
       "ChangeLog": "Change log",
       "ChangeLogHint": "Whisper a card listing what anyone changed by hand on a sheet.",
       "WelcomeOnStart": "Welcome window on start",
-      "WelcomeOnStartHint": "Open the welcome window for the GM once after each update of Base Knavery.",
+      "WelcomeOnStartHint": "Open the welcome window for the GM after each update of Base Knavery, and at each login until the world has a rulebook PDF.",
       "AllowPlayerGenerate": "Players may create characters",
       "AllowPlayerGenerateHint": "Shows Create Character to players.",
       "AllowPlayerRandomization": "Players may use the creation tools",
@@ -703,7 +703,8 @@
       "OpenGuide": "Open the guide",
       "ChooseRulebook": "Choose your rulebook PDF from this computer",
       "OpenRulebook": "Open the rulebook",
-      "ShowOnStart": "Show after each update",
+      "NoRulebook": "This world has no rulebook yet. Choose your copy of the Knave 2e PDF to read it inside Foundry; it is uploaded to this server only.",
+      "ShowOnStart": "Show after each update, and until a rulebook is chosen",
       "Close": "Close",
       "Sidebar": "Welcome & credits"
     }

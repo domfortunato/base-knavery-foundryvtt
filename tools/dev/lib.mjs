@@ -84,9 +84,16 @@ export async function withSettings(page, fn) {
  * prompt, and tour overlays, which cover the screen and swallow pointer events.
  */
 export async function dismissChrome(page) {
-  // The welcome window opens for a GM once per system version. A settled
-  // pristine has already shown it; a stale one would cover every screenshot.
-  await page.evaluate(() => foundry.applications.instances.get("knavery-welcome")?.close()).catch(() => {});
+  // The welcome window opens for a GM after an update and at every login while
+  // the world has no rulebook (welcome.js welcomeDue). game.ready is set before
+  // the ready hook runs, so when it is due, wait for it, then close it.
+  const due = await page.evaluate(async () => {
+    try { return (await import("/systems/base-knavery/module/welcome.js")).welcomeDue(); } catch { return false; }
+  }).catch(() => false);
+  if (due) await page.waitForSelector("#knavery-welcome", { timeout: 10000 * TIME_SCALE }).catch(() => {});
+  await page.evaluate(async () => {
+    await foundry.applications.instances.get("knavery-welcome")?.close({ animate: false });
+  }).catch(() => {});
   const decline = page.getByRole("button", { name: /Decline Sharing/i });
   if (await decline.count()) {
     await decline.first().click().catch(() => {});

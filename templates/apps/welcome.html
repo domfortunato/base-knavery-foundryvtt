@@ -11,6 +11,13 @@
     </p>
   </header>
 
+  {{#if isGM}}{{#unless hasRulebook}}
+  <div class="knavery-welcome-rulebook">
+    <p>{{localize "KNAVERY.Welcome.NoRulebook"}}</p>
+    <button type="button" data-action="chooseRulebook"><i class="fa-solid fa-file-arrow-up" inert></i> {{localize "KNAVERY.Welcome.ChooseRulebook"}}</button>
+  </div>
+  {{/unless}}{{/if}}
+
   <p class="knavery-welcome-unofficial">{{localize "KNAVERY.Welcome.Unofficial"}}</p>
   <p class="knavery-welcome-disclaimer">{{disclaimer}}</p>
   <p class="knavery-welcome-credit">{{credit}}</p>
@@ -27,12 +34,8 @@
   <h2 class="knavery-welcome-heading">{{localize "KNAVERY.Welcome.StartHere"}}</h2>
   <div class="knavery-welcome-actions">
     <button type="button" data-action="openGuide"><i class="fa-solid fa-book-atlas" inert></i> {{localize "KNAVERY.Welcome.OpenGuide"}}</button>
-    {{#if hasRulebook}}
-      {{#if canReadRulebook}}
+    {{#if (and hasRulebook canReadRulebook)}}
       <button type="button" data-action="openRulebook"><i class="fa-solid fa-book-open" inert></i> {{localize "KNAVERY.Welcome.OpenRulebook"}}</button>
-      {{/if}}
-    {{else if isGM}}
-      <button type="button" data-action="chooseRulebook"><i class="fa-solid fa-file-arrow-up" inert></i> {{localize "KNAVERY.Welcome.ChooseRulebook"}}</button>
     {{/if}}
   </div>
 
