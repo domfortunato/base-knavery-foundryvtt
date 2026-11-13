@@ -218,10 +218,12 @@ await withSettings(gm, async () => {
     return { reason: el.querySelector('input[name="reason"]').value, pc: el.querySelector(`input[name="pc"][value="${pc}"]`)?.checked };
   }, ids.a);
   ok(kept.reason === "Probe half-written" && kept.pc, "re-renders keep the request being written", JSON.stringify(kept));
+  // Deprecations reach the console as warnings; foundry.utils is a read-only
+  // module namespace, so wrapping logCompatibilityWarning in the page catches nothing.
+  const warned = [];
+  const onWarn = (m) => { if (m.type() === "warning" && /rollMode|DICE_ROLL_MODES/.test(m.text())) warned.push(m.text().split("\n")[0]); };
+  gm.on("console", onWarn);
   const dice = await gm.evaluate(async () => {
-    const warned = [];
-    const orig = foundry.utils.logCompatibilityWarning;
-    foundry.utils.logCompatibilityWarning = (msg, opts) => { warned.push(String(msg)); return orig.call(foundry.utils, msg, opts); };
     try {
       const app = foundry.applications.instances.get("knavery-gm-dashboard");
       app.changeTab("dice", "primary");
@@ -230,15 +232,14 @@ await withSettings(gm, async () => {
       app.element.querySelector('button[data-action="reaction"]').click();
       for (let i = 0; i < 40 && game.messages.size < n + 2; i++) await new Promise((r) => setTimeout(r, 100));
       const made = game.messages.contents.slice(n);
-      return {
-        made: made.length, whispered: made.every((m) => m.whisper.length > 0 || m.blind),
-        warned: warned.filter((w) => /rollMode|DICE_ROLL_MODES/.test(w)),
-      };
+      return { made: made.length, whispered: made.every((m) => m.whisper.length > 0 || m.blind) };
     } finally {
-      foundry.utils.logCompatibilityWarning = orig;
       await foundry.applications.instances.get("knavery-gm-dashboard")?.close();
     }
   });
+  await gm.waitForTimeout(500);
+  gm.off("console", onWarn);
+  dice.warned = warned;
   ok(dice.made === 2 && dice.whispered, "the dashboard's distance and reaction rolls go to the GM only", JSON.stringify(dice));
   ok(dice.warned.length === 0, "no rollMode / DICE_ROLL_MODES deprecation from them", JSON.stringify(dice.warned));
 
@@ -298,20 +299,25 @@ await withSettings(gm, async () => {
   /* ------------------------------------------------------------------ */
   // 11. Small fixes through the API.
   await section("11. Small fixes through the API.", async () => {
-  const small = await gm.evaluate(async ({ a, goblin }) => {
+  // Each small fix in its own try, so one that throws on old code hides no other.
+  const small = await gm.evaluate(async ({ a }) => {
     const out = {};
-    const { rowPrice } = await import("/systems/base-knavery/module/marketplace.js");
-    out.price = rowPrice({ flags: { "base-knavery": { price: 2.5 } } }, null);
+    const attempt = async (key, fn) => { try { out[key] = await fn(); } catch (e) { out[key] = `threw: ${e.message}`; } };
     const { rollDamage, castSpell } = await import("/systems/base-knavery/module/rolls.js");
-    out.special = await rollDamage(game.actors.get(a), { formula: "special" });
-    const pc = game.actors.get(a);
-    await pc.update({ "system.hp.value": 0, "system.wounds": 0 });
-    await pc.applyDamage(1);
-    out.woundCard = game.messages.contents.at(-1).content.match(/(\d+ wounds?)/)?.[1] ?? null;
-    const npc = await Actor.create({ name: "Probe Caster", type: "npc", system: { role: "npc", level: 3, useAbilities: false } });
-    const [book] = await npc.createEmbeddedDocuments("Item", [{ name: "Probe Spell", type: "spellbook" }]);
-    await castSpell(npc, book);
-    out.castLevel = game.messages.contents.at(-1).content.match(/level (\d+)/i)?.[1] ?? null;
+    await attempt("price", async () => (await import("/systems/base-knavery/module/marketplace.js")).rowPrice({ flags: { "base-knavery": { price: 2.5 } } }, null));
+    await attempt("special", () => rollDamage(game.actors.get(a), { formula: "special" }));
+    await attempt("woundCard", async () => {
+      const pc = game.actors.get(a);
+      await pc.update({ "system.hp.value": 0, "system.wounds": 0 });
+      await pc.applyDamage(1);
+      return game.messages.contents.at(-1).content.match(/(\d+ wounds?)/)?.[1] ?? null;
+    });
+    await attempt("castLevel", async () => {
+      const npc = await Actor.create({ name: "Probe Caster", type: "npc", system: { role: "npc", level: 3, useAbilities: false } });
+      const [book] = await npc.createEmbeddedDocuments("Item", [{ name: "Probe Spell", type: "spellbook" }]);
+      await castSpell(npc, book);
+      return game.messages.contents.at(-1).content.match(/level (\d+)/i)?.[1] ?? null;
+    });
     return out;
   }, ids);
   ok(small.price === 3, "a 2.5-coin price rounds up to 3", JSON.stringify(small));
