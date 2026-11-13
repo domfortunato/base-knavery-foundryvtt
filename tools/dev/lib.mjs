@@ -252,29 +252,36 @@ export function watchErrors(page) {
 
 /** Join the world as the first available user (the Gamemaster on a fresh world). */
 /**
- * Join through /join. Foundry v14 shows either a user <select> or, when the
- * world hides its user list, a plain username field; both are handled.
+ * Join through /join. The user control is a dropdown named `userid` up to
+ * Foundry 14.365, a plain name box on 14.367 and 14.368, and a dropdown named
+ * `userId` from 14.369 (met on the probe fleet, 2026-11-13; DB Mythic's
+ * lib.mjs had it first). The name is matched without regard to case. 14.369
+ * also disables the option of a user already in the world, and the probes
+ * open a second session of one user on purpose, so the option is re-enabled.
  */
+const JOIN_SELECT = 'select[name="userid" i]';
 async function joinWith(page, name) {
   await page.goto(`${FOUNDRY_URL}/join`, { waitUntil: "networkidle", timeout: 60000 });
-  await page.waitForSelector('input[name="username"], select[name="userid"]', { state: "attached", timeout: 30000 });
+  await page.waitForSelector(`input[name="username"], ${JOIN_SELECT}`, { state: "attached", timeout: 30000 * TIME_SCALE });
   const text = page.locator('input[name="username"]');
   if (await text.count()) {
     await text.fill(name ?? "Gamemaster");
   } else {
-    await page.waitForSelector('select[name="userid"] option[value]:not([value=""])', { state: "attached", timeout: 30000 });
-    const picked = await page.evaluate((name) => {
-      const s = document.querySelector('select[name="userid"]');
+    await page.waitForSelector(`${JOIN_SELECT} option[value]:not([value=""])`, { state: "attached", timeout: 30000 * TIME_SCALE });
+    const picked = await page.evaluate(({ name, select }) => {
+      const s = document.querySelector(select);
       const opt = [...s.options].find((o) => o.value && (!name || o.textContent.trim() === name));
       if (!opt) return null;
+      opt.disabled = false;
       s.value = opt.value;
       s.dispatchEvent(new Event("change", { bubbles: true }));
       return opt.value;
-    }, name);
+    }, { name, select: JOIN_SELECT });
     if (!picked) throw new Error(`join: no user named "${name}"`);
   }
-  await page.locator('button[type="submit"][name="join"]').first().click({ timeout: 15000 });
-  await page.waitForFunction(() => globalThis.game?.ready === true, null, { timeout: 90000 });
+  await page.locator('button[type="submit"][name="join"], form#join-game button[type="submit"]')
+    .first().click({ timeout: 15000 * TIME_SCALE });
+  await page.waitForFunction(() => globalThis.game?.ready === true, null, { timeout: 90000 * TIME_SCALE });
   await dismissChrome(page);
 }
 
