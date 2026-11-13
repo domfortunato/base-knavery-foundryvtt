@@ -56,12 +56,12 @@
     "AbilityTip": "Roll a {name} check: d20 + bonus. Its defense (what others must beat) is {defense}.",
     "DefenseTip": "Defense: 11 + the bonus. An opposed check must reach this.",
     "AbilityHint": {
-      "STR": "Melee attacks, feats of force",
-      "DEX": "Dodging, stealth, fine handiwork",
-      "CON": "Item slots, wounds, stamina",
-      "INT": "Spellbooks a day, lore, craft",
-      "WIS": "Ranged attacks, noticing, travel",
-      "CHA": "Parley, followers, morale"
+      "STR": "Melee attacks, lifting, climbing, breaking free",
+      "DEX": "Dodging, sneaking, sleight of hand",
+      "CON": "Physical resistance, item slots, wounds",
+      "INT": "Lockpicking, alchemy, spells per day",
+      "WIS": "Ranged attacks, foraging, navigation, spell resistance",
+      "CHA": "Initiative, persuasion, companions, blessings"
     },
     "Check": "Check",
 

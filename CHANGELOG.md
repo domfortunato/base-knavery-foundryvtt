@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- The taglines under the abilities now list what each is used for, e.g. Strength: melee attacks,
+  lifting, climbing, breaking free.
 - The GLOG grimoire hack is gone. In a world that used it, a Grimoire is now an ordinary item
   and its spellbooks return to the inventory, taking slots and casting the Knave way.
 - The actor sheet laid out after the Knave 2e sheet: the pages on a thumb-tab rail off the

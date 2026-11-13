@@ -15,7 +15,9 @@ picker, change log and marketplace it ports.
   Lookups prefer a world table of the same name (`module/compendium.js`).
 - The bestiary is statistics only, under generic or SRD names. "Brain flayer"
   and "eye tyrant" are left out on purpose.
-- Level titles, hints and the guide are this project's own writing.
+- Level titles, hints and the guide are this project's own writing. Exception
+  (user ruling 2026-11-13): the ability taglines (`KNAVERY.AbilityHint`) follow
+  the wording of the edm00se/knave2e sheet, as lists of mechanics, not book text.
 - `questing-beast/*.pdf` is reference only and gitignored. Only the "Made for
   Knave" logos ship (in `logo/`). Never use the Knave 2e or Questing Beast
   logos.
