@@ -13,6 +13,17 @@
   Made for Knave logo, which swaps to its white version on the dark theme.
 - The guide pack ships its page HTML trimmed, as Foundry stores it, so opening a world no
   longer rewrites the pack.
+- **Your rulebook inside Foundry.** Configure Rulebook points the world at your own copy of the
+  Knave 2e PDF (the file picker's Upload button puts it on the server; only its path is stored).
+  It opens in Foundry's pdf.js viewer; **B** toggles it; the dashboard's tables carry a book icon
+  at their page, and the table importer offers the page too; the GM can show a page to players
+  when they are allowed to read it. A page-offset setting serves other printings.
+- **A welcome window** for the GM after each update: the system, its author, that it is
+  unofficial, the Knave 2e credit, the Made for Knave logo and where to buy the book. The
+  Settings sidebar gains Welcome & credits, Rulebook and (for the GM) Dashboard buttons.
+- The Configure submenus render again: their template had never been committed. Path settings
+  (the portrait folder, the rulebook) get core's file picker.
+- The README shows the yellow Made for Knave logo at a modest size.
 
 ## 0.1.0
 

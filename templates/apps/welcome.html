@@ -1,0 +1,47 @@
+{{!-- The welcome window (module/welcome.js). The Made for Knave logo is the
+     black/white pair the sheet footer swaps by theme. The disclaimer is the
+     Knave 2e Third Party License §3 sentence, verbatim. --}}
+<div class="knavery-welcome-body">
+  <header class="knavery-welcome-head">
+    <img class="knavery-logo-light" src="{{logo}}" alt="{{localize 'KNAVERY.MadeForKnave'}}">
+    <img class="knavery-logo-dark" src="{{logoDark}}" alt="{{localize 'KNAVERY.MadeForKnave'}}">
+    <h1 class="knavery-welcome-title">{{title}}</h1>
+    <p class="knavery-welcome-byline">
+      {{#if authorUrl}}<a href="{{authorUrl}}" target="_blank" rel="noopener">{{byline}}</a>{{else}}{{byline}}{{/if}}
+    </p>
+  </header>
+
+  <p class="knavery-welcome-unofficial">{{localize "KNAVERY.Welcome.Unofficial"}}</p>
+  <p class="knavery-welcome-disclaimer">{{disclaimer}}</p>
+  <p class="knavery-welcome-credit">{{credit}}</p>
+
+  <h2 class="knavery-welcome-heading">{{localize "KNAVERY.Welcome.GetTheBook"}}</h2>
+  <div class="knavery-welcome-links">
+    {{#each links}}
+    <a class="knavery-welcome-link" href="{{this.href}}" target="_blank" rel="noopener">
+      <i class="{{this.icon}}" inert></i> {{localize this.label}}
+    </a>
+    {{/each}}
+  </div>
+
+  <h2 class="knavery-welcome-heading">{{localize "KNAVERY.Welcome.StartHere"}}</h2>
+  <div class="knavery-welcome-actions">
+    <button type="button" data-action="openGuide"><i class="fa-solid fa-book-atlas" inert></i> {{localize "KNAVERY.Welcome.OpenGuide"}}</button>
+    {{#if hasRulebook}}
+      {{#if canReadRulebook}}
+      <button type="button" data-action="openRulebook"><i class="fa-solid fa-book-open" inert></i> {{localize "KNAVERY.Welcome.OpenRulebook"}}</button>
+      {{/if}}
+    {{else if isGM}}
+      <button type="button" data-action="chooseRulebook"><i class="fa-solid fa-file-pdf" inert></i> {{localize "KNAVERY.Welcome.ChooseRulebook"}}</button>
+    {{/if}}
+  </div>
+
+  <footer class="knavery-welcome-foot">
+    {{#if isGM}}
+    <label class="knavery-welcome-onstart">
+      <input type="checkbox" name="welcome-on-start" {{checked showOnStart}}> {{localize "KNAVERY.Welcome.ShowOnStart"}}
+    </label>
+    {{/if}}
+    <button type="button" data-action="close"><i class="fa-solid fa-check" inert></i> {{localize "KNAVERY.Welcome.Close"}}</button>
+  </footer>
+</div>

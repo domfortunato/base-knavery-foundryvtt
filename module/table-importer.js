@@ -13,6 +13,7 @@
  * For Careers, "Name: item, item, item" gives a career its starting items.
  */
 import { FLAG_SCOPE, MARKET_PREFIX, TABLES } from "./config.js";
+import { canReadRulebook, hasRulebook, openRulebook, tablePage } from "./rulebook.js";
 
 const L = (k) => game.i18n.localize(k);
 const F = (k, d) => game.i18n.format(k, d);
@@ -78,6 +79,27 @@ export const importRows = async (name, rows, { mode = "replace", formula = "" } 
   return table;
 };
 
+/**
+ * "This table is on p. N of your rulebook — Open": shown while the name field
+ * names a table the book covers, when the world has a book this user may read,
+ * so filling a shell is the book beside the importer, then paste.
+ */
+const bindBookHint = (root) => {
+  const hint = root?.querySelector(".knavery-importer-book");
+  const field = root?.querySelector('input[name="table"]');
+  if (!hint || !field || !hasRulebook() || !canReadRulebook()) return;
+  const update = () => {
+    const page = tablePage(field.value.trim());
+    hint.hidden = !page;
+    if (page) hint.querySelector("span").textContent = F("KNAVERY.Rulebook.ImporterHint", { page });
+  };
+  field.addEventListener("input", update);
+  hint.querySelector("[data-importer-book]").addEventListener("click", () => {
+    openRulebook({ page: tablePage(field.value.trim()) });
+  });
+  update();
+};
+
 /** Open the importer, optionally aimed at a named table. */
 export const openTableImporter = async (name = "") => {
   if (!game.user.isGM) return;
@@ -91,6 +113,8 @@ export const openTableImporter = async (name = "") => {
       <input type="text" name="formula" placeholder="${L("KNAVERY.Import.FormulaHint")}" /></div>
     <div class="form-group"><label>${L("KNAVERY.Import.Mode")}</label>
       <select name="mode"><option value="replace">${L("KNAVERY.Import.Replace")}</option><option value="append">${L("KNAVERY.Import.Append")}</option></select></div>
+    <p class="hint knavery-importer-book" hidden><i class="fa-solid fa-book-open" inert></i> <span></span>
+      <a data-importer-book>${L("KNAVERY.Rulebook.Open")}</a></p>
     <textarea name="rows" rows="14" placeholder="${esc(L("KNAVERY.Import.RowsHint"))}"></textarea>
     <p class="hint">${L("KNAVERY.Import.Formats")}</p>
   </div>`;
@@ -107,6 +131,7 @@ export const openTableImporter = async (name = "") => {
       },
     }],
     rejectClose: false,
+    render: (_event, dialog) => bindBookHint(dialog.element),
   });
   if (!data?.name) return;
   const rows = parseRows(data.rows);

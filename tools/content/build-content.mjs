@@ -381,6 +381,16 @@ journal("Base Knavery Guide", [
 </ul>
 <p><b>Careers</b> rows written <code>Name: item, item, item</code> become careers with those starting items. Item names that match gear in the compendia arrive with their real statistics.</p>
 <p><b>Spells</b> rows become spellbooks. Put the spell's text in the book's description.</p>`],
+  ["Your Rulebook", `
+<p>Base Knavery can open <b>your own copy</b> of the Knave 2e PDF inside Foundry, so you can read a table while you fill it. Nothing of the book comes with the system: it stores only where your file is.</p>
+<ol>
+<li>Open <i>Settings → Configure Rulebook</i> and click the folder button beside <b>Your rulebook PDF</b>.</li>
+<li>In the file picker, make a folder such as <code>knavery-rulebook</code>, use <b>Upload</b> to copy your PDF there from your computer, pick it, and save.</li>
+<li>Press <b>B</b>, or use <b>Rulebook</b> in the Settings sidebar, to open or close it.</li>
+</ol>
+<p>On the dashboard's <b>Tables</b> tab, a book icon beside a table opens the rulebook at its page. The table importer offers the page too.</p>
+<p>Tick <b>Players may read it</b> to let players open it. Then <b>Show this page to players</b>, in the reader's menu or on the dashboard, opens the same page for everyone connected.</p>
+<p>Page numbers are the book's printed pages. If your PDF numbers its pages differently, change <b>Page offset</b>: PDF page minus printed page.</p>`],
   ["Custom Careers", `
 <p>A career is an Item that can carry mechanics as well as a name:</p>
 <ul>

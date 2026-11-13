@@ -8,7 +8,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { chromium } from "playwright";
-import { SHOTS, VIEWPORT, joinAsGM, watchErrors, watchdog, withSettings } from "./lib.mjs";
+import { SHOTS, VIEWPORT, joinAsGM, useProbeRulebook, waitForRulebook, watchErrors, watchdog, withSettings } from "./lib.mjs";
 
 const OUT = SHOTS;
 fs.mkdirSync(OUT, { recursive: true });
@@ -89,6 +89,39 @@ await withSettings(page, async () => {
     await page.evaluate((id) => game.actors.get(id).sheet.close(), id);
     await page.waitForTimeout(400);
   }
+
+  // The rulebook reader on a hand-made one-page PDF, and the welcome window, in both schemes.
+  await useProbeRulebook(page);
+  for (const scheme of ["dark", "light"]) {
+    await page.evaluate((s) => game.settings.set("core", "uiConfig", foundry.utils.mergeObject(game.settings.get("core", "uiConfig"), { colorScheme: { applications: s, interface: s } })), scheme);
+    await page.evaluate(() => game.knavery.openRulebook({ page: 1 }));
+    await waitForRulebook(page);
+    await page.waitForTimeout(800);
+    await shot(page, "#knavery-rulebook", `rulebook-${scheme}`);
+    await page.evaluate(() => foundry.applications.instances.get("knavery-rulebook")?.close());
+    await page.evaluate(() => game.knavery.openWelcome());
+    await page.waitForSelector("#knavery-welcome .knavery-welcome-links a", { timeout: 10000 });
+    await page.waitForTimeout(500);
+    await shot(page, "#knavery-welcome", `welcome-${scheme}`);
+    await page.evaluate(() => foundry.applications.instances.get("knavery-welcome")?.close());
+  }
+  const pages = await page.evaluate(() => {
+    const app = game.knavery.openRulebook({ page: 1 });
+    return !!app;
+  });
+  await waitForRulebook(page);
+  const doc = await page.evaluate(() => document.querySelector("#knavery-rulebook iframe").contentWindow.PDFViewerApplication.pagesCount);
+  ok(pages && doc === 1, "rulebook reader loads the GM's PDF in core's pdf.js viewer", JSON.stringify({ pages, doc }));
+  await page.evaluate(() => foundry.applications.instances.get("knavery-rulebook")?.close());
+  await page.evaluate(() => game.knavery.openDashboard());
+  await page.waitForSelector("#knavery-gm-dashboard", { timeout: 10000 });
+  await page.locator('#knavery-gm-dashboard nav [data-tab="tables"]').first().click();
+  await page.waitForSelector("#knavery-gm-dashboard .dash-rulebook", { timeout: 10000 });
+  const books = await page.evaluate(() => [...document.querySelectorAll("#knavery-gm-dashboard .dash-table-book")]
+    .map((a) => `${a.closest("[data-table]").dataset.table}:${a.dataset.page}`));
+  ok(books.includes("Careers:5") && books.includes("Spells:22") && !books.some((b) => b.startsWith("Physique")), "dashboard: book icons at each table's page", JSON.stringify(books));
+  await shot(page, "#knavery-gm-dashboard", "dashboard-tables");
+  await page.evaluate(() => foundry.applications.instances.get("knavery-gm-dashboard")?.close());
 
   // Cast with Magic Dice through the UI.
   await page.evaluate((id) => game.actors.get(id).sheet.render(true), id);

@@ -3,7 +3,7 @@
  * (ported from Air Bladder's SettingsGroupMenu). Every setting is `config:
  * false`; the order a GM sees is each group's `keys`.
  */
-import { ADVANTAGE_MODES, MAX_LEVEL, SETTINGS_NS, SYS_PATH } from "./config.js";
+import { ADVANTAGE_MODES, MAX_LEVEL, RULEBOOK, SETTINGS_NS, SYS_PATH } from "./config.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -21,7 +21,7 @@ export const SETTING_GROUPS = [
     button: "KNAVERY.Settings.GroupGeneralButton",
     hint: "KNAVERY.Settings.GroupGeneralHint",
     icon: "fa-solid fa-gears",
-    keys: ["advantage-mode", "roll-damage-default", "weapon-breaks-on-1", "show-traits", "change-log"],
+    keys: ["advantage-mode", "roll-damage-default", "weapon-breaks-on-1", "show-traits", "change-log", "welcome-on-start"],
   },
   {
     id: "generation",
@@ -50,7 +50,18 @@ export const SETTING_GROUPS = [
     icon: "fa-solid fa-flask",
     keys: ["enable-glog-grimoire", "hard-mode-wounds", "show-hazard-dice"],
   },
+  {
+    id: "rulebook",
+    title: "KNAVERY.Settings.GroupRulebook",
+    button: "KNAVERY.Settings.GroupRulebookButton",
+    hint: "KNAVERY.Settings.GroupRulebookHint",
+    icon: "fa-solid fa-book",
+    keys: ["rulebook-pdf", "rulebook-for-players", "rulebook-page-offset"],
+  },
 ];
+
+/** The rulebook reader, the dashboard and the Settings sidebar listen for this. */
+const rulebookChanged = () => Hooks.callAll("knaveryRulebookChanged");
 
 export const registerSettings = () => {
   const reg = (key, data) => game.settings.register(SETTINGS_NS, key, {
@@ -64,6 +75,7 @@ export const registerSettings = () => {
   reg("weapon-breaks-on-1", { label: "WeaponBreaks", type: Boolean, default: true });
   reg("show-traits", { label: "ShowTraits", type: Boolean, default: true, onChange: rerenderActorSheets });
   reg("change-log", { label: "ChangeLog", type: Boolean, default: true });
+  reg("welcome-on-start", { label: "WelcomeOnStart", type: Boolean, default: true });
 
   /* Character creation */
   reg("allow-player-generate", {
@@ -93,12 +105,23 @@ export const registerSettings = () => {
   reg("hard-mode-wounds", { label: "HardModeWounds", type: Boolean, default: false });
   reg("show-hazard-dice", { label: "ShowHazardDice", type: Boolean, default: true });
 
+  /* Rulebook: the GM's own PDF (module/rulebook.js). Only a path is stored. */
+  reg("rulebook-pdf", { label: "RulebookPdf", type: String, filePicker: "text", default: "", onChange: rulebookChanged });
+  reg("rulebook-for-players", { label: "RulebookForPlayers", type: Boolean, default: false, onChange: rulebookChanged });
+  reg("rulebook-page-offset", {
+    label: "RulebookPageOffset", type: Number, default: RULEBOOK.pageOffset, range: { min: 0, max: 20, step: 1 },
+  });
+
   /* Hidden state */
   game.settings.register(SETTINGS_NS, "market-hidden-aisles", {
     scope: "world", config: false, type: Array, default: [],
   });
   game.settings.register(SETTINGS_NS, "custom-portrait-list", {
     scope: "world", config: false, type: Array, default: [],
+  });
+  // The system version the welcome window last opened for (module/welcome.js).
+  game.settings.register(SETTINGS_NS, "welcome-shown-version", {
+    scope: "world", config: false, type: String, default: "",
   });
 
   registerSettingMenus(SETTINGS_NS, SETTING_GROUPS);
@@ -135,16 +158,24 @@ export class SettingsGroupMenu extends HandlebarsApplicationMixin(ApplicationV2)
       const setting = game.settings.settings.get(id);
       if (!setting) continue;
       let field;
+      let input;
       if (setting.type instanceof fields.DataField) field = setting.type;
       else if (setting.type === Boolean) field = new fields.BooleanField({ initial: setting.default ?? false });
       else if (setting.type === Number) {
         const { min, max, step } = setting.range ?? {};
         field = new fields.NumberField({ required: true, choices: setting.choices, initial: setting.default, min, max, step });
+      } else if (setting.filePicker) {
+        // A path setting gets core's file picker (with its Browse and Upload),
+        // as the main settings window gives one; `filePicker` is its type.
+        field = new fields.StringField({ required: true, blank: true });
+        input = (_field, config) => foundry.applications.elements.HTMLFilePickerElement.create({
+          ...config, type: setting.filePicker,
+        });
       } else field = new fields.StringField({ required: true, choices: setting.choices });
       field.name = id;
       field.label ||= game.i18n.localize(setting.name ?? "");
       field.hint ||= game.i18n.localize(setting.hint ?? "");
-      entries.push({ key, field, value: game.settings.get(ns, key) });
+      entries.push({ key, field, input, value: game.settings.get(ns, key) });
     }
     return {
       entries,

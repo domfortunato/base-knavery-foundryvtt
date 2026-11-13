@@ -11,6 +11,19 @@
     <button type="button" data-action="marketManager"><i class="fas fa-store"></i> {{localize "KNAVERY.Market.ManagerTitle"}}</button>
     <button type="button" data-action="importTable" data-table=""><i class="fas fa-file-import"></i> {{localize "KNAVERY.Import.Title"}}</button>
   </div>
+  <h3>{{localize "KNAVERY.Rulebook.Title"}}</h3>
+  {{#if rulebook}}
+  <div class="dash-rulebook">
+    <label>{{localize "KNAVERY.Rulebook.Page"}} <input type="number" name="rulebook-page" min="1" step="1" placeholder="1"></label>
+    <button type="button" data-action="openRulebook"><i class="fa-solid fa-book-open" inert></i> {{localize "KNAVERY.Rulebook.Open"}}</button>
+    <button type="button" data-action="showRulebook"><i class="fa-solid fa-eye" inert></i> {{localize "KNAVERY.Rulebook.Show"}}</button>
+  </div>
+  {{else}}
+  <div class="dash-rulebook">
+    <p class="hint knavery-rulebook-unset">{{localize "KNAVERY.Rulebook.NotSet"}}</p>
+    <button type="button" data-action="chooseRulebook"><i class="fa-solid fa-file-pdf" inert></i> {{localize "KNAVERY.Rulebook.Choose"}}</button>
+  </div>
+  {{/if}}
   <h3>{{localize "KNAVERY.Dashboard.Tables"}}</h3>
   <p class="hint">{{localize "KNAVERY.Dashboard.TablesHint"}}</p>
   <div class="table-list">
@@ -19,6 +32,7 @@
       <span class="dash-table-name">{{this.name}}</span>
       {{#if this.world}}<span class="knavery-item-tag">{{localize "KNAVERY.Dashboard.WorldCopy"}}</span>{{else}}<span class="knavery-item-tag">{{localize "KNAVERY.Dashboard.Shell"}}</span>{{/if}}
       <span class="dash-table-rows">{{this.rows}}</span>
+      {{#if (and @root.rulebook this.page)}}<a class="dash-table-book" data-action="openRulebook" data-page="{{this.page}}" data-tooltip-text="{{this.pageTip}}"><i class="fa-solid fa-book-open"></i></a>{{/if}}
       <a data-action="rollTable" data-tooltip="KNAVERY.Dashboard.RollTable"><i class="fas fa-dice-d20"></i></a>
       <a data-action="importTable" data-tooltip="KNAVERY.Import.Title"><i class="fas fa-file-import"></i></a>
     </div>

@@ -84,6 +84,9 @@ export async function withSettings(page, fn) {
  * prompt, and tour overlays, which cover the screen and swallow pointer events.
  */
 export async function dismissChrome(page) {
+  // The welcome window opens for a GM once per system version. A settled
+  // pristine has already shown it; a stale one would cover every screenshot.
+  await page.evaluate(() => foundry.applications.instances.get("knavery-welcome")?.close()).catch(() => {});
   const decline = page.getByRole("button", { name: /Decline Sharing/i });
   if (await decline.count()) {
     await decline.first().click().catch(() => {});
@@ -283,6 +286,66 @@ async function joinWith(page, name) {
     .first().click({ timeout: 15000 * TIME_SCALE });
   await page.waitForFunction(() => globalThis.game?.ready === true, null, { timeout: 90000 * TIME_SCALE });
   await dismissChrome(page);
+}
+
+/**
+ * A one-page PDF written by hand (no book text: a title line), for the
+ * rulebook reader. ASCII only, so string length is byte length and the xref
+ * offsets hold.
+ */
+export const probePdf = () => {
+  const content = "BT /F1 36 Tf 72 700 Td (Probe rulebook) Tj ET";
+  const objs = [
+    "<< /Type /Catalog /Pages 2 0 R >>",
+    "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+    "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>",
+    `<< /Length ${content.length} >>\nstream\n${content}\nendstream`,
+    "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
+  ];
+  let out = "%PDF-1.4\n";
+  const offsets = objs.map((o, i) => {
+    const at = out.length;
+    out += `${i + 1} 0 obj\n${o}\nendobj\n`;
+    return at;
+  });
+  const xref = out.length;
+  out += `xref\n0 ${objs.length + 1}\n0000000000 65535 f \n`;
+  out += offsets.map((o) => `${String(o).padStart(10, "0")} 00000 n \n`).join("");
+  out += `trailer\n<< /Size ${objs.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`;
+  return out;
+};
+
+export const PROBE_PDF = "knavery-rulebook/probe-rulebook.pdf";
+
+/**
+ * As the GM: upload the probe PDF into the user data folder and point the
+ * world's rulebook at it, offset 0 (it has one page). A fleet box is reset
+ * from pristine every run, so the file does not accumulate.
+ */
+export async function useProbeRulebook(page, { forPlayers = false } = {}) {
+  await page.evaluate(async ({ text, path, forPlayers }) => {
+    const FP = foundry.applications.apps.FilePicker.implementation;
+    const [dir, name] = path.split("/");
+    const root = await FP.browse("data", "");
+    if (!root.dirs.includes(dir)) await FP.createDirectory("data", dir, {});
+    await FP.upload("data", dir, new File([text], name, { type: "application/pdf" }), {}, { notify: false });
+    await game.settings.set("base-knavery", "rulebook-page-offset", 0);
+    await game.settings.set("base-knavery", "rulebook-for-players", forPlayers);
+    await game.settings.set("base-knavery", "rulebook-pdf", path);
+  }, { text: probePdf(), path: PROBE_PDF, forPlayers });
+}
+
+/** Wait until the open reader's pdf.js viewer has loaded its document. */
+export async function waitForRulebook(page, timeout = 20000) {
+  await page.waitForSelector("#knavery-rulebook iframe.knavery-rulebook-frame", { timeout: timeout * TIME_SCALE });
+  await page.waitForFunction(() => {
+    try {
+      return !!document.querySelector("#knavery-rulebook iframe.knavery-rulebook-frame")
+        ?.contentWindow?.PDFViewerApplication?.pdfDocument;
+    } catch {
+      return false;
+    }
+  }, null, { timeout: timeout * TIME_SCALE });
 }
 
 export async function joinAsGM(page) {

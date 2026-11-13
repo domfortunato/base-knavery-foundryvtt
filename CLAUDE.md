@@ -20,7 +20,10 @@ picker, change log and marketplace it ports.
   Knave" logos ship (in `logo/`). Never use the Knave 2e or Questing Beast
   logos.
 - The disclaimer string lives in `lang/en.json` `KNAVERY.Disclaimer` and in
-  LICENSE.txt and README.md.
+  LICENSE.txt and README.md. The welcome window shows it verbatim.
+- The rulebook reader shows the GM's own PDF. The system stores only its path
+  (setting `rulebook-pdf`) and page numbers (`config.js` `RULEBOOK`, read from
+  the PDF's outline and headings). Never ship, quote or extract the book.
 
 ## Layout
 - `module/knavery.js`: entry point; hooks, the `game.knavery` API.
@@ -39,6 +42,10 @@ picker, change log and marketplace it ports.
   - `item-offer.js`, `marketplace.js`, `character-generator.js`, `level-up.js`
   - `gm-dashboard.js`, `table-importer.js`, `grimoire.js`, `art.js`,
     `change-log.js`, `print.js`
+  - `rulebook.js`: the GM's PDF in Foundry's bundled pdf.js viewer (an iframe
+    of `scripts/pdfjs/web/viewer.html`, after Mythic-pwd), the B key, showing
+    a page to players; page map in `config.js` `RULEBOOK`
+  - `welcome.js`: the welcome window, once per world per version for the GM
   - `socket.js`: one channel, handlers by action
 - `css/knavery.css`: Air Bladder's stylesheet renamed (`cairn`→`knavery`,
   `--ab-`→`--kn-`), plus a Base Knavery section at the end. Colours only

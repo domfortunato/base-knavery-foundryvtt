@@ -181,6 +181,58 @@ const imported = await page.evaluate(async () => {
 });
 ok(imported.n === 2 && imported.formula === "1d100" && imported.ranges.includes("51-100"), "importer parses ranges (00 = 100)", JSON.stringify(imported));
 
+// 12. Rulebook reader, without a book: the viewer URL, and the no-book path.
+const rb = await page.evaluate(async () => {
+  const m = await import("/systems/base-knavery/module/rulebook.js");
+  const url = m.viewerUrl("knavery-rulebook/x.pdf", { page: 5, offset: 6 });
+  const had = m.hasRulebook();
+  const opened = had ? "skipped: this world has a book" : m.openRulebook();
+  return { url, had, opened: opened === null ? null : String(opened), careers: m.tablePage("Careers"), traits: m.tablePage("Physique") };
+});
+ok(/scripts\/pdfjs\/web\/viewer\.html\?file=%2Fknavery-rulebook%2Fx\.pdf#page=11$/.test(rb.url), "rulebook viewer URL: printed p. 5 + offset 6 = PDF page 11", rb.url);
+ok(rb.had || rb.opened === null, "no rulebook set: the reader does not open", JSON.stringify(rb));
+ok(rb.careers === 5 && rb.traits === null, "page map: Careers p. 5, trait tables none", JSON.stringify(rb));
+
+// 13. Every Configure submenu renders (its template was missing until 2026-11-13).
+const menus = await page.evaluate(async () => {
+  const out = {};
+  for (const id of ["general", "generation", "inventory", "hacks", "rulebook"]) {
+    const Menu = game.settings.menus.get(`base-knavery.${id}`)?.type;
+    if (!Menu) { out[id] = "unregistered"; continue; }
+    const app = new Menu();
+    await app.render({ force: true });
+    const el = document.getElementById(`knavery-settings-${id}`);
+    out[id] = { rows: el?.querySelectorAll(".knavery-settings-rows .form-group").length ?? 0, picker: !!el?.querySelector("file-picker") };
+    await app.close();
+  }
+  return out;
+});
+ok(Object.values(menus).every((m) => m.rows > 0), "the five Configure submenus render their rows", JSON.stringify(menus));
+ok(menus.rulebook?.picker && menus.generation?.picker, "path settings get core's file picker", JSON.stringify(menus));
+
+// 14. Welcome window and the Settings sidebar's buttons.
+await page.evaluate(() => game.knavery.openWelcome());
+await page.waitForSelector("#knavery-welcome .knavery-welcome-links a", { timeout: 10000 });
+const welcome = await page.evaluate(() => {
+  const el = document.getElementById("knavery-welcome");
+  return {
+    links: [...el.querySelectorAll(".knavery-welcome-links a")].map((a) => a.href),
+    disclaimer: el.querySelector(".knavery-welcome-disclaimer")?.textContent.trim(),
+    logo: !!el.querySelector("img.knavery-logo-light[src*='made-for-knave-black']"),
+    onStart: !!el.querySelector('input[name="welcome-on-start"]'),
+  };
+});
+ok(welcome.links.length === 3 && welcome.links[0].includes("affiliate_id=379088"), "welcome: three places to buy the book", JSON.stringify(welcome.links));
+ok(welcome.disclaimer?.startsWith("Base Knavery is an independent production of Dom Bosco") && welcome.logo, "welcome: the licence disclaimer and the Made for Knave logo", JSON.stringify(welcome));
+ok(welcome.onStart, "welcome: the GM's show-on-start box");
+await page.locator("#knavery-welcome").screenshot({ path: path.join(OUT, "welcome.png") });
+await page.evaluate(() => foundry.applications.instances.get("knavery-welcome")?.close());
+const sidebar = await page.evaluate(async () => {
+  await ui.settings.render({ force: true });
+  return [...document.querySelectorAll("#settings .knavery-sidebar-tools button")].map((b) => b.textContent.trim());
+});
+ok(sidebar.length === 3, "Settings sidebar: welcome, rulebook and dashboard buttons", JSON.stringify(sidebar));
+
 // Cleanup.
 await page.evaluate(async () => {
   for (const a of game.actors.filter((x) => x.name.startsWith("Probe"))) await a.delete();

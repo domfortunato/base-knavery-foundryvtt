@@ -10,11 +10,15 @@
  *   3. Alice edits her sheet by hand; the change-log card reaches the GM.
  *   4. Alice prints her sheet (a new window opens).
  *   5. Alice (no actor-create permission) creates a character through the GM.
+ *   6. The GM's rulebook: Alice cannot open it until the GM lets players read
+ *      it; then the GM's "show this page" opens it on Alice's client.
  */
 import path from "node:path";
 import fs from "node:fs";
 import { chromium } from "playwright";
-import { SHOTS, VIEWPORT, joinAs, joinAsGM, watchErrors, watchdog } from "./lib.mjs";
+import {
+  SHOTS, VIEWPORT, joinAs, joinAsGM, useProbeRulebook, waitForRulebook, watchErrors, watchdog,
+} from "./lib.mjs";
 
 const OUT = SHOTS;
 fs.mkdirSync(OUT, { recursive: true });
@@ -118,9 +122,25 @@ const relay = await gm.evaluate(() => {
 });
 ok(!canCreate && relay.owner, "Alice (no create permission) got a character created by the GM", JSON.stringify({ canCreate, relay }));
 
+// 6. The rulebook: closed to players, then shown to them by the GM.
+await useProbeRulebook(gm, { forPlayers: false });
+await alice.waitForFunction(() => game.settings.get("base-knavery", "rulebook-pdf") !== "", null, { timeout: 10000 });
+const closed = await alice.evaluate(() => game.knavery.openRulebook() === null);
+ok(closed, "Alice cannot open the rulebook while players may not read it");
+await gm.evaluate(() => game.settings.set("base-knavery", "rulebook-for-players", true));
+await alice.waitForFunction(() => game.settings.get("base-knavery", "rulebook-for-players"), null, { timeout: 10000 });
+await gm.evaluate(() => game.knavery.showRulebookPage(1));
+await waitForRulebook(alice);
+ok(true, "the GM's \"show this page\" opens the rulebook on Alice's client");
+await alice.locator("#knavery-rulebook").screenshot({ path: path.join(OUT, "rulebook-shown.png") });
+await alice.evaluate(() => foundry.applications.instances.get("knavery-rulebook")?.close());
+
 // Cleanup.
 await gm.evaluate(async () => {
   for (const a of game.actors.filter((x) => x.name.startsWith("Probe"))) await a.delete();
+  await game.settings.set("base-knavery", "rulebook-pdf", "");
+  await game.settings.set("base-knavery", "rulebook-for-players", false);
+  await game.settings.set("base-knavery", "rulebook-page-offset", 6);
 });
 const real = errors.flat().filter((e) => !/favicon|DEPRECATED/i.test(e));
 ok(real.length === 0, "no console errors", `\n    ${real.join("\n    ")}`);

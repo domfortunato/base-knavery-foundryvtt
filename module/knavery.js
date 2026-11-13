@@ -23,6 +23,10 @@ import { openMarketplace, openMarketplaceManager } from "./marketplace.js";
 import { openTableImporter, importRows, parseRows } from "./table-importer.js";
 import { rollAttack, rollCheck, rollDieOfFate, rollSave } from "./rolls.js";
 import { registerGrimoire } from "./grimoire.js";
+import {
+  canReadRulebook, hasRulebook, openRulebook, registerRulebook, showRulebookPage, toggleRulebook,
+} from "./rulebook.js";
+import { maybeOpenWelcome, openWelcome } from "./welcome.js";
 
 const L = (k) => game.i18n.localize(k);
 
@@ -52,6 +56,15 @@ Hooks.once("init", () => {
   registerCreationSocket();
   registerRequestSocket();
   registerGrimoire();
+  registerRulebook();
+
+  game.keybindings.register(SETTINGS_NS, "openRulebook", {
+    name: "KNAVERY.Rulebook.Key",
+    hint: "KNAVERY.Rulebook.KeyHint",
+    editable: [{ key: "KeyB" }],
+    onDown: () => { toggleRulebook(); return true; },
+    restricted: false,
+  });
 
   foundry.applications.handlebars.loadTemplates([
     `${SYS_PATH}/templates/parts/ability-list.html`,
@@ -74,6 +87,10 @@ Hooks.once("init", () => {
     rollSave,
     rollAttack,
     rollDieOfFate,
+    openRulebook,
+    toggleRulebook,
+    showRulebookPage,
+    openWelcome,
     /** Flip one of the player-tool switches (used by the shipped macros). */
     toggle: async (key) => {
       if (!game.user.isGM) return ui.notifications.warn("KNAVERY.Notify.GmOnly", { localize: true });
@@ -166,6 +183,41 @@ Hooks.on("hotbarDrop", (_bar, data, slot) => {
   return false;
 });
 
+/* -------------------------------------------- */
+/*  The Settings sidebar: welcome, rulebook      */
+/* -------------------------------------------- */
+
+Hooks.on("renderSettings", (_app, html) => {
+  html.querySelector(".knavery-sidebar-tools")?.remove();
+  const info = html.querySelector("section.info");
+  if (!info) return;
+  const section = document.createElement("section");
+  section.className = "knavery-sidebar-tools flexcol";
+  const heading = document.createElement("h4");
+  heading.className = "divider";
+  heading.textContent = game.system.title;
+  section.append(heading);
+  const btn = (icon, key, fn, { disabled = false, tip = null } = {}) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.innerHTML = `<i class="${icon}" inert></i> ${L(key)}`;
+    b.disabled = disabled;
+    if (tip) b.dataset.tooltipText = L(tip);
+    b.addEventListener("click", fn);
+    section.append(b);
+  };
+  btn("fa-solid fa-dungeon", "KNAVERY.Welcome.Sidebar", () => openWelcome());
+  const readable = hasRulebook() && canReadRulebook();
+  if (game.user.isGM || readable) {
+    btn("fa-solid fa-book-open", "KNAVERY.Rulebook.Title", () => toggleRulebook());
+  } else {
+    btn("fa-solid fa-book-open", "KNAVERY.Rulebook.Title", () => {}, { disabled: true, tip: "KNAVERY.Rulebook.NoCopy" });
+  }
+  if (game.user.isGM) btn("fa-solid fa-clipboard-list", "KNAVERY.Dashboard.Title", () => openGmDashboard());
+  info.after(section);
+});
+
 Hooks.once("ready", () => {
   console.log("Base Knavery | ready");
+  maybeOpenWelcome();
 });

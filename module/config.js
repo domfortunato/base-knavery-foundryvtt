@@ -116,5 +116,31 @@ export const TABLES = {
 /** Aisles of the marketplace are RollTables named "Market: <Aisle>". */
 export const MARKET_PREFIX = "Market: ";
 
+/**
+ * The GM's own rulebook PDF (module/rulebook.js). Nothing of the book ships:
+ * the world stores a path, and these are page numbers only, read from the Knave
+ * 2e PDF's outline and headings. Pages are PRINTED pages; the PDF index is the
+ * printed page plus the world's offset setting (6 in that PDF, whose printed
+ * page 1 is its seventh). `pdfPages` is the edition the numbers come from; a
+ * file with another page count warns once. The ten trait tables and both
+ * mishap tables have no page: they are not in the 2e book.
+ */
+export const RULEBOOK = {
+  pdfPages: 88,
+  pageOffset: 6,
+  pages: {
+    [TABLES.careers]: 5,
+    [TABLES.spells]: 22,
+    [TABLES.namesA]: 54,
+    [TABLES.surnames]: 55,
+    [TABLES.reaction]: 19,
+    [`${MARKET_PREFIX}Gear`]: 38,
+    [`${MARKET_PREFIX}Weapons`]: 38,
+    [`${MARKET_PREFIX}Armor`]: 38,
+    [`${MARKET_PREFIX}Animals & Transport`]: 38,
+    [`${MARKET_PREFIX}Clothing`]: 40,
+  },
+};
+
 /** Starting coins at creation. */
 export const STARTING_COINS = "3d6 * 10";

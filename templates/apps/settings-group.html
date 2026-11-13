@@ -1,0 +1,9 @@
+{{!-- One Configure Settings submenu (settings.js SettingsGroupMenu): the rows of
+     one SETTING_GROUPS group through core's formGroup helper, so they look like
+     the main settings window's rows. One wrapper element: a Handlebars part
+     must render a single top-level element. Ported from Air Bladder. --}}
+<div class="knavery-settings-rows">
+{{#each entries as |entry|}}
+{{formGroup entry.field value=entry.value input=entry.input rootId=@root.rootId localize=true}}
+{{/each}}
+</div>

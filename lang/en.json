@@ -622,6 +622,9 @@
       "GroupHacks": "Hacks",
       "GroupHacksButton": "Configure Hacks",
       "GroupHacksHint": "Optional rules: the GLOG grimoire, hard-mode wounds and hazard dice.",
+      "GroupRulebook": "Rulebook",
+      "GroupRulebookButton": "Configure Rulebook",
+      "GroupRulebookHint": "Read your own copy of the Knave 2e PDF inside Foundry.",
       "AdvantageMode": "Advantage and disadvantage",
       "AdvantageModeHint": "Knave 2e as written adds or subtracts 5. The 2d20 style rolls two d20s and keeps the higher or lower.",
       "AdvantageRaw": "Knave 2e: +5 / −5",
@@ -634,6 +637,8 @@
       "ShowTraitsHint": "The trait list on the Description tab.",
       "ChangeLog": "Change log",
       "ChangeLogHint": "Whisper a card listing what anyone changed by hand on a sheet.",
+      "WelcomeOnStart": "Welcome window on start",
+      "WelcomeOnStartHint": "Open the welcome window for the GM once after each update of Base Knavery.",
       "AllowPlayerGenerate": "Players may create characters",
       "AllowPlayerGenerateHint": "Shows Create Character to players.",
       "AllowPlayerRandomization": "Players may use the creation tools",
@@ -653,7 +658,48 @@
       "HardModeWounds": "Hard-mode wounds",
       "HardModeWoundsHint": "An item in a wounded slot breaks.",
       "ShowHazardDice": "Hazard dice on the dashboard",
-      "ShowHazardDiceHint": "Dungeon and travel hazard dice buttons."
+      "ShowHazardDiceHint": "Dungeon and travel hazard dice buttons.",
+      "RulebookPdf": "Your rulebook PDF",
+      "RulebookPdfHint": "A PDF in your user data, e.g. in a knavery-rulebook folder. The picker's Upload button copies it from your computer to this server; it goes nowhere else, and Base Knavery stores only its path.",
+      "RulebookForPlayers": "Players may read it",
+      "RulebookForPlayersHint": "Lets players open the rulebook too, and lets the GM show them a page.",
+      "RulebookPageOffset": "Page offset",
+      "RulebookPageOffsetHint": "PDF page minus printed page. In the Knave 2e PDF, printed page 1 is PDF page 7: offset 6."
+    },
+
+    "Rulebook": {
+      "Title": "Rulebook",
+      "Key": "Open or close the rulebook",
+      "KeyHint": "Toggles the reader on your own copy of the rulebook.",
+      "OpenAt": "Open the rulebook at p. {page}",
+      "Page": "Page",
+      "Open": "Open",
+      "Show": "Show this page to players",
+      "ShownPlayers": "Players are shown p. {page}.",
+      "NobodyToShow": "Nobody to show: no player is connected, or players may not read the rulebook (Configure Rulebook).",
+      "NotSet": "No rulebook PDF is set for this world. Choose your copy in Configure Rulebook.",
+      "Choose": "Choose the PDF",
+      "NoCopy": "The GM has not shared a rulebook in this world.",
+      "OtherEdition": "This PDF has {pages} pages; the page numbers here come from the {expected}-page Knave 2e PDF, so they may be off. Adjust the page offset in Configure Rulebook.",
+      "OpenTab": "Open in a new tab",
+      "ImporterHint": "This table is on p. {page} of your rulebook."
+    },
+
+    "Welcome": {
+      "Title": "Welcome to Base Knavery",
+      "By": "by {author} · version {version}",
+      "Unofficial": "Base Knavery is an unofficial, fan-made game system for Foundry VTT, compatible with Knave: Second Edition. It is not a Questing Beast LLC product and is not approved or endorsed by them. It ships none of the book's text or art: you play with your own copy of the rules, and its tables start empty for you to fill.",
+      "GetTheBook": "Get the book",
+      "BuyDtrpg": "PDF on DriveThruRPG",
+      "BuyItch": "PDF on Itch",
+      "BuyPrint": "In print",
+      "StartHere": "Start here",
+      "OpenGuide": "Open the guide",
+      "ChooseRulebook": "Choose your rulebook PDF",
+      "OpenRulebook": "Open the rulebook",
+      "ShowOnStart": "Show after each update",
+      "Close": "Close",
+      "Sidebar": "Welcome & credits"
     }
   }
 }

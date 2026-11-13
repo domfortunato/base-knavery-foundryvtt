@@ -8,7 +8,7 @@ Foundry v14.
 *Base Knavery is an independent production of Dom Bosco and is not affiliated
 with Questing Beast LLC.*
 
-![Made for Knave](logo/made-for-knave-black.png)
+<p align="center"><img src="logo/made-for-knave-yellow.png" alt="Made for Knave" width="260"></p>
 
 ## Install
 
@@ -21,12 +21,14 @@ https://github.com/domfortunato/base-knavery-foundryvtt/releases/latest/download
 ## What you get
 
 **The character sheet**
-- The Air Bladder layout: portrait, name with **pronouns** beside it, careers,
-  level and XP.
-- HP, AC, wounds and coins.
+- Laid out after the Knave 2e sheet, its pages on a thumb-tab rail off the
+  window's edge: **Knave**, **Inventory**, **Growth** and **Description**.
+- The Knave page: portrait, name with **pronouns** beside it, careers, level,
+  XP and coins over six circled abilities (each showing its defense), AC in a
+  shield, HP and wounds as bars, and the attacks.
 - **Rest**, **Heal Wound** and the **Die of Fate**.
-- Six ability buttons, each showing its defense.
-- Tabs for Items, Description and Notes.
+- Growth holds the level ladder and the careers; Description the traits,
+  biography and notes.
 - Values highlight when they are low or in peril (amber below max, red at 0),
   and banners appear for no HP, wounded slots, overburdened and dead.
 
@@ -87,6 +89,22 @@ https://github.com/domfortunato/base-knavery-foundryvtt/releases/latest/download
 - Every table the system rolls on.
 - Switches for the players' tools.
 
+**Your rulebook, inside Foundry**
+- Point the world at **your own copy** of the Knave 2e PDF (Configure
+  Rulebook; the file picker's Upload button puts it on your server). Nothing of
+  the book ships with the system, which stores only the file's path.
+- It opens in Foundry's own PDF viewer, with the book's outline and search.
+  **B** opens and closes it.
+- The dashboard puts a book icon on each table at its page, so you can read
+  the table while you fill it.
+- **Show this page to players** opens the same page for everyone, when you let
+  players read it.
+
+**Welcome window**
+- Opens for the GM after each update: what Base Knavery is, that it is
+  unofficial, the credits, and where to buy Knave 2e. Anyone can open it from
+  the Settings sidebar.
+
 **GM macros**
 - Toggle the player marketplace, character creation, creation tools and the
   change log.
@@ -126,6 +144,9 @@ See [LICENSE.txt](LICENSE.txt).
 - The "Made for Knave" logo is © Questing Beast LLC, used under the Knave:
   Second Edition Third Party License. Knave: Second Edition is © Ben Milton and
   Questing Beast LLC; its own logo is not used, as that licence requires.
-- The sheet's thumb-tab rail follows DB Mythic's, itself after Mythic-pwd's.
+- This README shows the yellow Made for Knave logo; the system shows the black
+  and white ones.
+- The sheet's thumb-tab rail follows DB Mythic's, itself after Mythic-pwd's,
+  and the rulebook reader follows Mythic-pwd's (PrinceWitherdick).
 - The system contains no text from Knave 2e and none from Dungeon Crawl
   Classics.

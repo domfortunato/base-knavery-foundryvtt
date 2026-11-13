@@ -57,11 +57,34 @@ pages:
     flags: {}
     ownership:
       default: -1
+  - _id: j9qHZDscBHT1S4rG
+    _key: '!journal.pages!q91oGmBk2jFcOYKv.j9qHZDscBHT1S4rG'
+    name: Your Rulebook
+    type: text
+    sort: 300000
+    title:
+      show: true
+      level: 1
+    text:
+      format: 1
+      content: |-
+        <p>Base Knavery can open <b>your own copy</b> of the Knave 2e PDF inside Foundry, so you can read a table while you fill it. Nothing of the book comes with the system: it stores only where your file is.</p>
+        <ol>
+        <li>Open <i>Settings → Configure Rulebook</i> and click the folder button beside <b>Your rulebook PDF</b>.</li>
+        <li>In the file picker, make a folder such as <code>knavery-rulebook</code>, use <b>Upload</b> to copy your PDF there from your computer, pick it, and save.</li>
+        <li>Press <b>B</b>, or use <b>Rulebook</b> in the Settings sidebar, to open or close it.</li>
+        </ol>
+        <p>On the dashboard's <b>Tables</b> tab, a book icon beside a table opens the rulebook at its page. The table importer offers the page too.</p>
+        <p>Tick <b>Players may read it</b> to let players open it. Then <b>Show this page to players</b>, in the reader's menu or on the dashboard, opens the same page for everyone connected.</p>
+        <p>Page numbers are the book's printed pages. If your PDF numbers its pages differently, change <b>Page offset</b>: PDF page minus printed page.</p>
+    flags: {}
+    ownership:
+      default: -1
   - _id: 1Pfm8GMCgECobV0b
     _key: '!journal.pages!q91oGmBk2jFcOYKv.1Pfm8GMCgECobV0b'
     name: Custom Careers
     type: text
-    sort: 300000
+    sort: 400000
     title:
       show: true
       level: 1
@@ -82,7 +105,7 @@ pages:
     _key: '!journal.pages!q91oGmBk2jFcOYKv.zDIEiXG8I0A7MC66'
     name: Rolls and Damage
     type: text
-    sort: 400000
+    sort: 500000
     title:
       show: true
       level: 1
@@ -108,7 +131,7 @@ pages:
     _key: '!journal.pages!q91oGmBk2jFcOYKv.WrB0zuU5hO2WDISC'
     name: Levels
     type: text
-    sort: 500000
+    sort: 600000
     title:
       show: true
       level: 1
@@ -128,7 +151,7 @@ pages:
     _key: '!journal.pages!q91oGmBk2jFcOYKv.C7iCnyL0XPh5HbGV'
     name: The GLOG Grimoire (hack)
     type: text
-    sort: 600000
+    sort: 700000
     title:
       show: true
       level: 1

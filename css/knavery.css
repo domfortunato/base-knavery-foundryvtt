@@ -4650,3 +4650,61 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .theme-dark .knavery:not(.theme-light) .knavery-compat-footer .knavery-logo-dark,
 .knavery.theme-dark .knavery-compat-footer .knavery-logo-dark { display: block; }
 .knavery .knavery-compat-caption { margin: 0; font-size: 10px; line-height: 1.3; font-style: normal; opacity: 1; color: var(--kn-muted); text-align: left; }
+
+/* ---- Rulebook reader: the GM's own PDF in core's pdf.js viewer (rulebook.js) - */
+.knavery-rulebook .window-content { padding: 0; overflow: hidden; }
+.knavery-rulebook .knavery-rulebook-frame { display: block; width: 100%; height: 100%; border: 0; }
+
+/* ---- Welcome window (welcome.js) --------------------------------------------- */
+.knavery-welcome .window-content { padding: 16px 20px; }
+.knavery-welcome-body { display: flex; flex-direction: column; gap: 8px; color: var(--kn-ink); }
+.knavery-welcome-head { display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; }
+.knavery-welcome-head img { display: block; width: 100%; max-width: 220px; height: auto; margin: 0 auto 4px; border: none; }
+.knavery-welcome .knavery-logo-dark { display: none; }
+.theme-dark .knavery-welcome:not(.theme-light) .knavery-logo-light,
+.knavery-welcome.theme-dark .knavery-logo-light { display: none; }
+.theme-dark .knavery-welcome:not(.theme-light) .knavery-logo-dark,
+.knavery-welcome.theme-dark .knavery-logo-dark { display: block; }
+.knavery-welcome-title {
+    margin: 0; border: none; font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
+    font-variant: small-caps; font-weight: bold; font-size: 30px; color: var(--kn-ink);
+}
+.knavery-welcome-byline { margin: 0; color: var(--kn-muted); font-size: 13px; }
+.knavery-welcome-byline a { color: inherit; }
+.knavery-welcome-unofficial { margin: 6px 0 0; }
+.knavery-welcome-disclaimer { margin: 0; font-weight: bold; }
+.knavery-welcome-credit { margin: 0; color: var(--kn-muted); font-size: 12px; }
+.knavery-welcome-heading {
+    margin: 8px 0 0; padding-bottom: 2px; border-bottom: 1px solid var(--kn-rule);
+    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif; font-variant: small-caps; font-size: 17px; color: var(--kn-ink);
+}
+.knavery-welcome-links, .knavery-welcome-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.knavery-welcome-link {
+    display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;
+    border: 1px solid var(--kn-rule-strong); border-radius: 4px; color: var(--kn-ink); text-decoration: none;
+}
+.knavery-welcome-link:hover, .knavery-welcome-link:focus-visible { background: var(--kn-wash-strong); text-shadow: none; }
+.knavery-welcome-actions button { flex: 1 1 auto; width: auto; }
+.knavery-welcome-foot {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px;
+    padding-top: 8px; border-top: 1px solid var(--kn-rule);
+}
+.knavery-welcome-onstart { display: flex; align-items: center; gap: 4px; color: var(--kn-muted); font-size: 13px; }
+.knavery-welcome-foot button { flex: 0 0 auto; width: auto; margin-left: auto; }
+
+/* ---- Dashboard: the Rulebook row and each table's book icon ------------------- */
+.knavery-gm-dashboard .dash-rulebook { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 8px; }
+.knavery-gm-dashboard .dash-rulebook label { display: flex; align-items: center; gap: 4px; flex: 0 0 auto; }
+.knavery-gm-dashboard .dash-rulebook input[name="rulebook-page"] { width: 64px; }
+.knavery-gm-dashboard .dash-rulebook button { flex: 0 0 auto; width: auto; }
+.knavery-gm-dashboard .knavery-rulebook-unset { flex: 1 1 100%; margin: 0; color: var(--kn-peril); }
+.knavery-gm-dashboard .dash-table-book { color: var(--kn-accent); }
+
+/* ---- Table importer: the line pointing at the table's page in the book -------- */
+.knavery-importer .knavery-importer-book a { color: var(--kn-accent); text-decoration: underline; cursor: pointer; }
+
+/* ---- Settings sidebar: Base Knavery's buttons (knavery.js renderSettings) ----- */
+#settings .knavery-sidebar-tools { gap: 4px; }
+
+/* ---- Configure submenus (settings.js): one column of core form groups --------- */
+.knavery-settings-menu .knavery-settings-rows { display: flex; flex-direction: column; gap: 4px; }

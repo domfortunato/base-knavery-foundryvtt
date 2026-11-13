@@ -19,6 +19,7 @@ import { actorFromUuid } from "./damage.js";
 import { findTable } from "./compendium.js";
 import { openTableImporter } from "./table-importer.js";
 import { openMarketplaceManager } from "./marketplace.js";
+import { hasRulebook, openRulebook, openRulebookSettings, showRulebookPage, tablePage } from "./rulebook.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 const L = (k) => game.i18n.localize(k);
@@ -56,6 +57,9 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       marketManager: () => openMarketplaceManager(),
       toggleSetting: GmDashboard.#onToggleSetting,
       selectAll: GmDashboard.#onSelectAll,
+      openRulebook: GmDashboard.#onOpenRulebook,
+      showRulebook: GmDashboard.#onShowRulebook,
+      chooseRulebook: () => openRulebookSettings(),
     },
   };
 
@@ -102,13 +106,16 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     const packIndex = game.packs.filter((p) => p.documentName === "RollTable").flatMap((p) => [...p.index]);
     const tables = tableNames.map((name) => {
       const world = game.tables.getName(name);
-      if (world) return { name, world: true, exists: true, rows: world.results.size };
+      const page = tablePage(name);
+      if (world) return { name, world: true, exists: true, rows: world.results.size, page };
       const shipped = packIndex.some((e) => e.name === name);
-      return { name, world: false, exists: shipped, rows: shipped ? "—" : 0 };
+      return { name, world: false, exists: shipped, rows: shipped ? "—" : 0, page };
     });
     for (const t of game.tables.filter((x) => !tableNames.includes(x.name))) {
-      tables.push({ name: t.name, world: true, exists: true, rows: t.results.size });
+      tables.push({ name: t.name, world: true, exists: true, rows: t.results.size, page: tablePage(t.name) });
     }
+    const rulebook = hasRulebook();
+    for (const t of tables) t.pageTip = t.page ? F("KNAVERY.Rulebook.OpenAt", { page: t.page }) : "";
     return Object.assign(context, {
       characters,
       abilities: ABILITIES.map((k) => ({ value: `ability:${k}`, label: L(`KNAVERY.Ability.${k}`) })),
@@ -118,6 +125,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       log: requestLog.slice(0, 20),
       showHazard: game.settings.get(SETTINGS_NS, "show-hazard-dice"),
       tables,
+      rulebook,
       toggles: TOGGLES.map((t) => ({ ...t, on: game.settings.get(SETTINGS_NS, t.key) })),
     });
   }
@@ -267,6 +275,18 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static #onImportTable(_e, target) {
     openTableImporter(target.closest("[data-table]")?.dataset.table ?? "");
+  }
+
+  /** A table's book icon carries its page; the Rulebook row reads its page input. */
+  static #onOpenRulebook(_e, target) {
+    const page = Number(target.dataset.page) || Number(this.element.querySelector('[name="rulebook-page"]')?.value) || null;
+    openRulebook({ page });
+  }
+
+  static #onShowRulebook() {
+    const reader = foundry.applications.instances.get("knavery-rulebook");
+    const page = Number(this.element.querySelector('[name="rulebook-page"]')?.value) || reader?.currentPage || 1;
+    showRulebookPage(page);
   }
 
   static async #onToggleSetting(_e, target) {
