@@ -110,8 +110,10 @@ export class KnaveryActor extends Actor {
     const bump = new Map();
     for (const data of dataList) {
       const qty = Number(data.system?.quantity ?? 1) || 1;
+      // Never onto a career's own item or a petty one: those marks belong to that one row.
       const same = data.type === "item" && this.items.find((i) => i.type === "item" && i.name === data.name
-        && i.img === data.img && !i.system.equipped && (i.system.bundle ?? 1) === (data.system?.bundle ?? 1));
+        && i.img === data.img && !i.system.equipped && (i.system.bundle ?? 1) === (data.system?.bundle ?? 1)
+        && !i.getFlag(FLAG_SCOPE, "fromCareer") && !i.getFlag(FLAG_SCOPE, "pettyFor"));
       if (same) bump.set(same.id, (bump.get(same.id) ?? same.system.quantity ?? 1) + qty);
       else {
         const pending = create.find((c) => c.type === "item" && data.type === "item" && c.name === data.name && c.img === data.img);

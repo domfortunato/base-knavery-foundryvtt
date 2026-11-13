@@ -47,7 +47,7 @@
             {{else}}
             <span class="career-none">{{localize "KNAVERY.NoCareers"}}</span>
             {{/each}}
-            {{#if generationEnabled}}
+            {{#if careerEdit}}
             <a class="background-roll" data-action="rollCareer" data-tooltip="KNAVERY.RollCareer" aria-label="{{localize 'KNAVERY.RollCareer'}}"><i class="fas fa-dice-d20"></i></a>
             <a class="background-pick" data-action="pickCareer" data-tooltip="KNAVERY.PickCareer" aria-label="{{localize 'KNAVERY.PickCareer'}}"><i class="fas fa-list-ul"></i></a>
             {{/if}}
@@ -196,6 +196,7 @@
           <div class="trait-picklist-section">
             <div class="trait-picklist-header">
               <label class="trait-picklist-label">{{localize "KNAVERY.Traits"}}</label>
+              {{#if generationEnabled}}<a class="trait-roll-all" data-action="rollAllTraits" data-tooltip="KNAVERY.RollAllTraits" aria-label="{{localize 'KNAVERY.RollAllTraits'}}"><i class="fas fa-dice-d20"></i></a>{{/if}}
               <a class="trait-toggle" data-action="toggleTraits"><i class="fas {{#if traitsCollapsed}}fa-plus-square{{else}}fa-minus-square{{/if}}"></i></a>
             </div>
             <div class="trait-grid">
@@ -233,7 +234,7 @@
   <footer class="knavery-compat-footer">
     <img class="knavery-logo-light" src="{{logo}}" alt="{{localize 'KNAVERY.MadeForKnave'}}" />
     <img class="knavery-logo-dark" src="{{logoDark}}" alt="" />
-    <div class="knavery-compat-caption">{{disclaimer}} {{logoCredit}}</div>
+    <div class="knavery-compat-caption">{{disclaimer}}</div>
   </footer>
 </div>
 {{/if}}

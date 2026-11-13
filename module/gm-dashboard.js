@@ -22,6 +22,7 @@ import { findTable } from "./compendium.js";
 import { openTableImporter } from "./table-importer.js";
 import { openMarketplaceManager } from "./marketplace.js";
 import { hasRulebook, openRulebook, pickLocalRulebook, showRulebookPage, tablePage } from "./rulebook.js";
+import { scaledPosition } from "./settings.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 const L = (k) => game.i18n.localize(k);
@@ -67,6 +68,13 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       buildTables: () => import("./rulebook-import.js").then((m) => m.openRulebookTablesReview()),
     },
   };
+
+  /** Opens larger with the player's text size. */
+  _initializeApplicationOptions(options) {
+    const applied = super._initializeApplicationOptions(options);
+    applied.position = scaledPosition(applied.position);
+    return applied;
+  }
 
   static PARTS = {
     tabs: { template: "templates/generic/tab-navigation.hbs" },

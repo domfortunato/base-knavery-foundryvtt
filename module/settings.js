@@ -7,6 +7,19 @@ import { ADVANTAGE_MODES, FIRST_LEVEL_HP, LEVEL_HP_RULES, MAX_LEVEL, RULEBOOK, S
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
+/** The player's text size (setting `text-size`): 1 is the old size. */
+export const textScale = () => Number(game.settings.get(SETTINGS_NS, "text-size")) || 1;
+/** Put the text size on the page, where every Base Knavery font size reads it (css/knavery.css). */
+export const applyTextScale = () => document.documentElement.style.setProperty("--kn-text", String(textScale()));
+/** A window's default size grown with the text, kept on the screen. */
+export const scaledPosition = (position = {}) => {
+  const k = textScale();
+  const out = { ...position };
+  if (typeof out.width === "number") out.width = Math.min(Math.round(out.width * k), Math.max(400, window.innerWidth - 80));
+  if (typeof out.height === "number") out.height = Math.min(Math.round(out.height * k), Math.max(400, window.innerHeight - 60));
+  return out;
+};
+
 /** Re-render every open actor sheet, so a live toggle takes effect at once. */
 export const rerenderActorSheets = () => {
   for (const app of foundry.applications.instances.values()) {
@@ -48,7 +61,7 @@ export const SETTING_GROUPS = [
     button: "KNAVERY.Settings.GroupHacksButton",
     hint: "KNAVERY.Settings.GroupHacksHint",
     icon: "fa-solid fa-flask",
-    keys: ["failed-career", "hard-mode-wounds", "show-hazard-dice"],
+    keys: ["failed-career", "failed-career-item", "hard-mode-wounds", "show-hazard-dice"],
   },
   {
     id: "rulebook",
@@ -103,8 +116,20 @@ export const registerSettings = () => {
   });
   reg("coins-take-slots", { label: "CoinsTakeSlots", type: Boolean, default: true, onChange: rerenderActorSheets });
 
+  /* Text size: each player's own (client), in core's Configure Settings. */
+  game.settings.register(SETTINGS_NS, "text-size", {
+    name: "KNAVERY.Settings.TextSize", hint: "KNAVERY.Settings.TextSizeHint",
+    scope: "client", config: true, type: String, default: "1.2",
+    choices: {
+      1: "KNAVERY.Settings.TextNormal", 1.2: "KNAVERY.Settings.TextLarge",
+      1.4: "KNAVERY.Settings.TextLarger", 1.6: "KNAVERY.Settings.TextLargest",
+    },
+    onChange: () => applyTextScale(),
+  });
+
   /* Hacks */
   reg("failed-career", { label: "FailedCareer", type: Boolean, default: false, onChange: rerenderActorSheets });
+  reg("failed-career-item", { label: "FailedCareerItem", type: Boolean, default: true });
   reg("hard-mode-wounds", { label: "HardModeWounds", type: Boolean, default: false });
   reg("show-hazard-dice", { label: "ShowHazardDice", type: Boolean, default: true });
 

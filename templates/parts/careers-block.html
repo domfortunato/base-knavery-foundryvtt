@@ -4,7 +4,7 @@
 <div class="knavery-careers">
   <div class="trait-picklist-header">
     <label class="trait-picklist-label">{{localize "KNAVERY.Careers"}}</label>
-    {{#if generationEnabled}}
+    {{#if careerEdit}}
     <a class="background-roll" data-action="rollCareer" data-tooltip="KNAVERY.RollCareer"><i class="fas fa-dice-d20"></i></a>
     <a class="background-pick" data-action="pickCareer" data-tooltip="KNAVERY.PickCareer"><i class="fas fa-list-ul"></i></a>
     {{/if}}
@@ -19,6 +19,10 @@
       <img src="{{career.img}}" alt="" />
       <a class="career-name" data-action="openCareer">{{career.name}}</a>
       {{#each career.effects}}<span class="knavery-item-tag effect-tag"><i class="fas fa-bolt"></i> {{this}}</span>{{/each}}
+      {{#if career.canChange}}
+      <a class="career-change" data-action="changeCareer" data-mode="roll" data-tooltip="KNAVERY.ChangeCareerRoll"><i class="fas fa-dice-d20"></i></a>
+      <a class="career-change" data-action="changeCareer" data-mode="pick" data-tooltip="KNAVERY.ChangeCareerPick"><i class="fas fa-list-ul"></i></a>
+      {{/if}}
       {{#if career.canRemove}}
       <a class="career-remove" data-action="removeCareer" data-tooltip="KNAVERY.RemoveCareer"><i class="fas fa-xmark"></i></a>
       {{/if}}

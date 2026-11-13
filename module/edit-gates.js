@@ -29,6 +29,10 @@ export const mayEditLevelXp = (actor, user = game.user, changed = {}) =>
   user.isGM || actor.type !== "character"
   || (mayEditAbilities(actor, user, changed) && game.settings.get(SETTINGS_NS, "allow-player-level-xp"));
 
+/** Careers and the failed career: the GM always; a player in Char Gen Mode while the character is level 1. */
+export const mayEditCareers = (actor, user = game.user) =>
+  user.isGM || (mayUseCharGen(actor, user) && actor.system.generationEnabled === true && actor.system.level === 1);
+
 /** Remove `path` from an update, whether it arrived flat or expanded. */
 const drop = (changed, path) => {
   let hit = false;

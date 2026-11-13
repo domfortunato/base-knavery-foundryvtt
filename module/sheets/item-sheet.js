@@ -8,6 +8,8 @@ import { ARMOR_TYPES, FEATURE_TYPES, SYS_PATH } from "../config.js";
 import { pickArt } from "../art.js";
 import { enrichForSheet } from "../clean-html.js";
 
+import { scaledPosition } from "../settings.js";
+
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ItemSheetV2 } = foundry.applications.sheets;
 const TextEditor = foundry.applications.ux.TextEditor.implementation;
@@ -30,6 +32,13 @@ export class KnaveryItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
       toggleEffect: KnaveryItemSheet.#onToggleEffect,
     },
   };
+
+  /** Opens larger with the player's text size. */
+  _initializeApplicationOptions(options) {
+    const applied = super._initializeApplicationOptions(options);
+    applied.position = scaledPosition(applied.position);
+    return applied;
+  }
 
   static PARTS = {
     form: { template: `${SYS_PATH}/templates/item/item-sheet.html`, scrollable: [""] },

@@ -12,7 +12,7 @@ import { KnaveryActor } from "./documents/actor.js";
 import { KnaveryItem } from "./documents/item.js";
 import { KnaveryActorSheet } from "./sheets/actor-sheet.js";
 import { KnaveryItemSheet } from "./sheets/item-sheet.js";
-import { registerSettings } from "./settings.js";
+import { applyTextScale, registerSettings } from "./settings.js";
 import { initSocket, onSocket } from "./socket.js";
 import { bindRollCard, handleApplyDamage } from "./damage.js";
 import { bindOfferCard, registerOfferSocket } from "./item-offer.js";
@@ -50,6 +50,7 @@ Hooks.once("init", () => {
   DocumentSheetConfig.registerSheet(Item, SETTINGS_NS, KnaveryItemSheet, { makeDefault: true, label: "KNAVERY.SheetLabel" });
 
   registerSettings();
+  applyTextScale();
   initSocket();
   onSocket("applyDamage", handleApplyDamage);
   registerOfferSocket();

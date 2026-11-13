@@ -28,6 +28,7 @@ import { drawFrom, pickFromList, plainText, realResults, findTable, resultText }
 import { firstLevelHpFormula, randomAbilityPicks, rollLevelHp } from "./level-up.js";
 import { randomPortraitPair, pairedTokenFor } from "./art.js";
 import { emit, onSocket } from "./socket.js";
+import { mayEditCareers } from "./edit-gates.js";
 
 const L = (k) => game.i18n.localize(k);
 const F = (k, d) => game.i18n.format(k, d);
@@ -112,13 +113,16 @@ export const addCareer = async (actor, career, { grantItems = null, knNoLog = fa
   }
   if (Object.keys(seed).length) await actor.update(seed, { knNoLog: true });
   if (failed) {
-    await grantPettyItem(actor, created, { knNoLog });
+    if (game.settings.get(SETTINGS_NS, "failed-career-item")) await grantPettyItem(actor, created, { knNoLog });
     return created;
   }
   const grant = grantItems ?? actor.system.generationEnabled === true;
   if (grant && created.system.startingItems?.length) {
     const items = (await Promise.all(created.system.startingItems.map(resolveStartingItem))).filter(Boolean);
-    if (items.length) await actor.addItems(items, { knNoLog });
+    // Marked with the career and kept on their own rows (never stacked onto what
+    // the Knave already carries), so changing the career takes back exactly these.
+    for (const data of items) foundry.utils.setProperty(data, `flags.${FLAG_SCOPE}.fromCareer`, created.id);
+    if (items.length) await actor.createEmbeddedDocuments("Item", items, { knNoLog });
   }
   return created;
 };
@@ -159,6 +163,7 @@ const grantPettyItem = async (actor, career, { knNoLog = false } = {}) => {
   const data = await resolveStartingItem(entries[Math.floor(Math.random() * entries.length)]);
   if (!data) return null;
   foundry.utils.setProperty(data, `flags.${FLAG_SCOPE}.pettyFor`, actor.id);
+  foundry.utils.setProperty(data, `flags.${FLAG_SCOPE}.fromCareer`, career.id);
   foundry.utils.setProperty(data, "system.equipped", false);
   const [item] = await actor.createEmbeddedDocuments("Item", [data], { knNoLog });
   if (item) await career.update({ [`flags.${FLAG_SCOPE}.pettyItem`]: { id: item.id, name: item.name } }, { knNoLog: true });
@@ -166,7 +171,7 @@ const grantPettyItem = async (actor, career, { knNoLog = false } = {}) => {
 };
 
 /** A career from the Careers table whose name is not in `avoid`, or null. */
-const drawCareerExcept = async (avoid = []) => {
+export const drawCareerExcept = async (avoid = []) => {
   for (let i = 0; i < 12; i++) {
     const r = await drawFrom(TABLES.careers, { warn: false });
     if (!r) return null;
@@ -180,6 +185,7 @@ export const failedCareersOn = () => game.settings.get(SETTINGS_NS, "failed-care
 
 /** The Careers block's failed-career die: one failed career per Knave. */
 export const rollFailedCareer = async (actor) => {
+  if (!mayEditCareers(actor)) return ui.notifications.warn("KNAVERY.Notify.CareersLocked", { localize: true });
   const careers = actor.items.filter((i) => i.type === "career");
   if (careers.some((c) => c.system.failed)) return null;
   const career = await drawCareerExcept(careers.map((c) => c.name));
@@ -187,8 +193,37 @@ export const rollFailedCareer = async (actor) => {
   return addCareer(actor, career, { failed: true });
 };
 
+/** Remove a career, its feature values and the items it gave that the Knave still carries. */
+export const removeCareer = async (actor, career) => {
+  const given = actor.items.filter((i) => i.getFlag(FLAG_SCOPE, "fromCareer") === career.id).map((i) => i.id);
+  const key = career.system.key;
+  await actor.deleteEmbeddedDocuments("Item", [career.id, ...given]);
+  if (key && actor.system.features?.[key] !== undefined) {
+    await actor.update({ [`system.features.${key}`]: foundry.data.operators.ForcedDeletion.create() }, { knNoLog: true });
+  }
+};
+
+/**
+ * Swap a career for another of the same kind: a career for a career (with its
+ * items), a failed career for a failed career (with its one petty item). Players
+ * may only while the character is level 1, in Char Gen Mode.
+ */
+export const replaceCareer = async (actor, old, replacement) => {
+  if (!mayEditCareers(actor)) return ui.notifications.warn("KNAVERY.Notify.CareersLocked", { localize: true });
+  if (!old || !replacement) return null;
+  const failed = old.system.failed === true;
+  await removeCareer(actor, old);
+  return addCareer(actor, replacement, { failed, grantItems: true });
+};
+
 /** The pick-list for careers: career Items everywhere, plus Careers table rows. */
 export const pickCareerItem = async (actor) => {
+  const career = await chooseCareer();
+  if (career) return addCareer(actor, career);
+};
+
+/** The career pick-list, returning the chosen career (an Item, or career data from a table row) without adding it. */
+export const chooseCareer = async () => {
   const options = [];
   for (const i of game.items.filter((it) => it.type === "career")) {
     options.push({ value: i.uuid, label: i.name, img: i.img });
@@ -205,18 +240,28 @@ export const pickCareerItem = async (actor) => {
   }
   if (!options.length) return ui.notifications.warn("KNAVERY.Notify.NoCareers", { localize: true });
   const chosen = await pickFromList(options, { title: L("KNAVERY.PickCareer") });
-  if (!chosen) return;
+  if (!chosen) return null;
   if (chosen.startsWith("row:")) {
     const r = table.results.get(chosen.slice(4));
-    return careerFromText(actor, r, plainText(resultText(r)));
+    return careerFromResult(r, plainText(resultText(r)));
   }
   const doc = await fromUuid(chosen);
-  if (doc) return addCareer(actor, doc);
+  return doc?.type === "career" ? doc : null;
 };
 
 /* -------------------------------------------- */
 /*  Generation                                   */
 /* -------------------------------------------- */
+
+/** Every trait drawn from its table; a table still an empty shell leaves its trait out. */
+export const rollTraits = async () => {
+  const traits = {};
+  for (const [key, table] of Object.entries(TABLES.traits)) {
+    const r = await drawFrom(table, { warn: false });
+    if (r) traits[key] = r.text;
+  }
+  return traits;
+};
 
 /** 3d6, each face raising its ability. Returns {values, faces}. */
 const rollAbilities = async () => {
@@ -300,11 +345,7 @@ export const buildCharacter = async ({ level = 1, abilities = null } = {}) => {
   const name = first ? [first.text, last].filter(Boolean).join(" ") : L("KNAVERY.DefaultCharacterName");
   if (!first) notes.push(L("KNAVERY.Gen.NoNameTable"));
 
-  const traits = {};
-  for (const [key, table] of Object.entries(TABLES.traits)) {
-    const r = await drawFrom(table, { warn: false });
-    if (r) traits[key] = r.text;
-  }
+  const traits = await rollTraits();
   const art = await randomPortraitPair("person");
 
   return {
@@ -516,6 +557,9 @@ export const createCharacter = async ({ mode = "random", level = 1, name = "", o
   } else {
     const art = await randomPortraitPair("person");
     if (art) await actor.update({ img: art.img, "prototypeToken.texture.src": (await pairedTokenFor(art.img)) ?? art.img }, { knNoLog: true });
+    // A blank sheet still starts with its traits rolled; the player changes them in Char Gen Mode.
+    const traits = await rollTraits();
+    if (Object.keys(traits).length) await actor.update({ "system.traits": traits }, { knNoLog: true });
   }
   const user = game.users.get(owner);
   if (user && !user.isGM && !user.character) await user.update({ character: actor.id });

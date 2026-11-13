@@ -4,7 +4,7 @@
  * Level Up arrow and its window; the HP rules; random creation from placed
  * ability points (one spellbook per STARTING point of INT); the failed-career
  * hack and its petty item; the GM's notes; the dashboard's XP tab; the ability
- * roll link's tooltip. GM, Alice and Bob in three browsers.
+ * roll link's tooltip; the text size; the footer; traits; changing careers at level 1. GM, Alice and Bob in three browsers.
  *
  *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/e2e-chargen.mjs   (npm run dev:chargen)
  *
@@ -321,6 +321,159 @@ await withSettings(gm, async () => {
     await alice.screenshot({ path: `${SHOTS}/chargen-sheet.png` });
     const ac = await alice.evaluate(() => game.i18n.localize("KNAVERY.ACAuto"));
     ok(ac === "AC = 11 plus 1 point for each piece of equipped armor.", "the AC tooltip states the rule", ac);
+  });
+
+  /* ------------------------------------------------------------------ */
+  await section("10. Text size, the short footer, the fist icon, the Hacks labels.", async () => {
+    const before = await gm.evaluate(() => game.settings.get("base-knavery", "text-size"));
+    const measure = (x) => gm.evaluate(async (id) => {
+      const a = game.actors.get(id);
+      await a.sheet.render({ force: true });
+      await new Promise((r) => setTimeout(r, 500));
+      const name = a.sheet.element.querySelector(".knavery-ability-name");
+      const card = document.querySelector("#chat .chat-message .card-title h3, #chat .chat-message h3");
+      return { name: parseFloat(getComputedStyle(name).fontSize), card: card ? parseFloat(getComputedStyle(card).fontSize) : null };
+    }, x);
+    await gm.evaluate(() => game.settings.set("base-knavery", "text-size", "1"));
+    const small = await measure(ids.a);
+    await gm.evaluate(() => game.settings.set("base-knavery", "text-size", "1.4"));
+    const big = await measure(ids.a);
+    await gm.evaluate((v) => game.settings.set("base-knavery", "text-size", v), before);
+    ok(Math.abs(big.name / small.name - 1.4) < 0.05, "the ability names grow with the text size, live", JSON.stringify({ small, big }));
+    ok(small.card === null || small.card === big.card, "chat cards keep their size", JSON.stringify({ small, big }));
+    ok(before === "1.2", "the default is Large", String(before));
+
+    const foot = await gm.evaluate((id) => game.actors.get(id).sheet.element.querySelector(".knavery-compat-caption")?.textContent.trim(), ids.a);
+    ok(foot === "Base Knavery is not affiliated with Questing Beast LLC.", "the sheet footer is the short line", foot);
+    const welcome = await gm.evaluate(async () => {
+      await game.knavery.openWelcome();
+      await new Promise((r) => setTimeout(r, 800));
+      const t = document.querySelector(".knavery-welcome-disclaimer")?.textContent.trim() ?? "";
+      for (const app of [...foundry.applications.instances.values()]) if (app.constructor.name === "WelcomeWindow") await app.close();
+      return t;
+    });
+    ok(welcome === (await gm.evaluate(() => game.i18n.localize("KNAVERY.Disclaimer"))), "the welcome window keeps the full disclaimer", welcome);
+
+    const fist = await gm.evaluate(async (id) => {
+      const a = game.actors.get(id);
+      await a.createEmbeddedDocuments("Item", [{ name: "Probe Club", type: "weapon", system: { damage: "d6" } }]);
+      await a.sheet.render({ force: true });
+      await new Promise((r) => setTimeout(r, 500));
+      return !!a.sheet.element.querySelector(".item-toggle-equipped i.fa-hand-fist");
+    }, ids.a);
+    ok(fist, "the equip toggle is a fist", String(fist));
+    await gm.evaluate((id) => game.actors.get(id).sheet.close(), ids.a);
+
+    const labels = await gm.evaluate(async () => {
+      const menu = new (game.settings.menus.get("base-knavery.hacks").type)();
+      await menu.render({ force: true });
+      await new Promise((r) => setTimeout(r, 500));
+      const rows = [...menu.element.querySelectorAll(".form-group > label")].map((l) => {
+        const lh = parseFloat(getComputedStyle(l).lineHeight) || 20;
+        return { text: l.textContent.trim(), lines: Math.round(l.getBoundingClientRect().height / lh) };
+      });
+      await menu.close();
+      return rows;
+    });
+    ok(labels.length >= 4 && labels.every((r) => r.lines <= 1), "every Hacks label sits on one line", JSON.stringify(labels));
+  });
+
+  /* ------------------------------------------------------------------ */
+  await section("11. Traits: expanded, rolled for a blank sheet, pick-lists in Char Gen Mode.", async () => {
+    const r = await gm.evaluate(async (sys) => {
+      const made = [];
+      if (!game.tables.getName("Physique")) {
+        made.push((await RollTable.create({ name: "Physique", formula: "1d1", results: [{ type: "text", name: "Probe Wiry", range: [1, 1], weight: 1 }] })).id);
+      }
+      const { createCharacter } = await import(`${sys}/character-generator.js`);
+      const blank = await createCharacter({ mode: "blank", name: "Probe Blank" });
+      await new Promise((res) => setTimeout(res, 600));
+      const el = blank.sheet.element;
+      const out = { made, physique: blank.system.traits.physique, rows: el.querySelectorAll(".trait-row").length };
+      await blank.sheet.close();
+      return out;
+    }, SYS);
+    made.tables.push(...r.made);
+    ok(!!r.physique, "a Blank character starts with its traits rolled", JSON.stringify(r));
+    ok(r.rows === 10, "the traits section opens expanded, every trait showing", JSON.stringify(r));
+    await gm.evaluate((x) => game.actors.get(x).update({ "system.generationEnabled": true }), ids.a);
+    await openAs(alice, ids.a);
+    await settle();
+    const ctl = await alice.evaluate((x) => {
+      const el = game.actors.get(x).sheet.element;
+      return { picks: el.querySelectorAll(".trait-pick").length, all: !!el.querySelector(".trait-roll-all") };
+    }, ids.a);
+    ok(ctl.picks === 10 && ctl.all, "in Char Gen Mode Alice gets a pick-list per trait and Roll every trait", JSON.stringify(ctl));
+  });
+
+  /* ------------------------------------------------------------------ */
+  await section("12. Careers change at level 1; the failed career's item is an option.", async () => {
+    const setup = await gm.evaluate(async ([sys, a]) => {
+      const { addCareer } = await import(`${sys}/character-generator.js`);
+      const actor = game.actors.get(a);
+      for (const i of actor.items.contents) await i.delete();
+      await actor.update({ "system.level": 1, "system.xp": 0, "system.generationEnabled": true });
+      await game.settings.set("base-knavery", "failed-career-item", true);
+      const baker = await addCareer(actor, { name: "Probe Baker", type: "career", system: { startingItems: ["Probe Rolling Pin"] } }, { grantItems: true });
+      const failed = await addCareer(actor, { name: "Probe Lutist", type: "career", system: { startingItems: ["Probe Lute"] } }, { failed: true });
+      return { baker: baker.id, failed: failed.id };
+    }, [SYS, ids.a]);
+    await openAs(alice, ids.a);
+    await alice.evaluate((x) => game.actors.get(x).sheet.changeTab("growth", "primary"), ids.a);
+    await settle();
+    await alice.locator(`${sheet}[id$="${ids.a}"] .knavery-career[data-career-id="${setup.baker}"] .career-change[data-mode="roll"]`).click();
+    await gm.waitForFunction(([x, id]) => !game.actors.get(x).items.get(id), [ids.a, setup.baker], { timeout: T(15000) });
+    await settle();
+    await alice.locator(`${sheet}[id$="${ids.a}"] .knavery-career[data-career-id="${setup.failed}"] .career-change[data-mode="roll"]`).click();
+    await gm.waitForFunction(([x, id]) => !game.actors.get(x).items.get(id), [ids.a, setup.failed], { timeout: T(15000) });
+    await settle();
+    const after = await gm.evaluate((x) => {
+      const a = game.actors.get(x);
+      const careers = a.items.filter((i) => i.type === "career");
+      const plain = careers.find((c) => !c.system.failed);
+      const failed = careers.find((c) => c.system.failed);
+      const from = (c) => a.items.filter((i) => i.getFlag("base-knavery", "fromCareer") === c?.id);
+      return {
+        careers: careers.length, pin: !!a.items.getName("Probe Rolling Pin"), lute: !!a.items.getName("Probe Lute"),
+        plainItems: from(plain).length, plainWants: (plain?.system.startingItems ?? []).filter((e) => e.trim()).length,
+        petty: a.items.filter((i) => i.getFlag("base-knavery", "pettyFor") === a.id).length,
+        pettyFromNew: from(failed).length,
+      };
+    }, ids.a);
+    ok(after.careers === 2 && !after.pin && after.plainItems === after.plainWants, "rerolling a career takes back its items and gives the new one's", JSON.stringify(after));
+    ok(!after.lute && after.petty === 1 && after.pettyFromNew === 1, "rerolling the failed career leaves one petty item, the new one's", JSON.stringify(after));
+
+    const noItem = await gm.evaluate(async ([sys, a]) => {
+      const { addCareer } = await import(`${sys}/character-generator.js`);
+      await game.settings.set("base-knavery", "failed-career-item", false);
+      const before = game.actors.get(a).items.size;
+      await addCareer(game.actors.get(a), { name: "Probe Tinker", type: "career", system: { startingItems: ["Probe Pliers"] } }, { failed: true });
+      await game.settings.set("base-knavery", "failed-career-item", true);
+      return game.actors.get(a).items.size - before;
+    }, [SYS, ids.a]);
+    ok(noItem === 1, "with the item option off, a failed career gives no item", String(noItem));
+
+    await gm.evaluate((x) => game.actors.get(x).update({ "system.level": 2 }), ids.a);
+    await settle();
+    const locked = await alice.evaluate(async ([sys, x]) => {
+      const a = game.actors.get(x);
+      const el = a.sheet.element;
+      const out = { change: el.querySelectorAll(".career-change").length, roll: el.querySelectorAll('[data-action="rollCareer"]').length };
+      const { replaceCareer } = await import(`${sys}/character-generator.js`);
+      const c = a.items.find((i) => i.type === "career" && !i.system.failed);
+      await replaceCareer(a, c, { name: "Probe Forger", type: "career", system: {} });
+      out.kept = !!a.items.get(c.id);
+      return out;
+    }, [SYS, ids.a]);
+    ok(locked.change === 0 && locked.roll === 0 && locked.kept, "at level 2 Alice can no longer change careers", JSON.stringify(locked));
+    const gmCan = await gm.evaluate(async ([sys, x]) => {
+      const a = game.actors.get(x);
+      const { replaceCareer } = await import(`${sys}/character-generator.js`);
+      const c = a.items.find((i) => i.type === "career" && !i.system.failed);
+      await replaceCareer(a, c, { name: "Probe Forger", type: "career", system: {} });
+      return !!a.items.getName("Probe Forger");
+    }, [SYS, ids.a]);
+    ok(gmCan, "the GM still can", String(gmCan));
   });
 
   // Cleanup.

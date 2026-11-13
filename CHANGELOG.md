@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- **Bigger text, and your own text size.** Base Knavery's windows default to Large, and each player picks
+  Normal, Large, Larger or Largest under Configure Settings → Base Knavery. Sheets and the dashboard open
+  larger to match. Chat cards keep their size.
+- The sheet footer is one short line; the welcome window keeps the full disclaimer and credits.
+- The equip toggle is a fist.
+- Traits open expanded, a Blank character starts with its traits rolled, and Char Gen Mode adds Roll every trait.
+- Careers and the failed career change only at level 1, in Char Gen Mode (the GM can always): each career card
+  rerolls or picks a replacement, which takes back the old career's items and gives the new one's. Removing a
+  career takes back its items too. A career's items now sit on their own rows.
+- The failed career's petty item is its own option in the Hacks settings, on by default.
+- The settings windows' labels no longer wrap with gaps.
 - **Char Gen Mode** (was Character Creation Mode). Players edit ability scores only with it on, and level and XP
   only when the GM's new switch "Players may change level & XP" is on too (dashboard, settings and a macro).
 - An up arrow in the character's title bar when Char Gen Mode is on and the XP is there: it opens Level Up.

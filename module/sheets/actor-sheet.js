@@ -11,12 +11,14 @@ import {
   ABILITIES, FLAG_SCOPE, LEVEL_UP_ABILITIES, LEVELS, NPC_ROLES, SETTINGS_NS, SYS_PATH, TABLES,
 } from "../config.js";
 import { isPetty, slotsForItem } from "../documents/actor.js";
-import { mayEditAbilities, mayEditLevelXp, mayUseCharGen } from "../edit-gates.js";
+import { mayEditAbilities, mayEditCareers, mayEditLevelXp, mayUseCharGen } from "../edit-gates.js";
+import { scaledPosition } from "../settings.js";
 import { castSpell, rollAttack, rollCheck, rollDamage, rollDieOfFate, rollMorale } from "../rolls.js";
 import { pickArt, randomPortraitPair, setActorArt } from "../art.js";
 import { drawFrom, pickFrom } from "../compendium.js";
 import {
-  addCareer, careerFromText, failedCareersOn, pickCareerItem, regenerateCharacter, rollFailedCareer,
+  addCareer, careerFromText, chooseCareer, drawCareerExcept, failedCareersOn, pickCareerItem, regenerateCharacter,
+  removeCareer, replaceCareer, rollFailedCareer, rollTraits,
 } from "../character-generator.js";
 import { hpRuleHint, openLevelUp } from "../level-up.js";
 import { canOfferItem, offerFromDrop, promptOfferTarget } from "../item-offer.js";
@@ -71,6 +73,15 @@ const owned = (fn) => function (event, target) {
   return fn.call(this, event, target);
 };
 
+/** Guard: careers change only while this user may (players: level 1, Char Gen Mode). */
+const careerGate = (fn) => function (event, target) {
+  if (!mayEditCareers(this.actor)) {
+    ui.notifications.warn("KNAVERY.Notify.CareersLocked", { localize: true });
+    return undefined;
+  }
+  return fn.call(this, event, target);
+};
+
 /** Guard: Char Gen Mode must be allowed for this user. */
 const mayRandomize = (fn) => function (event, target) {
   if (!this._mayRandomize()) {
@@ -96,10 +107,12 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       pickName: owned(mayRandomize(KnaveryActorSheet.#onPickName)),
       rollTrait: owned(mayRandomize(KnaveryActorSheet.#onRollTrait)),
       pickTrait: owned(mayRandomize(KnaveryActorSheet.#onPickTrait)),
-      rollCareer: owned(mayRandomize(KnaveryActorSheet.#onRollCareer)),
-      pickCareer: owned(mayRandomize(KnaveryActorSheet.#onPickCareer)),
-      rollFailedCareer: owned(mayRandomize(KnaveryActorSheet.#onRollFailedCareer)),
-      removeCareer: owned(KnaveryActorSheet.#onRemoveCareer),
+      rollCareer: owned(mayRandomize(careerGate(KnaveryActorSheet.#onRollCareer))),
+      pickCareer: owned(mayRandomize(careerGate(KnaveryActorSheet.#onPickCareer))),
+      rollFailedCareer: owned(mayRandomize(careerGate(KnaveryActorSheet.#onRollFailedCareer))),
+      changeCareer: owned(careerGate(KnaveryActorSheet.#onChangeCareer)),
+      removeCareer: owned(careerGate(KnaveryActorSheet.#onRemoveCareer)),
+      rollAllTraits: owned(mayRandomize(KnaveryActorSheet.#onRollAllTraits)),
       openCareer: KnaveryActorSheet.#onOpenCareer,
       rollAbility: KnaveryActorSheet.#onRollAbility,
       rollMorale: KnaveryActorSheet.#onRollMorale,
@@ -155,12 +168,14 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
   };
 
   #expandedRows = new Set();
-  #traitsCollapsed = true;
+  #traitsCollapsed = false;
   #dragDrop = null;
 
   _initializeApplicationOptions(options) {
     const applied = super._initializeApplicationOptions(options);
     if (options.document?.type === "npc") applied.classes.push("knavery-npc-sheet");
+    // Opens larger with the player's text size.
+    applied.position = scaledPosition(applied.position);
     return applied;
   }
 
@@ -336,7 +351,9 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     if (isChar && items.some((i) => i.wounded)) banners.push({ key: "wounded", icon: "fa-droplet", label: L("KNAVERY.Status.Wounded"), text: L("KNAVERY.Status.WoundedText") });
     if (actor.overburdened) banners.push({ key: "overburdened", icon: "fa-weight-hanging", label: L("KNAVERY.Status.Overburdened"), text: L("KNAVERY.Status.OverburdenedText") });
 
-    const careers = await this.#careerContext(gen);
+    // Careers change at creation only: players in Char Gen Mode at level 1; the GM in Char Gen Mode at any level.
+    const careerEdit = gen && isChar && mayEditCareers(actor);
+    const careers = await this.#careerContext(careerEdit);
     const levelRow = LEVELS.find((r) => r.level === s.level);
 
     // The bars and the Growth page's ladder: shares of a whole, clamped to 0–100.
@@ -380,7 +397,8 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
         value: s.gmNotes ?? "",
         enriched: await enrichForSheet(s.gmNotes ?? "", { relativeTo: actor, secrets: game.user.isGM }),
       } : null,
-      showFailedCareerRoll: gen && isChar && failedCareersOn() && !careers.some((c) => c.failed),
+      careerEdit,
+      showFailedCareerRoll: careerEdit && failedCareersOn() && !careers.some((c) => c.failed),
       abilities,
       attacks,
       items,
@@ -408,8 +426,8 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       enrichedNotes: await enrichForSheet(s.notes ?? "", { relativeTo: actor, secrets: actor.isOwner }),
       enrichedBio: await enrichForSheet(s.biography ?? s.description ?? "", { relativeTo: actor, secrets: actor.isOwner }),
       spellsLeft: isChar ? Math.max(0, s.spellsPerDay - s.spellsCastToday) : null,
-      disclaimer: L("KNAVERY.Disclaimer"),
-      logoCredit: L("KNAVERY.LogoCredit"),
+      // The sheet's footer is the short line; the welcome window carries the full disclaimer and credit.
+      disclaimer: L("KNAVERY.DisclaimerShort"),
       logo: `${SYS_PATH}/logo/made-for-knave-black.png`,
       logoDark: `${SYS_PATH}/logo/made-for-knave-white.png`,
     });
@@ -433,7 +451,7 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
   }
 
   /** Careers on the actor, with the feature fields they add to the sheet. */
-  async #careerContext(gen) {
+  async #careerContext(careerEdit) {
     const s = this.actor.system;
     const out = [];
     for (const career of this.actor.items.filter((i) => i.type === "career")) {
@@ -460,7 +478,8 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
         description: await enrichForSheet(career.system.description ?? "", { relativeTo: career }),
         features,
         effects: career.effects.filter((e) => !e.disabled).map((e) => e.name),
-        canRemove: gen || game.user.isGM,
+        canRemove: careerEdit,
+        canChange: careerEdit,
         failed: career.system.failed === true,
         petty: career.system.failed ? this.#pettyContext(career) : null,
       });
@@ -619,7 +638,22 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       window: { title: L("KNAVERY.RemoveCareer") },
       content: `<p>${F("KNAVERY.RemoveCareerConfirm", { name: foundry.utils.escapeHTML(item.name) })}</p>`,
     });
-    if (ok) await item.delete();
+    if (ok) await removeCareer(this.actor, item);
+  }
+
+  /** Swap one career (or the failed career) for another: rolled, or picked from the list. */
+  static async #onChangeCareer(_event, target) {
+    const old = this.actor.items.get(target.closest("[data-career-id]")?.dataset.careerId);
+    if (!old) return;
+    const others = this.actor.items.filter((i) => i.type === "career").map((i) => i.name);
+    const next = target.dataset.mode === "pick" ? await chooseCareer() : await drawCareerExcept(others);
+    if (!next) return target.dataset.mode === "pick" ? null : ui.notifications.warn("KNAVERY.Notify.NoCareers", { localize: true });
+    await replaceCareer(this.actor, old, next);
+  }
+
+  static async #onRollAllTraits() {
+    const traits = await rollTraits();
+    if (Object.keys(traits).length) await this.actor.update({ "system.traits": traits });
   }
 
   static #onOpenCareer(_event, target) {

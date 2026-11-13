@@ -22,7 +22,9 @@ picker, change log and marketplace it ports.
   Knave" logos ship (in `logo/`). Never use the Knave 2e or Questing Beast
   logos.
 - The disclaimer string lives in `lang/en.json` `KNAVERY.Disclaimer` and in
-  LICENSE.txt and README.md. The welcome window shows it verbatim.
+  LICENSE.txt and README.md. The welcome window shows it verbatim, with the
+  logo credit. The sheet footer carries only `KNAVERY.DisclaimerShort` (user
+  ruling 2026-11-13).
 - The rulebook reader shows the GM's own PDF. The system stores only its path
   (setting `rulebook-pdf`) and page numbers (`config.js` `RULEBOOK`, read from
   the PDF's outline and headings).
