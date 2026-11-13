@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Screenshots of every main window, in both colour schemes, plus functional
- * checks of careers (features, starting items, effects) and the GLOG hack.
+ * checks of careers (features, starting items, effects).
  *
  *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/e2e-screens.mjs   (npm run dev:screens)
  */
@@ -28,9 +28,7 @@ const errors = watchErrors(page);
 await joinAsGM(page);
 
 await withSettings(page, async () => {
-  await page.evaluate(() => game.settings.set("base-knavery", "enable-glog-grimoire", true));
-
-  // A character with a custom career (features + an effect) and a grimoire.
+  // A character with a custom career (features + an effect) and a spellbook.
   const id = await page.evaluate(async () => {
     for (const a of game.actors.filter((x) => x.name.startsWith("Probe"))) await a.delete();
     const a = await game.knavery.createCharacter({ mode: "random", level: 2, name: "Probe Wizard" });
@@ -43,13 +41,9 @@ await withSettings(page, async () => {
       name: "Hardy", transfer: true, img: "icons/svg/heal.svg",
       changes: [{ key: "system.hp.max", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: "2" }],
     }]);
-    const { createGrimoire } = await import("/systems/base-knavery/module/grimoire.js");
-    await createGrimoire(a);
-    const [book] = await a.createEmbeddedDocuments("Item", [{
+    await a.createEmbeddedDocuments("Item", [{
       name: "Probe Bolt", type: "spellbook", system: { description: "<p>Deals [sum] damage to [dice] targets.</p>" },
     }]);
-    const { bindSpell } = await import("/systems/base-knavery/module/grimoire.js");
-    await bindSpell(a, book);
     return a.id;
   });
 
@@ -67,18 +61,10 @@ await withSettings(page, async () => {
   ok(career.torch, "career starting items granted");
   ok(career.hpMaxWithEffect === career.srcMax + 2, "career Active Effect applies (+2 max HP)", JSON.stringify(career));
 
-  const glog = await page.evaluate(async (id) => {
-    const a = game.actors.get(id);
-    const book = a.items.getName("Probe Bolt");
-    const { magicDiceLeft, magicDiceMax } = await import("/systems/base-knavery/module/grimoire.js");
-    return { bound: book.system.bound, slots: a.calcSlotsUsed(), max: magicDiceMax(a), left: magicDiceLeft(a) };
-  }, id);
-  ok(glog.bound && glog.max === 2 && glog.left === 2, "GLOG: spell bound, 2 Magic Dice at level 2", JSON.stringify(glog));
-
   for (const scheme of ["dark", "light"]) {
     await page.evaluate((s) => game.settings.set("core", "uiConfig", foundry.utils.mergeObject(game.settings.get("core", "uiConfig"), { colorScheme: { applications: s, interface: s } })), scheme);
     await page.evaluate((id) => game.actors.get(id).sheet.render(true), id);
-    await page.waitForSelector(".knavery.sheet.actor .knavery-grimoire", { timeout: 15000 });
+    await page.waitForSelector(".knavery.sheet.actor .knavery-attacks", { timeout: 15000 });
     await page.waitForTimeout(800);
     await shot(page, ".knavery.sheet.actor", `sheet-knave-${scheme}`);
     const rail = (tab) => page.locator(`.knavery.sheet.actor nav.knavery-tab-rail button[data-tab="${tab}"]`);
@@ -190,20 +176,6 @@ await withSettings(page, async () => {
   ok(books.includes("Careers:5") && books.includes("Spells:22") && !books.some((b) => b.startsWith("Physique")), "dashboard: book icons at each table's page", JSON.stringify(books));
   await shot(page, "#knavery-gm-dashboard", "dashboard-tables");
   await page.evaluate(() => foundry.applications.instances.get("knavery-gm-dashboard")?.close());
-
-  // Cast with Magic Dice through the UI.
-  await page.evaluate((id) => game.actors.get(id).sheet.render(true), id);
-  await page.waitForSelector(".knavery.sheet.actor .grimoire-page .attack-roll", { timeout: 15000 });
-  await page.locator(".knavery.sheet.actor .grimoire-page .attack-roll").click();
-  await page.waitForSelector('select[name="md"]', { timeout: 10000 });
-  await page.locator('select[name="md"]').selectOption("2");
-  await page.locator('.application.dialog button[data-action="ok"]').click();
-  await page.waitForTimeout(1500);
-  const cast = await page.evaluate(() => {
-    const m = game.messages.contents.at(-1);
-    return { flag: m.getFlag("base-knavery", "glogCast"), text: m.content };
-  });
-  ok(cast.flag?.dice === 2 && cast.text.includes(`Deals ${cast.flag.sum} damage to 2 targets`), "GLOG cast substitutes [dice] and [sum]", JSON.stringify(cast.flag));
 
   // Career item sheet (the custom-background editor).
   await page.evaluate((id) => game.actors.get(id).items.find((i) => i.type === "career").sheet.render(true), id);

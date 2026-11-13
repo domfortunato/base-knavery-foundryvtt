@@ -22,7 +22,6 @@ import { GmDashboard, openGmDashboard, registerRequestSocket, setToggle } from "
 import { openMarketplace, openMarketplaceManager } from "./marketplace.js";
 import { openTableImporter, importRows, parseRows } from "./table-importer.js";
 import { rollAttack, rollCheck, rollDieOfFate, rollSave } from "./rolls.js";
-import { registerGrimoire } from "./grimoire.js";
 import {
   canReadRulebook, hasRulebook, openRulebook, registerRulebook, showRulebookPage, toggleRulebook,
 } from "./rulebook.js";
@@ -56,7 +55,6 @@ Hooks.once("init", () => {
   registerOfferSocket();
   registerCreationSocket();
   registerRequestSocket();
-  registerGrimoire();
   registerRulebook();
 
   game.keybindings.register(SETTINGS_NS, "openRulebook", {

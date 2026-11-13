@@ -101,7 +101,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       };
     });
     const tableNames = [TABLES.careers, TABLES.spells, TABLES.namesA, TABLES.surnames, ...Object.values(TABLES.traits),
-      TABLES.reaction, TABLES.mishaps, TABLES.glogMishaps];
+      TABLES.reaction, TABLES.mishaps];
     // Index lookups only: loading every compendium table to count its rows
     // took ten seconds on a small server. World tables are already in memory.
     const packIndex = game.packs.filter((p) => p.documentName === "RollTable").flatMap((p) => [...p.index]);

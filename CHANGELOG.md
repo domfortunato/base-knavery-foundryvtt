@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- The GLOG grimoire hack is gone. In a world that used it, a Grimoire is now an ordinary item
+  and its spellbooks return to the inventory, taking slots and casting the Knave way.
 - The actor sheet laid out after the Knave 2e sheet: the pages on a thumb-tab rail off the
   window's edge (DB Mythic's); the Knave page with the portrait, name, careers, level and coins
   over six circled abilities, AC in a shield, HP and wounds as bars, Rest, Heal Wound, the Die

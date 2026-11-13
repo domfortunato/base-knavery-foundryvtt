@@ -21,7 +21,7 @@ const esc = (s) => foundry.utils.escapeHTML(String(s ?? ""));
 
 const knownNames = () => [
   TABLES.careers, TABLES.spells, TABLES.namesA, TABLES.surnames, ...Object.values(TABLES.traits),
-  TABLES.reaction, TABLES.mishaps, TABLES.glogMishaps,
+  TABLES.reaction, TABLES.mishaps,
   `${MARKET_PREFIX}Weapons`, `${MARKET_PREFIX}Armor`, `${MARKET_PREFIX}Gear`,
 ];
 

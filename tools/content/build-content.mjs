@@ -202,7 +202,6 @@ shell("Surnames", 100);
 for (const n of ["Physique", "Face", "Skin", "Hair", "Clothing", "Virtue", "Vice", "Speech", "Background", "Misfortune"]) shell(n, 20);
 shell("Reaction", 12, "2d6");
 shell("Mishaps", 20);
-shell("GLOG Mishaps", 12);
 
 /* -------------------------------------------- */
 /*  Bestiary: statistics only                    */
@@ -426,15 +425,6 @@ journal("Base Knavery Guide", [
 <li>rerolls max HP with one d6 per level. If the roll isn't higher, max HP goes up by one.</li>
 </ul>
 <p>The GM sets the lowest and highest levels a new character may start at.</p>`],
-  ["The GLOG Grimoire (hack)", `
-<p>Turn it on in <i>Settings → Hacks</i>. A character starts a <b>grimoire</b> from the Items tab and binds spellbooks into it. Bound books take no slots.</p>
-<p>To cast a bound spell, invest Magic Dice. The pool equals the character's level, at least 1 and at most 4, and a rest refills it. Roll the dice as d6s:</p>
-<ul>
-<li>Dice showing 1–3 come back; 4–6 are spent for the day.</li>
-<li><code>[dice]</code> and <code>[sum]</code> in the spell's text are filled in on the chat card.</li>
-<li>Doubles draw from the <i>GLOG Mishaps</i> table.</li>
-<li>Triples mean doom.</li>
-</ul>`],
 ]);
 
 /* -------------------------------------------- */

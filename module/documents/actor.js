@@ -6,14 +6,12 @@ import { ABILITIES, MAX_ARMOR_POINTS, SETTINGS_NS, SYS_PATH } from "../config.js
 import {
   postActorChanges, postItemChanges, postItemUpdates, stashAudit, stashItemAudit,
 } from "../change-log.js";
-import { refillMagicDice } from "../grimoire.js";
 
 /** How many inventory slots one owned item fills. */
 export const slotsForItem = (item) => {
   const s = item.system;
   if (item.type === "career") return 0;
   if (s.weightless) return 0;
-  if (item.type === "spellbook" && s.bound) return 0;
   const qty = Math.max(0, s.quantity ?? 1);
   const bundle = Math.max(1, s.bundle ?? 1);
   return Math.ceil(qty / bundle) * (s.slots ?? 1);
@@ -220,7 +218,6 @@ export class KnaveryActor extends Actor {
     const books = this.items.filter((i) => i.type === "spellbook" && i.system.castToday)
       .map((i) => ({ _id: i.id, "system.castToday": false }));
     if (books.length) await this.updateEmbeddedDocuments("Item", books, { knNoLog: true });
-    await refillMagicDice(this);
   }
 
   async healWound() {

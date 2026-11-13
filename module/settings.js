@@ -48,7 +48,7 @@ export const SETTING_GROUPS = [
     button: "KNAVERY.Settings.GroupHacksButton",
     hint: "KNAVERY.Settings.GroupHacksHint",
     icon: "fa-solid fa-flask",
-    keys: ["enable-glog-grimoire", "hard-mode-wounds", "show-hazard-dice"],
+    keys: ["hard-mode-wounds", "show-hazard-dice"],
   },
   {
     id: "rulebook",
@@ -99,9 +99,6 @@ export const registerSettings = () => {
   reg("coins-take-slots", { label: "CoinsTakeSlots", type: Boolean, default: true, onChange: rerenderActorSheets });
 
   /* Hacks */
-  reg("enable-glog-grimoire", {
-    label: "EnableGlogGrimoire", type: Boolean, default: false, onChange: rerenderActorSheets,
-  });
   reg("hard-mode-wounds", { label: "HardModeWounds", type: Boolean, default: false });
   reg("show-hazard-dice", { label: "ShowHazardDice", type: Boolean, default: true });
 

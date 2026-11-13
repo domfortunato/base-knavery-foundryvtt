@@ -115,11 +115,6 @@ https://github.com/domfortunato/base-knavery-foundryvtt/releases/latest/download
   change log.
 - Open the dashboard, the Marketplace Manager and the table importer.
 
-**The GLOG grimoire** (an optional hack)
-- Bind spellbooks into a grimoire and cast them with Magic Dice.
-- `[dice]` and `[sum]` in the spell text are filled in when you cast.
-- Doubles roll a mishap; triples mean doom.
-
 **Bestiary**
 - Classic monsters and hirelings as statistics, ready to drop on a scene.
 

@@ -46,8 +46,8 @@ picker, change log and marketplace it ports.
   - `rolls.js`: the edge prompt, checks, attacks, spells, dice
   - `damage.js`: chat-card buttons and the GM relay
   - `item-offer.js`, `marketplace.js`, `character-generator.js`, `level-up.js`
-  - `gm-dashboard.js`, `table-importer.js`, `grimoire.js`, `art.js`,
-    `change-log.js`, `print.js`
+  - `gm-dashboard.js`, `table-importer.js`, `art.js`, `change-log.js`,
+    `print.js`
   - `rulebook.js`: the GM's PDF in Foundry's bundled pdf.js viewer (an iframe
     of `scripts/pdfjs/web/viewer.html`, after Mythic-pwd), the B key, showing
     a page to players; page map in `config.js` `RULEBOOK`

@@ -112,7 +112,6 @@ export const TABLES = {
   },
   mishaps: "Mishaps",
   reaction: "Reaction",
-  glogMishaps: "GLOG Mishaps",
 };
 
 /** Aisles of the marketplace are RollTables named "Market: <Aisle>". */

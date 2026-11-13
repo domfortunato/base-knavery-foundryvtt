@@ -377,28 +377,6 @@
       }
     },
 
-    "Glog": {
-      "Grimoire": "Grimoire",
-      "Create": "Start a grimoire",
-      "AlreadyHasOne": "This character already has a grimoire.",
-      "NoGrimoire": "No grimoire to bind it into.",
-      "NoScrolls": "Scrolls cannot be bound into a grimoire.",
-      "Bind": "Bind into the grimoire",
-      "Unbind": "Take out of the grimoire",
-      "Cast": "Cast",
-      "CastHint": "Cast with Magic Dice",
-      "CastTitle": "Casts {name}",
-      "InvestDice": "Magic Dice to invest",
-      "DiceLeft": "{n} of {max} Magic Dice left.",
-      "DiceSummary": "[dice] = {dice}, [sum] = {sum}. {spent} dice spent for the day.",
-      "MdCount": "MD {n} / {max}",
-      "MdTip": "Magic Dice left today. Dice showing 1–3 come back; a rest refills them all.",
-      "NoDiceLeft": "No Magic Dice left today.",
-      "Mishap": "Doubles: a mishap! (The GLOG Mishaps table is empty.)",
-      "MishapRolled": "Doubles: {text}",
-      "Doom": "Triples: doom."
-    },
-
     "Offer": {
       "Give": "Give",
       "CannotGive": "You can't give that.",
@@ -634,7 +612,7 @@
       "GroupInventoryHint": "The marketplace and slots.",
       "GroupHacks": "Hacks",
       "GroupHacksButton": "Configure Hacks",
-      "GroupHacksHint": "Optional rules: the GLOG grimoire, hard-mode wounds and hazard dice.",
+      "GroupHacksHint": "Optional rules: hard-mode wounds and hazard dice.",
       "GroupRulebook": "Rulebook",
       "GroupRulebookButton": "Configure Rulebook",
       "GroupRulebookHint": "Read your own copy of the Knave 2e PDF inside Foundry.",
@@ -666,8 +644,6 @@
       "AllowPlayerMarketplaceHint": "Shows the Marketplace button on character sheets.",
       "CoinsTakeSlots": "Coins take slots",
       "CoinsTakeSlotsHint": "Every 500 coins fill an item slot.",
-      "EnableGlogGrimoire": "GLOG grimoire",
-      "EnableGlogGrimoireHint": "Characters may keep a grimoire and cast bound spells with Magic Dice.",
       "HardModeWounds": "Hard-mode wounds",
       "HardModeWoundsHint": "An item in a wounded slot breaks.",
       "ShowHazardDice": "Hazard dice on the dashboard",

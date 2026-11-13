@@ -162,7 +162,6 @@ export class ItemData extends foundry.abstract.TypeDataModel {
       weightless: bool(false),
       /** Small items that share one slot, e.g. 10 candles or 20 arrows. */
       bundle: int(1, { min: 1 }),
-      grimoire: bool(false),
     };
   }
 }
@@ -201,9 +200,6 @@ export class SpellbookData extends foundry.abstract.TypeDataModel {
       /** A chaos spellbook swaps to a new random spell at the next dawn after casting. */
       chaos: bool(false),
       castToday: bool(false),
-      /** GLOG hack: bound into a grimoire (the key of the book it lives in). */
-      bound: bool(false),
-      boundTo: str(),
     };
   }
 }

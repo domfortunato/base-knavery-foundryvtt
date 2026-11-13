@@ -31,7 +31,7 @@ export class KnaveryItem extends Item {
     const s = this.system;
     s.isEquipable = ["weapon", "armor"].includes(this.type);
     s.isAttack = this.type === "weapon";
-    s.canCast = this.type === "spellbook" && !s.bound;
+    s.canCast = this.type === "spellbook";
     s.hasPlusMinus = ["item", "weapon"].includes(this.type) && ((s.quantity ?? 1) > 1 || (s.bundle ?? 1) > 1);
     s.canGive = this.isEmbedded && this.type !== "career";
   }

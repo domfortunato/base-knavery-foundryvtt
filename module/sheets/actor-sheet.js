@@ -18,7 +18,6 @@ import { openLevelUp } from "../level-up.js";
 import { canOfferItem, offerFromDrop, promptOfferTarget } from "../item-offer.js";
 import { openMarketplace, playerMarketClosed } from "../marketplace.js";
 import { printActorSheet } from "../print.js";
-import { bindSpell, castWithMagicDice, createGrimoire, glogEnabled, grimoireContext, unbindSpell } from "../grimoire.js";
 import { placeRail, placeRailSoon } from "./tab-rail.js";
 import { enrichForSheet } from "../clean-html.js";
 
@@ -120,10 +119,6 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       toggleTraits: KnaveryActorSheet.#onToggleTraits,
       featureTrack: owned(KnaveryActorSheet.#onFeatureTrack),
       rollFeatureDie: KnaveryActorSheet.#onRollFeatureDie,
-      createGrimoire: owned(KnaveryActorSheet.#onCreateGrimoire),
-      bindSpell: owned(KnaveryActorSheet.#onBindSpell),
-      unbindSpell: owned(KnaveryActorSheet.#onUnbindSpell),
-      castGlog: owned(KnaveryActorSheet.#onCastGlog),
     },
   };
 
@@ -261,9 +256,7 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     const isChar = actor.type === "character";
     const gen = s.generationEnabled === true && this._mayRandomize() && this.isEditable;
     const layout = actor.slotLayout();
-    const glog = glogEnabled();
-    const grimoire = grimoireContext(actor);
-    const inventory = actor.inventory.filter((i) => !(glog && i.type === "spellbook" && i.system.bound));
+    const inventory = actor.inventory;
 
     const items = inventory.map((item) => {
       const slots = slotsForItem(item);
@@ -290,9 +283,7 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
         wounded: pos?.wounded ?? false,
         broken: item.system.broken,
         canAttack: item.type === "weapon" && item.system.equipped,
-        canCast: item.type === "spellbook" && !item.system.bound,
-        canBind: !!grimoire?.exists && item.type === "spellbook" && !item.system.scroll && !item.system.bound,
-        isGrimoire: item.type === "item" && item.system.grimoire,
+        canCast: item.type === "spellbook",
         castToday: item.type === "spellbook" && item.system.castToday,
         canGive: this.isEditable && canOfferItem(item),
         expanded: this.#expandedRows.has(item.id),
@@ -394,7 +385,6 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       roles: NPC_ROLES.map((r) => ({ value: r, label: L(`KNAVERY.Role.${r}`) })),
       enrichedNotes: await enrichForSheet(s.notes ?? "", { relativeTo: actor, secrets: actor.isOwner }),
       enrichedBio: await enrichForSheet(s.biography ?? s.description ?? "", { relativeTo: actor, secrets: actor.isOwner }),
-      grimoire,
       spellsLeft: isChar ? Math.max(0, s.spellsPerDay - s.spellsCastToday) : null,
       disclaimer: L("KNAVERY.Disclaimer"),
       logoCredit: L("KNAVERY.LogoCredit"),
@@ -734,25 +724,6 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
   static async #onItemGive(_event, target) {
     const item = this.#itemFrom(target);
     if (item) await promptOfferTarget(item);
-  }
-
-  static async #onCreateGrimoire() {
-    await createGrimoire(this.actor);
-  }
-
-  static async #onBindSpell(_event, target) {
-    const item = this.#itemFrom(target);
-    if (item) await bindSpell(this.actor, item);
-  }
-
-  static async #onUnbindSpell(_event, target) {
-    const item = this.#itemFrom(target);
-    if (item) await unbindSpell(item);
-  }
-
-  static async #onCastGlog(_event, target) {
-    const item = this.#itemFrom(target);
-    if (item) await castWithMagicDice(this.actor, item);
   }
 
   static async #onItemShop() {

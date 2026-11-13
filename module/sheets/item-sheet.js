@@ -56,7 +56,6 @@ export class KnaveryItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
       })),
       effects: item.effects.map((e) => ({ id: e.id, name: e.name, img: e.img, disabled: e.disabled })),
       enrichedDescription: await enrichForSheet(s.description ?? "", { relativeTo: item, secrets: item.isOwner }),
-      glog: game.settings.get("base-knavery", "enable-glog-grimoire"),
     });
     return context;
   }

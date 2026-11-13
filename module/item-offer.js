@@ -28,8 +28,7 @@ const inFlight = new Map();
 /*  Eligibility and payload                      */
 /* -------------------------------------------- */
 
-export const canOfferItem = (item) => !!item?.actor?.isOwner && OFFERABLE.includes(item.type)
-  && !item.system?.bound && !item.system?.grimoire;
+export const canOfferItem = (item) => !!item?.actor?.isOwner && OFFERABLE.includes(item.type);
 
 export const canReceiveOffer = (actor, giver = null) =>
   !!actor && !actor.pack && !actor.isToken && actor.uuid !== giver?.uuid;
@@ -44,7 +43,6 @@ const buildItemData = (item) => {
 
 const sanitize = (data) => {
   if (!data || typeof data !== "object" || !OFFERABLE.includes(data.type)) return null;
-  if (data.system?.bound || data.system?.grimoire) return null;
   const out = foundry.utils.deepClone(data);
   delete out._id;
   out.sort = 0;
