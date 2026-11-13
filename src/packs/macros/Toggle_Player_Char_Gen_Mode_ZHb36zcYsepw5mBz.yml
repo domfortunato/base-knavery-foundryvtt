@@ -2,9 +2,9 @@ folder: null
 sort: 0
 ownership:
   default: 0
-_id: 3MMx6bRGRXBGlg3f
-_key: '!macros!3MMx6bRGRXBGlg3f'
-name: Toggle Player Creation Tools
+_id: ZHb36zcYsepw5mBz
+_key: '!macros!ZHb36zcYsepw5mBz'
+name: Toggle Player Char Gen Mode
 type: script
 img: icons/svg/dice-target.svg
 scope: global

@@ -1,5 +1,5 @@
 /**
- * The marketplace: buy (or, in creation mode, take) gear from aisles.
+ * The marketplace: buy (or, in Char Gen Mode, take) gear from aisles.
  *
  * An aisle is a RollTable named "Market: <Aisle>". Shipped aisles live in the
  * Marketplace compendium; a WORLD table with the same name replaces it, and a
@@ -107,8 +107,8 @@ export const aisleStock = async (table) => {
 /* -------------------------------------------- */
 
 /**
- * Free Take: the GM, or a character in creation mode whose player may use the
- * creation tools (the same test the sheet applies to the creation toggle).
+ * Free Take: the GM, or a character in Char Gen Mode whose player may use
+ * Char Gen Mode (the same test the sheet applies to its toggle).
  */
 export const mayTakeFree = (actor) => {
   if (game.user.isGM) return true;
@@ -145,7 +145,7 @@ const acquire = async (actor, data, pay) => {
   return true;
 };
 
-/** Open the shop for `actor`. Take (free) is offered to the GM and in creation mode. */
+/** Open the shop for `actor`. Take (free) is offered to the GM and in Char Gen Mode. */
 export const openMarketplace = async (actor) => {
   if (playerMarketClosed()) return ui.notifications.warn("KNAVERY.Notify.MarketplaceClosed", { localize: true });
   const tables = await marketTables();

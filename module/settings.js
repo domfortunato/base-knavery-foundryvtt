@@ -3,7 +3,7 @@
  * (ported from Air Bladder's SettingsGroupMenu). Every setting is `config:
  * false`; the order a GM sees is each group's `keys`.
  */
-import { ADVANTAGE_MODES, MAX_LEVEL, RULEBOOK, SETTINGS_NS, SYS_PATH } from "./config.js";
+import { ADVANTAGE_MODES, FIRST_LEVEL_HP, LEVEL_HP_RULES, MAX_LEVEL, RULEBOOK, SETTINGS_NS, SYS_PATH } from "./config.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -30,8 +30,8 @@ export const SETTING_GROUPS = [
     hint: "KNAVERY.Settings.GroupGenerationHint",
     icon: "fa-solid fa-user-plus",
     keys: [
-      "allow-player-generate", "allow-player-randomization", "min-creation-level",
-      "max-creation-level", "custom-portrait-folder",
+      "allow-player-generate", "allow-player-randomization", "allow-player-level-xp", "min-creation-level",
+      "max-creation-level", "first-level-hp", "level-hp-rule", "custom-portrait-folder",
     ],
   },
   {
@@ -48,7 +48,7 @@ export const SETTING_GROUPS = [
     button: "KNAVERY.Settings.GroupHacksButton",
     hint: "KNAVERY.Settings.GroupHacksHint",
     icon: "fa-solid fa-flask",
-    keys: ["hard-mode-wounds", "show-hazard-dice"],
+    keys: ["failed-career", "hard-mode-wounds", "show-hazard-dice"],
   },
   {
     id: "rulebook",
@@ -85,6 +85,11 @@ export const registerSettings = () => {
   reg("allow-player-randomization", {
     label: "AllowPlayerRandomization", type: Boolean, default: true, onChange: rerenderActorSheets,
   });
+  reg("allow-player-level-xp", {
+    label: "AllowPlayerLevelXp", type: Boolean, default: true, onChange: rerenderActorSheets,
+  });
+  reg("first-level-hp", { label: "FirstLevelHp", type: String, choices: FIRST_LEVEL_HP, default: "1d6", onChange: rerenderActorSheets });
+  reg("level-hp-rule", { label: "LevelHpRule", type: String, choices: LEVEL_HP_RULES, default: "reroll", onChange: rerenderActorSheets });
   const levels = Object.fromEntries(Array.from({ length: MAX_LEVEL }, (_, i) => [i + 1, String(i + 1)]));
   reg("min-creation-level", { label: "MinCreationLevel", type: Number, choices: levels, default: 1 });
   reg("max-creation-level", { label: "MaxCreationLevel", type: Number, choices: levels, default: MAX_LEVEL });
@@ -99,6 +104,7 @@ export const registerSettings = () => {
   reg("coins-take-slots", { label: "CoinsTakeSlots", type: Boolean, default: true, onChange: rerenderActorSheets });
 
   /* Hacks */
+  reg("failed-career", { label: "FailedCareer", type: Boolean, default: false, onChange: rerenderActorSheets });
   reg("hard-mode-wounds", { label: "HardModeWounds", type: Boolean, default: false });
   reg("show-hazard-dice", { label: "ShowHazardDice", type: Boolean, default: true });
 

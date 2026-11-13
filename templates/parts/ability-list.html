@@ -5,10 +5,10 @@
   {{#each abilities as |ability|}}
   <div class="knavery-ability {{ability.key}}-ability">
     <div class="knavery-ability-circle">
-      <input type="number" min="0" max="10" step="1" class="stat-input" name="system.abilities.{{ability.key}}.value" value="{{ability.value}}"{{{ability.effAttrs}}} data-dtype="Number" aria-label="{{ability.name}}" />
+      <input type="number" min="0" max="10" step="1" class="stat-input" name="system.abilities.{{ability.key}}.value" value="{{ability.value}}"{{{ability.effAttrs}}} data-dtype="Number" aria-label="{{ability.name}}"{{#unless @root.mayEditAbilities}} disabled{{/unless}} />
     </div>
     <div class="knavery-ability-words">
-      <a class="resource-roll knavery-ability-name" data-action="rollAbility" data-ability="{{ability.key}}" data-always-live data-tooltip="{{ability.tip}}"><i class="fas fa-dice-d20 roll-icon"></i>{{ability.name}}</a>
+      <a class="resource-roll knavery-ability-name" data-action="rollAbility" data-ability="{{ability.key}}" data-always-live data-tooltip="{{ability.tip}}"><i class="fas fa-dice-d20 roll-icon" inert></i><span>{{ability.name}}</span></a>
       <span class="knavery-ability-hint">{{ability.hint}}</span>
     </div>
     {{#if @root.isCharacter}}<span class="ability-defense" data-tooltip="KNAVERY.DefenseTip">{{ability.defense}}</span>{{/if}}

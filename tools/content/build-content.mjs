@@ -139,7 +139,7 @@ c("Royal", 120000);
     _id, _key: `!items!${_id}`, name: "Example Career (duplicate me)", type: "career", img: ICON("background"),
     system: {
       description: "<p>A template for a custom career or background. Duplicate it into your world, rename it, and "
-        + "edit it: the <b>starting items</b> are granted in Character Creation Mode, each <b>feature</b> becomes "
+        + "edit it: the <b>starting items</b> are granted in Char Gen Mode, each <b>feature</b> becomes "
         + "a field on the character sheet, and any <b>effect</b> applies to whoever holds the career.</p>",
       key: "example",
       source: "Base Knavery",
@@ -331,7 +331,8 @@ const macro = (name, icon, command) => {
 };
 macro("Toggle Player Marketplace", "icons/svg/coins.svg", 'game.knavery.toggle("allow-player-marketplace");');
 macro("Toggle Player Character Creation", "icons/svg/mystery-man.svg", 'game.knavery.toggle("allow-player-generate");');
-macro("Toggle Player Creation Tools", "icons/svg/dice-target.svg", 'game.knavery.toggle("allow-player-randomization");');
+macro("Toggle Player Char Gen Mode", "icons/svg/dice-target.svg", 'game.knavery.toggle("allow-player-randomization");');
+macro("Toggle Player Level & XP", "icons/svg/upgrade.svg", 'game.knavery.toggle("allow-player-level-xp");');
 macro("Toggle Change Log", "icons/svg/book.svg", 'game.knavery.toggle("change-log");');
 macro("Game Master's Dashboard", "icons/svg/eye.svg", "game.knavery.openDashboard();");
 macro("Marketplace Manager", "icons/svg/chest.svg", "game.knavery.openMarketplaceManager();");
@@ -372,7 +373,7 @@ journal("Base Knavery Guide", [
 <li><b>Let players in.</b> Players click <b>Create Character</b> in the Actors sidebar and pick a random knave or a blank sheet. Players who may not create actors have the GM's client create one for them.</li>
 <li><b>Stock the market.</b> In the <b>Marketplace Manager</b>, <i>Customize</i> an aisle to change its prices, drop items in, or add new aisles.</li>
 </ol>
-<p>The <b>GM Macros</b> compendium turns the player marketplace, character creation, the creation tools and the change log on and off. Drag the macros to your hotbar.</p>`],
+<p>The <b>GM Macros</b> compendium turns the player marketplace, character creation, Char Gen Mode, players' level and XP, and the change log on and off. Drag the macros to your hotbar.</p>`],
   ["Filling the Tables", `
 <p>A world table always wins over the shipped shell with the same name. The importer creates or replaces that world table from pasted rows, one per line:</p>
 <ul>
@@ -400,7 +401,7 @@ journal("Base Knavery Guide", [
   ["Custom Careers", `
 <p>A career is an Item that can carry mechanics as well as a name:</p>
 <ul>
-<li><b>Starting items</b> are granted when the career is added in Character Creation Mode.</li>
+<li><b>Starting items</b> are granted when the career is added in Char Gen Mode.</li>
 <li><b>Features</b> are extra fields on the character sheet: text, number, checkbox, track (pips up to a maximum) or die (a rollable formula).</li>
 <li><b>Effects</b> are Active Effects that apply to whoever holds the career, e.g. <code>system.hp.max</code> +2.</li>
 </ul>
@@ -419,12 +420,12 @@ journal("Base Knavery Guide", [
 <li>The <b>Die of Fate</b> is a d6 for when fate, not skill, decides.</li>
 </ul>`],
   ["Levels", `
-<p>XP is earned the Knave way. Once a character's XP reaches the next threshold and <b>Character Creation Mode</b> is on, <b>Level Up</b> appears on the sheet. Levelling up:</p>
+<p>XP is earned the Knave way; the GM awards it from the dashboard's <b>XP</b> tab. Once a character's XP reaches the next threshold and <b>Char Gen Mode</b> is on, an up arrow appears in the sheet's title bar (and <b>Level Up</b> on the Growth page). Levelling up:</p>
 <ul>
 <li>raises three different abilities by one (you choose them, or the dice do);</li>
-<li>rerolls max HP with one d6 per level. If the roll isn't higher, max HP goes up by one.</li>
+<li>grows max HP by the GM's rule (Settings → Character Creation). As written: reroll one d6 per level; if the roll isn't higher, max HP goes up by one.</li>
 </ul>
-<p>The GM sets the lowest and highest levels a new character may start at.</p>`],
+<p>Players may type abilities only in Char Gen Mode, and level and XP only when the GM also allows it. The GM sets the lowest and highest levels a new character may start at.</p>`],
 ]);
 
 /* -------------------------------------------- */

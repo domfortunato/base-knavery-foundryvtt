@@ -115,12 +115,27 @@ alice.evaluate(() => { game.knavery.createCharacterInteractive(); });
 await alice.waitForSelector(".knavery-create", { timeout: 10000 });
 await alice.locator('.knavery-create input[name="name"]').fill("Probe Relay");
 await alice.locator('.knavery-create button[data-action="random"]').click();
+// Random creation first asks where the 3 ability points go: STR 2, INT 1.
+await alice.waitForSelector(".knavery-points .kn-points-row", { timeout: 10000 });
+const step = (k, d) => alice.locator(`.knavery-points .kn-points-row[data-ability="${k}"] [data-delta="${d}"]`).click();
+const assignOff = await alice.locator('.knavery-points button[data-action="assign"]').isDisabled();
+await step("STR", 1); await step("STR", 1); await step("INT", 1);
+const plusOff = await alice.locator('.knavery-points .kn-points-row[data-ability="DEX"] [data-delta="1"]').isDisabled();
+ok(assignOff && plusOff, "the points window allows exactly 3 points, Assign only once all are placed", JSON.stringify({ assignOff, plusOff }));
+await alice.locator('.knavery-points button[data-action="assign"]').click();
 await gm.waitForFunction(() => game.actors.getName("Probe Relay"), null, { timeout: 30000 });
+await gm.waitForFunction(() => game.actors.getName("Probe Relay")?.items.size > 0, null, { timeout: 30000 }).catch(() => {});
 const relay = await gm.evaluate(() => {
   const a = game.actors.getName("Probe Relay");
-  return { owner: a.testUserPermission(game.users.getName("Alice"), "OWNER"), level: a.system.level };
+  const s = a._source.system;
+  return {
+    owner: a.testUserPermission(game.users.getName("Alice"), "OWNER"), level: a.system.level,
+    str: s.abilities.STR.value, int: s.abilities.INT.value,
+    rest: ["DEX", "CON", "WIS", "CHA"].reduce((n, k) => n + s.abilities[k].value, 0),
+  };
 });
 ok(!canCreate && relay.owner, "Alice (no create permission) got a character created by the GM", JSON.stringify({ canCreate, relay }));
+ok(relay.level > 1 || (relay.str === 2 && relay.int === 1 && relay.rest === 0), "the GM built it from Alice's placed points", JSON.stringify(relay));
 
 // 6. The rulebook: closed to players, then shown to them by the GM.
 await useProbeRulebook(gm, { forPlayers: false });

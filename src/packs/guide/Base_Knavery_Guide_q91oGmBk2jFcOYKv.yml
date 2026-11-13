@@ -30,7 +30,7 @@ pages:
         <li><b>Let players in.</b> Players click <b>Create Character</b> in the Actors sidebar and pick a random knave or a blank sheet. Players who may not create actors have the GM's client create one for them.</li>
         <li><b>Stock the market.</b> In the <b>Marketplace Manager</b>, <i>Customize</i> an aisle to change its prices, drop items in, or add new aisles.</li>
         </ol>
-        <p>The <b>GM Macros</b> compendium turns the player marketplace, character creation, the creation tools and the change log on and off. Drag the macros to your hotbar.</p>
+        <p>The <b>GM Macros</b> compendium turns the player marketplace, character creation, Char Gen Mode, players' level and XP, and the change log on and off. Drag the macros to your hotbar.</p>
     flags: {}
     ownership:
       default: -1
@@ -97,7 +97,7 @@ pages:
       content: |-
         <p>A career is an Item that can carry mechanics as well as a name:</p>
         <ul>
-        <li><b>Starting items</b> are granted when the career is added in Character Creation Mode.</li>
+        <li><b>Starting items</b> are granted when the career is added in Char Gen Mode.</li>
         <li><b>Features</b> are extra fields on the character sheet: text, number, checkbox, track (pips up to a maximum) or die (a rollable formula).</li>
         <li><b>Effects</b> are Active Effects that apply to whoever holds the career, e.g. <code>system.hp.max</code> +2.</li>
         </ul>
@@ -142,12 +142,12 @@ pages:
     text:
       format: 1
       content: |-
-        <p>XP is earned the Knave way. Once a character's XP reaches the next threshold and <b>Character Creation Mode</b> is on, <b>Level Up</b> appears on the sheet. Levelling up:</p>
+        <p>XP is earned the Knave way; the GM awards it from the dashboard's <b>XP</b> tab. Once a character's XP reaches the next threshold and <b>Char Gen Mode</b> is on, an up arrow appears in the sheet's title bar (and <b>Level Up</b> on the Growth page). Levelling up:</p>
         <ul>
         <li>raises three different abilities by one (you choose them, or the dice do);</li>
-        <li>rerolls max HP with one d6 per level. If the roll isn't higher, max HP goes up by one.</li>
+        <li>grows max HP by the GM's rule (Settings → Character Creation). As written: reroll one d6 per level; if the roll isn't higher, max HP goes up by one.</li>
         </ul>
-        <p>The GM sets the lowest and highest levels a new character may start at.</p>
+        <p>Players may type abilities only in Char Gen Mode, and level and XP only when the GM also allows it. The GM sets the lowest and highest levels a new character may start at.</p>
     flags: {}
     ownership:
       default: -1

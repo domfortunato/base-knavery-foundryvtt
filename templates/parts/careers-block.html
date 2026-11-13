@@ -8,9 +8,13 @@
     <a class="background-roll" data-action="rollCareer" data-tooltip="KNAVERY.RollCareer"><i class="fas fa-dice-d20"></i></a>
     <a class="background-pick" data-action="pickCareer" data-tooltip="KNAVERY.PickCareer"><i class="fas fa-list-ul"></i></a>
     {{/if}}
+    {{#if showFailedCareerRoll}}
+    <a class="background-roll failed-career-roll" data-action="rollFailedCareer" data-tooltip="KNAVERY.RollFailedCareer"><i class="fas fa-heart-crack"></i></a>
+    {{/if}}
   </div>
   {{#each careers as |career|}}
-  <div class="knavery-career" data-career-id="{{career.id}}">
+  <div class="knavery-career{{#if career.failed}} failed{{/if}}" data-career-id="{{career.id}}">
+    {{#if career.failed}}<div class="career-failed-label">{{localize "KNAVERY.FailedCareer"}}</div>{{/if}}
     <div class="career-head">
       <img src="{{career.img}}" alt="" />
       <a class="career-name" data-action="openCareer">{{career.name}}</a>
@@ -19,6 +23,12 @@
       <a class="career-remove" data-action="removeCareer" data-tooltip="KNAVERY.RemoveCareer"><i class="fas fa-xmark"></i></a>
       {{/if}}
     </div>
+    {{#if career.petty}}
+    <div class="career-petty"{{#if career.petty.id}} data-item-id="{{career.petty.id}}"{{/if}} data-tooltip="KNAVERY.PettyTip">
+      <i class="fas fa-feather-pointed"></i> {{localize "KNAVERY.PettyItem"}}
+      {{#if career.petty.id}}<a data-action="itemEdit">{{career.petty.name}}</a>{{else}}<span class="petty-gone">{{career.petty.name}}</span>{{/if}}
+    </div>
+    {{/if}}
     {{#if career.description}}<div class="career-description">{{{career.description}}}</div>{{/if}}
     {{#if career.features.length}}
     <div class="career-features">

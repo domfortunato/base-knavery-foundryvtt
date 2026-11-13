@@ -68,6 +68,20 @@ export const ADVANTAGE_MODES = {
 };
 export const ADVANTAGE_BONUS = 5;
 
+/** How max HP grows at each level (setting `level-hp-rule`). `reroll` is Knave 2e as written. */
+export const LEVEL_HP_RULES = {
+  reroll: "KNAVERY.Settings.HpRuleReroll",
+  add1d6: "KNAVERY.Settings.HpRuleAdd",
+  rerollBest: "KNAVERY.Settings.HpRuleBest",
+};
+/** First-level HP (setting `first-level-hp`). Under the reroll rules it is also the first die of every reroll. */
+export const FIRST_LEVEL_HP = {
+  "1d6": "KNAVERY.Settings.FirstHp1d6",
+  "1d4+2": "KNAVERY.Settings.FirstHp1d4",
+};
+/** Points a new character places in its abilities (more than one in a score is allowed). */
+export const CREATION_POINTS = 3;
+
 /** Roll modes offered by the roll prompt. */
 export const EDGES = ["disadvantage", "normal", "advantage"];
 

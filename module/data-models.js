@@ -76,6 +76,8 @@ export class CharacterData extends KnaveryActorData {
       generationEnabled: bool(false),
       biography: html(),
       notes: html(),
+      /** The Game Master's notes on the Growth page: the GM writes, the player reads. */
+      gmNotes: html(),
     };
   }
 
@@ -212,6 +214,8 @@ export class CareerData extends foundry.abstract.TypeDataModel {
       key: str(),
       source: str(),
       attribution: str(),
+      /** "Give Knaves a failed career" hack: a career the Knave failed at. */
+      failed: bool(false),
       /** Items granted at creation: compendium/world UUIDs or plain names. */
       startingItems: new ArrayField(str()),
       /** Extra fields this career adds to the character sheet. */

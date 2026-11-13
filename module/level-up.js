@@ -1,12 +1,16 @@
 /**
  * Levelling up: +1 to three different abilities (chosen or random, max 10),
- * then reroll max HP with one d6 per level — if the new total is not greater
- * than the old maximum, the maximum goes up by one instead.
+ * then max HP grows by the GM's rule (setting `level-hp-rule`):
+ *   reroll      Knave 2e: reroll one d6 per level; not higher, +1.
+ *   add1d6      add one d6.
+ *   rerollBest  reroll, and keep the higher of the roll and the old max.
+ * Under both reroll rules the first die is the first-level formula
+ * (setting `first-level-hp`, 1d6 or 1d4+2).
  *
- * The sheet shows the Level Up button only while Character Creation Mode is
- * on AND the character's XP has reached the next threshold.
+ * The sheet offers Level Up (the title-bar arrow and the Growth button) only
+ * while Char Gen Mode is on AND the character's XP has reached the next level.
  */
-import { ABILITIES, ABILITY_MAX, FLAG_SCOPE, LEVEL_UP_ABILITIES, MAX_LEVEL, SYS_PATH } from "./config.js";
+import { ABILITIES, ABILITY_MAX, FLAG_SCOPE, LEVEL_UP_ABILITIES, MAX_LEVEL, SETTINGS_NS, SYS_PATH } from "./config.js";
 
 const L = (k) => game.i18n.localize(k);
 const F = (k, d) => game.i18n.format(k, d);
@@ -21,11 +25,33 @@ export const randomAbilityPicks = (values) => {
   return picks;
 };
 
-/** Reroll max HP for `level`: {max, rolled, dice}. */
+const hpRule = () => game.settings.get(SETTINGS_NS, "level-hp-rule");
+/** The first-level HP formula: 1d6, or 1d4+2. */
+export const firstLevelHpFormula = () => game.settings.get(SETTINGS_NS, "first-level-hp") === "1d4+2" ? "1d4 + 2" : "1d6";
+/** The reroll formula for `level`: the first-level formula plus a d6 for each level after the first. */
+export const levelHpFormula = (level) => (level > 1 ? `${firstLevelHpFormula()} + ${level - 1}d6` : firstLevelHpFormula());
+
+/** Max HP for reaching `level` from `oldMax`, by the GM's rule: {max, rolled, roll, note}. */
 export const rollLevelHp = async (level, oldMax) => {
-  const roll = await new Roll(`${level}d6`).evaluate();
-  const max = roll.total > oldMax ? roll.total : oldMax + 1;
-  return { max, rolled: roll.total, roll };
+  const rule = hpRule();
+  if (rule === "add1d6") {
+    const roll = await new Roll("1d6").evaluate();
+    const max = oldMax + roll.total;
+    return { max, rolled: roll.total, roll, note: F("KNAVERY.LevelUpHpAdded", { rolled: roll.total, max }) };
+  }
+  const roll = await new Roll(levelHpFormula(level)).evaluate();
+  const higher = roll.total > oldMax;
+  const max = higher ? roll.total : (rule === "rerollBest" ? oldMax : oldMax + 1);
+  const note = higher ? F("KNAVERY.LevelUpHpNew", { max })
+    : F(rule === "rerollBest" ? "KNAVERY.LevelUpHpKeptBest" : "KNAVERY.LevelUpHpKept", { rolled: roll.total, max });
+  return { max, rolled: roll.total, roll, note };
+};
+
+/** One sentence: how max HP will change on reaching `level` from `max`. */
+export const hpRuleHint = (level, max) => {
+  const rule = hpRule();
+  if (rule === "add1d6") return F("KNAVERY.HpHint.Add", { max });
+  return F(rule === "rerollBest" ? "KNAVERY.HpHint.Best" : "KNAVERY.HpHint.Reroll", { formula: levelHpFormula(level), max, next: max + 1 });
 };
 
 /**
@@ -43,15 +69,13 @@ export const applyLevelUp = async (actor, picks = null) => {
   const hp = await rollLevelHp(level, s.hp.max);
   const update = { "system.level": level, "system.hp.max": hp.max, "system.hp.value": s.hp.value + Math.max(0, hp.max - s.hp.max) };
   for (const k of chosen) update[`system.abilities.${k}.value`] = Math.min(ABILITY_MAX, values[k] + 1);
-  await actor.update(update, { knLogAction: "KNAVERY.LevelUp" });
+  await actor.update(update, { knLogAction: "KNAVERY.LevelUp", knLevelUp: true });
   const content = await foundry.applications.handlebars.renderTemplate(`${SYS_PATH}/templates/chat/level-up-card.html`, {
     name: actor.name,
     level,
     title: L(`KNAVERY.LevelTitle.${level}`),
     abilities: chosen.map((k) => L(`KNAVERY.AbilityShort.${k}`)).join(", "),
-    rolled: hp.rolled,
-    max: hp.max,
-    kept: hp.rolled <= s.hp.max,
+    hpNote: hp.note,
     rollHtml: await hp.roll.render(),
   });
   await ChatMessage.create({
@@ -72,7 +96,7 @@ export const openLevelUp = async (actor) => {
       + ` <strong>${L(`KNAVERY.AbilityShort.${k}`)}</strong> ${v} → ${Math.min(ABILITY_MAX, v + 1)}</label>`;
   }).join("");
   const content = `<div class="kn-levelup"><p>${F("KNAVERY.LevelUpBody", { level: s.level + 1, n: LEVEL_UP_ABILITIES })}</p>`
-    + `<div class="kn-levelup-grid">${rows}</div><p class="hint">${F("KNAVERY.LevelUpHpHint", { level: s.level + 1, max: s.hp.max, next: s.hp.max + 1 })}</p></div>`;
+    + `<div class="kn-levelup-grid">${rows}</div><p class="hint">${hpRuleHint(s.level + 1, actor._source.system.hp.max)}</p></div>`;
   const picks = await foundry.applications.api.DialogV2.wait({
     window: { title: F("KNAVERY.LevelUpTitle", { name: actor.name }), icon: "fas fa-angles-up" },
     classes: ["knavery"],

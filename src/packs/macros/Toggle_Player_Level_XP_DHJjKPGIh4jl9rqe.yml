@@ -1,0 +1,17 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: DHJjKPGIh4jl9rqe
+_key: '!macros!DHJjKPGIh4jl9rqe'
+name: Toggle Player Level & XP
+type: script
+img: icons/svg/upgrade.svg
+scope: global
+command: game.knavery.toggle("allow-player-level-xp");
+author: null
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.0

@@ -2,16 +2,21 @@
  * The Actor document: inventory arithmetic, damage and wounds, rest, level-up
  * bookkeeping and the change log. Rolls live in rolls.js; the sheet only calls.
  */
-import { ABILITIES, MAX_ARMOR_POINTS, SETTINGS_NS, SYS_PATH } from "../config.js";
+import { ABILITIES, FLAG_SCOPE, MAX_ARMOR_POINTS, SETTINGS_NS, SYS_PATH } from "../config.js";
 import {
   postActorChanges, postItemChanges, postItemUpdates, stashAudit, stashItemAudit,
 } from "../change-log.js";
+import { stripLockedChanges } from "../edit-gates.js";
+
+/** A failed career's item is petty, filling no slot, while the Knave it was made for carries it. */
+export const isPetty = (item) => !!item.actor && item.getFlag?.(FLAG_SCOPE, "pettyFor") === item.actor.id;
 
 /** How many inventory slots one owned item fills. */
 export const slotsForItem = (item) => {
   const s = item.system;
   if (item.type === "career") return 0;
   if (s.weightless) return 0;
+  if (isPetty(item)) return 0;
   const qty = Math.max(0, s.quantity ?? 1);
   const bundle = Math.max(1, s.bundle ?? 1);
   return Math.ceil(qty / bundle) * (s.slots ?? 1);
@@ -231,6 +236,9 @@ export class KnaveryActor extends Actor {
 
   async _preUpdate(changed, options, user) {
     if ((await super._preUpdate(changed, options, user)) === false) return false;
+    if (stripLockedChanges(this, changed, options, user) && user.id === game.user.id) {
+      ui.notifications.warn("KNAVERY.Notify.FieldLocked", { localize: true });
+    }
     const audit = stashAudit(this, changed);
     if (audit) (options.knavery ??= {})[this.id] = { audit };
     return true;

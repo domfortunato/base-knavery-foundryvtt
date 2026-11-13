@@ -4469,8 +4469,14 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
     font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
     font-size: 18px; font-weight: bold; font-variant: small-caps; cursor: pointer; color: var(--kn-ink);
 }
-.knavery .knavery-ability-name:hover { text-shadow: 0 0 6px var(--kn-accent); }
-.knavery .knavery-ability-name .roll-icon { font-size: 11px; margin-right: 4px; opacity: 0.8; }
+/* The roll link: a large d20 and the ability's name, one link; hovering either
+   lights both (the icon is inert, so the link owns the hover and the tooltip). */
+.knavery .knavery-ability-name { display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; }
+.knavery .knavery-ability-name .roll-icon { font-size: 22px; margin: 0; opacity: 0.85; transition: text-shadow 0.15s, opacity 0.15s; }
+.knavery .knavery-ability-name:hover,
+.knavery .knavery-ability-name:focus-visible { text-shadow: 0 0 6px var(--kn-accent); }
+.knavery .knavery-ability-name:hover .roll-icon,
+.knavery .knavery-ability-name:focus-visible .roll-icon { opacity: 1; text-shadow: 0 0 8px var(--kn-accent); }
 .knavery-ability-hint { font-size: 11px; font-style: italic; color: var(--kn-muted); }
 .knavery .knavery-ability .ability-defense { flex: 0 0 auto; font-size: 12px; color: var(--kn-faint); padding-right: 2px; }
 .knavery .npc-no-abilities .hint { font-size: 13px; font-style: italic; color: var(--kn-muted); margin: 0; }
@@ -4662,3 +4668,45 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-roll-card .card-apply.applied button { opacity: 0.6; }
 .knavery-roll-card .card-applied { display: block; margin-bottom: 2px; color: var(--kn-muted); font-size: 12px; }
 .knavery.sheet.actor > .window-content > nav.knavery-tab-rail[hidden] { display: none; }
+
+/* ---- Char Gen Mode, Level Up, Growth, failed careers ------------------------ */
+/* A score, level or XP this user may not change (Char Gen Mode off, or the GM's
+   level & XP switch): readable, plainly not a field. */
+.knavery .knavery-ability-circle input:disabled,
+.knavery .level-line input:disabled { opacity: 1; color: var(--kn-ink); cursor: default; }
+.knavery .level-line input:disabled { background: none !important; border-color: transparent !important; }
+
+/* The title bar's Level Up arrow: a bare icon, lit so it is seen. */
+.knavery.sheet .window-header button.knavery-levelup-arrow { color: var(--kn-accent); text-shadow: 0 0 8px var(--kn-accent); font-size: 1.1em; }
+.knavery.sheet .window-header button.knavery-levelup-arrow:hover { text-shadow: 0 0 12px var(--kn-accent); }
+
+/* Growth: what a new level brings, and the GM's notes. */
+.knavery .knavery-level-rule { margin: 6px 0 2px; font-size: 13px; font-style: italic; color: var(--kn-muted); }
+.knavery .knavery-level-rule i { color: var(--kn-accent); font-style: normal; margin-right: 4px; }
+.knavery .knavery-gm-notes { margin-top: 12px; }
+.knavery .knavery-gm-notes prose-mirror { min-height: 140px; height: auto; }
+.knavery .knavery-gm-notes-text { padding: 4px 2px; }
+
+/* Failed careers: a chip and a card marked failed, and the petty item. */
+.knavery .career-chip.failed a { font-style: italic; color: var(--kn-muted); }
+.knavery .knavery-career.failed { border-style: dashed; }
+.knavery .career-failed-label { font-size: 11px; font-variant: small-caps; letter-spacing: 0.05em; color: var(--kn-muted); }
+.knavery .career-petty { font-size: 13px; margin: 2px 0 4px; }
+.knavery .career-petty a { cursor: pointer; font-weight: bold; }
+.knavery .career-petty .petty-gone { text-decoration: line-through; color: var(--kn-faint); }
+
+/* The ability-points window of random creation. */
+.knavery-points .kn-points-row { display: flex; align-items: center; gap: 6px; padding: 3px 0; border-bottom: 1px dotted var(--kn-line); }
+.knavery-points .kn-points-name { flex: 1 1 auto; min-width: 0; }
+.knavery-points .kn-points-hint { display: block; font-size: 11px; font-style: italic; color: var(--kn-muted); }
+.knavery-points .kn-points-step { flex: 0 0 28px; width: 28px; height: 28px; line-height: 1; padding: 0; }
+.knavery-points .kn-points-row input { flex: 0 0 36px; width: 36px; text-align: center; font-weight: bold; }
+.knavery-points .kn-points-left { margin: 8px 0 0; font-weight: bold; text-align: right; }
+
+/* The dashboard's XP tab. */
+.knavery-gm-dashboard .dash-xp-rows { display: flex; flex-direction: column; gap: 2px; }
+.knavery-gm-dashboard .dash-xp-row { display: flex; align-items: center; gap: 10px; }
+.knavery-gm-dashboard .dash-xp-row .dash-pc { flex: 1 1 auto; min-width: 0; }
+.knavery-gm-dashboard .dash-xp-now { flex: 0 0 auto; font-size: 12px; color: var(--kn-faint); }
+.knavery-gm-dashboard .dash-xp-each { flex: 0 0 80px; width: 80px; }
+.knavery-gm-dashboard [hidden] { display: none !important; }

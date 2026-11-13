@@ -4,17 +4,21 @@
  * Knave page carries the head (portrait, name, careers, level, coins) over the
  * six abilities, the vitals (AC, HP and wounds as bars, Rest, Heal Wound, Die of
  * Fate) and the attacks; then Inventory, Growth and Description. The frame
- * carries Roll Character, the Character Creation Mode toggle, Pop Out and Print.
+ * carries Roll Character, the Char Gen Mode toggle, the Level Up arrow, Pop Out
+ * and Print.
  */
 import {
-  ABILITIES, LEVELS, NPC_ROLES, SETTINGS_NS, SYS_PATH, TABLES,
+  ABILITIES, FLAG_SCOPE, LEVEL_UP_ABILITIES, LEVELS, NPC_ROLES, SETTINGS_NS, SYS_PATH, TABLES,
 } from "../config.js";
-import { slotsForItem } from "../documents/actor.js";
+import { isPetty, slotsForItem } from "../documents/actor.js";
+import { mayEditAbilities, mayEditLevelXp, mayUseCharGen } from "../edit-gates.js";
 import { castSpell, rollAttack, rollCheck, rollDamage, rollDieOfFate, rollMorale } from "../rolls.js";
 import { pickArt, randomPortraitPair, setActorArt } from "../art.js";
 import { drawFrom, pickFrom } from "../compendium.js";
-import { addCareer, careerFromText, pickCareerItem, regenerateCharacter } from "../character-generator.js";
-import { openLevelUp } from "../level-up.js";
+import {
+  addCareer, careerFromText, failedCareersOn, pickCareerItem, regenerateCharacter, rollFailedCareer,
+} from "../character-generator.js";
+import { hpRuleHint, openLevelUp } from "../level-up.js";
 import { canOfferItem, offerFromDrop, promptOfferTarget } from "../item-offer.js";
 import { openMarketplace, playerMarketClosed } from "../marketplace.js";
 import { printActorSheet } from "../print.js";
@@ -67,7 +71,7 @@ const owned = (fn) => function (event, target) {
   return fn.call(this, event, target);
 };
 
-/** Guard: creation tools must be allowed for this user. */
+/** Guard: Char Gen Mode must be allowed for this user. */
 const mayRandomize = (fn) => function (event, target) {
   if (!this._mayRandomize()) {
     ui.notifications.warn("KNAVERY.Notify.RandomizationDisabled", { localize: true });
@@ -94,6 +98,7 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       pickTrait: owned(mayRandomize(KnaveryActorSheet.#onPickTrait)),
       rollCareer: owned(mayRandomize(KnaveryActorSheet.#onRollCareer)),
       pickCareer: owned(mayRandomize(KnaveryActorSheet.#onPickCareer)),
+      rollFailedCareer: owned(mayRandomize(KnaveryActorSheet.#onRollFailedCareer)),
       removeCareer: owned(KnaveryActorSheet.#onRemoveCareer),
       openCareer: KnaveryActorSheet.#onOpenCareer,
       rollAbility: KnaveryActorSheet.#onRollAbility,
@@ -187,6 +192,7 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     return [
       { action: "rollActor", icon: isChar ? "fas fa-dice-d6" : "fas fa-dragon", label: isChar ? "KNAVERY.RollCharacter" : "KNAVERY.RollNpc" },
       { action: "toggleGeneration", icon: "fas fa-toggle-on", label: "KNAVERY.CreationModeOn" },
+      ...(isChar ? [{ action: "levelUp", icon: "fas fa-circle-up", label: "KNAVERY.LevelUpArrow" }] : []),
       popOut,
       print,
       ...buttons,
@@ -206,6 +212,8 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       button.removeAttribute("data-tooltip");
       button.append(icon, document.createTextNode(button.getAttribute("aria-label") ?? ""));
     }
+    // The Level Up arrow stays a bare icon (core's frame button, with its tooltip), lit in the accent.
+    frame.querySelector('.window-header button[data-action="levelUp"]')?.classList.add("knavery-levelup-arrow");
     const header = frame.querySelector(".window-header");
     const controls = header?.querySelector('button[data-action="toggleControls"]');
     const close = header?.querySelector('button[data-action="close"]');
@@ -215,9 +223,7 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
   }
 
   _mayRandomize() {
-    if (game.user.isGM) return true;
-    if (this.actor.type !== "character") return false;
-    return game.settings.get(SETTINGS_NS, "allow-player-randomization");
+    return mayUseCharGen(this.actor);
   }
 
   #syncFrameButtons(root = this.element) {
@@ -229,6 +235,9 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     const on = this.actor.system.generationEnabled === true;
     toggle?.classList.toggle("knavery-header-hidden", denied);
     roll?.classList.toggle("knavery-header-hidden", !on || denied);
+    // Up arrow: Char Gen Mode on and XP enough for the next level.
+    root?.querySelector('.window-header button[data-action="levelUp"]')
+      ?.classList.toggle("knavery-header-hidden", denied || !on || !this.actor.system.canLevelUp || !this.isEditable);
     if (!toggle) return;
     const label = L(on ? "KNAVERY.CreationModeOn" : "KNAVERY.CreationModeOff");
     toggle.setAttribute("aria-label", label);
@@ -270,6 +279,7 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       if (item.type === "armor") tags.push(F("KNAVERY.NAp", { n: item.system.points }));
       if (item.type === "spellbook") tags.push(L(item.system.scroll ? "KNAVERY.Scroll" : "KNAVERY.Spellbook"));
       if (item.system.quantity > 1) tags.push(F("KNAVERY.NQuantity", { n: item.system.quantity }));
+      if (isPetty(item)) tags.push(L("KNAVERY.Petty"));
       return {
         id: item.id,
         uuid: item.uuid,
@@ -337,7 +347,10 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       current: r.level === s.level, reached: s.xp >= r.xp,
     })) : [];
     const slotsUsed = actor.calcSlotsUsed();
-    const showLevelUp = isChar && s.canLevelUp && s.generationEnabled === true && this.isEditable;
+    const showLevelUp = isChar && s.canLevelUp && s.generationEnabled === true && this.isEditable && this._mayRandomize();
+    // What a new level brings, by the GM's HP rule (stored max: effects are not rolled into it).
+    const levelRule = !isChar ? "" : s.nextXp === null ? L("KNAVERY.Growth.TopLevel")
+      : F("KNAVERY.Growth.EachLevel", { n: LEVEL_UP_ABILITIES, hp: hpRuleHint(s.level + 1, actor._source.system.hp.max) });
 
     const traitKeys = Object.keys(TABLES.traits);
     const traitRows = traitKeys.map((key) => ({
@@ -359,6 +372,15 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       limitedView: actor.limited && !actor.isOwner,
       idp: this.id,
       generationEnabled: gen,
+      mayEditAbilities: this.isEditable && mayEditAbilities(actor),
+      mayEditLevelXp: this.isEditable && mayEditLevelXp(actor),
+      levelRule,
+      gmNotes: isChar ? {
+        editable: game.user.isGM,
+        value: s.gmNotes ?? "",
+        enriched: await enrichForSheet(s.gmNotes ?? "", { relativeTo: actor, secrets: game.user.isGM }),
+      } : null,
+      showFailedCareerRoll: gen && isChar && failedCareersOn() && !careers.some((c) => c.failed),
       abilities,
       attacks,
       items,
@@ -402,6 +424,14 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     return context;
   }
 
+  /** A failed career's petty item: its name, and its id while this Knave still carries it petty. */
+  #pettyContext(career) {
+    const mark = career.getFlag(FLAG_SCOPE, "pettyItem");
+    if (!mark?.name) return null;
+    const item = this.actor.items.get(mark.id);
+    return { name: item?.name ?? mark.name, id: item && isPetty(item) ? item.id : null };
+  }
+
   /** Careers on the actor, with the feature fields they add to the sheet. */
   async #careerContext(gen) {
     const s = this.actor.system;
@@ -431,6 +461,8 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
         features,
         effects: career.effects.filter((e) => !e.disabled).map((e) => e.name),
         canRemove: gen || game.user.isGM,
+        failed: career.system.failed === true,
+        petty: career.system.failed ? this.#pettyContext(career) : null,
       });
     }
     return out;
@@ -574,6 +606,10 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
 
   static async #onPickCareer() {
     await pickCareerItem(this.actor);
+  }
+
+  static async #onRollFailedCareer() {
+    await rollFailedCareer(this.actor);
   }
 
   static async #onRemoveCareer(_event, target) {

@@ -1,25 +1,31 @@
 /**
  * Character creation: one dialog that branches between a RANDOM character
  * (rolled the Knave way, at a level the player chooses within the GM's range)
- * and a BLANK sheet the player builds by hand with Character Creation Mode on.
+ * and a BLANK sheet the player builds by hand with Char Gen Mode on.
  *
  * Generation, level by level:
- *   1. 3d6: each die adds +1 to the ability matching its face (1 STR … 6 CHA).
+ *   1. The player places 3 points in the abilities (more than one in a score
+ *      is allowed), or lets 3d6 decide: each die adds +1 to the ability
+ *      matching its face (1 STR … 6 CHA).
  *   2. For each level above 1: +1 to three different abilities, and reroll
  *      max HP with one d6 per level (no higher than before -> old max + 1).
  *   3. XP set to the chosen level's threshold.
  *   4. Two careers from the Careers table, with their starting items.
- *   5. 3d6 × 10 coins and the standard kit; one random spellbook per INT.
+ *   5. 3d6 × 10 coins and the standard kit; one random spellbook per point of
+ *      INT the character starts with (levels above the first add none).
+ *   6b. With the "failed career" hack on, a third career the Knave failed at:
+ *      a full career, but it grants one random item of its list, petty
+ *      (no slot) while this Knave carries it.
  *   6. Name, traits and portrait from the tables and galleries.
  *
  * Every table is a shell until the GM fills it. A step whose table is empty is
  * skipped and listed on the summary card, never faked.
  */
 import {
-  ABILITIES, ABILITY_MAX, FLAG_SCOPE, LEVELS, SETTINGS_NS, STARTING_COINS, SYS_PATH, TABLES,
+  ABILITIES, ABILITY_MAX, CREATION_POINTS, FLAG_SCOPE, LEVELS, SETTINGS_NS, STARTING_COINS, SYS_PATH, TABLES,
 } from "./config.js";
 import { drawFrom, pickFromList, plainText, realResults, findTable, resultText } from "./compendium.js";
-import { randomAbilityPicks, rollLevelHp } from "./level-up.js";
+import { firstLevelHpFormula, randomAbilityPicks, rollLevelHp } from "./level-up.js";
 import { randomPortraitPair, pairedTokenFor } from "./art.js";
 import { emit, onSocket } from "./socket.js";
 
@@ -87,12 +93,13 @@ const resolveStartingItem = async (entry) => {
 const slug = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || foundry.utils.randomID(6);
 
 /**
- * Add a career Item to an actor. In creation mode its starting items come too,
+ * Add a career Item to an actor. In Char Gen Mode its starting items come too,
  * and each feature field is seeded with its initial value.
  */
-export const addCareer = async (actor, career, { grantItems = null, knNoLog = false } = {}) => {
+export const addCareer = async (actor, career, { grantItems = null, knNoLog = false, failed = false } = {}) => {
   const data = career instanceof Item ? itemData(career) : foundry.utils.deepClone(career);
   data.system ??= {};
+  if (failed) data.system.failed = true;
   data.system.key ||= slug(data.name);
   // `knNoLog` from generation, whose summary card already lists what it gave.
   const [created] = await actor.createEmbeddedDocuments("Item", [data], { knNoLog });
@@ -104,6 +111,10 @@ export const addCareer = async (actor, career, { grantItems = null, knNoLog = fa
     seed[`system.features.${created.system.key}.${f.key}`] = v;
   }
   if (Object.keys(seed).length) await actor.update(seed, { knNoLog: true });
+  if (failed) {
+    await grantPettyItem(actor, created, { knNoLog });
+    return created;
+  }
   const grant = grantItems ?? actor.system.generationEnabled === true;
   if (grant && created.system.startingItems?.length) {
     const items = (await Promise.all(created.system.startingItems.map(resolveStartingItem))).filter(Boolean);
@@ -135,6 +146,46 @@ export const careerFromResult = async (result, text) => {
 };
 
 export const careerFromText = async (actor, result, text) => addCareer(actor, await careerFromResult(result, text));
+
+/**
+ * A failed career's one item: drawn at random from its starting items and
+ * marked petty for this Knave (no slot while they carry it). Created on its
+ * own, never stacked, since the mark belongs to this one item. The career
+ * remembers it, so the Growth page can name it even after it is gone.
+ */
+const grantPettyItem = async (actor, career, { knNoLog = false } = {}) => {
+  const entries = (career.system.startingItems ?? []).filter((e) => String(e ?? "").trim());
+  if (!entries.length) return null;
+  const data = await resolveStartingItem(entries[Math.floor(Math.random() * entries.length)]);
+  if (!data) return null;
+  foundry.utils.setProperty(data, `flags.${FLAG_SCOPE}.pettyFor`, actor.id);
+  foundry.utils.setProperty(data, "system.equipped", false);
+  const [item] = await actor.createEmbeddedDocuments("Item", [data], { knNoLog });
+  if (item) await career.update({ [`flags.${FLAG_SCOPE}.pettyItem`]: { id: item.id, name: item.name } }, { knNoLog: true });
+  return item;
+};
+
+/** A career from the Careers table whose name is not in `avoid`, or null. */
+const drawCareerExcept = async (avoid = []) => {
+  for (let i = 0; i < 12; i++) {
+    const r = await drawFrom(TABLES.careers, { warn: false });
+    if (!r) return null;
+    const c = await careerFromResult(r.result, r.text);
+    if (!avoid.includes(c.name)) return c;
+  }
+  return null;
+};
+
+export const failedCareersOn = () => game.settings.get(SETTINGS_NS, "failed-career") === true;
+
+/** The Careers block's failed-career die: one failed career per Knave. */
+export const rollFailedCareer = async (actor) => {
+  const careers = actor.items.filter((i) => i.type === "career");
+  if (careers.some((c) => c.system.failed)) return null;
+  const career = await drawCareerExcept(careers.map((c) => c.name));
+  if (!career) return ui.notifications.warn("KNAVERY.Notify.NoCareers", { localize: true });
+  return addCareer(actor, career, { failed: true });
+};
 
 /** The pick-list for careers: career Items everywhere, plus Careers table rows. */
 export const pickCareerItem = async (actor) => {
@@ -180,12 +231,25 @@ const rollAbilities = async () => {
  * Build a character's data at `level`. Pure data; nothing is written.
  * @returns {Promise<{system:object, careers:object[], items:object[], name:string, img:string, token:string, notes:string[]}>}
  */
-export const buildCharacter = async ({ level = 1 } = {}) => {
+export const buildCharacter = async ({ level = 1, abilities = null } = {}) => {
   const notes = [];
-  const { values, faces } = await rollAbilities();
-  notes.push(F("KNAVERY.Gen.AbilityRoll", { faces: faces.join(", ") }));
+  const placed = validPoints(abilities);
+  let values;
+  if (placed) {
+    values = { ...placed };
+    notes.push(F("KNAVERY.Gen.AbilityPoints", {
+      list: ABILITIES.filter((k) => placed[k]).map((k) => `${L(`KNAVERY.AbilityShort.${k}`)} ${placed[k]}`).join(", "),
+    }));
+  } else {
+    const rolled = await rollAbilities();
+    values = rolled.values;
+    notes.push(F("KNAVERY.Gen.AbilityRoll", { faces: rolled.faces.join(", ") }));
+  }
+  // One spellbook per point of INT the character STARTS with: a point of INT
+  // gained at a later level brings no book.
+  const startingInt = values.INT;
 
-  const hpRoll = await new Roll("1d6").evaluate();
+  const hpRoll = await new Roll(firstLevelHpFormula()).evaluate();
   let hpMax = hpRoll.total;
   notes.push(F("KNAVERY.Gen.HpRoll", { level: 1, rolled: hpRoll.total, max: hpMax }));
   for (let l = 2; l <= level; l++) {
@@ -204,15 +268,17 @@ export const buildCharacter = async ({ level = 1 } = {}) => {
     if (!r) { notes.push(L("KNAVERY.Gen.NoCareerTable")); break; }
     careers.push(await careerFromResult(r.result, r.text));
   }
+  const failedCareer = failedCareersOn() && careers.length ? await drawCareerExcept(careers.map((c) => c.name)) : null;
+  if (failedCareer) notes.push(F("KNAVERY.Gen.FailedCareer", { name: failedCareer.name }));
 
   const items = [];
   for (const k of STANDARD_KIT) {
     const doc = await findItemByName(k.name);
     if (doc) items.push(itemData(doc, { system: { quantity: k.quantity } }));
   }
-  for (let i = 0; i < values.INT; i++) {
+  for (let i = 0; i < startingInt; i++) {
     const r = await drawFrom(TABLES.spells, { warn: false });
-    if (!r) { if (values.INT) notes.push(L("KNAVERY.Gen.NoSpellTable")); break; }
+    if (!r) { notes.push(L("KNAVERY.Gen.NoSpellTable")); break; }
     const linked = r.result.documentUuid ? await fromUuid(r.result.documentUuid).catch(() => null) : null;
     // A row built from the rulebook carries the spell's effect as its description.
     items.push(linked?.type === "spellbook" ? itemData(linked)
@@ -255,6 +321,7 @@ export const buildCharacter = async ({ level = 1 } = {}) => {
       generationEnabled: true,
     },
     careers,
+    failedCareer,
     items,
     notes,
   };
@@ -276,8 +343,9 @@ const applyBuilt = async (actor, built) => {
       acOverride: null,
       features: foundry.data.operators.ForcedReplacement.create({}),
     },
-  }, { knNoLog: true });
+  }, { knNoLog: true, knCreation: true });
   for (const c of built.careers) await addCareer(actor, c, { grantItems: true, knNoLog: true });
+  if (built.failedCareer) await addCareer(actor, built.failedCareer, { failed: true, knNoLog: true });
   if (built.items.length) await actor.addItems(built.items, { knNoLog: true });
   await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor }),
@@ -295,13 +363,85 @@ export const regenerateCharacter = async (actor) => {
   const { min, max } = creationLevels();
   const level = await promptLevel({ min, max, initial: Math.max(min, actor.system.level) });
   if (!level) return;
+  const points = await promptAbilityPoints();
+  if (!points) return;
   const ok = await foundry.applications.api.DialogV2.confirm({
     window: { title: L("KNAVERY.RollCharacter") },
     content: `<p>${esc(F("KNAVERY.Gen.RerollConfirm", { name: actor.name }))}</p>`,
     rejectClose: false,
   });
   if (!ok) return;
-  await applyBuilt(actor, await buildCharacter({ level }));
+  await applyBuilt(actor, await buildCharacter({ level, abilities: points === "dice" ? null : points }));
+};
+
+/** Placed points, if they are whole numbers from 0 to 3 totalling exactly 3; otherwise null. */
+export const validPoints = (abilities) => {
+  if (!abilities || typeof abilities !== "object") return null;
+  const out = {};
+  let total = 0;
+  for (const k of ABILITIES) {
+    const v = Number(abilities[k] ?? 0);
+    if (!Number.isInteger(v) || v < 0 || v > CREATION_POINTS) return null;
+    out[k] = v;
+    total += v;
+  }
+  return total === CREATION_POINTS ? out : null;
+};
+
+/**
+ * Where a new character's 3 ability points go: a stepper per ability (more
+ * than one point in a score is allowed), or the dice. Resolves to the
+ * placed points, "dice" for 3d6, or null when the window is closed.
+ */
+export const promptAbilityPoints = async () => {
+  const rows = ABILITIES.map((k) => `<div class="kn-points-row" data-ability="${k}">`
+    + `<span class="kn-points-name"><strong>${esc(L(`KNAVERY.Ability.${k}`))}</strong>`
+    + ` <span class="kn-points-hint">${esc(L(`KNAVERY.AbilityHint.${k}`))}</span></span>`
+    + `<button type="button" class="kn-points-step" data-delta="-1" aria-label="${esc(F("KNAVERY.Gen.PointsLess", { name: L(`KNAVERY.Ability.${k}`) }))}"><i class="fas fa-minus" inert></i></button>`
+    + `<input type="number" name="${k}" value="0" readonly tabindex="-1" />`
+    + `<button type="button" class="kn-points-step" data-delta="1" aria-label="${esc(F("KNAVERY.Gen.PointsMore", { name: L(`KNAVERY.Ability.${k}`) }))}"><i class="fas fa-plus" inert></i></button>`
+    + "</div>").join("");
+  const content = `<div class="kn-points"><p>${esc(F("KNAVERY.Gen.PointsBody", { n: CREATION_POINTS }))}</p>${rows}`
+    + "<p class=\"kn-points-left\"></p></div>";
+  const result = await foundry.applications.api.DialogV2.wait({
+    window: { title: L("KNAVERY.Gen.PointsTitle"), icon: "fas fa-dice-d6" },
+    classes: ["knavery", "knavery-points"],
+    position: { width: 480 },
+    content,
+    render: (_e, dialog) => {
+      const root = dialog.element;
+      const inputs = [...root.querySelectorAll(".kn-points-row input")];
+      const sync = () => {
+        const used = inputs.reduce((n, i) => n + Number(i.value), 0);
+        root.querySelector(".kn-points-left").textContent = F("KNAVERY.Gen.PointsLeft", { n: CREATION_POINTS - used });
+        for (const row of root.querySelectorAll(".kn-points-row")) {
+          const v = Number(row.querySelector("input").value);
+          row.querySelector('[data-delta="-1"]').disabled = v <= 0;
+          row.querySelector('[data-delta="1"]').disabled = used >= CREATION_POINTS || v >= ABILITY_MAX;
+        }
+        const assign = root.querySelector('button[data-action="assign"]');
+        if (assign) assign.disabled = used !== CREATION_POINTS;
+      };
+      for (const b of root.querySelectorAll(".kn-points-step")) {
+        b.addEventListener("click", () => {
+          const input = b.closest(".kn-points-row").querySelector("input");
+          input.value = String(Math.max(0, Number(input.value) + Number(b.dataset.delta)));
+          sync();
+        });
+      }
+      sync();
+    },
+    buttons: [
+      // A plain button: Enter submits through the first submit button, which must be Assign.
+      { action: "dice", type: "button", label: "KNAVERY.Gen.PointsDice", icon: "fas fa-dice", callback: () => "dice" },
+      {
+        action: "assign", label: "KNAVERY.Gen.PointsAssign", icon: "fas fa-check", default: true,
+        callback: (_e, b) => validPoints(Object.fromEntries(ABILITIES.map((k) => [k, Number(b.form.elements[k].value) || 0]))) || false,
+      },
+    ],
+    rejectClose: false,
+  });
+  return result || null;
 };
 
 const promptLevel = ({ min, max, initial }) => foundry.applications.api.DialogV2.prompt({
@@ -345,16 +485,21 @@ export const createCharacterInteractive = async () => {
   });
   if (!choice) return null;
   choice.level = Math.min(max, Math.max(min, choice.level));
+  if (choice.mode === "random") {
+    const points = await promptAbilityPoints();
+    if (!points) return null;
+    choice.abilities = points === "dice" ? null : points;
+  }
   if (!game.user.can("ACTOR_CREATE")) {
     if (!game.users.activeGM) return ui.notifications.warn("KNAVERY.Notify.NoGmForCreation", { localize: true });
-    emit("generatePC", { mode: choice.mode, level: choice.level, name: choice.name.slice(0, 80) });
+    emit("generatePC", { mode: choice.mode, level: choice.level, name: choice.name.slice(0, 80), abilities: choice.abilities ?? null });
     return ui.notifications.info("KNAVERY.Notify.CreationRequested", { localize: true });
   }
   return createCharacter({ ...choice, owner: game.user.id });
 };
 
 /** Create (and, if random, generate) a character owned by `owner`. */
-export const createCharacter = async ({ mode = "random", level = 1, name = "", owner = null } = {}) => {
+export const createCharacter = async ({ mode = "random", level = 1, name = "", owner = null, abilities = null } = {}) => {
   const ownership = { default: 0 };
   if (owner && !game.users.get(owner)?.isGM) ownership[owner] = CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER;
   const actor = await Actor.create({
@@ -365,7 +510,7 @@ export const createCharacter = async ({ mode = "random", level = 1, name = "", o
   });
   if (!actor) return null;
   if (mode === "random") {
-    const built = await buildCharacter({ level });
+    const built = await buildCharacter({ level, abilities });
     if (name) built.name = name;
     await applyBuilt(actor, built);
   } else {
@@ -395,6 +540,7 @@ export const registerCreationSocket = () => {
       const level = Math.min(max, Math.max(min, Number(msg.level) || min));
       const actor = await createCharacter({
         mode: msg.mode === "blank" ? "blank" : "random", level, name: String(msg.name ?? "").slice(0, 80), owner: senderId,
+        abilities: validPoints(msg.abilities),
       });
       answer(actor ? { actorId: actor.id } : { failed: true });
     } catch (err) {

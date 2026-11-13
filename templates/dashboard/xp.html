@@ -1,0 +1,30 @@
+<section class="tab {{tab.cssClass}}" data-tab="xp" data-group="primary">
+  <p class="hint">{{localize "KNAVERY.Dashboard.XpHint"}}</p>
+  <div class="form-group">
+    <label>{{localize "KNAVERY.Dashboard.XpMode"}}</label>
+    <select name="xpMode">
+      <option value="each">{{localize "KNAVERY.Dashboard.XpEach"}}</option>
+      <option value="individual">{{localize "KNAVERY.Dashboard.XpIndividual"}}</option>
+      <option value="split">{{localize "KNAVERY.Dashboard.XpSplit"}}</option>
+    </select>
+  </div>
+  <div class="form-group dash-xp-amount">
+    <label>{{localize "KNAVERY.Dashboard.XpAmount"}}</label>
+    <input type="number" name="xpAmount" min="0" step="1" placeholder="0" />
+  </div>
+  <fieldset>
+    <legend>{{localize "KNAVERY.Dashboard.ChosenPcs"}} <a class="dash-xp-all" data-action="selectAll" data-field="xpPc" data-tooltip="KNAVERY.Dashboard.SelectAll"><i class="fas fa-check-double"></i></a></legend>
+    <div class="dash-xp-rows">
+      {{#each characters}}
+      <div class="dash-xp-row">
+        <label class="dash-pc"><input type="checkbox" name="xpPc" value="{{this.id}}" /><img src="{{this.img}}" alt="" /><span>{{this.name}}</span></label>
+        <span class="dash-xp-now">{{localize "KNAVERY.Dashboard.XpNow" level=this.level xp=this.xp}}</span>
+        <input type="number" class="dash-xp-each" name="xpFor.{{this.id}}" min="0" step="1" placeholder="0" aria-label="{{localize 'KNAVERY.Dashboard.XpFor' name=this.name}}" />
+      </div>
+      {{else}}
+      <p class="hint">{{localize "KNAVERY.Dashboard.XpNoPcs"}}</p>
+      {{/each}}
+    </div>
+  </fieldset>
+  <button type="button" data-action="awardXp"><i class="fas fa-star"></i> {{localize "KNAVERY.Dashboard.AwardXp"}}</button>
+</section>

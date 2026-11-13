@@ -34,7 +34,8 @@
       "character": {
         "htmlFields": [
           "biography",
-          "notes"
+          "notes",
+          "gmNotes"
         ]
       },
       "npc": {

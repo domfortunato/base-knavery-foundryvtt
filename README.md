@@ -67,7 +67,7 @@ https://github.com/domfortunato/base-knavery-foundryvtt/releases/latest/download
 **Character creation**
 - **Create Character** offers a **random** knave or a **blank sheet**.
 - The player chooses a starting level within the range the GM allows.
-- **Character Creation Mode** adds dice and pick-lists to every field.
+- **Char Gen Mode** adds dice and pick-lists to every field.
 - **Level Up** appears once the XP is there.
 - **Careers** are custom backgrounds. A career can:
   - add fields to the sheet (text, numbers, checkboxes, tracks, dice);
@@ -111,7 +111,7 @@ https://github.com/domfortunato/base-knavery-foundryvtt/releases/latest/download
   the Settings sidebar.
 
 **GM macros**
-- Toggle the player marketplace, character creation, creation tools and the
+- Toggle the player marketplace, character creation, Char Gen Mode, level & XP and the
   change log.
 - Open the dashboard, the Marketplace Manager and the table importer.
 

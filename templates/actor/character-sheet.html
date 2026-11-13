@@ -43,7 +43,7 @@
           <div class="career-line">
             <span class="background-label">{{localize "KNAVERY.Careers"}}</span>
             {{#each careers}}
-            <span class="career-chip" data-career-id="{{this.id}}"><a data-action="openCareer">{{this.name}}</a></span>
+            <span class="career-chip{{#if this.failed}} failed{{/if}}" data-career-id="{{this.id}}"><a data-action="openCareer"{{#if this.failed}} data-tooltip="KNAVERY.FailedCareerTip"{{/if}}>{{this.name}}{{#if this.failed}} {{localize "KNAVERY.FailedSuffix"}}{{/if}}</a></span>
             {{else}}
             <span class="career-none">{{localize "KNAVERY.NoCareers"}}</span>
             {{/each}}
@@ -55,10 +55,10 @@
 
           <div class="level-line">
             <label for="{{idp}}-level">{{localize "KNAVERY.Level"}}</label>
-            <input type="number" id="{{idp}}-level" class="level-input" name="system.level" value="{{source.level}}"{{{effAttrs.level}}} min="1" max="10" step="1" data-dtype="Number" />
+            <input type="number" id="{{idp}}-level" class="level-input" name="system.level" value="{{source.level}}"{{{effAttrs.level}}} min="1" max="10" step="1" data-dtype="Number"{{#unless mayEditLevelXp}} disabled{{/unless}} />
             <span class="level-title">{{levelTitle}}</span>
             <label for="{{idp}}-xp">{{localize "KNAVERY.XP"}}</label>
-            <input type="number" id="{{idp}}-xp" class="xp-input" name="system.xp" value="{{source.xp}}"{{{effAttrs.xp}}} min="0" step="1" data-dtype="Number" />
+            <input type="number" id="{{idp}}-xp" class="xp-input" name="system.xp" value="{{source.xp}}"{{{effAttrs.xp}}} min="0" step="1" data-dtype="Number"{{#unless mayEditLevelXp}} disabled{{/unless}} />
             {{#if system.nextXp}}<span class="xp-next" data-tooltip="KNAVERY.NextLevelTip">/ {{system.nextXp}}</span>{{/if}}
             {{#if showLevelUp}}
             <button type="button" class="level-up-button" data-action="levelUp"><i class="fas fa-angles-up"></i> {{localize "KNAVERY.LevelUp"}}</button>
@@ -153,7 +153,7 @@
       {{> "systems/base-knavery/templates/parts/items-list.html"}}
     </div>
 
-    <!-- Growth: the level ladder, then careers and what they add to the sheet -->
+    <!-- Growth: the level ladder and what a level brings, careers, then the GM's notes -->
     <div class="tab knavery-page knavery-page-growth {{tabs.growth.cssClass}}" data-group="primary" data-tab="growth">
       <div class="knavery-advancement">
         <div class="knavery-items-list-header"><div>{{localize "KNAVERY.Advancement"}}</div></div>
@@ -161,6 +161,7 @@
           <div class="knavery-xp-fill" style="width: {{xpPercent}}%"></div>
           <span>{{#if system.nextXp}}{{localize "KNAVERY.XpProgress" xp=system.xp next=system.nextXp}}{{else}}{{localize "KNAVERY.XpTop" xp=system.xp}}{{/if}}</span>
         </div>
+        {{#if levelRule}}<p class="knavery-level-rule"><i class="fas fa-circle-up"></i> {{levelRule}}</p>{{/if}}
         <ol class="knavery-level-ladder">
           {{#each levelLadder}}
           <li class="{{#if this.current}}current{{/if}} {{#if this.reached}}reached{{/if}}">
@@ -172,6 +173,19 @@
         </ol>
       </div>
       {{> "systems/base-knavery/templates/parts/careers-block.html"}}
+      {{#if gmNotes}}
+      {{#if (or gmNotes.editable gmNotes.value)}}
+      <div class="knavery-gm-notes">
+        <div class="knavery-items-list-header"><div><i class="fas fa-feather"></i> {{localize "KNAVERY.GmNotes"}}</div></div>
+        {{#if gmNotes.editable}}
+        <prose-mirror name="system.gmNotes" value="{{gmNotes.value}}" toggled collaborate relative
+          data-document-uuid="{{actor.uuid}}">{{#if gmNotes.value}}{{{gmNotes.enriched}}}{{else}}<p class="knavery-editor-placeholder">{{localize "KNAVERY.GmNotesPlaceholder"}}</p>{{/if}}</prose-mirror>
+        {{else}}
+        <div class="knavery-gm-notes-text">{{{gmNotes.enriched}}}</div>
+        {{/if}}
+      </div>
+      {{/if}}
+      {{/if}}
     </div>
 
     <!-- Description: traits, biography and notes -->

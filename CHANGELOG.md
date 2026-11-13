@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+- **Char Gen Mode** (was Character Creation Mode). Players edit ability scores only with it on, and level and XP
+  only when the GM's new switch "Players may change level & XP" is on too (dashboard, settings and a macro).
+- An up arrow in the character's title bar when Char Gen Mode is on and the XP is there: it opens Level Up.
+- Random creation asks where the 3 ability points go (or lets 3d6 decide), then rolls the rest. A character
+  gets one spellbook per point of INT it starts with; a level-3 character no longer gets books for INT gained
+  by its levels.
+- The dashboard's XP tab: the same amount to each character, a different amount to each, or a total split evenly.
+- New settings for max HP at each level (Knave 2e's reroll, add 1d6, or reroll keeping the better) and for
+  first-level HP (1d6 or 1d4 + 2). The Growth page says what the next level brings.
+- The Game Master's notes on the Growth page: the GM writes them, the player reads them.
+- New hack, "Give Knaves a failed career": a third career the Knave failed at, granting one random item of its
+  list, petty (no slot) while that Knave carries it. The Knave and Growth pages mark it; the die rolls one in
+  Char Gen Mode.
+- The ability roll link has a large d20 beside the name; both light up and show the tooltip. The AC tooltip
+  states the rule: AC = 11 plus 1 per piece of equipped armor.
 - The taglines under the abilities now list what each is used for, e.g. Strength: melee attacks,
   lifting, climbing, breaking free.
 - The GLOG grimoire hack is gone. In a world that used it, a Grimoire is now an ordinary item

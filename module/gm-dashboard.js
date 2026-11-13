@@ -7,6 +7,8 @@
  *   Damage    roll or type damage and apply it to chosen characters or to
  *             the selected/targeted tokens, normal or direct, with a source.
  *   Dice      hazard dice, reaction, encounter distance, morale.
+ *   XP        award XP: the same amount to each chosen character, a different
+ *             amount to each, or a total split evenly (the book's treasure rule).
  *   Tables    roll any table, import rows, open the Marketplace Manager, and
  *             the live switches for the players' tools.
  */
@@ -32,6 +34,7 @@ const TOGGLES = [
   { key: "allow-player-marketplace", label: "KNAVERY.Macro.Marketplace", icon: "fa-store" },
   { key: "allow-player-generate", label: "KNAVERY.Macro.Creation", icon: "fa-user-plus" },
   { key: "allow-player-randomization", label: "KNAVERY.Macro.CreationTools", icon: "fa-dice-d20" },
+  { key: "allow-player-level-xp", label: "KNAVERY.Macro.LevelXp", icon: "fa-arrow-up-1-9" },
   { key: "change-log", label: "KNAVERY.Macro.ChangeLog", icon: "fa-clipboard-list" },
 ];
 
@@ -48,6 +51,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       rollForThem: GmDashboard.#onRollForThem,
       clearLog: GmDashboard.#onClearLog,
       applyDamage: GmDashboard.#onApplyDamage,
+      awardXp: GmDashboard.#onAwardXp,
       hazard: GmDashboard.#onHazard,
       reaction: GmDashboard.#onReaction,
       encounterDistance: GmDashboard.#onEncounterDistance,
@@ -69,6 +73,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     requests: { template: `${SYS_PATH}/templates/dashboard/requests.html`, scrollable: [".request-log"] },
     damage: { template: `${SYS_PATH}/templates/dashboard/damage.html` },
     dice: { template: `${SYS_PATH}/templates/dashboard/dice.html` },
+    xp: { template: `${SYS_PATH}/templates/dashboard/xp.html`, scrollable: [".dash-xp-rows"] },
     tables: { template: `${SYS_PATH}/templates/dashboard/tables.html`, scrollable: [".table-list"] },
   };
 
@@ -78,6 +83,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
         { id: "requests", icon: "fas fa-bullhorn", label: "KNAVERY.Dashboard.TabRequests" },
         { id: "damage", icon: "fas fa-skull-crossbones", label: "KNAVERY.Dashboard.TabDamage" },
         { id: "dice", icon: "fas fa-dice", label: "KNAVERY.Dashboard.TabDice" },
+        { id: "xp", icon: "fas fa-star", label: "KNAVERY.Dashboard.TabXp" },
         { id: "tables", icon: "fas fa-table-list", label: "KNAVERY.Dashboard.TabTables" },
       ],
       initial: "requests",
@@ -95,7 +101,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     const characters = game.actors.filter((a) => a.type === "character" && a.hasPlayerOwner).map((a) => {
       const owners = game.users.filter((u) => !u.isGM && a.testUserPermission(u, "OWNER"));
       return {
-        id: a.id, name: a.name, img: a.img,
+        id: a.id, name: a.name, img: a.img, level: a.system.level, xp: a.system.xp,
         players: owners.map((u) => u.name).join(", "),
         online: owners.some((u) => u.active),
       };
@@ -139,7 +145,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
    */
   _syncPartState(partId, newElement, priorElement, state) {
     super._syncPartState(partId, newElement, priorElement, state);
-    if (!["requests", "damage"].includes(partId)) return;
+    if (!["requests", "damage", "xp"].includes(partId)) return;
     for (const el of priorElement.querySelectorAll("input[name], select[name], textarea[name]")) {
       const toggle = el.type === "checkbox" || el.type === "radio";
       const selector = `[name="${CSS.escape(el.name)}"]${toggle ? `[value="${CSS.escape(el.value)}"]` : ""}`;
@@ -157,9 +163,46 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     const showTarget = () => { if (diff && out) out.textContent = CHECK_BASE + (Number(diff.value) || 0); };
     showTarget();
     diff?.addEventListener("input", showTarget);
+    // XP: one amount for "same to each" and "split", a box per character for "different to each".
+    const mode = this.element.querySelector('[name="xpMode"]');
+    const showMode = () => {
+      const individual = mode?.value === "individual";
+      this.element.querySelector(".dash-xp-amount")?.toggleAttribute("hidden", individual);
+      this.element.querySelectorAll(".dash-xp-each").forEach((el) => el.toggleAttribute("hidden", !individual));
+      this.element.querySelectorAll('.dash-xp-row input[name="xpPc"], .dash-xp-all').forEach((el) => el.toggleAttribute("hidden", individual));
+    };
+    showMode();
+    mode?.addEventListener("change", showMode);
   }
 
   #form() { return this.element; }
+
+  /* -------------------------------------------- */
+  /*  XP                                           */
+  /* -------------------------------------------- */
+
+  static async #onAwardXp() {
+    const root = this.#form();
+    const mode = root.querySelector('[name="xpMode"]')?.value ?? "each";
+    const amount = Number(root.querySelector('[name="xpAmount"]')?.value) || 0;
+    const all = [...root.querySelectorAll(".dash-xp-row input[name=\"xpPc\"]")].map((b) => game.actors.get(b.value)).filter(Boolean);
+    const chosen = all.filter((a) => root.querySelector(`input[name="xpPc"][value="${CSS.escape(a.id)}"]`)?.checked);
+    const valueFor = (a) => Number(root.querySelector(`[name="xpFor.${CSS.escape(a.id)}"]`)?.value) || 0;
+    const awards = xpAwards(mode, amount, mode === "individual" ? all : chosen, valueFor);
+    if (!awards.length) return ui.notifications.warn("KNAVERY.Dashboard.XpNothing", { localize: true });
+    await Actor.updateDocuments(awards.map(({ actor, xp }) => ({ _id: actor.id, "system.xp": actor._source.system.xp + xp })),
+      { knLogAction: "KNAVERY.Dashboard.AwardXp" });
+    const esc = (s) => foundry.utils.escapeHTML(String(s ?? ""));
+    await ChatMessage.create({
+      speaker: ChatMessage.getSpeaker({ user: game.user }),
+      content: `<div class="knavery-roll-card kind-xp"><header class="card-title"><h3><i class="fas fa-star"></i> ${esc(L("KNAVERY.Dashboard.XpCardTitle"))}</h3></header>`
+        + `<ul>${awards.map(({ actor, xp }) => `<li>${esc(F("KNAVERY.Dashboard.XpCardLine", { name: actor.name, xp }))}</li>`).join("")}</ul></div>`,
+      flags: { [FLAG_SCOPE]: { xpAward: awards.map(({ actor, xp }) => ({ actorId: actor.id, xp })) } },
+    });
+    for (const el of root.querySelectorAll('[name="xpAmount"], .dash-xp-each')) el.value = "";
+    for (const el of root.querySelectorAll('input[name="xpPc"]')) el.checked = false;
+    this.render({ parts: ["xp"] });
+  }
 
   static #onSelectAll(_e, target) {
     const boxes = [...this.element.querySelectorAll(`input[name="${target.dataset.field}"]`)];
@@ -322,6 +365,21 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
 }
 
 /** Flip a player-tool switch and announce it (shared with the macros). */
+/**
+ * Who gets how much XP. `each`: `amount` to every actor; `split`: `amount`
+ * shared evenly, rounded down; `individual`: each actor's own value. Whole,
+ * positive amounts only.
+ * @returns {{actor: Actor, xp: number}[]}
+ */
+export const xpAwards = (mode, amount, actors, valueFor = () => 0) => {
+  const whole = (n) => Math.max(0, Math.floor(Number(n) || 0));
+  let list;
+  if (mode === "individual") list = actors.map((actor) => ({ actor, xp: whole(valueFor(actor)) }));
+  else if (mode === "split") list = actors.map((actor) => ({ actor, xp: actors.length ? whole(whole(amount) / actors.length) : 0 }));
+  else list = actors.map((actor) => ({ actor, xp: whole(amount) }));
+  return list.filter((a) => a.xp > 0);
+};
+
 export const setToggle = async (key, value) => {
   // An Assistant GM may have had "Modify Configuration Settings" taken away.
   if (!game.user.can("SETTINGS_MODIFY")) {
