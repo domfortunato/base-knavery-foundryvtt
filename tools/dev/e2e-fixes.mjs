@@ -141,7 +141,9 @@ await withSettings(gm, async () => {
   await section("4. Enter in the level-up dialog levels up with the ticked abilities.", async () => {
   await gm.evaluate(async (id) => {
     const a = game.actors.get(id);
-    await a.update({ "system.xp": 2000, "system.generationEnabled": true });
+    // Stored max HP 11 (13 with the effect): level 2's 2d6 can never beat 11, so
+    // the stored path always ends at 11 + 1 = 12, the effect's path at 14.
+    await a.update({ "system.xp": 2000, "system.generationEnabled": true, "system.hp.max": 11, "system.hp.value": 11 }, { knNoLog: true });
     (await import("/systems/base-knavery/module/level-up.js")).openLevelUp(a);
   }, ids.a);
   await gm.waitForSelector('input[name="pick"][value="STR"]', { timeout: T(10000) });
@@ -152,8 +154,6 @@ await withSettings(gm, async () => {
   const abil1 = await gm.evaluate((id) => Object.fromEntries(Object.entries(game.actors.get(id)._source.system.abilities).map(([k, v]) => [k, v.value])), ids.a);
   const raised = Object.keys(abil1).filter((k) => abil1[k] > abil0[k]).sort();
   ok(raised.join() === "CON,DEX,STR", "Enter on a ticked box raises exactly the ticked three", JSON.stringify({ abil0, abil1 }));
-  // Stored max 4 (6 with the effect). A roll at or under 4 keeps 4 + 1 = 5 from the
-  // stored value; working from the effect's 6 it would be 7 for any roll up to 6.
   // The card is posted after the level changes, and other probes leave level-up
   // cards in the world: wait for THIS character's.
   await gm.waitForFunction((id) => game.messages.some((x) => x.getFlag("base-knavery", "levelUp") && x.speaker?.actor === id),
@@ -162,7 +162,7 @@ await withSettings(gm, async () => {
     const m = game.messages.filter((x) => x.getFlag("base-knavery", "levelUp") && x.speaker?.actor === id).at(-1);
     return { rolled: m?.rolls[0]?.total ?? null, max: game.actors.get(id)._source.system.hp.max };
   }, ids.a);
-  ok(hpLevel.rolled !== null && hpLevel.max === (hpLevel.rolled <= 4 ? 5 : hpLevel.rolled),
+  ok(hpLevel.rolled !== null && hpLevel.max === 12,
     "level-up rolls HP against the stored max, not the effect's", JSON.stringify(hpLevel));
 
   });
@@ -321,6 +321,9 @@ await withSettings(gm, async () => {
     return out;
   }, ids);
   ok(small.price === 3, "a 2.5-coin price rounds up to 3", JSON.stringify(small));
+  ok(small.special === null, "damage text that is not dice rolls nothing and throws nothing", JSON.stringify(small));
+  ok(small.woundCard === "1 wound", "one wound reads \"1 wound\"", JSON.stringify(small));
+  ok(small.castLevel === "3", "a level-3 monster casts at level 3", JSON.stringify(small));
 
   // The pick-list, with real key presses (a synthetic Enter never submits a form).
   await gm.evaluate(async () => {
@@ -335,9 +338,6 @@ await withSettings(gm, async () => {
   await gm.locator(".knavery-picker .kn-pick-filter").press("Enter");
   const pick = await gm.evaluate(() => Promise.race([globalThis.__probePick, new Promise((r) => setTimeout(() => r("timeout"), 3000))]));
   ok(stillOpen && pick === "alpha", "Enter with nothing chosen does nothing; with one row left it picks it", JSON.stringify({ stillOpen, pick }));
-  ok(small.special === null, "damage text that is not dice rolls nothing and throws nothing", JSON.stringify(small));
-  ok(small.woundCard === "1 wound", "one wound reads \"1 wound\"", JSON.stringify(small));
-  ok(small.castLevel === "3", "a level-3 monster casts at level 3", JSON.stringify(small));
 
   });
   // 12. A career sheet with a starting item inside a compendium actor still opens.
