@@ -384,8 +384,8 @@ journal("Base Knavery Guide", [
   ["Your Rulebook", `
 <p>Base Knavery can open <b>your own copy</b> of the Knave 2e PDF inside Foundry, so you can read a table while you fill it. Nothing of the book comes with the system: it stores only where your file is.</p>
 <ol>
-<li>Open <i>Settings → Configure Rulebook</i> and click the folder button beside <b>Your rulebook PDF</b>.</li>
-<li>In the file picker, make a folder such as <code>knavery-rulebook</code>, use <b>Upload</b> to copy your PDF there from your computer, pick it, and save.</li>
+<li>Click <b>Choose from this computer</b>: in the welcome window, on the dashboard's <b>Tables</b> tab, or in <i>Settings → Configure Rulebook</i>.</li>
+<li>Pick your PDF in your computer's file dialog. It is uploaded to the server's <code>knavery-rulebook</code> folder and opens. (A PDF already on the server can be chosen with the folder button in Configure Rulebook instead.)</li>
 <li>Press <b>B</b>, or use <b>Rulebook</b> in the Settings sidebar, to open or close it.</li>
 </ol>
 <p>On the dashboard's <b>Tables</b> tab, a book icon beside a table opens the rulebook at its page. The table importer offers the page too.</p>

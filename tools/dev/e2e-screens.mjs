@@ -8,7 +8,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import { chromium } from "playwright";
-import { SHOTS, VIEWPORT, joinAsGM, useProbeRulebook, waitForRulebook, watchErrors, watchdog, withSettings } from "./lib.mjs";
+import {
+  SHOTS, VIEWPORT, joinAsGM, probePdf, useProbeRulebook, waitForRulebook, watchErrors, watchdog, withSettings,
+} from "./lib.mjs";
 
 const OUT = SHOTS;
 fs.mkdirSync(OUT, { recursive: true });
@@ -89,6 +91,28 @@ await withSettings(page, async () => {
     await page.evaluate((id) => game.actors.get(id).sheet.close(), id);
     await page.waitForTimeout(400);
   }
+
+  // "Choose your rulebook PDF from this computer" in the welcome window: the
+  // computer's own file dialog (Playwright answers it), then an upload.
+  await page.evaluate(() => game.settings.set("base-knavery", "rulebook-pdf", ""));
+  await page.evaluate(() => game.knavery.openWelcome());
+  await page.waitForSelector('#knavery-welcome button[data-action="chooseRulebook"]', { timeout: 10000 });
+  const [chooser] = await Promise.all([
+    page.waitForEvent("filechooser", { timeout: 10000 }),
+    page.locator('#knavery-welcome button[data-action="chooseRulebook"]').click(),
+  ]);
+  await chooser.setFiles({ name: "probe-local.pdf", mimeType: "application/pdf", buffer: Buffer.from(probePdf()) });
+  await page.waitForFunction(() => game.settings.get("base-knavery", "rulebook-pdf").endsWith("probe-local.pdf"), null, { timeout: 20000 });
+  await waitForRulebook(page);
+  const local = await page.evaluate(() => ({
+    path: game.settings.get("base-knavery", "rulebook-pdf"),
+    welcomeOpen: !!document.querySelector('#knavery-welcome button[data-action="openRulebook"]'),
+  }));
+  ok(local.path === "knavery-rulebook/probe-local.pdf" && local.welcomeOpen, "a PDF chosen from this computer is uploaded, set and opened", JSON.stringify(local));
+  await page.evaluate(() => {
+    foundry.applications.instances.get("knavery-rulebook")?.close();
+    foundry.applications.instances.get("knavery-welcome")?.close();
+  });
 
   // The rulebook reader on a hand-made one-page PDF, and the welcome window, in both schemes.
   await useProbeRulebook(page);

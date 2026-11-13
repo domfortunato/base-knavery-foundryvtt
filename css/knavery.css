@@ -4703,6 +4703,9 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 /* ---- Table importer: the line pointing at the table's page in the book -------- */
 .knavery-importer .knavery-importer-book a { color: var(--kn-accent); text-decoration: underline; cursor: pointer; }
 
+/* ---- Configure Rulebook: "Choose from this computer" under the server picker -- */
+.knavery-settings-menu .knavery-rulebook-local { width: auto; margin: 4px 0 0 auto; display: flex; align-items: center; gap: 6px; }
+
 /* ---- Settings sidebar: Base Knavery's buttons (knavery.js renderSettings) ----- */
 #settings .knavery-sidebar-tools { gap: 4px; }
 

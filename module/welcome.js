@@ -10,7 +10,7 @@
  * the Made for Knave logo, nothing that implies approval.
  */
 import { SETTINGS_NS, SYS_PATH, SYSTEM_ID } from "./config.js";
-import { canReadRulebook, hasRulebook, openRulebook, openRulebookSettings } from "./rulebook.js";
+import { canReadRulebook, hasRulebook, openRulebook, pickLocalRulebook } from "./rulebook.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 const L = (k) => game.i18n.localize(k);
@@ -36,7 +36,7 @@ export class WelcomeWindow extends HandlebarsApplicationMixin(ApplicationV2) {
     position: { width: 560, height: "auto" },
     actions: {
       openGuide: WelcomeWindow.#onOpenGuide,
-      chooseRulebook: () => openRulebookSettings(),
+      chooseRulebook: () => pickLocalRulebook(),
       openRulebook: () => openRulebook(),
     },
   };

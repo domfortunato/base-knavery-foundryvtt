@@ -90,9 +90,9 @@ https://github.com/domfortunato/base-knavery-foundryvtt/releases/latest/download
 - Switches for the players' tools.
 
 **Your rulebook, inside Foundry**
-- Point the world at **your own copy** of the Knave 2e PDF (Configure
-  Rulebook; the file picker's Upload button puts it on your server). Nothing of
-  the book ships with the system, which stores only the file's path.
+- **Choose your own copy** of the Knave 2e PDF from your computer; it is
+  uploaded to your Foundry server and opens. Nothing of the book ships with the
+  system, which stores only the file's path.
 - It opens in Foundry's own PDF viewer, with the book's outline and search.
   **B** opens and closes it.
 - The dashboard puts a book icon on each table at its page, so you can read

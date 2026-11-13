@@ -19,7 +19,7 @@ import { actorFromUuid } from "./damage.js";
 import { findTable } from "./compendium.js";
 import { openTableImporter } from "./table-importer.js";
 import { openMarketplaceManager } from "./marketplace.js";
-import { hasRulebook, openRulebook, openRulebookSettings, showRulebookPage, tablePage } from "./rulebook.js";
+import { hasRulebook, openRulebook, pickLocalRulebook, showRulebookPage, tablePage } from "./rulebook.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 const L = (k) => game.i18n.localize(k);
@@ -59,7 +59,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       selectAll: GmDashboard.#onSelectAll,
       openRulebook: GmDashboard.#onOpenRulebook,
       showRulebook: GmDashboard.#onShowRulebook,
-      chooseRulebook: () => openRulebookSettings(),
+      chooseRulebook: () => pickLocalRulebook(),
     },
   };
 

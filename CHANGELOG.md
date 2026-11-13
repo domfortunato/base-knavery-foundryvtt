@@ -13,8 +13,10 @@
   Made for Knave logo, which swaps to its white version on the dark theme.
 - The guide pack ships its page HTML trimmed, as Foundry stores it, so opening a world no
   longer rewrites the pack.
-- **Your rulebook inside Foundry.** Configure Rulebook points the world at your own copy of the
-  Knave 2e PDF (the file picker's Upload button puts it on the server; only its path is stored).
+- **Your rulebook inside Foundry.** **Choose from this computer** (welcome window, dashboard,
+  Configure Rulebook) uploads your own copy of the Knave 2e PDF to the server's
+  `knavery-rulebook` folder and opens it; a PDF already on the server can be picked instead.
+  Only its path is stored.
   It opens in Foundry's pdf.js viewer; **B** toggles it; the dashboard's tables carry a book icon
   at their page, and the table importer offers the page too; the GM can show a page to players
   when they are allowed to read it. A page-offset setting serves other printings.
