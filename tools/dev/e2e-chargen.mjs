@@ -242,7 +242,8 @@ await withSettings(gm, async () => {
     await gm.evaluate(async (x) => {
       const a = game.actors.get(x);
       for (const i of a.items.contents) await i.delete();
-      await a.update({ "system.generationEnabled": true });
+      // Careers change at level 1 only (part 2 levelled her up).
+      await a.update({ "system.generationEnabled": true, "system.level": 1, "system.xp": 0 });
     }, ids.a);
     await openAs(alice, ids.a);
     await settle();
@@ -416,7 +417,9 @@ await withSettings(gm, async () => {
       await game.settings.set("base-knavery", "failed-career-item", true);
       const baker = await addCareer(actor, { name: "Probe Baker", type: "career", system: { startingItems: ["Probe Rolling Pin"] } }, { grantItems: true });
       const failed = await addCareer(actor, { name: "Probe Lutist", type: "career", system: { startingItems: ["Probe Lute"] } }, { failed: true });
-      return { baker: baker.id, failed: failed.id };
+      const pin = actor.items.find((i) => i.getFlag("base-knavery", "fromCareer") === baker.id);
+      const lute = actor.items.find((i) => i.getFlag("base-knavery", "fromCareer") === failed.id);
+      return { baker: baker.id, failed: failed.id, pin: pin?.id, lute: lute?.id };
     }, [SYS, ids.a]);
     await openAs(alice, ids.a);
     await alice.evaluate((x) => game.actors.get(x).sheet.changeTab("growth", "primary"), ids.a);
@@ -427,20 +430,21 @@ await withSettings(gm, async () => {
     await alice.locator(`${sheet}[id$="${ids.a}"] .knavery-career[data-career-id="${setup.failed}"] .career-change[data-mode="roll"]`).click();
     await gm.waitForFunction(([x, id]) => !game.actors.get(x).items.get(id), [ids.a, setup.failed], { timeout: T(15000) });
     await settle();
-    const after = await gm.evaluate((x) => {
+    const after = await gm.evaluate(([x, pinId, luteId]) => {
       const a = game.actors.get(x);
       const careers = a.items.filter((i) => i.type === "career");
       const plain = careers.find((c) => !c.system.failed);
       const failed = careers.find((c) => c.system.failed);
       const from = (c) => a.items.filter((i) => i.getFlag("base-knavery", "fromCareer") === c?.id);
       return {
-        careers: careers.length, pin: !!a.items.getName("Probe Rolling Pin"), lute: !!a.items.getName("Probe Lute"),
+        // By id: a rerolled career may well be the other Probe career, carrying an item of the same name.
+        careers: careers.length, pin: !!pinId && !!a.items.get(pinId), lute: !!luteId && !!a.items.get(luteId), hadBoth: !!pinId && !!luteId,
         plainItems: from(plain).length, plainWants: (plain?.system.startingItems ?? []).filter((e) => e.trim()).length,
         petty: a.items.filter((i) => i.getFlag("base-knavery", "pettyFor") === a.id).length,
         pettyFromNew: from(failed).length,
       };
-    }, ids.a);
-    ok(after.careers === 2 && !after.pin && after.plainItems === after.plainWants, "rerolling a career takes back its items and gives the new one's", JSON.stringify(after));
+    }, [ids.a, setup.pin, setup.lute]);
+    ok(after.hadBoth && after.careers === 2 && !after.pin && after.plainItems === after.plainWants, "rerolling a career takes back its items and gives the new one's", JSON.stringify(after));
     ok(!after.lute && after.petty === 1 && after.pettyFromNew === 1, "rerolling the failed career leaves one petty item, the new one's", JSON.stringify(after));
 
     const noItem = await gm.evaluate(async ([sys, a]) => {
