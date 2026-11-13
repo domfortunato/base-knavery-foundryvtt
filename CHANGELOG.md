@@ -11,6 +11,8 @@
   sheet and `game.knavery.rollSave` still roll them.
 - The footer credits Knave: Second Edition to Ben Milton and Questing Beast LLC beside the
   Made for Knave logo, which swaps to its white version on the dark theme.
+- The guide pack ships its page HTML trimmed, as Foundry stores it, so opening a world no
+  longer rewrites the pack.
 
 ## 0.1.0
 

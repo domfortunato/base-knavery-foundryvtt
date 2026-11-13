@@ -345,9 +345,12 @@ const journal = (name, pages) => {
     _id, _key: `!journal!${_id}`, name, categories: [],
     pages: pages.map(([title, html], i) => {
       const pid = id("guide", name, title);
+      // Trimmed as Foundry's StringField stores it: the template literals open with a
+      // newline, and a leading newline the first world launch drops makes the pack
+      // build guard report drift on every server (met on the probe fleet, 2026-11-13).
       return {
         _id: pid, _key: `!journal.pages!${_id}.${pid}`, name: title, type: "text", sort: (i + 1) * 100000,
-        title: { show: true, level: 1 }, text: { format: 1, content: html }, flags: {}, ownership: { default: -1 },
+        title: { show: true, level: 1 }, text: { format: 1, content: html.trim() }, flags: {}, ownership: { default: -1 },
       };
     }),
     flags: {}, _stats: STATS,

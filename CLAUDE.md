@@ -99,3 +99,7 @@ picker, change log and marketplace it ports.
   section pins its children with `grid-column: 1 / -1`.
 - Loading compendium documents is slow on the CT (≈0.6 s each). Use pack
   indexes for lists.
+- Pack text must survive a world launch unchanged: StringField trims, so a journal
+  page whose HTML opened with a newline came back without it, and the pack build
+  guard (and the probe fleet, whose setup starts the app before the deploy) reported
+  drift on every server. The generator trims the guide HTML (2026-11-13).
