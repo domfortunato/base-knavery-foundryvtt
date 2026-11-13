@@ -148,7 +148,8 @@ await withSettings(page, async () => {
     const m = await import("/systems/base-knavery/module/rulebook-import.js");
     await m.openRulebookTablesReview({ specs: [spec], offset: 0, combined: [] });
   }, SPEC);
-  await page.waitForSelector('#knavery-rulebook-tables textarea[data-index="0"]', { timeout: 20000 });
+  // Attached, not visible: each table's rows sit in a collapsed <details>.
+  await page.waitForSelector('#knavery-rulebook-tables textarea[data-index="0"]', { state: "attached", timeout: 20000 });
   const reviewed = await page.evaluate(() => document.querySelector('#knavery-rulebook-tables textarea[data-index="0"]').value.split("\n"));
   ok(reviewed.length === 6 && reviewed[0] === "1 Row Alpha" && reviewed[5] === "6 Row Foxtrot", "rulebook tables: the review shows the rows read from the PDF", JSON.stringify(reviewed));
   await page.locator("#knavery-rulebook-tables details").first().evaluate((d) => { d.open = true; });
