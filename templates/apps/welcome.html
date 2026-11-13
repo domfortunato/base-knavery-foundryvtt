@@ -3,13 +3,17 @@
      Knave 2e Third Party License §3 sentence, verbatim. --}}
 <div class="knavery-welcome-body">
   <header class="knavery-welcome-head">
-    <img class="knavery-logo-light" src="{{logo}}" alt="{{localize 'KNAVERY.MadeForKnave'}}">
-    <img class="knavery-logo-dark" src="{{logoDark}}" alt="{{localize 'KNAVERY.MadeForKnave'}}">
     <h1 class="knavery-welcome-title">{{title}}</h1>
     <p class="knavery-welcome-byline">
       {{#if authorUrl}}<a href="{{authorUrl}}" target="_blank" rel="noopener">{{byline}}</a>{{else}}{{byline}}{{/if}}
     </p>
+    <img class="knavery-logo-light" src="{{logo}}" alt="{{localize 'KNAVERY.MadeForKnave'}}">
+    <img class="knavery-logo-dark" src="{{logoDark}}" alt="{{localize 'KNAVERY.MadeForKnave'}}">
   </header>
+
+  <p class="knavery-welcome-unofficial">{{localize "KNAVERY.Welcome.Unofficial"}}</p>
+  <p class="knavery-welcome-disclaimer">{{disclaimer}}</p>
+  <p class="knavery-welcome-credit">{{credit}}</p>
 
   {{#if isGM}}{{#unless hasRulebook}}
   <div class="knavery-welcome-rulebook">
@@ -17,10 +21,6 @@
     <button type="button" data-action="chooseRulebook"><i class="fa-solid fa-file-arrow-up" inert></i> {{localize "KNAVERY.Welcome.ChooseRulebook"}}</button>
   </div>
   {{/unless}}{{/if}}
-
-  <p class="knavery-welcome-unofficial">{{localize "KNAVERY.Welcome.Unofficial"}}</p>
-  <p class="knavery-welcome-disclaimer">{{disclaimer}}</p>
-  <p class="knavery-welcome-credit">{{credit}}</p>
 
   <h2 class="knavery-welcome-heading">{{localize "KNAVERY.Welcome.GetTheBook"}}</h2>
   <div class="knavery-welcome-links">

@@ -4659,7 +4659,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-welcome .window-content { padding: 16px 20px; }
 .knavery-welcome-body { display: flex; flex-direction: column; gap: 8px; color: var(--kn-ink); }
 .knavery-welcome-head { display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; }
-.knavery-welcome-head img { display: block; width: 100%; max-width: 220px; height: auto; margin: 0 auto 4px; border: none; }
+.knavery-welcome-head img { display: block; width: 100%; max-width: 220px; height: auto; margin: 8px auto 0; border: none; }
 .knavery-welcome .knavery-logo-dark { display: none; }
 .theme-dark .knavery-welcome:not(.theme-light) .knavery-logo-light,
 .knavery-welcome.theme-dark .knavery-logo-light { display: none; }
