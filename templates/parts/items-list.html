@@ -1,9 +1,7 @@
 {{!-- The inventory, slot by slot. Wounds fill slots from the top down, so a
       row in a wounded slot is marked and must be dropped. --}}
 <div class="knavery-items-list-header">
-  <div>{{localize "KNAVERY.Name"}} <i>{{localize "KNAVERY.BoldMeansEquipped"}}</i>
-    {{#if isCharacter}}<span class="spells-left" data-tooltip="KNAVERY.SpellsLeftTip">· {{localize "KNAVERY.SpellsLeft" n=spellsLeft max=system.spellsPerDay}}</span>{{/if}}
-  </div>
+  <div>{{localize "KNAVERY.Name"}} <i>{{localize "KNAVERY.BoldMeansEquipped"}}</i></div>
   <span class="items-header-controls">
     {{#if showShop}}
     <a class="item-control item-shop" data-action="itemShop" data-tooltip="KNAVERY.MarketplaceHint"><i class="fas fa-store"></i>&nbsp;{{localize "KNAVERY.Marketplace"}}</a>

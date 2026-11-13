@@ -128,6 +128,14 @@
        those tokens flip with the theme, these must not. */
     --kn-save-pass-chat: #1a7a3a;
     --kn-save-fail-chat: #c62828;
+
+    /* The sheet's bars (HP, wounds, XP) and the thumb-tab rail's shadow
+       (2026-11-13). Translucent fills so the parchment shows through and the
+       value typed over them stays legible. */
+    --kn-hp-fill: rgba(42, 170, 102, 0.5);
+    --kn-wound-fill: rgba(198, 40, 40, 0.45);
+    --kn-xp-fill: rgba(18, 163, 180, 0.35);
+    --kn-shadow: rgba(0, 0, 0, 0.3);
 }
 
 /* Dark scheme.
@@ -168,6 +176,10 @@
        invisible against a near-black backdrop. */
     --kn-accent-wash: rgba(53, 200, 218, 0.18);
     --kn-ok-wash: rgba(79, 208, 138, 0.22);
+    --kn-hp-fill: rgba(79, 208, 138, 0.45);
+    --kn-wound-fill: rgba(255, 107, 107, 0.4);
+    --kn-xp-fill: rgba(53, 200, 218, 0.4);
+    --kn-shadow: rgba(0, 0, 0, 0.6);
 
     /* The season tints go up for the same reason the washes above do. */
     --kn-season-dead: rgba(140, 175, 215, 0.18);
@@ -2505,15 +2517,6 @@ textarea.omen-input {
     opacity: 0.9;
 }
 
-/* Save dice while Character Creation Mode is On (2026-09-01): grayed and
-   inert. The templates drop the data-action (that is what makes it dead);
-   this is only the look. NO pointer-events:none — the element must keep
-   receiving pointerenter or its "turn the mode off" tooltip never fires. */
-.resource-roll.save-roll-off {
-    opacity: 0.45;
-    cursor: default;
-}
-
 /* Confirmation dialogs: blank line before the yes/no question. */
 .knavery-confirm-q {
     margin-top: 12px;
@@ -4222,16 +4225,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery .ability-defense { color: var(--kn-faint); font-size: 12px; padding-right: 4px; }
 .knavery .npc-no-abilities { display: flex; align-items: center; }
 
-/* ---- Saves strip and attacks --------------------------------------------- */
-.knavery-saves-strip {
-    display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px;
-    padding: 4px 2px 6px; border-bottom: 1px solid var(--kn-rule);
-    font-size: 13px;
-}
-.knavery-saves-strip .saves-label { font-weight: bold; font-variant: small-caps; }
-.knavery-saves-strip .save-roll { cursor: pointer; white-space: nowrap; }
-.knavery-saves-strip .save-roll:hover { text-shadow: 0 0 6px var(--kn-accent); }
-
+/* ---- Attacks and the grimoire ---------------------------------------------- */
 .knavery-attacks, .knavery-grimoire { margin-bottom: 6px; }
 .knavery-attack-row {
     display: flex; align-items: center; gap: 6px;
@@ -4281,14 +4275,6 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-career .effect-tag { color: var(--kn-accent); }
 .knavery-bio { margin-top: 12px; }
 .knavery-bio prose-mirror { min-height: 160px; height: auto; }
-
-/* ---- Compatibility footer -------------------------------------------------- */
-.knavery .knavery-compat-footer {
-    display: flex; align-items: center; gap: 12px; margin-top: 18px; padding-top: 8px;
-    border-top: 1px solid var(--kn-rule);
-}
-.knavery .knavery-compat-footer img { width: 110px; height: auto; border: none; }
-.knavery .knavery-compat-caption { font-size: 11px; color: var(--kn-muted); }
 
 /* ---- Limited sheet ------------------------------------------------------- */
 .knavery-limited-sheet { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px; }
@@ -4430,3 +4416,224 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
     font-family: "Alegreya", Times, serif; font-size: 17px; font-variant: small-caps;
     border-bottom: 1px solid var(--kn-rule); padding-bottom: 2px;
 }
+
+/* ---- Thumb-tab rail (module/sheets/tab-rail.js, parts/tab-rail.html) ------
+   The rail is a render part of its own inside .window-content, which is not
+   positioned, so it is placed against the frame and hangs outside it. The frame
+   stops clipping so it can show, and rounds its header and content itself; the
+   dark theme's backdrop blur on .window-content is off, since a backdrop filter
+   would make the content the rail's containing block and clip it. Mirrored onto
+   the left edge under .knavery-rail-left when the window stands too near the
+   right of its screen (tab-rail.js decides). DB Mythic's mechanism. */
+.knavery.sheet.actor { overflow: visible; }
+.knavery.sheet.actor > .window-header { border-radius: 6px 6px 0 0; }
+.knavery.sheet.actor > .window-content {
+    border-radius: 0 0 6px 6px;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+.knavery.sheet.actor > .window-content > nav.knavery-tab-rail {
+    position: absolute;
+    top: calc(var(--header-height, 36px) + 12px);
+    left: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    gap: 4px;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 5px;
+    border: 1px solid var(--kn-rule-strong);
+    border-left: none;
+    border-radius: 0 8px 8px 0;
+    background: var(--background);
+    box-shadow: 3px 3px 8px var(--kn-shadow);
+    line-height: normal;
+}
+.knavery.sheet.actor > .window-content > nav.knavery-tab-rail button {
+    /* Core keeps a button at least --button-size (2em) tall; a tab is a 32px square. */
+    --button-size: 32px;
+    position: relative;
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    min-height: 32px;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 5px;
+    background: transparent;
+    box-shadow: none;
+    color: var(--kn-ink);
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.12s, color 0.12s;
+}
+.knavery.sheet.actor > .window-content > nav.knavery-tab-rail button i { margin: 0; color: inherit; pointer-events: none; }
+.knavery.sheet.actor > .window-content > nav.knavery-tab-rail button:hover,
+.knavery.sheet.actor > .window-content > nav.knavery-tab-rail button:focus-visible { background: var(--kn-wash-strong); outline: none; }
+.knavery.sheet.actor > .window-content > nav.knavery-tab-rail button.active { background: var(--kn-bar); color: var(--kn-on-bar); }
+/* Growth's tab while a level-up waits: the Die of Fate's teal, as a dot. */
+.knavery.sheet.actor > .window-content > nav.knavery-tab-rail button.attention::after {
+    content: ""; position: absolute; top: 3px; right: 3px; width: 7px; height: 7px;
+    border-radius: 50%; background: var(--kn-accent);
+}
+.knavery.sheet.actor.knavery-rail-left > .window-content > nav.knavery-tab-rail {
+    left: auto;
+    right: 100%;
+    border-left: 1px solid var(--kn-rule-strong);
+    border-right: none;
+    border-radius: 8px 0 0 8px;
+    box-shadow: -3px 3px 8px var(--kn-shadow);
+}
+
+/* ---- The sheet: banners, pages, footer ------------------------------------- */
+.knavery-sheet { display: flex; flex-direction: column; min-height: 100%; }
+.knavery-pages { flex: 1 0 auto; display: flex; flex-direction: column; }
+.knavery-pages > .tab.active { display: flex; flex-direction: column; flex: 1 0 auto; height: auto; }
+
+/* ---- The Knave page: head ------------------------------------------------- */
+.knavery-head { display: grid; grid-template-columns: 140px 1fr; column-gap: 8px; align-items: start; }
+.knavery-identity { display: flex; flex-direction: column; gap: 4px; min-width: 0; min-height: 140px; }
+.knavery-identity .name-line { height: 46px; flex: 0 0 auto; }
+.knavery-identity .career-line, .knavery-identity .level-line, .knavery-identity .npc-role-line { flex: 0 0 auto; }
+.knavery .npc-role-line {
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif; font-size: 15px;
+}
+.knavery .npc-role-line label { font-weight: bold; font-variant: small-caps; }
+.knavery .npc-role-line select { width: auto; flex: 0 1 140px; }
+.knavery .npc-role-line .short-input { width: 54px; flex: 0 0 54px; text-align: center; }
+.knavery-head-counters { grid-template-columns: 1fr 1fr; margin-top: auto; align-self: stretch; }
+.knavery .slots-counter.peril { border-color: var(--kn-peril); }
+.knavery .slots-counter.peril .resource-input-wrapper span { color: var(--kn-peril); font-weight: bold; }
+
+/* ---- The Knave page: abilities | vitals | attacks ------------------------- */
+.knavery-body {
+    display: grid;
+    grid-template-columns: minmax(210px, 1.1fr) 150px minmax(170px, 1fr);
+    column-gap: 14px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 2px solid var(--kn-line);
+    align-items: start;
+}
+.knavery-abilities { display: flex; flex-direction: column; gap: 6px; }
+.knavery-ability { display: flex; align-items: center; gap: 10px; min-height: 52px; }
+.knavery-ability-circle {
+    flex: 0 0 50px; width: 50px; height: 50px; box-sizing: border-box;
+    border: 2px solid var(--kn-line); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+}
+.knavery .knavery-ability-circle input {
+    width: 40px; height: 40px !important; padding: 0;
+    background: none !important; border: none !important;
+    text-align: center !important; font-size: 18px; font-weight: bold;
+}
+.knavery .knavery-ability-circle input:focus { box-shadow: none; }
+.knavery-ability-words { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; line-height: 1.15; }
+.knavery .knavery-ability-name {
+    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
+    font-size: 18px; font-weight: bold; font-variant: small-caps; cursor: pointer; color: var(--kn-ink);
+}
+.knavery .knavery-ability-name:hover { text-shadow: 0 0 6px var(--kn-accent); }
+.knavery .knavery-ability-name .roll-icon { font-size: 11px; margin-right: 4px; opacity: 0.8; }
+.knavery-ability-hint { font-size: 11px; font-style: italic; color: var(--kn-muted); }
+.knavery .knavery-ability .ability-defense { flex: 0 0 auto; font-size: 12px; color: var(--kn-faint); padding-right: 2px; }
+.knavery .npc-no-abilities .hint { font-size: 13px; font-style: italic; color: var(--kn-muted); margin: 0; }
+
+.knavery-vitals { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.knavery-shield {
+    position: relative; width: 58px; height: 64px; box-sizing: border-box;
+    border: 2px solid var(--kn-line);
+    border-radius: 50% 50% 50% 50% / 12% 12% 88% 88%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.knavery-shield label {
+    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
+    font-size: 11px; font-weight: bold; font-variant: small-caps; line-height: 1; margin-top: 4px;
+}
+.knavery .knavery-shield input.ac-input {
+    width: 44px; height: 26px !important; padding: 0;
+    background: none !important; border: none !important;
+    text-align: center; font-size: 18px; font-weight: bold;
+}
+.knavery .knavery-shield .armor-reset { position: absolute; right: -18px; top: 4px; }
+.knavery-ap { font-size: 12px; font-variant: small-caps; color: var(--kn-muted); margin-top: -2px; }
+.knavery-bars { display: flex; gap: 10px; align-items: flex-end; margin-top: 4px; }
+.knavery-bar-block { display: flex; flex-direction: column; align-items: center; gap: 2px; width: 62px; }
+.knavery-bar-block > label { font-size: 10px; font-weight: bold; font-variant: small-caps; white-space: nowrap; }
+.knavery .knavery-bar-block .bar-max { width: 46px; height: 24px !important; text-align: center; font-size: 13px; }
+.knavery-bar-block .readout { height: 24px; line-height: 24px; font-size: 13px; }
+.knavery-bar {
+    position: relative; width: 50px; height: 150px; box-sizing: border-box;
+    border: 2px solid var(--kn-line); border-radius: 4px; overflow: hidden; background: var(--kn-wash);
+}
+.knavery-bar-fill { position: absolute; left: 0; right: 0; bottom: 0; background: var(--kn-hp-fill); transition: height 0.2s; }
+.wounds-bar .knavery-bar-fill { background: var(--kn-wound-fill); }
+.knavery .knavery-bar input.bar-value {
+    position: absolute; inset: 0; width: 100%; height: 100% !important; padding: 0;
+    background: none !important; border: none !important;
+    text-align: center !important; font-size: 18px; font-weight: bold;
+}
+.knavery .knavery-bar input.bar-value:focus { box-shadow: none; }
+.knavery-bar-name { font-family: "Alegreya", Times, "Times New Roman", Georgia, serif; font-size: 13px; font-weight: bold; font-variant: small-caps; }
+.hp-bar.peril .knavery-bar, .wounds-bar.peril .knavery-bar { border-color: var(--kn-peril); }
+.knavery .hp-bar.peril input.bar-value, .knavery .wounds-bar.peril input.bar-value { color: var(--kn-peril); }
+.knavery .hp-bar.low:not(.peril) input.bar-value { color: var(--kn-amber); }
+.knavery-vital-buttons { display: flex; flex-direction: column; gap: 3px; width: 100%; margin-top: 4px; }
+.knavery-vital-buttons button { height: 28px; }
+.knavery-vital-buttons .strict-size-button:disabled { opacity: 0.45; }
+.knavery .knavery-vital-buttons .use-abilities-toggle { font-size: 12px; display: flex; align-items: center; gap: 4px; }
+
+.knavery-play { min-width: 0; }
+.knavery-play .knavery-items-list-header { height: 30px; line-height: 30px; }
+.knavery-empty { font-size: 12px; font-style: italic; color: var(--kn-muted); margin: 4px 0; }
+
+/* ---- Inventory: the slots strip -------------------------------------------- */
+.knavery-summary-strip {
+    display: flex; flex-wrap: wrap; gap: 4px 14px; padding: 2px 2px 6px; margin-bottom: 4px;
+    border-bottom: 2px solid var(--kn-line);
+    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif; font-size: 14px; font-variant: small-caps;
+}
+.knavery-summary-strip .summary-item i { margin-right: 5px; color: var(--kn-muted); }
+.knavery-summary-strip .summary-item.peril { color: var(--kn-peril); }
+
+/* ---- Growth: the level ladder and the XP bar ------------------------------- */
+.knavery-advancement { margin-bottom: 12px; }
+.knavery-xp-bar {
+    position: relative; height: 24px; margin: 6px 0; box-sizing: border-box;
+    border: 2px solid var(--kn-line); border-radius: 4px; overflow: hidden; background: var(--kn-wash);
+}
+.knavery-xp-fill { position: absolute; top: 0; bottom: 0; left: 0; background: var(--kn-xp-fill); }
+.knavery-xp-bar span { position: relative; display: block; text-align: center; line-height: 20px; font-size: 13px; font-weight: bold; }
+.knavery-level-ladder { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 2px 16px; }
+.knavery-level-ladder li {
+    display: flex; gap: 8px; align-items: baseline; padding: 1px 4px;
+    border-bottom: 1px solid var(--kn-hairline); color: var(--kn-faint); font-size: 12px;
+}
+.knavery-level-ladder li.reached { color: var(--kn-ink); }
+.knavery-level-ladder li.current { background: var(--kn-accent-wash); font-weight: bold; border-radius: 3px; }
+.knavery-level-ladder .ladder-level { flex: 0 0 18px; text-align: right; }
+.knavery-level-ladder .ladder-title { flex: 1; font-family: "Alegreya", Times, "Times New Roman", Georgia, serif; font-variant: small-caps; font-size: 15px; }
+
+/* ---- Description: biography over notes ------------------------------------- */
+.knavery-notes { margin-top: 12px; }
+.knavery .knavery-notes prose-mirror { min-height: 320px; height: auto; }
+
+/* ---- Compatibility footer: the Made for Knave logo and the licence's words -- */
+.knavery .knavery-compat-footer {
+    display: flex; align-items: center; gap: 12px; margin-top: 12px; padding-top: 6px;
+    border-top: 1px solid var(--kn-rule); text-align: left;
+}
+.knavery .knavery-compat-footer img { display: block; width: 84px; height: auto; margin: 0; border: none; }
+.knavery .knavery-compat-footer .knavery-logo-dark { display: none; }
+.theme-dark .knavery:not(.theme-light) .knavery-compat-footer .knavery-logo-light,
+.knavery.theme-dark .knavery-compat-footer .knavery-logo-light { display: none; }
+.theme-dark .knavery:not(.theme-light) .knavery-compat-footer .knavery-logo-dark,
+.knavery.theme-dark .knavery-compat-footer .knavery-logo-dark { display: block; }
+.knavery .knavery-compat-caption { margin: 0; font-size: 10px; line-height: 1.3; font-style: normal; opacity: 1; color: var(--kn-muted); text-align: left; }

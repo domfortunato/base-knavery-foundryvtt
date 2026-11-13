@@ -29,6 +29,7 @@ for (const f of files) {
 const DYNAMIC = {
   "KNAVERY.Ability": ["STR", "DEX", "CON", "INT", "WIS", "CHA"],
   "KNAVERY.AbilityShort": ["STR", "DEX", "CON", "INT", "WIS", "CHA"],
+  "KNAVERY.AbilityHint": ["STR", "DEX", "CON", "INT", "WIS", "CHA"],
   "KNAVERY.Save": ["paralysis", "blast", "poison", "device", "spell"],
   "KNAVERY.LevelTitle": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
   "KNAVERY.Role": ["monster", "npc", "hireling", "companion"],

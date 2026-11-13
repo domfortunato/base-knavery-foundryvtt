@@ -59,7 +59,8 @@ ok(char.coins >= 30 && char.coins <= 180, "starting coins 3d6×10");
 
 // 3. Sheet renders.
 await page.evaluate((id) => game.actors.get(id).sheet.render(true), actorId);
-await page.waitForSelector(".knavery.sheet.actor .charater-sheet-grid", { timeout: 15000 });
+await page.waitForSelector(".knavery.sheet.actor .knavery-page-knave", { timeout: 15000 });
+ok(await page.locator('.knavery.sheet.actor nav.knavery-tab-rail button[data-tab]').count() === 4, "four pages on the thumb-tab rail");
 await page.waitForTimeout(800);
 await page.locator(".knavery.sheet.actor").first().screenshot({ path: path.join(OUT, "character-sheet.png") });
 ok(await page.locator(".knavery.sheet.actor #die-of-fate-button").count() === 1, "Die of Fate button on the sheet");

@@ -123,7 +123,9 @@ See [LICENSE.txt](LICENSE.txt).
   - Jon Aspeheim, CC BY 4.0
   - tlomdev, CC BY-SA 4.0
   - Lydia Comer, CC BY-NC-SA 4.0 (so the system as a whole may not be sold)
-- The "Made for Knave" logo is used under the Knave: Second Edition Third Party
-  License.
+- The "Made for Knave" logo is © Questing Beast LLC, used under the Knave:
+  Second Edition Third Party License. Knave: Second Edition is © Ben Milton and
+  Questing Beast LLC; its own logo is not used, as that licence requires.
+- The sheet's thumb-tab rail follows DB Mythic's, itself after Mythic-pwd's.
 - The system contains no text from Knave 2e and none from Dungeon Crawl
   Classics.

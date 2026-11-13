@@ -70,6 +70,9 @@ await gm.evaluate(() => foundry.applications.instances.get("knavery-gm-dashboard
 
 // 2. Alice gives the lantern to Bob's character; Bob accepts.
 await alice.evaluate((id) => game.actors.get(id).sheet.render(true), ids.a);
+// The sheet opens on the Knave page; the item list is on the rail's Inventory page.
+await alice.waitForSelector('.knavery.sheet.actor nav.knavery-tab-rail button[data-tab="inventory"]', { timeout: 15000 });
+await alice.locator('.knavery.sheet.actor nav.knavery-tab-rail button[data-tab="inventory"]').click();
 await alice.waitForSelector(".knavery.sheet.actor .item-give", { timeout: 15000 });
 await alice.locator(".knavery.sheet.actor .item-give").first().click();
 await alice.waitForSelector('input[name="offerTarget"]', { timeout: 10000 });
@@ -82,6 +85,7 @@ ok(true, "the lantern moved from Alice's character to Bob's");
 
 // 3. Change log: Alice edits her coins by hand.
 const beforeLogs = await gm.evaluate(() => game.messages.filter((m) => m.getFlag("base-knavery", "changeLog")).length);
+await alice.locator('.knavery.sheet.actor nav.knavery-tab-rail button[data-tab="knave"]').click();
 await alice.locator('.knavery.sheet.actor input[name="system.coins"]').fill("250");
 await alice.locator('.knavery.sheet.actor input[name="system.coins"]').press("Tab");
 await gm.waitForFunction((n) => game.messages.filter((m) => m.getFlag("base-knavery", "changeLog")).length > n, beforeLogs, { timeout: 15000 });

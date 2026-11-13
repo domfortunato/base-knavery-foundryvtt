@@ -54,6 +54,7 @@ Hooks.once("init", () => {
   registerGrimoire();
 
   foundry.applications.handlebars.loadTemplates([
+    `${SYS_PATH}/templates/parts/ability-list.html`,
     `${SYS_PATH}/templates/parts/items-list.html`,
     `${SYS_PATH}/templates/parts/careers-block.html`,
     `${SYS_PATH}/templates/chat/roll-card.html`,

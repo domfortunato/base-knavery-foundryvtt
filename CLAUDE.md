@@ -30,6 +30,9 @@ picker, change log and marketplace it ports.
 - `module/documents/`: the Actor (slots, wound layout, damage, rest,
   change-log plumbing, `addItems` stacking) and the Item.
 - `module/sheets/`: one actor sheet for character and npc, and one item sheet.
+  `tab-rail.js` hangs the pages' thumb-tab rail off the window's edge (DB
+  Mythic's mechanism; the rail is a render PART, `templates/parts/tab-rail.html`).
+  The Knave page carries the head; Inventory, Growth and Description follow.
 - Feature modules:
   - `rolls.js`: the edge prompt, checks, attacks, spells, dice
   - `damage.js`: chat-card buttons and the GM relay
@@ -66,7 +69,7 @@ picker, change log and marketplace it ports.
 - `npm run check` (manifest, fields, i18n) and `npm run lint`.
 
 ## Git and releases
-- Remotes: `origin` is `gitea@<private-gitea>:fortunato/base-knavery.git`
+- Remotes: `origin` is `gitea@<private-gitea>:fortunato/base-knavery-foundryvtt.git`
   (private). Gitea push-mirrors to the public
   `github.com/domfortunato/base-knavery-foundryvtt`.
 - Branches: work on `dev`; `master` is the released state.

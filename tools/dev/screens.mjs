@@ -78,11 +78,14 @@ await withSettings(page, async () => {
     await page.evaluate((id) => game.actors.get(id).sheet.render(true), id);
     await page.waitForSelector(".knavery.sheet.actor .knavery-grimoire", { timeout: 15000 });
     await page.waitForTimeout(800);
-    await shot(page, ".knavery.sheet.actor", `sheet-items-${scheme}`);
-    await page.locator('.knavery.sheet.actor nav.tabs a[data-tab="description"]').click();
-    await page.waitForTimeout(500);
-    await shot(page, ".knavery.sheet.actor", `sheet-description-${scheme}`);
-    await page.locator('.knavery.sheet.actor nav.tabs a[data-tab="items"]').click();
+    await shot(page, ".knavery.sheet.actor", `sheet-knave-${scheme}`);
+    const rail = (tab) => page.locator(`.knavery.sheet.actor nav.knavery-tab-rail button[data-tab="${tab}"]`);
+    for (const tab of ["inventory", "growth", "description"]) {
+      await rail(tab).click();
+      await page.waitForTimeout(500);
+      await shot(page, ".knavery.sheet.actor", `sheet-${tab}-${scheme}`);
+    }
+    await rail("knave").click();
     await page.evaluate((id) => game.actors.get(id).sheet.close(), id);
     await page.waitForTimeout(400);
   }

@@ -1,14 +1,16 @@
 /**
- * The actor sheet — one ApplicationV2 class for characters and NPCs, laid out
- * after Air Bladder's: portrait, name block, three buttons (Rest, Heal Wound,
- * Die of Fate), the ability grid, then tabs. The frame carries Roll Character,
- * the Character Creation Mode toggle, Pop Out and Print.
+ * The actor sheet — one ApplicationV2 class for characters and NPCs. Its pages
+ * are turned from a thumb-tab rail hung off the window's edge (tab-rail.js): the
+ * Knave page carries the head (portrait, name, careers, level, coins) over the
+ * six abilities, the vitals (AC, HP and wounds as bars, Rest, Heal Wound, Die of
+ * Fate) and the attacks; then Inventory, Growth and Description. The frame
+ * carries Roll Character, the Character Creation Mode toggle, Pop Out and Print.
  */
 import {
-  ABILITIES, LEVELS, NPC_ROLES, SAVE_CATEGORIES, SETTINGS_NS, SYS_PATH, TABLES,
+  ABILITIES, LEVELS, NPC_ROLES, SETTINGS_NS, SYS_PATH, TABLES,
 } from "../config.js";
 import { slotsForItem } from "../documents/actor.js";
-import { castSpell, rollAttack, rollCheck, rollDamage, rollDieOfFate, rollMorale, rollSave } from "../rolls.js";
+import { castSpell, rollAttack, rollCheck, rollDamage, rollDieOfFate, rollMorale } from "../rolls.js";
 import { pickArt, randomPortraitPair, setActorArt } from "../art.js";
 import { drawFrom, pickFrom } from "../compendium.js";
 import { addCareer, careerFromText, pickCareerItem, regenerateCharacter } from "../character-generator.js";
@@ -17,6 +19,7 @@ import { canOfferItem, offerFromDrop, promptOfferTarget } from "../item-offer.js
 import { openMarketplace, playerMarketClosed } from "../marketplace.js";
 import { printActorSheet } from "../print.js";
 import { bindSpell, castWithMagicDice, createGrimoire, glogEnabled, grimoireContext, unbindSpell } from "../grimoire.js";
+import { placeRail, placeRailSoon } from "./tab-rail.js";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -24,10 +27,21 @@ const TextEditor = foundry.applications.ux.TextEditor.implementation;
 const L = (k) => game.i18n.localize(k);
 const F = (k, d) => game.i18n.format(k, d);
 
-const TAB_LABELS = {
-  items: "KNAVERY.Tab.Items",
-  description: "KNAVERY.Tab.Description",
-  notes: "KNAVERY.Tab.Notes",
+/**
+ * The pages, by id, each with its label and its icon on the rail (parts/tab-rail.html),
+ * and the set each actor type shows. Both types open on `knave`: a character's
+ * Knave page, an NPC's creature page under a different label and icon.
+ */
+const TABS = {
+  knave: { label: "KNAVERY.Tab.Knave", icon: "fa-solid fa-mask" },
+  inventory: { label: "KNAVERY.Tab.Inventory", icon: "fa-solid fa-sack" },
+  growth: { label: "KNAVERY.Tab.Growth", icon: "fa-solid fa-seedling" },
+  description: { label: "KNAVERY.Tab.Description", icon: "fa-solid fa-feather" },
+};
+const NPC_KNAVE_TAB = { label: "KNAVERY.Tab.Npc", icon: "fa-solid fa-dragon" };
+const TAB_IDS = {
+  character: ["knave", "inventory", "growth", "description"],
+  npc: ["knave", "inventory", "description"],
 };
 
 /** Guard: the sheet must be editable by this user. */
@@ -69,7 +83,6 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       removeCareer: owned(KnaveryActorSheet.#onRemoveCareer),
       openCareer: KnaveryActorSheet.#onOpenCareer,
       rollAbility: KnaveryActorSheet.#onRollAbility,
-      rollSave: KnaveryActorSheet.#onRollSave,
       rollMorale: KnaveryActorSheet.#onRollMorale,
       attack: KnaveryActorSheet.#onAttack,
       rollWeaponDamage: KnaveryActorSheet.#onRollWeaponDamage,
@@ -99,22 +112,30 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     },
   };
 
+  /**
+   * The rail first, then the sheet. Both render into `.window-content`, where
+   * core's changeTab looks for the tabs; the rail takes no room there, hanging
+   * outside the window (tab-rail.js and the stylesheet).
+   */
   static PARTS = {
+    rail: {
+      template: `${SYS_PATH}/templates/parts/tab-rail.html`,
+    },
     form: {
       template: `${SYS_PATH}/templates/actor/character-sheet.html`,
-      templates: [`${SYS_PATH}/templates/parts/items-list.html`, `${SYS_PATH}/templates/parts/careers-block.html`],
+      templates: [
+        `${SYS_PATH}/templates/parts/ability-list.html`,
+        `${SYS_PATH}/templates/parts/items-list.html`,
+        `${SYS_PATH}/templates/parts/careers-block.html`,
+      ],
       scrollable: [""],
     },
   };
 
   static TABS = {
     primary: {
-      tabs: [
-        { id: "items", label: TAB_LABELS.items },
-        { id: "description", label: TAB_LABELS.description },
-        { id: "notes", label: TAB_LABELS.notes },
-      ],
-      initial: "items",
+      tabs: TAB_IDS.character.map((id) => ({ id, ...TABS[id] })),
+      initial: "knave",
     },
   };
 
@@ -132,6 +153,15 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     const parts = super._configureRenderParts(options);
     parts.form.template = `${SYS_PATH}/templates/actor/${this.actor.type}-sheet.html`;
     return parts;
+  }
+
+  /** Each actor type shows its own page set; an NPC's first page wears its own label and icon. */
+  _getTabsConfig(group) {
+    const base = super._getTabsConfig(group);
+    if (group !== "primary" || !base) return base;
+    const ids = TAB_IDS[this.actor.type] ?? TAB_IDS.character;
+    const tabFor = (id) => (id === "knave" && this.actor.type === "npc" ? NPC_KNAVE_TAB : TABS[id]);
+    return { ...base, tabs: ids.map((id) => ({ id, ...tabFor(id) })) };
   }
 
   /* -------------------------------------------- */
@@ -197,8 +227,9 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     toggle.querySelector("i")?.classList.replace(on ? "fa-toggle-off" : "fa-toggle-on", on ? "fa-toggle-on" : "fa-toggle-off");
   }
 
-  _onDetach(from, to) { super._onDetach?.(from, to); this.#syncPopOut(); }
-  _onAttach(from, to) { super._onAttach?.(from, to); this.#syncPopOut(); }
+  /** A move between browser windows: the rail's side is decided against the new one. */
+  _onDetach(from, to) { super._onDetach?.(from, to); this.#syncPopOut(); placeRailSoon(this); }
+  _onAttach(from, to) { super._onAttach?.(from, to); this.#syncPopOut(); placeRailSoon(this); }
   #syncPopOut() {
     this.element?.querySelector('.window-header button[data-action="detach"]')
       ?.classList.toggle("knavery-header-hidden", !this._canDetach?.());
@@ -276,13 +307,10 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       key,
       label: L(`KNAVERY.AbilityShort.${key}`),
       name: L(`KNAVERY.Ability.${key}`),
+      hint: L(`KNAVERY.AbilityHint.${key}`),
       value: s.abilities[key].value,
       defense: s.abilities[key].defense,
       tip: F("KNAVERY.AbilityTip", { name: L(`KNAVERY.Ability.${key}`), defense: s.abilities[key].defense }),
-    }));
-
-    const saves = Object.entries(SAVE_CATEGORIES).map(([key, ability]) => ({
-      key, label: L(`KNAVERY.Save.${key}`), ability: L(`KNAVERY.AbilityShort.${ability}`),
     }));
 
     const banners = [];
@@ -293,6 +321,16 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
 
     const careers = await this.#careerContext(gen);
     const levelRow = LEVELS.find((r) => r.level === s.level);
+
+    // The bars and the Growth page's ladder: shares of a whole, clamped to 0–100.
+    const percent = (value, max) => (max > 0 ? Math.max(0, Math.min(100, Math.round((100 * value) / max))) : 0);
+    const xpFloor = levelRow?.xp ?? 0;
+    const levelLadder = isChar ? LEVELS.map((r) => ({
+      level: r.level, xp: r.xp, title: L(`KNAVERY.LevelTitle.${r.level}`),
+      current: r.level === s.level, reached: s.xp >= r.xp,
+    })) : [];
+    const slotsUsed = actor.calcSlotsUsed();
+    const showLevelUp = isChar && s.canLevelUp && s.generationEnabled === true && this.isEditable;
 
     const traitKeys = Object.keys(TABLES.traits);
     const traitRows = traitKeys.map((key) => ({
@@ -311,21 +349,24 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       idp: this.id,
       generationEnabled: gen,
       abilities,
-      abilityRows: [abilities.slice(0, 3), abilities.slice(3)],
-      saves,
       attacks,
       items,
       coinRows: Array.from({ length: s.coinSlots ?? 0 }, (_, i) => i),
       woundRows: isChar ? Array.from({ length: s.wounds ?? 0 }, (_, i) => i) : [],
-      slotsUsed: actor.calcSlotsUsed(),
+      slotsUsed,
       slotsMax: s.slotsMax,
+      overburdened: actor.overburdened,
       banners,
       careers,
       levelTitle: levelRow ? L(`KNAVERY.LevelTitle.${levelRow.level}`) : "",
-      showLevelUp: isChar && s.canLevelUp && s.generationEnabled === true && this.isEditable,
+      levelLadder,
+      xpPercent: isChar ? (s.nextXp ? percent(s.xp - xpFloor, s.nextXp - xpFloor) : 100) : 0,
+      showLevelUp,
       hpLow: s.hp.value < s.hp.max,
       hpPeril: s.hp.value <= 0,
+      hpPercent: percent(s.hp.value, s.hp.max),
       woundPeril: isChar && s.wounds > 0,
+      woundPercent: isChar ? percent(s.wounds, s.slotsMax) : 0,
       traitRows,
       showTraits: game.settings.get(SETTINGS_NS, "show-traits"),
       traitsCollapsed: this.#traitsCollapsed,
@@ -336,8 +377,17 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       grimoire,
       spellsLeft: isChar ? Math.max(0, s.spellsPerDay - s.spellsCastToday) : null,
       disclaimer: L("KNAVERY.Disclaimer"),
+      logoCredit: L("KNAVERY.LogoCredit"),
       logo: `${SYS_PATH}/logo/made-for-knave-black.png`,
+      logoDark: `${SYS_PATH}/logo/made-for-knave-white.png`,
     });
+    // The rail's tooltips: each page's own word, the Inventory's with its slots; Growth marks a level-up waiting.
+    for (const tab of Object.values(context.tabs ?? {})) {
+      tab.tip = tab.id === "inventory" && s.slotsMax
+        ? F("KNAVERY.Tab.InventoryCount", { used: slotsUsed, max: s.slotsMax })
+        : L(tab.label);
+      tab.attention = tab.id === "growth" && showLevelUp;
+    }
     return context;
   }
 
@@ -386,12 +436,20 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     // The Die of Fate and the rolls stay live on sheets this user cannot edit.
     root.querySelectorAll("[data-always-live]").forEach((el) => { el.disabled = false; });
 
-    // AC is derived; typing a value sets an override, the reset icon clears it.
-    root.querySelector(".ac-input")?.addEventListener("change", async (ev) => {
+    // A character's AC is derived; typing a value sets an override, the reset
+    // icon clears it. An NPC's AC input is a plain form field (it has a name).
+    root.querySelector(".ac-input:not([name])")?.addEventListener("change", async (ev) => {
       const v = ev.currentTarget.value.trim();
       const n = Number(v);
       await this.actor.update({ "system.acOverride": v === "" || !Number.isFinite(n) || n === this.actor.system.acDerived ? null : Math.floor(n) });
     });
+    placeRailSoon(this);
+  }
+
+  /** Every move, a drag's every frame included, decides the rail's side again (tab-rail.js). */
+  _onPosition(position) {
+    super._onPosition(position);
+    placeRail(this, position);
   }
 
   /** Rows drag by their own element; Foundry's default selector is `.draggable`. */
@@ -544,11 +602,6 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
   static async #onRollAbility(_event, target) {
     if (!this.actor.isOwner) return;
     await rollCheck(this.actor, target.dataset.ability);
-  }
-
-  static async #onRollSave(_event, target) {
-    if (!this.actor.isOwner) return;
-    await rollSave(this.actor, target.dataset.save);
   }
 
   static async #onRollMorale() {

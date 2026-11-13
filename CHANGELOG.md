@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+- The actor sheet laid out after the Knave 2e sheet: the pages on a thumb-tab rail off the
+  window's edge (DB Mythic's); the Knave page with the portrait, name, careers, level and coins
+  over six circled abilities, AC in a shield, HP and wounds as bars, Rest, Heal Wound, the Die
+  of Fate and the attacks; then Inventory (with a slots strip), Growth (the level ladder and
+  careers) and Description (traits, biography, notes). The NPC sheet follows the same frame.
+- The saves strip (Paralysis, Breath & Blast…) left the sheet; the GM dashboard, the print
+  sheet and `game.knavery.rollSave` still roll them.
+- The footer credits Knave: Second Edition to Ben Milton and Questing Beast LLC beside the
+  Made for Knave logo, which swaps to its white version on the dark theme.
+
 ## 0.1.0
 
 First release: a Knave 2e-compatible system on ApplicationV2 for Foundry v14.

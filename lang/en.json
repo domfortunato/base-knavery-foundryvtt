@@ -19,6 +19,7 @@
     "GameMaster": "Game Master",
     "Disclaimer": "Base Knavery is an independent production of Dom Bosco and is not affiliated with Questing Beast LLC. Compatible with Knave 2e.",
     "MadeForKnave": "Made for Knave",
+    "LogoCredit": "Knave: Second Edition is © Ben Milton and Questing Beast LLC. The “Made for Knave” logo is © Questing Beast LLC, used under the Knave: Second Edition Third Party License.",
 
     "Name": "Name",
     "Pronouns": "Pronouns",
@@ -53,6 +54,14 @@
     },
     "AbilityTip": "Roll a {name} check: d20 + bonus. Its defense (what others must beat) is {defense}.",
     "DefenseTip": "Defense: 11 + the bonus. An opposed check must reach this.",
+    "AbilityHint": {
+      "STR": "Melee attacks, feats of force",
+      "DEX": "Dodging, stealth, fine handiwork",
+      "CON": "Item slots, wounds, stamina",
+      "INT": "Spellbooks a day, lore, craft",
+      "WIS": "Ranged attacks, noticing, travel",
+      "CHA": "Parley, followers, morale"
+    },
     "Check": "Check",
 
     "Saves": "Saves",
@@ -67,6 +76,8 @@
 
     "HP": "HP",
     "HPTip": "Hit points. Damage comes off HP first; at 0 HP each further point is a wound.",
+    "MaxHP": "Max HP",
+    "MaxWounds": "Max wounds",
     "AC": "AC",
     "ACShort": "AC",
     "ACTip": "Armor class: 11 + armor points ({ap}). Type a value to override it.",
@@ -94,6 +105,12 @@
       "10": "Arch-Knave"
     },
     "Slots": "Slots",
+    "SlotsTip": "Item slots: 10 + CON. Coins and wounds take slots too.",
+    "CoinSlots": "Coin slots: {n}",
+    "WoundSlots": "Wound slots: {n}",
+    "Advancement": "Advancement",
+    "XpProgress": "{xp} / {next} XP to the next level",
+    "XpTop": "{xp} XP — the top level",
 
     "Rest": "Rest",
     "RestTip": "A night's sleep after a meal: HP back to full, spellbooks ready again.",
@@ -177,12 +194,18 @@
     "DefaultCharacterName": "Nameless Knave",
 
     "Tab": {
-      "Items": "Items",
+      "Knave": "Knave",
+      "Npc": "Creature",
+      "Inventory": "Inventory",
+      "InventoryCount": "Inventory ({used} / {max} slots)",
+      "Growth": "Growth",
       "Description": "Description",
       "Notes": "Notes"
     },
+    "Rail": "Pages",
 
     "Attacks": "Attacks",
+    "NoAttacks": "No equipped weapon. Equip one in the Inventory.",
     "AttackTip": "Attack: d20 + STR (melee) or WIS (ranged) against the target's AC.",
     "RollDamage": "Roll damage",
     "Melee": "Melee",
