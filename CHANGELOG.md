@@ -20,6 +20,14 @@
   It opens in Foundry's pdf.js viewer; **B** toggles it; the dashboard's tables carry a book icon
   at their page, and the table importer offers the page too; the GM can show a page to players
   when they are allowed to read it. A page-offset setting serves other printings.
+- **Tables from your rulebook.** Build tables from the book (dashboard, Configure Rulebook, and
+  right after you choose your PDF) reads every table in your copy of Knave 2e in your browser:
+  careers, spells, names (male and female, 1d200), surnames (now joined from the book's two
+  halves), reaction, and some seventy more, from weather to weaknesses. A review shows each
+  table's rows to correct or untick; then they become world roll tables in a "From your
+  rulebook" folder, and the system rolls on them at once. A rebuild replaces only tables it
+  built that you have not changed; anything you made, imported or edited is kept. Spellbooks
+  rolled at creation carry the spell's effect.
 - **A welcome window** for the GM after each update: the system, its author, that it is
   unofficial, the Knave 2e credit, the Made for Knave logo and where to buy the book. The
   Settings sidebar gains Welcome & credits, Rulebook and (for the GM) Dashboard buttons.

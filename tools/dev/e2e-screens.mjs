@@ -109,9 +109,12 @@ await withSettings(page, async () => {
     welcomeOpen: !!document.querySelector('#knavery-welcome button[data-action="openRulebook"]'),
   }));
   ok(local.path === "knavery-rulebook/probe-local.pdf" && local.welcomeOpen, "a PDF chosen from this computer is uploaded, set and opened", JSON.stringify(local));
-  await page.evaluate(() => {
-    foundry.applications.instances.get("knavery-rulebook")?.close();
-    foundry.applications.instances.get("knavery-welcome")?.close();
+  // The upload also opens the review of the book's tables (a one-page PDF has none of them).
+  await page.waitForSelector("#knavery-rulebook-tables", { timeout: 20000 }).catch(() => {});
+  await page.evaluate(async () => {
+    await foundry.applications.instances.get("knavery-rulebook-tables")?.close();
+    await foundry.applications.instances.get("knavery-rulebook")?.close();
+    await foundry.applications.instances.get("knavery-welcome")?.close();
   });
 
   // The rulebook reader on a hand-made one-page PDF, and the welcome window, in both schemes.
@@ -122,7 +125,7 @@ await withSettings(page, async () => {
     await waitForRulebook(page);
     await page.waitForTimeout(800);
     await shot(page, "#knavery-rulebook", `rulebook-${scheme}`);
-    await page.evaluate(() => foundry.applications.instances.get("knavery-rulebook")?.close());
+    await page.evaluate(async () => { await foundry.applications.instances.get("knavery-rulebook")?.close(); });
     await page.evaluate(() => game.knavery.openWelcome());
     await page.waitForSelector("#knavery-welcome .knavery-welcome-links a", { timeout: 10000 });
     await page.waitForTimeout(500);
@@ -136,7 +139,47 @@ await withSettings(page, async () => {
   await waitForRulebook(page);
   const doc = await page.evaluate(() => document.querySelector("#knavery-rulebook iframe").contentWindow.PDFViewerApplication.pagesCount);
   ok(pages && doc === 1, "rulebook reader loads the GM's PDF in core's pdf.js viewer", JSON.stringify({ pages, doc }));
-  await page.evaluate(() => foundry.applications.instances.get("knavery-rulebook")?.close());
+  await page.evaluate(async () => { await foundry.applications.instances.get("knavery-rulebook")?.close(); });
+
+  // Tables from the rulebook: read, review, build; a rebuild replaces an
+  // unchanged table and keeps one the GM edited or made by hand.
+  const SPEC = { name: "Probe Rulebook Table", pages: [1], region: "left", below: "probe table", first: 1, last: 6, formula: "1d6" };
+  await page.evaluate(async (spec) => {
+    const m = await import("/systems/base-knavery/module/rulebook-import.js");
+    await m.openRulebookTablesReview({ specs: [spec], offset: 0, combined: [] });
+  }, SPEC);
+  await page.waitForSelector('#knavery-rulebook-tables textarea[data-index="0"]', { timeout: 20000 });
+  const reviewed = await page.evaluate(() => document.querySelector('#knavery-rulebook-tables textarea[data-index="0"]').value.split("\n"));
+  ok(reviewed.length === 6 && reviewed[0] === "1 Row Alpha" && reviewed[5] === "6 Row Foxtrot", "rulebook tables: the review shows the rows read from the PDF", JSON.stringify(reviewed));
+  await page.locator("#knavery-rulebook-tables details").first().evaluate((d) => { d.open = true; });
+  await shot(page, "#knavery-rulebook-tables", "rulebook-tables");
+  await page.locator('#knavery-rulebook-tables button[type="submit"]').click();
+  await page.waitForFunction((n) => game.tables.getName(n)?.results.size === 6, SPEC.name, { timeout: 15000 });
+  const built = await page.evaluate(async (spec) => {
+    const m = await import("/systems/base-knavery/module/rulebook-import.js");
+    const t = game.tables.getName(spec.name);
+    const out = { formula: t.formula, folder: t.folder?.getFlag("base-knavery", "rulebookFolder") ?? false, status: m.tableStatus(spec.name) };
+    const rows = t.results.contents.map((r) => ({ range: r.range, text: r.name }));
+    out.rebuild = await m.writeRulebookTables([{ ...spec, rows }]);
+    await game.tables.getName(spec.name).results.contents[0].update({ name: "Edited by the GM" });
+    out.afterEdit = m.tableStatus(spec.name);
+    out.editedRebuild = await m.writeRulebookTables([{ ...spec, rows }]);
+    out.kept = game.tables.getName(spec.name).results.contents.some((r) => r.name === "Edited by the GM");
+    await game.knavery.importRows("Probe Hand Table", game.knavery.parseRows("1 Mine"));
+    out.handStatus = m.tableStatus("Probe Hand Table");
+    out.handRebuild = await m.writeRulebookTables([{ ...spec, name: "Probe Hand Table", rows }]);
+    out.handKept = game.tables.getName("Probe Hand Table").results.size === 1;
+    return out;
+  }, SPEC);
+  ok(built.formula === "1d6" && built.folder && built.status === "replace", "rulebook tables: built into the world's folder", JSON.stringify(built));
+  ok(built.rebuild.replaced.includes(SPEC.name), "rulebook tables: a rebuild replaces an unchanged table", JSON.stringify(built.rebuild));
+  ok(built.afterEdit === "keep" && built.editedRebuild.kept.includes(SPEC.name) && built.kept, "rulebook tables: a table the GM edited is kept", JSON.stringify(built));
+  ok(built.handStatus === "keep" && built.handRebuild.kept.includes("Probe Hand Table") && built.handKept, "rulebook tables: a table the GM imported is kept", JSON.stringify(built));
+  await page.evaluate(async () => {
+    for (const t of game.tables.filter((x) => x.name.startsWith("Probe"))) await t.delete();
+    for (const f of game.folders.filter((x) => x.type === "RollTable" && x.getFlag("base-knavery", "rulebookFolder"))) await f.delete();
+  });
+
   await page.evaluate(() => game.knavery.openDashboard());
   await page.waitForSelector("#knavery-gm-dashboard", { timeout: 10000 });
   await page.locator('#knavery-gm-dashboard nav [data-tab="tables"]').first().click();

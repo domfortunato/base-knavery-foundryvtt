@@ -27,6 +27,7 @@ import {
   canReadRulebook, hasRulebook, openRulebook, registerRulebook, showRulebookPage, toggleRulebook,
 } from "./rulebook.js";
 import { maybeOpenWelcome, openWelcome } from "./welcome.js";
+import { openRulebookTablesReview } from "./rulebook-import.js";
 
 const L = (k) => game.i18n.localize(k);
 
@@ -91,6 +92,7 @@ Hooks.once("init", () => {
     toggleRulebook,
     showRulebookPage,
     openWelcome,
+    buildRulebookTables: openRulebookTablesReview,
     /** Flip one of the player-tool switches (used by the shipped macros). */
     toggle: async (key) => {
       if (!game.user.isGM) return ui.notifications.warn("KNAVERY.Notify.GmOnly", { localize: true });

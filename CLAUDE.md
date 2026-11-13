@@ -23,7 +23,13 @@ picker, change log and marketplace it ports.
   LICENSE.txt and README.md. The welcome window shows it verbatim.
 - The rulebook reader shows the GM's own PDF. The system stores only its path
   (setting `rulebook-pdf`) and page numbers (`config.js` `RULEBOOK`, read from
-  the PDF's outline and headings). Never ship, quote or extract the book.
+  the PDF's outline and headings).
+- The GM may build roll tables from their own copy (user ruling 2026-11-13:
+  "not a licensing issue and the system should do it"). That reading runs only
+  in the GM's browser and writes only into their world. The repository,
+  packs and releases still carry none of the book's text: the catalogue
+  (`module/rulebook-catalogue.js`) holds table names, pages and layout only,
+  and output of `tools/dev/rulebook-tables-check.mjs --show` is never committed.
 
 ## Layout
 - `module/knavery.js`: entry point; hooks, the `game.knavery` API.
@@ -45,7 +51,15 @@ picker, change log and marketplace it ports.
   - `rulebook.js`: the GM's PDF in Foundry's bundled pdf.js viewer (an iframe
     of `scripts/pdfjs/web/viewer.html`, after Mythic-pwd), the B key, showing
     a page to players; page map in `config.js` `RULEBOOK`
-  - `welcome.js`: the welcome window, once per world per version for the GM
+  - `welcome.js`: the welcome window, after each update and until the world has
+    a rulebook, for the GM
+  - `rulebook-import.js`: build world roll tables from the GM's PDF, with a
+    review first; a rebuild replaces only tables it built that are unchanged
+    (`flags.base-knavery.rulebook.hash`), never the GM's own
+  - `rulebook-tables.js` (pure: reads numbered tables from pdf.js text by
+    position) and `rulebook-catalogue.js` (where each table is). Check the
+    catalogue against a local PDF with
+    `node tools/dev/rulebook-tables-check.mjs "<pdf>" --pdfjs <foundry>/node_modules/@foundryvtt/pdfjs/build`
   - `socket.js`: one channel, handlers by action
 - `css/knavery.css`: Air Bladder's stylesheet renamed (`cairn`→`knavery`,
   `--ab-`→`--kn-`), plus a Base Knavery section at the end. Colours only

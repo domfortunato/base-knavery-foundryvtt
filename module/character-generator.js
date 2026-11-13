@@ -211,14 +211,24 @@ export const buildCharacter = async ({ level = 1 } = {}) => {
     const r = await drawFrom(TABLES.spells, { warn: false });
     if (!r) { if (values.INT) notes.push(L("KNAVERY.Gen.NoSpellTable")); break; }
     const linked = r.result.documentUuid ? await fromUuid(r.result.documentUuid).catch(() => null) : null;
+    // A row built from the rulebook carries the spell's effect as its description.
     items.push(linked?.type === "spellbook" ? itemData(linked)
-      : { name: r.text, type: "spellbook", img: `${SYS_PATH}/icons/spellbook.svg`, system: { slots: 1 } });
+      : {
+        name: r.text, type: "spellbook", img: `${SYS_PATH}/icons/spellbook.svg`,
+        system: { slots: 1, description: r.result?.description ?? "" },
+      });
   }
 
   const coins = (await new Roll(STARTING_COINS).evaluate()).total;
   const first = await drawFrom(TABLES.namesA, { warn: false });
-  const last = first ? await drawFrom(TABLES.surnames, { warn: false }) : null;
-  const name = first ? [first.text, last?.text].filter(Boolean).join(" ") : L("KNAVERY.DefaultCharacterName");
+  let last = first ? (await drawFrom(TABLES.surnames, { warn: false }))?.text : null;
+  // The book builds a surname from two halves ("Adder-" + "-bald"): a draw ending
+  // in "-" is joined to one from Surname Endings, when the world has that table.
+  if (last?.endsWith("-")) {
+    const end = (await drawFrom(TABLES.surnameEndings, { warn: false }))?.text;
+    last = end ? last.slice(0, -1) + end.replace(/^-/, "") : last.slice(0, -1);
+  }
+  const name = first ? [first.text, last].filter(Boolean).join(" ") : L("KNAVERY.DefaultCharacterName");
   if (!first) notes.push(L("KNAVERY.Gen.NoNameTable"));
 
   const traits = {};

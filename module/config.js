@@ -96,6 +96,8 @@ export const TABLES = {
   spells: "Spells",
   namesA: "Names",
   surnames: "Surnames",
+  /** The book's second surname table: a Surnames draw ending in "-" is joined to one of these. */
+  surnameEndings: "Surname Endings",
   traits: {
     physique: "Physique",
     face: "Face",

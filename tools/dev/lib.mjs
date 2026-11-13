@@ -296,12 +296,19 @@ async function joinWith(page, name) {
 }
 
 /**
- * A one-page PDF written by hand (no book text: a title line), for the
- * rulebook reader. ASCII only, so string length is byte length and the xref
+ * A one-page PDF written by hand (no book text: a title and a six-row table
+ * of invented words), for the rulebook reader and the table builder. ASCII only, so string length is byte length and the xref
  * offsets hold.
  */
 export const probePdf = () => {
-  const content = "BT /F1 36 Tf 72 700 Td (Probe rulebook) Tj ET";
+  // A title, then a six-row table under a heading in the left half, laid out
+  // as the book's tables are (number, then text), for the table builder.
+  const words = ["Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot"];
+  const content = [
+    "BT /F1 36 Tf 72 700 Td (Probe rulebook) Tj ET",
+    "BT /F1 12 Tf 40 640 Td (probe table) Tj ET",
+    ...words.map((w, i) => `BT /F1 10 Tf 40 ${620 - 14 * i} Td (${i + 1}) Tj ET BT /F1 10 Tf 52 ${620 - 14 * i} Td (Row ${w}) Tj ET`),
+  ].join("\n");
   const objs = [
     "<< /Type /Catalog /Pages 2 0 R >>",
     "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",

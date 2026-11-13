@@ -20,6 +20,7 @@
  */
 import { RULEBOOK, SETTINGS_NS, SYS_PATH } from "./config.js";
 import { emit, onSocket } from "./socket.js";
+import { cataloguePage } from "./rulebook-catalogue.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 const L = (k) => game.i18n.localize(k);
@@ -39,8 +40,8 @@ export const hasRulebook = () => /\.pdf$/i.test(rulebookPath());
 export const canReadRulebook = () => game.user.isGM || game.settings.get(SETTINGS_NS, "rulebook-for-players");
 const pageOffset = () => Number(game.settings.get(SETTINGS_NS, "rulebook-page-offset")) || 0;
 
-/** The printed page a table is on, or null (config.js RULEBOOK.pages). */
-export const tablePage = (name) => RULEBOOK.pages[name] ?? null;
+/** The printed page a table is on, or null (config.js RULEBOOK.pages, then the table catalogue). */
+export const tablePage = (name) => RULEBOOK.pages[name] ?? cataloguePage(name);
 
 /** Printed page → PDF index, never below 1. */
 export const toIndex = (printed, offset = pageOffset()) => Math.max(1, Math.round(Number(printed) || 1) + offset);
@@ -224,6 +225,8 @@ export const uploadRulebook = async (file) => {
     await game.settings.set(SETTINGS_NS, "rulebook-pdf", result.path);
     ui.notifications.info(game.i18n.format("KNAVERY.Rulebook.Uploaded", { name: file.name }));
     openRulebook();
+    // Then offer its tables: the review writes nothing until the GM presses Build.
+    import("./rulebook-import.js").then((m) => m.openRulebookTablesReview());
     return result.path;
   } catch (err) {
     console.error("Base Knavery | rulebook upload failed", err);
@@ -309,6 +312,13 @@ export const registerRulebook = () => {
       if (path) picker.value = path;
     });
     picker.closest(".form-fields")?.after(button) ?? picker.after(button);
+    const build = document.createElement("button");
+    build.type = "button";
+    build.className = "knavery-rulebook-local";
+    build.innerHTML = `<i class="fa-solid fa-table-list" inert></i> ${L("KNAVERY.RulebookTables.Open")}`;
+    build.disabled = !hasRulebook();
+    build.addEventListener("click", () => import("./rulebook-import.js").then((m) => m.openRulebookTablesReview()));
+    button.after(build);
   });
   Hooks.on("knaveryRulebookChanged", () => {
     const open = foundry.applications.instances.get(READER_ID);

@@ -60,6 +60,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       openRulebook: GmDashboard.#onOpenRulebook,
       showRulebook: GmDashboard.#onShowRulebook,
       chooseRulebook: () => pickLocalRulebook(),
+      buildTables: () => import("./rulebook-import.js").then((m) => m.openRulebookTablesReview()),
     },
   };
 

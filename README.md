@@ -99,6 +99,11 @@ https://github.com/domfortunato/base-knavery-foundryvtt/releases/latest/download
   the table while you fill it.
 - **Show this page to players** opens the same page for everyone, when you let
   players read it.
+- **Build tables from the book**: Base Knavery reads every table in your copy
+  (careers, spells, names, reaction, and about seventy more) and, after you
+  review and correct the rows, writes them as roll tables in your world, where
+  the system rolls on them at once. Rebuilding never overwrites a table you
+  made or edited.
 
 **Welcome window**
 - Opens for the GM after each update: what Base Knavery is, that it is
@@ -122,7 +127,8 @@ https://github.com/domfortunato/base-knavery-foundryvtt/releases/latest/download
 
 Knave 2e's text is not licensed for reuse, so **every rollable table ships as
 an empty shell**. That covers careers, spells, names, traits, reaction and
-mishaps. Each shell has the right name and dice.
+mishaps. Each shell has the right name and dice. With your own copy of the PDF,
+**Build tables from the book** fills them for you (see above); otherwise:
 
 To fill a table:
 1. Open the GM Dashboard, go to **Tables**, and click **Import** next to it.

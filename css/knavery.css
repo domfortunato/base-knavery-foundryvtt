@@ -4712,6 +4712,27 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 /* ---- Configure Rulebook: "Choose from this computer" under the server picker -- */
 .knavery-settings-menu .knavery-rulebook-local { width: auto; margin: 4px 0 0 auto; display: flex; align-items: center; gap: 6px; }
 
+/* ---- Tables from your rulebook: the review before they are written ---------- */
+.knavery-rulebook-tables .window-content { padding: 8px 12px; }
+.knavery-rulebook-tables .rt-body { display: flex; flex-direction: column; gap: 6px; height: 100%; min-height: 0; }
+.knavery-rulebook-tables .rt-body > .hint { margin: 0; }
+.knavery-rulebook-tables .rt-warning { margin: 0; color: var(--kn-peril); }
+.knavery-rulebook-tables .rt-tools { display: flex; align-items: center; gap: 6px; }
+.knavery-rulebook-tables .rt-tools button { flex: 0 0 auto; width: auto; }
+.knavery-rulebook-tables .rt-summary { flex: 1; color: var(--kn-muted); }
+.knavery-rulebook-tables .rt-list { flex: 1; min-height: 0; overflow-y: auto; margin: 0; padding: 0; list-style: none; }
+.knavery-rulebook-tables .rt-table { border-bottom: 1px solid var(--kn-hairline); }
+.knavery-rulebook-tables .rt-table summary { display: flex; align-items: center; gap: 8px; padding: 3px 2px; cursor: pointer; }
+.knavery-rulebook-tables .rt-table summary input { flex: 0 0 auto; margin: 0; }
+.knavery-rulebook-tables .rt-name { flex: 1; font-weight: bold; }
+.knavery-rulebook-tables .rt-page, .knavery-rulebook-tables .rt-status { color: var(--kn-muted); font-size: 12px; }
+.knavery-rulebook-tables .rt-count { font-size: 12px; font-variant-numeric: tabular-nums; }
+.knavery-rulebook-tables .rt-count.rt-short { color: var(--kn-peril); font-weight: bold; }
+.knavery-rulebook-tables .rt-keep .rt-status { color: var(--kn-amber); }
+.knavery-rulebook-tables .rt-table textarea { width: 100%; margin: 2px 0 6px; font-family: monospace; font-size: 12px; resize: vertical; }
+.knavery-rulebook-tables .rt-foot { display: flex; justify-content: flex-end; }
+.knavery-rulebook-tables .rt-foot button { width: auto; }
+
 /* ---- Settings sidebar: Base Knavery's buttons (knavery.js renderSettings) ----- */
 #settings .knavery-sidebar-tools { gap: 4px; }
 

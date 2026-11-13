@@ -1,0 +1,34 @@
+{{!-- Review the tables read from the GM's own rulebook (module/rulebook-import.js)
+     before any is written. Each row can be corrected or dropped in its box:
+     one row per line, "N text" or "N-M text", as the table importer reads. A
+     table the GM made or edited is kept, never overwritten. --}}
+<div class="rt-body">
+  <p class="hint">{{localize "KNAVERY.RulebookTables.Intro"}}</p>
+  {{#if otherEdition}}<p class="rt-warning">{{otherEdition}}</p>{{/if}}
+  <div class="rt-tools">
+    <span class="rt-summary">{{summary}}</span>
+    <button type="button" data-action="selectAll">{{localize "KNAVERY.RulebookTables.SelectAll"}}</button>
+    <button type="button" data-action="selectNone">{{localize "KNAVERY.RulebookTables.SelectNone"}}</button>
+  </div>
+  <ol class="rt-list">
+    {{#each tables}}
+    <li class="rt-table rt-{{this.status}}">
+      <details>
+        <summary>
+          <input type="checkbox" name="build-{{this.index}}" {{checked this.checked}} {{disabled this.disabled}}>
+          <span class="rt-name">{{this.name}}</span>
+          {{#if this.system}}<span class="knavery-item-tag">{{localize "KNAVERY.RulebookTables.UsedBySystem"}}</span>{{/if}}
+          {{#if this.page}}<span class="rt-page">p. {{this.page}}</span>{{/if}}
+          <span class="rt-count {{#unless this.complete}}rt-short{{/unless}}">{{this.count}} / {{this.expected}}</span>
+          <span class="rt-status">{{this.statusLabel}}</span>
+        </summary>
+        {{#if this.missing}}<p class="rt-warning">{{localize "KNAVERY.RulebookTables.Missing"}} {{this.missing}}</p>{{/if}}
+        <textarea data-index="{{this.index}}" rows="{{this.lines}}" spellcheck="false">{{this.text}}</textarea>
+      </details>
+    </li>
+    {{/each}}
+  </ol>
+  <footer class="rt-foot">
+    <button type="submit"><i class="fa-solid fa-hammer" inert></i> {{localize "KNAVERY.RulebookTables.Build"}}</button>
+  </footer>
+</div>

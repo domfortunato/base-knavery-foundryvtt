@@ -38,6 +38,7 @@ const DYNAMIC = {
   "KNAVERY.Hazard": ["dungeon", "travel"],
   "KNAVERY.FeatureType": ["text", "number", "checkbox", "track", "die"],
   "KNAVERY.ArmorType": ["shield", "helmet", "gambeson", "mail", "breastplate", "armPlate", "legPlate", "other"],
+  "KNAVERY.RulebookTables.Status": ["new", "replace", "keep"],
   "KNAVERY.Trait": ["physique", "face", "skin", "hair", "clothing", "virtue", "vice", "speech", "background", "misfortune"],
 };
 for (const [prefix, keys] of Object.entries(DYNAMIC)) {

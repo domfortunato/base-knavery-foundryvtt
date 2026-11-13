@@ -77,6 +77,10 @@ pages:
         <p>On the dashboard's <b>Tables</b> tab, a book icon beside a table opens the rulebook at its page. The table importer offers the page too.</p>
         <p>Tick <b>Players may read it</b> to let players open it. Then <b>Show this page to players</b>, in the reader's menu or on the dashboard, opens the same page for everyone connected.</p>
         <p>Page numbers are the book's printed pages. If your PDF numbers its pages differently, change <b>Page offset</b>: PDF page minus printed page.</p>
+        <h2>Tables from the book</h2>
+        <p><b>Build tables from the book</b> (on the dashboard's <b>Tables</b> tab, in Configure Rulebook, and right after you choose your PDF) reads every table in your copy: careers, spells, names, surnames, reaction and some seventy more. A review lists them with their rows: open one to correct a line, untick any you do not want, then build.</p>
+        <p>They become world roll tables in a <i>From your rulebook</i> folder. The system rolls on Careers, Spells, Names, Surnames and Reaction at once, since a world table wins over the empty shell.</p>
+        <p>Building again replaces only the tables it built that you have not changed. A table you made, imported or edited yourself is kept and listed; delete or rename it to rebuild it from the book.</p>
     flags: {}
     ownership:
       default: -1

@@ -691,6 +691,29 @@
       "ImporterHint": "This table is on p. {page} of your rulebook."
     },
 
+    "RulebookTables": {
+      "Title": "Tables from your rulebook",
+      "Folder": "From your rulebook",
+      "Open": "Build tables from the book",
+      "Reading": "Reading the tables in your rulebook…",
+      "ReadFailed": "Your rulebook's tables could not be read. See the browser console.",
+      "Intro": "These are the tables read from your copy of the book. Open one to check or correct its rows (one per line, as the table importer reads them), untick any you do not want, then build. They become world roll tables in the From your rulebook folder; the system rolls on Careers, Spells, Names, Surnames and Reaction at once. A table you made or edited yourself is never overwritten.",
+      "Summary": "{complete} of {n} tables read complete",
+      "SelectAll": "Select all",
+      "SelectNone": "Select none",
+      "UsedBySystem": "used by the system",
+      "Missing": "Not read:",
+      "Build": "Build the ticked tables",
+      "NoneChosen": "No table is ticked.",
+      "Done": "Rulebook tables: {created} created, {replaced} rebuilt, {kept} kept as you left them.",
+      "KeptList": "Kept, because you made or edited them: {names}. Delete or rename one to rebuild it from the book.",
+      "Status": {
+        "new": "new",
+        "replace": "will be rebuilt",
+        "keep": "yours: kept"
+      }
+    },
+
     "Welcome": {
       "Title": "Welcome to Base Knavery",
       "By": "by {author} · version {version}",
