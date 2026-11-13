@@ -3,14 +3,14 @@
  * Screenshots of every main window, in both colour schemes, plus functional
  * checks of careers (features, starting items, effects) and the GLOG hack.
  *
- *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/screens.mjs
+ *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/e2e-screens.mjs   (npm run dev:screens)
  */
 import fs from "node:fs";
 import path from "node:path";
 import { chromium } from "playwright";
-import { VIEWPORT, joinAsGM, watchErrors, watchdog, withSettings } from "./lib.mjs";
+import { SHOTS, VIEWPORT, joinAsGM, watchErrors, watchdog, withSettings } from "./lib.mjs";
 
-const OUT = path.resolve("tools/dev/out");
+const OUT = SHOTS;
 fs.mkdirSync(OUT, { recursive: true });
 let failures = 0;
 const ok = (cond, label, extra = "") => {

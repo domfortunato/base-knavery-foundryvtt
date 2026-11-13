@@ -4,10 +4,21 @@
  * `docs/release-testing.md`.
  */
 
+import path from "node:path";
+
 export const FOUNDRY_URL = process.env.FOUNDRY_URL ?? "http://localhost:30000";
 
 /** Foundry's minimum supported resolution; below this it logs a console error. */
 export const VIEWPORT = { width: 1600, height: 1000 };
+
+/**
+ * The probe fleet (foundry-ops scripts/fleet-gpu/probe.sh) runs each probe in a
+ * container on VM 200 with MB_TIME_SCALE=2 and MB_SHOTS set: every watchdog
+ * stretches by the scale, and screenshots go where the fleet collects a failing
+ * probe's. From a workstation both are unset: scale 1, tools/dev/out.
+ */
+export const TIME_SCALE = Number(process.env.MB_TIME_SCALE) || 1;
+export const SHOTS = process.env.MB_SHOTS ?? path.resolve("tools/dev/out");
 
 /**
  * Run `fn` and put every world setting back the way it was, even if `fn` throws.
@@ -117,6 +128,7 @@ export async function dismissChrome(page) {
  * early is not held open by the timer.
  */
 export function watchdog(ms = 120000, label = "probe", cleanup = null) {
+  ms *= TIME_SCALE;
   const t = setTimeout(async () => {
     console.error(`\n  FAIL  ${label} exceeded ${ms}ms — treating as a hang, not a slow run`);
     // CLOSE THE BROWSER BEFORE EXITING. `process.exit` skips every async
@@ -213,8 +225,12 @@ export function watchErrors(page) {
   const keep = (t) => !ignore.some((re) => re.test(t));
   page.on("console", m => {
     if (m.type() !== "error") return;
-    const t = m.text();
+    let t = m.text();
     if (!keep(t)) return;
+    // A failed resource load says only "Failed to load resource: ... 404"; the
+    // URL is in the message's location, and a 404 is nothing without it.
+    const url = m.location()?.url;
+    if (url && !t.includes(url)) t = `${t} (${url})`;
     errors.push(t);
   });
   // The STACK too, first frame onwards. A pageerror reported as its message

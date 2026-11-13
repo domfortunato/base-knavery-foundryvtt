@@ -58,15 +58,20 @@ picker, change log and marketplace it ports.
     the browser), or
   - from `c:\Users\domin\code\foundry`, `scripts/deploy-system.sh 127
     base-knavery --yes` when `system.json` or the packs change.
-- Probes, run from the workstation. Keep all three green before merging to
-  master.
+- Probes (`tools/dev/e2e-*.mjs`, the `dev:*` scripts) run on the **probe
+  fleet, never from the workstation** (user ruling 2026-11-13): VM 200's GPU
+  drives the browsers against the eleven probe boxes, conducted from CT 120, as
+  project `base-knavery` of foundry-ops `fleet/projects.tsv` (rows for Foundry
+  14.370, 14.369 and 14.368; world `knavery-dev` staged from CT 127). Keep all
+  three green before merging to master.
   ```
-  FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/smoke.mjs
-  FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/e2e-players.mjs
-  FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/screens.mjs
+  ssh fleet@<private-ip> foundry/scripts/fleet-runner.sh start --project base-knavery --ref <sha> [--probes smoke,players,screens]
+  ssh fleet@<private-ip> foundry/scripts/fleet-runner.sh last
   ```
-  Screenshots land in `tools/dev/out/`.
-- `npm run check` (manifest, fields, i18n) and `npm run lint`.
+  `--refresh` after a release retakes every box's `pristine`. The report quotes
+  each failing check, and a failing probe's screenshots come back with it. The
+  probes read `MB_SHOTS` and `MB_TIME_SCALE` from the fleet (`tools/dev/lib.mjs`).
+- `npm run check` (manifest, fields, i18n) and `npm run lint` run locally.
 
 ## Git and releases
 - Remotes: `origin` is `gitea@<private-gitea>:fortunato/base-knavery-foundryvtt.git`

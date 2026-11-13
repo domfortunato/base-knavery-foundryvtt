@@ -12,6 +12,9 @@
     "check:fields": "node tools/dev/field-audit.mjs",
     "check:i18n": "node tools/dev/i18n-check.mjs",
     "check": "npm run check:manifest && npm run check:fields && npm run check:i18n",
+    "dev:smoke": "node tools/dev/e2e-smoke.mjs",
+    "dev:players": "node tools/dev/e2e-players.mjs",
+    "dev:screens": "node tools/dev/e2e-screens.mjs",
     "release": "node tools/release.mjs"
   },
   "author": "Dom Bosco (https://github.com/domfortunato)",

@@ -14,9 +14,9 @@
 import path from "node:path";
 import fs from "node:fs";
 import { chromium } from "playwright";
-import { VIEWPORT, joinAs, joinAsGM, watchErrors, watchdog } from "./lib.mjs";
+import { SHOTS, VIEWPORT, joinAs, joinAsGM, watchErrors, watchdog } from "./lib.mjs";
 
-const OUT = path.resolve("tools/dev/out");
+const OUT = SHOTS;
 fs.mkdirSync(OUT, { recursive: true });
 let failures = 0;
 const ok = (cond, label, extra = "") => {

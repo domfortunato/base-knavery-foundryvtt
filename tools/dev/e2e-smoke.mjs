@@ -3,17 +3,17 @@
  * Smoke probe against a live world: joins as the GM, exercises the core
  * mechanics through the system's own API, and screenshots the main windows.
  *
- *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/smoke.mjs
+ *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/e2e-smoke.mjs   (npm run dev:smoke)
  *
  * Leaves no documents behind (everything it makes is named "Probe …" and
- * deleted at the end). Screenshots land in tools/dev/out/.
+ * deleted at the end). Screenshots land in tools/dev/out/, or MB_SHOTS on the fleet.
  */
 import fs from "node:fs";
 import path from "node:path";
 import { chromium } from "playwright";
-import { FOUNDRY_URL, VIEWPORT, joinAsGM, watchErrors, watchdog } from "./lib.mjs";
+import { FOUNDRY_URL, SHOTS, VIEWPORT, joinAsGM, watchErrors, watchdog } from "./lib.mjs";
 
-const OUT = path.resolve("tools/dev/out");
+const OUT = SHOTS;
 fs.mkdirSync(OUT, { recursive: true });
 let failures = 0;
 const ok = (cond, label, extra = "") => {
