@@ -136,6 +136,15 @@
     --kn-wound-fill: rgba(198, 40, 40, 0.45);
     --kn-xp-fill: rgba(18, 163, 180, 0.35);
     --kn-shadow: rgba(0, 0, 0, 0.3);
+    /* The rail hangs outside the frame, so it paints its own paper. Not
+       var(--background): core sets that to a RELATIVE url() of its parchment,
+       and a relative url in a custom property resolves against the stylesheet
+       that uses it, so from here it asked for systems/base-knavery/ui/
+       parchment.jpg and got a 404 (screens probe on the fleet, 2026-11-13).
+       This url is relative to THIS file (systems/base-knavery/css/), which
+       reaches core's /ui/ and keeps working under a route prefix. */
+    --kn-rail-paper: url("../../../ui/parchment.jpg");
+    --kn-rail-fill: #e9dfc9;
 }
 
 /* Dark scheme.
@@ -180,6 +189,9 @@
     --kn-wound-fill: rgba(255, 107, 107, 0.4);
     --kn-xp-fill: rgba(53, 200, 218, 0.4);
     --kn-shadow: rgba(0, 0, 0, 0.6);
+    /* Dark: core's --background is a colour here, the frame's own fill. */
+    --kn-rail-paper: none;
+    --kn-rail-fill: var(--background);
 
     /* The season tints go up for the same reason the washes above do. */
     --kn-season-dead: rgba(140, 175, 215, 0.18);
@@ -4447,7 +4459,8 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
     border: 1px solid var(--kn-rule-strong);
     border-left: none;
     border-radius: 0 8px 8px 0;
-    background: var(--background);
+    background-color: var(--kn-rail-fill);
+    background-image: var(--kn-rail-paper);
     box-shadow: 3px 3px 8px var(--kn-shadow);
     line-height: normal;
 }
