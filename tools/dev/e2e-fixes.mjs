@@ -21,6 +21,7 @@ const ok = (cond, label, extra = "") => {
   if (cond) console.log(`  ok    ${label}`);
   else { failures++; console.error(`  FAIL  ${label} ${extra}`); }
 };
+
 const T = (ms) => ms * TIME_SCALE;
 const SYS = "/systems/base-knavery/module";
 
@@ -31,6 +32,17 @@ const gm = await (await ctx()).newPage();
 const alice = await (await ctx()).newPage();
 const bob = await (await ctx()).newPage();
 const errors = [gm, alice, bob].map(watchErrors);
+/** One part of the probe: a throw fails that part and the rest still run. */
+const section = async (name, fn) => {
+  try { await fn(); } catch (e) {
+    failures++;
+    console.error(`  FAIL  ${name}: threw ${String(e?.message ?? e).split("\n")[0]}`);
+    // Close any dialog the part left open, so the next part starts clean.
+    for (const page of [gm, alice, bob]) {
+      await page.evaluate(() => { for (const app of [...foundry.applications.instances.values()]) if (app instanceof foundry.applications.api.DialogV2) app.close(); }).catch(() => {});
+    }
+  }
+};
 
 await joinAsGM(gm);
 await withSettings(gm, async () => {
@@ -52,9 +64,11 @@ await withSettings(gm, async () => {
   });
   await joinAs(alice, "Alice");
   await joinAs(bob, "Bob");
+  let sheetSel = "";
 
   /* ------------------------------------------------------------------ */
   // 1. A sheet the viewer cannot edit keeps its rail, Die of Fate and Check.
+  await section("1. A sheet the viewer cannot edit keeps its rail, Die of Fate and Check.", async () => {
   const locked = await gm.evaluate(async () => {
     const pack = game.packs.get("base-knavery.monsters");
     const entry = pack.index.contents[0];
@@ -81,8 +95,10 @@ await withSettings(gm, async () => {
   ok(locked.rail > 0 && locked.railDisabled === 0 && locked.turned, "its page rail stays live and turns the page", JSON.stringify(locked));
   ok(locked.fateDisabled === false && locked.checkDisabled === false, "its Die of Fate and Check stay live", JSON.stringify(locked));
 
+  });
   /* ------------------------------------------------------------------ */
   // 2. An Active Effect on max HP does not compound through the form.
+  await section("2. An Active Effect on max HP does not compound through the form.", async () => {
   await gm.evaluate(async (id) => {
     const a = game.actors.get(id);
     await a.createEmbeddedDocuments("ActiveEffect", [{
@@ -91,7 +107,7 @@ await withSettings(gm, async () => {
     await a.sheet.render({ force: true });
   }, ids.a);
   await gm.waitForSelector(`#${await gm.evaluate((id) => game.actors.get(id).sheet.id, ids.a)} input[name="system.hp.max"]`, { timeout: T(15000) });
-  const sheetSel = `#${await gm.evaluate((id) => game.actors.get(id).sheet.id, ids.a)}`;
+  sheetSel = `#${await gm.evaluate((id) => game.actors.get(id).sheet.id, ids.a)}`;
   const before = await gm.evaluate((id) => { const a = game.actors.get(id); return { live: a.system.hp.max, stored: a._source.system.hp.max }; }, ids.a);
   const box = await gm.locator(`${sheetSel} input[name="system.hp.max"]`).evaluate((i) => ({ value: i.value, marked: i.hasAttribute("data-kn-modified"), tip: i.dataset.tooltipText }));
   ok(before.live === 6 && before.stored === 4, "the effect raises max HP 4 → 6 in play", JSON.stringify(before));
@@ -104,8 +120,10 @@ await withSettings(gm, async () => {
   const after = await gm.evaluate((id) => { const a = game.actors.get(id); return { live: a.system.hp.max, stored: a._source.system.hp.max }; }, ids.a);
   ok(after.stored === 4 && after.live === 6, "two sheet edits later max HP is still 4 stored, 6 in play", JSON.stringify(after));
 
+  });
   /* ------------------------------------------------------------------ */
   // 3. Enter in the roll prompt's Modifier field rolls Normal.
+  await section("3. Enter in the roll prompt's Modifier field rolls Normal.", async () => {
   const n0 = await gm.evaluate(() => game.messages.size);
   await gm.locator(`${sheetSel} .resource-roll[data-ability="STR"]`).click();
   await gm.waitForSelector(".knavery-roll-prompt input[name=\"modifier\"]", { timeout: T(10000) });
@@ -118,7 +136,9 @@ await withSettings(gm, async () => {
   });
   ok(!/kl|kh|- 5|\+ 5/.test(enter.formula) && !enter.edge && /\+ 2/.test(enter.formula), "Enter rolls Normal with the modifier", JSON.stringify(enter));
 
+  });
   // 4. Enter in the level-up dialog levels up with the ticked abilities.
+  await section("4. Enter in the level-up dialog levels up with the ticked abilities.", async () => {
   await gm.evaluate(async (id) => {
     const a = game.actors.get(id);
     await a.update({ "system.xp": 2000, "system.generationEnabled": true });
@@ -145,8 +165,10 @@ await withSettings(gm, async () => {
   ok(hpLevel.rolled !== null && hpLevel.max === (hpLevel.rolled <= 4 ? 5 : hpLevel.rolled),
     "level-up rolls HP against the stored max, not the effect's", JSON.stringify(hpLevel));
 
+  });
   /* ------------------------------------------------------------------ */
   // 5. Enriched descriptions lose data-action and name in the sheet.
+  await section("5. Enriched descriptions lose data-action and name in the sheet.", async () => {
   const cleaned = await gm.evaluate(async ({ id, sel }) => {
     const a = game.actors.get(id);
     const [it] = await a.createEmbeddedDocuments("Item", [{
@@ -162,8 +184,10 @@ await withSettings(gm, async () => {
   }, { id: ids.a, sel: sheetSel });
   ok(cleaned.shown && cleaned.action === null && cleaned.name === null, "a description's data-action and name are stripped", JSON.stringify(cleaned));
 
+  });
   /* ------------------------------------------------------------------ */
   // 6. Duplicates keep their token; hirelings start friendly.
+  await section("6. Duplicates keep their token; hirelings start friendly.", async () => {
   const tokens = await gm.evaluate(async () => {
     const D = CONST.TOKEN_DISPOSITIONS;
     const friend = await Actor.create({ name: "Probe Friendly Beast", type: "npc", system: { role: "monster" }, prototypeToken: { disposition: D.FRIENDLY, actorLink: true } });
@@ -178,8 +202,10 @@ await withSettings(gm, async () => {
   ok(tokens.copy === tokens.D.FRIENDLY && tokens.copyLink === true, "a duplicated friendly NPC stays friendly and linked", JSON.stringify(tokens));
   ok(tokens.hire === tokens.D.FRIENDLY && tokens.beast === tokens.D.HOSTILE, "hirelings start friendly, monsters hostile", JSON.stringify(tokens));
 
+  });
   /* ------------------------------------------------------------------ */
   // 7. Dashboard: a re-render keeps the half-written request; private rolls use messageMode.
+  await section("7. Dashboard: a re-render keeps the half-written request; private rolls use messageMode.", async () => {
   await gm.evaluate(() => game.knavery.openDashboard());
   await gm.waitForSelector('#knavery-gm-dashboard input[name="reason"]', { timeout: T(10000) });
   await gm.locator('#knavery-gm-dashboard input[name="reason"]').fill("Probe half-written");
@@ -216,7 +242,9 @@ await withSettings(gm, async () => {
   ok(dice.made === 2 && dice.whispered, "the dashboard's distance and reaction rolls go to the GM only", JSON.stringify(dice));
   ok(dice.warned.length === 0, "no rollMode / DICE_ROLL_MODES deprecation from them", JSON.stringify(dice.warned));
 
+  });
   // 8. Sheet rolls follow the chat's message mode.
+  await section("8. Sheet rolls follow the chat's message mode.", async () => {
   const mode = await gm.evaluate(async (id) => {
     const prev = game.settings.get("core", "messageMode");
     await game.settings.set("core", "messageMode", "gm");
@@ -229,8 +257,10 @@ await withSettings(gm, async () => {
   }, ids.a);
   ok(mode.made && mode.whisper > 0, "a sheet check in Private GM mode is whispered", JSON.stringify(mode));
 
+  });
   /* ------------------------------------------------------------------ */
   // 9. The importer turns a dead link into text and never empties a table.
+  await section("9. The importer turns a dead link into text and never empties a table.", async () => {
   const imp = await gm.evaluate(async () => {
     const t0 = await game.knavery.importRows("Probe Import", game.knavery.parseRows("1 Old A\n2 Old B"));
     const report = { unlinked: 0 };
@@ -243,7 +273,9 @@ await withSettings(gm, async () => {
   ok(imp.same && imp.rows.length === 2 && imp.rows.every((r) => r.type === "text") && imp.unlinked === 1,
     "a dead @UUID link imports as a text row, and the old rows are replaced", JSON.stringify(imp));
 
+  });
   // 10. A rulebook-built table that the GM links or re-formulas counts as theirs.
+  await section("10. A rulebook-built table that the GM links or re-formulas counts as theirs.", async () => {
   const book = await gm.evaluate(async () => {
     const m = await import("/systems/base-knavery/module/rulebook-import.js");
     const hadFolder = !!game.folders.find((f) => f.type === "RollTable" && f.getFlag("base-knavery", "rulebookFolder"));
@@ -262,8 +294,10 @@ await withSettings(gm, async () => {
   ok(book.fresh.every((s) => s === "replace"), "a freshly built book table is the book's to rebuild", JSON.stringify(book));
   ok(book.edited.every((s) => s === "keep"), "linking a row or changing the formula makes it the GM's", JSON.stringify(book));
 
+  });
   /* ------------------------------------------------------------------ */
   // 11. Small fixes through the API.
+  await section("11. Small fixes through the API.", async () => {
   const small = await gm.evaluate(async ({ a, goblin }) => {
     const out = {};
     const { rowPrice } = await import("/systems/base-knavery/module/marketplace.js");
@@ -299,7 +333,9 @@ await withSettings(gm, async () => {
   ok(small.woundCard === "1 wound", "one wound reads \"1 wound\"", JSON.stringify(small));
   ok(small.castLevel === "3", "a level-3 monster casts at level 3", JSON.stringify(small));
 
+  });
   // 12. A career sheet with a starting item inside a compendium actor still opens.
+  await section("12. A career sheet with a starting item inside a compendium actor still opens.", async () => {
   const career = await gm.evaluate(async () => {
     const it = await Item.create({ name: "Probe Career", type: "career", system: { startingItems: ["Compendium.base-knavery.monsters.Actor.AAAAAAAAAAAAAAAA.Item.BBBBBBBBBBBBBBBB"] } });
     try {
@@ -310,8 +346,10 @@ await withSettings(gm, async () => {
   });
   ok(career.open, "a career listing an item inside a compendium actor still opens", JSON.stringify(career));
 
+  });
   /* ------------------------------------------------------------------ */
   // 13. Offers: a card naming someone else's item gets no Accept on the GM's screen.
+  await section("13. Offers: a card naming someone else's item gets no Accept on the GM's screen.", async () => {
   const forgedId = await alice.evaluate(async ({ a, b, item }) => {
     const m = await ChatMessage.create({
       content: '<div class="knavery-offer-card">probe</div>',
@@ -329,7 +367,9 @@ await withSettings(gm, async () => {
   }, { id: forgedId, b: ids.b, item: ids.bobItem });
   ok(!forged.accept && forged.stillBobs, "a forged offer card draws no Accept, and Bob keeps his ring", JSON.stringify(forged));
 
+  });
   // 14. Damage relay: tied to the card, its total, and visible targets.
+  await section("14. Damage relay: tied to the card, its total, and visible targets.", async () => {
   const dmg = await alice.evaluate(async ({ a, goblin }) => {
     const { rollDamage } = await import("/systems/base-knavery/module/rolls.js");
     const { emit } = await import("/systems/base-knavery/module/socket.js");
@@ -352,7 +392,9 @@ await withSettings(gm, async () => {
   await gm.waitForFunction((id) => game.messages.get(id)?.getFlag("base-knavery", "damageApplied") === true, dmg.cardId, { timeout: T(10000) });
   ok(true, "Alice's own Apply reaches the GM: 30 → 27, and the card is stamped applied");
 
+  });
   // 15. A LIMITED viewer gets no rail.
+  await section("15. A LIMITED viewer gets no rail.", async () => {
   await bob.evaluate((id) => game.actors.get(id).sheet.render({ force: true }), ids.a);
   await bob.waitForSelector(".knavery-limited-sheet", { timeout: T(10000) });
   const limited = await bob.evaluate(() => {
@@ -362,7 +404,9 @@ await withSettings(gm, async () => {
   ok(limited.buttons === 0 && (limited.hidden || !limited.nav) && limited.shown !== "flex", "Bob's LIMITED view of Alice's character has no page rail", JSON.stringify(limited));
   await bob.evaluate((id) => game.actors.get(id).sheet.close(), ids.a);
 
+  });
   // 16. Free Take follows "Players may use the creation tools".
+  await section("16. Free Take follows 'Players may use the creation tools'.", async () => {
   await gm.evaluate(() => game.settings.set("base-knavery", "allow-player-randomization", false));
   await alice.waitForFunction(() => game.settings.get("base-knavery", "allow-player-randomization") === false, null, { timeout: T(10000) });
   const take = await alice.evaluate(async (a) => {
@@ -373,7 +417,9 @@ await withSettings(gm, async () => {
   }, ids.a);
   ok(take === false, "with the creation tools off, a player in creation mode gets no free Take", String(take));
 
+  });
   // 17. A refused Create Character is answered.
+  await section("17. A refused Create Character is answered.", async () => {
   await gm.evaluate(() => game.settings.set("base-knavery", "allow-player-generate", false));
   await alice.waitForFunction(() => game.settings.get("base-knavery", "allow-player-generate") === false, null, { timeout: T(10000) });
   const refused = await alice.evaluate(async () => {
@@ -389,8 +435,10 @@ await withSettings(gm, async () => {
   ok(refused.some((m) => m.includes("CreationClosed")), "a refused creation request tells the player so", JSON.stringify(refused));
   ok(!(await gm.evaluate(() => !!game.actors.getName("Probe Refused"))), "and makes no character");
 
+  });
   /* ------------------------------------------------------------------ */
   // 18. B closes the reader while the PDF has focus.
+  await section("18. B closes the reader while the PDF has focus.", async () => {
   await useProbeRulebook(gm, { forPlayers: false });
   await gm.evaluate(() => game.knavery.openRulebook());
   await waitForRulebook(gm);
@@ -406,6 +454,7 @@ await withSettings(gm, async () => {
     await game.settings.set("base-knavery", "rulebook-page-offset", 6);
   });
 
+  });
   // Cleanup.
   await gm.evaluate(async () => {
     for (const app of [...foundry.applications.instances.values()]) if (app.id !== "sidebar") app.close?.();
