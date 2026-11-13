@@ -117,7 +117,7 @@ export const castWithMagicDice = async (actor, book) => {
       + (mishap ? `<p class="card-note fumble"><i class="fas fa-bolt"></i> ${esc(mishap)}</p>` : "")
       + `${doom}<div class="card-spell-text">${text}</div></div>`,
     flags: { [FLAG_SCOPE]: { glogCast: { dice: n, sum: roll.total } } },
-  });
+  }, { messageMode: game.settings.get("core", "messageMode") });
 };
 
 export const registerGrimoire = () => {

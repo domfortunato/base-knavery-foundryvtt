@@ -5,7 +5,7 @@
   {{#each abilities as |ability|}}
   <div class="knavery-ability {{ability.key}}-ability">
     <div class="knavery-ability-circle">
-      <input type="number" min="0" max="10" step="1" class="stat-input" name="system.abilities.{{ability.key}}.value" value="{{ability.value}}" data-dtype="Number" aria-label="{{ability.name}}" />
+      <input type="number" min="0" max="10" step="1" class="stat-input" name="system.abilities.{{ability.key}}.value" value="{{ability.value}}"{{{ability.effAttrs}}} data-dtype="Number" aria-label="{{ability.name}}" />
     </div>
     <div class="knavery-ability-words">
       <a class="resource-roll knavery-ability-name" data-action="rollAbility" data-ability="{{ability.key}}" data-always-live data-tooltip="{{ability.tip}}"><i class="fas fa-dice-d20 roll-icon"></i>{{ability.name}}</a>

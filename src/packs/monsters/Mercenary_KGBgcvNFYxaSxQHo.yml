@@ -46,12 +46,12 @@ items:
     effects: []
     flags: {}
     _stats:
-      coreVersion: '14.367'
+      coreVersion: '14.370'
       systemId: base-knavery
       systemVersion: 0.1.0
 effects: []
 flags: {}
 _stats:
-  coreVersion: '14.367'
+  coreVersion: '14.370'
   systemId: base-knavery
   systemVersion: 0.1.0

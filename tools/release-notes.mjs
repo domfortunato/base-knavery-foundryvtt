@@ -6,8 +6,8 @@
  * `## <version>` and the next `## ` heading, trimmed. `null` when the file has no
  * such heading, `""` when the heading has nothing under it; `release.mjs` refuses
  * both, with different messages. `releaseBody(version, section)` is what the
- * GitHub release shows: the `# Air Bladder X.Y.Z` headline every release here
- * has opened with, then the section verbatim. `tagMessage(version, body)` is the
+ * GitHub release shows: a `# Base Knavery X.Y.Z` headline, then the section
+ * verbatim. (Until 0.1.0 it said "Air Bladder", left from the port.) `tagMessage(version, body)` is the
  * annotated tag's message — a subject line, a blank line, the body — which the
  * Release Creation workflow reads back with
  * `git tag -l --format='%(contents:body)'` and hands to the release action, so
@@ -46,10 +46,13 @@ export function sectionFor(text, version) {
   return lines.slice(start, end).join("\n").trim();
 }
 
+/** The product name every release is headed with. */
+export const PRODUCT = "Base Knavery";
+
 export function releaseBody(version, section) {
-  return `# Air Bladder ${version}\n\n${section}\n`;
+  return `# ${PRODUCT} ${version}\n\n${section}\n`;
 }
 
 export function tagMessage(version, body) {
-  return `Air Bladder ${version}\n\n${body}`;
+  return `${PRODUCT} ${version}\n\n${body}`;
 }

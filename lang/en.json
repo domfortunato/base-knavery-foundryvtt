@@ -14,10 +14,9 @@
     }
   },
   "KNAVERY": {
-    "SystemTitle": "Base Knavery",
     "SheetLabel": "Base Knavery",
     "GameMaster": "Game Master",
-    "Disclaimer": "Base Knavery is an independent production of Dom Bosco and is not affiliated with Questing Beast LLC. Compatible with Knave 2e.",
+    "Disclaimer": "Base Knavery is an independent production of Dom Bosco and is not affiliated with Questing Beast LLC.",
     "MadeForKnave": "Made for Knave",
     "LogoCredit": "Knave: Second Edition is © Ben Milton and Questing Beast LLC. The “Made for Knave” logo is © Questing Beast LLC, used under the Knave: Second Edition Third Party License.",
 
@@ -30,6 +29,8 @@
     "NotesPlaceholder": "Click to add notes.",
     "NoDescription": "No description.",
     "Filter": "Filter…",
+    "PageN": "p. {n}",
+    "EffectModified": "An Active Effect makes this {value} in play. The box holds the value without it.",
     "Choose": "Choose",
     "Close": "Close",
     "PopOut": "Pop Out",
@@ -65,7 +66,6 @@
     "Check": "Check",
 
     "Saves": "Saves",
-    "SavesTip": "Saving throws from other games, rolled as the matching ability check.",
     "Save": {
       "paralysis": "Paralysis",
       "blast": "Breath & Blast",
@@ -141,6 +141,7 @@
     "NewFeature": "New feature",
     "AddFeature": "Add a feature",
     "FeatureLabel": "Label",
+    "FeatureKey": "key",
     "FeatureInitial": "Starting value",
     "FeatureMax": "Maximum (tracks)",
     "FeatureHint": "Tooltip",
@@ -333,6 +334,9 @@
       "ApplyHint": "Apply to the hit targets, or to your targeted or selected tokens.",
       "ApplyDirect": "Direct",
       "ApplyDirectHint": "Direct damage skips HP and wounds a character at once; a creature takes it tripled.",
+      "Applied": "Applied",
+      "AppliedTitle": "Damage already applied",
+      "AppliedAgain": "This damage has already been applied. Apply it again?",
       "MoraleTitle": "Morale (MRL {n})",
       "MoraleHolds": "They hold.",
       "MoraleBreaks": "They break: flee or surrender."
@@ -343,6 +347,7 @@
       "DirectTitle": "{name} takes {n} direct damage",
       "HpLost": "−{n} HP",
       "WoundsTaken": "{n} wounds",
+      "WoundsTakenOne": "{n} wound",
       "NoEffect": "No effect.",
       "Dead": "{name} is dead.",
       "DropWounded": "Drop whatever sits in the wounded slots."
@@ -354,7 +359,8 @@
       "ScrollUsed": "The scroll crumbles to dust.",
       "ChaosNote": "A chaos spellbook: it becomes a different spell at the next dawn.",
       "AlreadyCast": "{name} has already been used today.",
-      "DailyLimit": "You can only use {n} spellbooks per day."
+      "DailyLimit": "You can only use {n} spellbooks per day.",
+      "DailyLimitOne": "You can only use {n} spellbook per day."
     },
 
     "Hazard": {
@@ -525,7 +531,9 @@
       "Formats": "One row per line. Ranges like \"01-05\" or \"7.\" are kept; plain lines are numbered in order. Careers: \"Name: item, item, item\" gives starting items. Link a document with @UUID[…]{Name}.",
       "Go": "Import",
       "NoRows": "Nothing to import.",
-      "Done": "Imported {n} rows into {name}."
+      "Done": "Imported {n} rows into {name}.",
+      "Failed": "Importing into {name} failed, and the table was left as it was. See the browser console.",
+      "Unlinked": "Rows whose @UUID link named no document were imported as plain text: {n}."
     },
 
     "Gen": {
@@ -606,7 +614,12 @@
       "PrintBlocked": "The browser blocked the print window. Allow pop-ups for this site.",
       "NpcRollManual": "NPCs aren't rolled; drop stats in from the bestiary.",
       "GmOnly": "Only the Game Master can do that.",
-      "MacroItemMissing": "That item is gone."
+      "MacroItemMissing": "That item is gone.",
+      "NotADamageFormula": "\"{formula}\" is not a dice formula, so no damage was rolled.",
+      "EmbeddedStartingItem": "That item belongs to an actor in a compendium. Drag it from the Items sidebar or an Items compendium instead.",
+      "NoSettingsPermission": "Your user may not change world settings (core permission: Modify Configuration Settings).",
+      "PurchaseFailed": "The purchase did not go through, and no coins were taken. See the browser console.",
+      "CreationFailed": "The Game Master's client could not create your character. Ask the Game Master to try again."
     },
 
     "Settings": {
@@ -660,9 +673,9 @@
       "ShowHazardDice": "Hazard dice on the dashboard",
       "ShowHazardDiceHint": "Dungeon and travel hazard dice buttons.",
       "RulebookPdf": "Your rulebook PDF",
-      "RulebookPdfHint": "Choose from this computer uploads your copy into the server's knavery-rulebook folder; the folder button picks a PDF already on the server. It goes nowhere else, and Base Knavery stores only its path.",
+      "RulebookPdfHint": "Choose from this computer uploads your copy into the server's knavery-rulebook folder; the folder button picks a PDF already on the server. Base Knavery stores only its path. The file sits in your user data folder, which Foundry serves to anyone logged in to this world who knows its address.",
       "RulebookForPlayers": "Players may read it",
-      "RulebookForPlayersHint": "Lets players open the rulebook too, and lets the GM show them a page.",
+      "RulebookForPlayersHint": "Lets players open the rulebook in its reader, and lets the GM show them a page. Off hides the reader from them; it does not lock the file itself.",
       "RulebookPageOffset": "Page offset",
       "RulebookPageOffsetHint": "PDF page minus printed page. In the Knave 2e PDF, printed page 1 is PDF page 7: offset 6."
     },
@@ -678,7 +691,6 @@
       "ShownPlayers": "Players are shown p. {page}.",
       "NobodyToShow": "Nobody to show: no player is connected, or players may not read the rulebook (Configure Rulebook).",
       "NotSet": "No rulebook PDF is set for this world. Choose your copy from your computer on the dashboard's Tables tab or in Configure Rulebook.",
-      "Choose": "Choose the PDF",
       "FromComputer": "Choose from this computer",
       "Uploading": "Uploading {name} to the server…",
       "Uploaded": "{name} is now this world's rulebook.",
@@ -707,6 +719,7 @@
       "NoneChosen": "No table is ticked.",
       "Done": "Rulebook tables: {created} created, {replaced} rebuilt, {kept} kept as you left them.",
       "KeptList": "Kept, because you made or edited them: {names}. Delete or rename one to rebuild it from the book.",
+      "BuildFailed": "Building the tables stopped partway. Tables already written stay; see the browser console.",
       "Status": {
         "new": "new",
         "replace": "will be rebuilt",

@@ -29,18 +29,25 @@ export class KnaveryActor extends Actor {
 
   async _preCreate(data, options, user) {
     if ((await super._preCreate(data, options, user)) === false) return false;
+    // Defaults only: what the creation data says wins, so a duplicate or an
+    // import keeps the token the GM set up (Air Bladder's rule).
     const updates = {};
+    const token = data.prototypeToken ?? {};
+    const D = CONST.TOKEN_DISPOSITIONS;
     if (this.type === "character") {
-      updates["prototypeToken.actorLink"] = true;
+      if (token.actorLink === undefined) updates["prototypeToken.actorLink"] = true;
       // The party can see each other's portrait and name (the LIMITED view).
       if ((data.ownership?.default ?? 0) === 0) updates["ownership.default"] = CONST.DOCUMENT_OWNERSHIP_LEVELS.LIMITED;
-      updates["prototypeToken.disposition"] = CONST.TOKEN_DISPOSITIONS.FRIENDLY;
+      if (token.disposition === undefined) updates["prototypeToken.disposition"] = D.FRIENDLY;
       if (!data.img) updates.img = `${SYS_PATH}/icons/background.svg`;
     } else {
-      updates["prototypeToken.disposition"] = CONST.TOKEN_DISPOSITIONS.HOSTILE;
+      // Monsters are hostile, people met on the road neutral, the party's hirelings and companions friendly.
+      const role = data.system?.role ?? "monster";
+      const disposition = role === "monster" ? D.HOSTILE : (role === "npc" ? D.NEUTRAL : D.FRIENDLY);
+      if (token.disposition === undefined) updates["prototypeToken.disposition"] = disposition;
       if (!data.img) updates.img = `${SYS_PATH}/icons/monster.svg`;
     }
-    updates["prototypeToken.bar1.attribute"] = "hp";
+    if (token.bar1?.attribute === undefined) updates["prototypeToken.bar1.attribute"] = "hp";
     this.updateSource(updates);
     return true;
   }
@@ -188,7 +195,7 @@ export class KnaveryActor extends Actor {
     const name = foundry.utils.escapeHTML(this.token?.name ?? this.prototypeToken?.name ?? this.name);
     const parts = [];
     if (out.hpLost) parts.push(game.i18n.format("KNAVERY.Damage.HpLost", { n: out.hpLost }));
-    if (out.wounds) parts.push(game.i18n.format("KNAVERY.Damage.WoundsTaken", { n: out.wounds }));
+    if (out.wounds) parts.push(game.i18n.format(out.wounds === 1 ? "KNAVERY.Damage.WoundsTakenOne" : "KNAVERY.Damage.WoundsTaken", { n: out.wounds }));
     if (!parts.length) parts.push(game.i18n.localize("KNAVERY.Damage.NoEffect"));
     const src = source ? `<p class="dmg-source">${foundry.utils.escapeHTML(source)}</p>` : "";
     const dead = out.dead
@@ -196,10 +203,13 @@ export class KnaveryActor extends Actor {
       : "";
     const drop = out.wounds && this.type === "character"
       ? `<p class="dmg-drop">${game.i18n.localize("KNAVERY.Damage.DropWounded")}</p>` : "";
+    // A token hidden from the players keeps its name and fate between the GMs.
+    const whisper = this.token?.hidden ? game.users.filter((u) => u.isGM).map((u) => u.id) : [];
     await ChatMessage.create({
       speaker: ChatMessage.getSpeaker({ actor: this }),
       content: `<div class="knavery-damage-card"><h3>${game.i18n.format(out.direct ? "KNAVERY.Damage.DirectTitle" : "KNAVERY.Damage.Title", { name, n: out.amount })}</h3>`
         + `${src}<p>${parts.join(" · ")}</p>${drop}${dead}</div>`,
+      whisper,
     });
   }
 

@@ -22,7 +22,10 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", ".
 const SYS = "systems/base-knavery";
 const ICON = (n) => `${SYS}/icons/${n}.svg`;
 const GI = (cat, n) => `${SYS}/art/game-icons/${cat}/${n}.svg`;
-const STATS = { coreVersion: "14.367", systemId: "base-knavery", systemVersion: "0.1.0" };
+// Read from the manifest, so a release or a newly verified core build is not
+// stamped into the packs with yesterday's numbers.
+const MANIFEST = JSON.parse(fs.readFileSync(path.join(root, "system.json"), "utf8"));
+const STATS = { coreVersion: MANIFEST.compatibility.verified, systemId: MANIFEST.id, systemVersion: MANIFEST.version };
 
 const id = (...parts) => {
   const h = crypto.createHash("sha1").update(parts.join("|")).digest();

@@ -20,12 +20,27 @@ import { openMarketplace, playerMarketClosed } from "../marketplace.js";
 import { printActorSheet } from "../print.js";
 import { bindSpell, castWithMagicDice, createGrimoire, glogEnabled, grimoireContext, unbindSpell } from "../grimoire.js";
 import { placeRail, placeRailSoon } from "./tab-rail.js";
+import { enrichForSheet } from "../clean-html.js";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
-const TextEditor = foundry.applications.ux.TextEditor.implementation;
 const L = (k) => game.i18n.localize(k);
 const F = (k, d) => game.i18n.format(k, d);
+
+/**
+ * Form inputs render the STORED value: the form submits whole on every change,
+ * so an input showing an Active-Effect-modified value would write it back to
+ * source, and a career's "+2 max HP" would compound on every edit. Where an
+ * effect changes a field, its input is marked and its tooltip gives the value
+ * in play. Returns the attribute string for the input ("" when unmodified).
+ */
+const effectAttrs = (actor, path) => {
+  const live = foundry.utils.getProperty(actor.system, path);
+  const stored = foundry.utils.getProperty(actor._source.system, path);
+  if (live === stored || live === undefined) return "";
+  const tip = foundry.utils.escapeHTML(F("KNAVERY.EffectModified", { value: live }));
+  return ` data-kn-modified data-tooltip-text="${tip}"`;
+};
 
 /**
  * The pages, by id, each with its label and its icon on the rail (parts/tab-rail.html),
@@ -285,7 +300,7 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     });
     for (const row of items) {
       if (row.expanded) {
-        row.enriched = await TextEditor.enrichHTML(row.system.description ?? "", {
+        row.enriched = await enrichForSheet(row.system.description ?? "", {
           relativeTo: actor.items.get(row.id), secrets: actor.isOwner,
         });
       }
@@ -308,7 +323,8 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       label: L(`KNAVERY.AbilityShort.${key}`),
       name: L(`KNAVERY.Ability.${key}`),
       hint: L(`KNAVERY.AbilityHint.${key}`),
-      value: s.abilities[key].value,
+      value: actor._source.system.abilities?.[key]?.value ?? 0,
+      effAttrs: effectAttrs(actor, `abilities.${key}.value`),
       defense: s.abilities[key].defense,
       tip: F("KNAVERY.AbilityTip", { name: L(`KNAVERY.Ability.${key}`), defense: s.abilities[key].defense }),
     }));
@@ -334,13 +350,17 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
 
     const traitKeys = Object.keys(TABLES.traits);
     const traitRows = traitKeys.map((key) => ({
-      key, label: L(`KNAVERY.Trait.${key}`), value: s.traits?.[key] ?? "", table: TABLES.traits[key],
+      key, label: L(`KNAVERY.Trait.${key}`), value: actor._source.system.traits?.[key] ?? "", table: TABLES.traits[key],
     }));
 
     Object.assign(context, {
       actor,
       system: s,
       source: actor._source.system,
+      effAttrs: Object.fromEntries([
+        ["level", "level"], ["xp", "xp"], ["coins", "coins"], ["hpMax", "hp.max"], ["hpValue", "hp.value"],
+        ["wounds", "wounds"], ["morale", "morale"],
+      ].map(([k, path]) => [k, effectAttrs(actor, path)])),
       isCharacter: isChar,
       isNpc: actor.type === "npc",
       isGM: game.user.isGM,
@@ -372,8 +392,8 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       traitsCollapsed: this.#traitsCollapsed,
       showShop: isChar && this.isEditable && !playerMarketClosed(),
       roles: NPC_ROLES.map((r) => ({ value: r, label: L(`KNAVERY.Role.${r}`) })),
-      enrichedNotes: await TextEditor.enrichHTML(s.notes ?? "", { relativeTo: actor, secrets: actor.isOwner }),
-      enrichedBio: await TextEditor.enrichHTML(s.biography ?? s.description ?? "", { relativeTo: actor, secrets: actor.isOwner }),
+      enrichedNotes: await enrichForSheet(s.notes ?? "", { relativeTo: actor, secrets: actor.isOwner }),
+      enrichedBio: await enrichForSheet(s.biography ?? s.description ?? "", { relativeTo: actor, secrets: actor.isOwner }),
       grimoire,
       spellsLeft: isChar ? Math.max(0, s.spellsPerDay - s.spellsCastToday) : null,
       disclaimer: L("KNAVERY.Disclaimer"),
@@ -382,8 +402,9 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       logoDark: `${SYS_PATH}/logo/made-for-knave-white.png`,
     });
     // The rail's tooltips: each page's own word, the Inventory's with its slots; Growth marks a level-up waiting.
+    // A LIMITED viewer sees only portrait and name, so no rail and no slot count.
     for (const tab of Object.values(context.tabs ?? {})) {
-      tab.tip = tab.id === "inventory" && s.slotsMax
+      tab.tip = tab.id === "inventory" && s.slotsMax && !context.limitedView
         ? F("KNAVERY.Tab.InventoryCount", { used: slotsUsed, max: s.slotsMax })
         : L(tab.label);
       tab.attention = tab.id === "growth" && showLevelUp;
@@ -416,7 +437,7 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
         id: career.id,
         name: career.name,
         img: career.img,
-        description: await TextEditor.enrichHTML(career.system.description ?? "", { relativeTo: career }),
+        description: await enrichForSheet(career.system.description ?? "", { relativeTo: career }),
         features,
         effects: career.effects.filter((e) => !e.disabled).map((e) => e.name),
         canRemove: gen || game.user.isGM,
@@ -429,11 +450,14 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
   /*  Rendering and listeners                      */
   /* -------------------------------------------- */
 
-  _onRender(context, options) {
-    super._onRender(context, options);
+  async _onRender(context, options) {
+    // Awaited: DocumentSheetV2._onRender disables every form control of a sheet
+    // this user cannot edit only after its own await, so re-enabling before it
+    // finished was undone (Air Bladder review #18).
+    await super._onRender(context, options);
     this.#syncFrameButtons();
     const root = this.element;
-    // The Die of Fate and the rolls stay live on sheets this user cannot edit.
+    // The rail, the Die of Fate and the rolls stay live on sheets this user cannot edit.
     root.querySelectorAll("[data-always-live]").forEach((el) => { el.disabled = false; });
 
     // A character's AC is derived; typing a value sets an override, the reset
@@ -584,7 +608,9 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
   static async #onFeatureTrack(_event, target) {
     const path = target.dataset.path;
     const i = Number(target.dataset.i);
-    const now = Number(foundry.utils.getProperty(this.actor, path)) || 0;
+    // The same fallback the pips are drawn with: an unclicked track reads its initial value.
+    const stored = foundry.utils.getProperty(this.actor, path);
+    const now = Number(stored ?? target.dataset.initial) || 0;
     await this.actor.update({ [path]: now === i ? i - 1 : i });
   }
 

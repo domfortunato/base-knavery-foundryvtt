@@ -61,7 +61,9 @@ const itemData = (doc, overrides = {}) => {
   const data = doc.toObject();
   delete data._id;
   foundry.utils.mergeObject(data, overrides);
-  data.flags = foundry.utils.mergeObject(data.flags ?? {}, { core: { sourceId: doc.uuid } });
+  // Where it came from, the way core's fromCompendium records it (v14 reads
+  // `_stats.compendiumSource`; the old `flags.core.sourceId` is read by nothing).
+  if (doc.pack) foundry.utils.setProperty(data, "_stats.compendiumSource", doc.uuid);
   return data;
 };
 
@@ -88,11 +90,12 @@ const slug = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(
  * Add a career Item to an actor. In creation mode its starting items come too,
  * and each feature field is seeded with its initial value.
  */
-export const addCareer = async (actor, career, { grantItems = null } = {}) => {
+export const addCareer = async (actor, career, { grantItems = null, knNoLog = false } = {}) => {
   const data = career instanceof Item ? itemData(career) : foundry.utils.deepClone(career);
   data.system ??= {};
   data.system.key ||= slug(data.name);
-  const [created] = await actor.createEmbeddedDocuments("Item", [data]);
+  // `knNoLog` from generation, whose summary card already lists what it gave.
+  const [created] = await actor.createEmbeddedDocuments("Item", [data], { knNoLog });
   const seed = {};
   for (const f of created.system.features ?? []) {
     if (!f.key) continue;
@@ -104,7 +107,7 @@ export const addCareer = async (actor, career, { grantItems = null } = {}) => {
   const grant = grantItems ?? actor.system.generationEnabled === true;
   if (grant && created.system.startingItems?.length) {
     const items = (await Promise.all(created.system.startingItems.map(resolveStartingItem))).filter(Boolean);
-    if (items.length) await actor.addItems(items);
+    if (items.length) await actor.addItems(items, { knNoLog });
   }
   return created;
 };
@@ -274,7 +277,7 @@ const applyBuilt = async (actor, built) => {
       features: foundry.data.operators.ForcedReplacement.create({}),
     },
   }, { knNoLog: true });
-  for (const c of built.careers) await addCareer(actor, c, { grantItems: true });
+  for (const c of built.careers) await addCareer(actor, c, { grantItems: true, knNoLog: true });
   if (built.items.length) await actor.addItems(built.items, { knNoLog: true });
   await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor }),
@@ -375,21 +378,36 @@ export const createCharacter = async ({ mode = "random", level = 1, name = "", o
   return actor;
 };
 
-/** GM side of a player's creation request. */
+/** Players whose creation request this GM client is working on (a doubled click mints one, not two). */
+const generationInFlight = new Set();
+
+/** GM side of a player's creation request. The player is always answered. */
 export const registerCreationSocket = () => {
   onSocket("generatePC", async (msg, senderId) => {
     if (!game.user.isActiveGM) return;
     const user = game.users.get(senderId);
-    if (!user || !game.settings.get(SETTINGS_NS, "allow-player-generate")) return;
-    const { min, max } = creationLevels();
-    const level = Math.min(max, Math.max(min, Number(msg.level) || min));
-    const actor = await createCharacter({
-      mode: msg.mode === "blank" ? "blank" : "random", level, name: String(msg.name ?? "").slice(0, 80), owner: senderId,
-    });
-    if (actor) emit("pcGenerated", { actorId: actor.id }, { recipients: [senderId] });
+    if (!user || generationInFlight.has(senderId)) return;
+    const answer = (data) => emit("pcGenerated", data, { recipients: [senderId] });
+    if (!game.settings.get(SETTINGS_NS, "allow-player-generate")) return answer({ refused: true });
+    generationInFlight.add(senderId);
+    try {
+      const { min, max } = creationLevels();
+      const level = Math.min(max, Math.max(min, Number(msg.level) || min));
+      const actor = await createCharacter({
+        mode: msg.mode === "blank" ? "blank" : "random", level, name: String(msg.name ?? "").slice(0, 80), owner: senderId,
+      });
+      answer(actor ? { actorId: actor.id } : { failed: true });
+    } catch (err) {
+      console.error("Base Knavery | creating a character for a player failed", err);
+      answer({ failed: true });
+    } finally {
+      generationInFlight.delete(senderId);
+    }
   });
   onSocket("pcGenerated", (msg, senderId) => {
     if (!game.users.get(senderId)?.isGM) return;
+    if (msg.refused) return ui.notifications.warn("KNAVERY.Notify.CreationClosed", { localize: true });
+    if (msg.failed) return ui.notifications.error("KNAVERY.Notify.CreationFailed", { localize: true });
     game.actors.get(msg.actorId)?.sheet.render(true);
   });
 };

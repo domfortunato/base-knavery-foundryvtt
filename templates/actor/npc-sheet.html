@@ -34,7 +34,7 @@
             <a class="name-roll" data-action="rollName" data-tooltip="KNAVERY.RollName"><i class="fas fa-dice-d20"></i></a>
             <a class="name-pick" data-action="pickName" data-tooltip="KNAVERY.PickName"><i class="fas fa-list-ul"></i></a>
             {{/if}}
-            <input class="pronouns-input" type="text" name="system.pronouns" value="{{system.pronouns}}" maxlength="24" placeholder="{{localize 'KNAVERY.Pronouns'}}" />
+            <input class="pronouns-input" type="text" name="system.pronouns" value="{{source.pronouns}}" maxlength="24" placeholder="{{localize 'KNAVERY.Pronouns'}}" />
           </div>
           <div class="npc-role-line">
             <label>{{localize "KNAVERY.Role.Label"}}</label>
@@ -42,25 +42,25 @@
               {{#each roles}}<option value="{{this.value}}" {{#if (eq this.value ../system.role)}}selected{{/if}}>{{this.label}}</option>{{/each}}
             </select>
             <label>{{localize "KNAVERY.Movement"}}</label>
-            <input type="text" name="system.movement" value="{{system.movement}}" class="short-input" />
+            <input type="text" name="system.movement" value="{{source.movement}}" class="short-input" />
             <label data-tooltip="KNAVERY.NumberAppearingTip">{{localize "KNAVERY.NumberAppearing"}}</label>
-            <input type="text" name="system.numberAppearing" value="{{system.numberAppearing}}" class="short-input" />
+            <input type="text" name="system.numberAppearing" value="{{source.numberAppearing}}" class="short-input" />
           </div>
           <div class="level-line">
             <label>{{localize "KNAVERY.AttacksText"}}</label>
-            <input type="text" name="system.attacksText" value="{{system.attacksText}}" class="attacks-text" placeholder="{{localize 'KNAVERY.AttacksTextPlaceholder'}}" />
+            <input type="text" name="system.attacksText" value="{{source.attacksText}}" class="attacks-text" placeholder="{{localize 'KNAVERY.AttacksTextPlaceholder'}}" />
           </div>
           <div class="knavery-counter-row knavery-head-counters">
             <div class="resource-counter level-counter">
               <label data-tooltip="KNAVERY.NpcLevelTip">{{localize "KNAVERY.LevelShort"}}</label>
               <div class="resource-input-wrapper">
-                <input type="number" min="0" step="1" name="system.level" value="{{system.level}}" data-dtype="Number" />
+                <input type="number" min="0" step="1" name="system.level" value="{{source.level}}"{{{effAttrs.level}}} data-dtype="Number" />
               </div>
             </div>
             <div class="resource-counter morale-counter">
               <a class="resource-roll" data-action="rollMorale" data-always-live data-tooltip="KNAVERY.MoraleTip"><i class="fas fa-dice-d20 roll-icon"></i> {{localize "KNAVERY.Morale"}}</a>
               <div class="resource-input-wrapper">
-                <input type="number" min="2" max="12" step="1" name="system.morale" value="{{system.morale}}" data-dtype="Number" />
+                <input type="number" min="2" max="12" step="1" name="system.morale" value="{{source.morale}}"{{{effAttrs.morale}}} data-dtype="Number" />
               </div>
             </div>
           </div>
@@ -86,10 +86,10 @@
           <div class="knavery-bars">
             <div class="knavery-bar-block hp-bar {{#if hpLow}}low{{/if}} {{#if hpPeril}}peril{{/if}}">
               <label for="{{idp}}-hp-max">{{localize "KNAVERY.MaxHP"}}</label>
-              <input type="number" min="0" step="1" class="stat-input bar-max" id="{{idp}}-hp-max" name="system.hp.max" value="{{system.hp.max}}" data-dtype="Number" />
+              <input type="number" min="0" step="1" class="stat-input bar-max" id="{{idp}}-hp-max" name="system.hp.max" value="{{source.hp.max}}"{{{effAttrs.hpMax}}} data-dtype="Number" />
               <div class="knavery-bar">
                 <div class="knavery-bar-fill" style="height: {{hpPercent}}%"></div>
-                <input type="number" min="0" step="1" class="stat-input bar-value" id="{{idp}}-hp" name="system.hp.value" value="{{system.hp.value}}" data-dtype="Number" aria-label="{{localize 'KNAVERY.HP'}}" />
+                <input type="number" min="0" step="1" class="stat-input bar-value" id="{{idp}}-hp" name="system.hp.value" value="{{source.hp.value}}"{{{effAttrs.hpValue}}} data-dtype="Number" aria-label="{{localize 'KNAVERY.HP'}}" />
               </div>
               <span class="knavery-bar-name">{{localize "KNAVERY.HP"}}</span>
             </div>
@@ -98,7 +98,7 @@
           <div class="knavery-vital-buttons">
             <button type="button" data-action="rollAbility" data-ability="STR" data-always-live class="strict-size-button" data-tooltip="KNAVERY.NpcCheckTip"><i class="fas fa-dice-d20"></i> {{localize "KNAVERY.Check"}}</button>
             <button id="die-of-fate-button" type="button" data-action="dieOfFate" data-always-live class="strict-size-button" data-tooltip="KNAVERY.DieOfFateTip"><i class="fas fa-dice-d6"></i> {{localize "KNAVERY.DieOfFate"}}</button>
-            <label class="use-abilities-toggle"><input type="checkbox" name="system.useAbilities" {{checked system.useAbilities}} /> {{localize "KNAVERY.UseAbilities"}}</label>
+            <label class="use-abilities-toggle"><input type="checkbox" name="system.useAbilities" {{checked source.useAbilities}} /> {{localize "KNAVERY.UseAbilities"}}</label>
           </div>
         </div>
 

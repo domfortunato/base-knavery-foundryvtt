@@ -64,6 +64,18 @@ const unitSlots = (item) => (item.system.weightless ? 0 : (item.system.slots ?? 
 
 const answerersFor = (actor) => game.users.filter((u) => !u.isGM && actor.testUserPermission(u, "OWNER"));
 
+/**
+ * Does the card's author own the actor it says is giving? The flag is
+ * player-writable, so a card naming someone else's item as the gift would
+ * otherwise have the GM's Accept move it with the GM's rights (Air Bladder
+ * review #34 finding 6). No Accept is drawn for such a card and every transfer
+ * path refuses it.
+ */
+const authorGives = (message, offer) => {
+  const giver = fromUuidSync(offer?.giverActorUuid ?? "", { strict: false });
+  return !!giver && !!message.author && !!giver.testUserPermission?.(message.author, "OWNER");
+};
+
 /* -------------------------------------------- */
 /*  Picker and card                              */
 /* -------------------------------------------- */
@@ -104,7 +116,8 @@ export const promptOfferTarget = async (item) => {
       + `<div class="kn-pick-list">${rows}</div></div>`,
     buttons: [{
       action: "offer", label: "KNAVERY.Offer.Give", icon: "fas fa-hand-holding", default: true,
-      callback: (_e, button) => fromUuidSync(button.form.elements.offerTarget?.value ?? "") ?? null,
+      // `|| false`: a null result would resolve to the action string "offer".
+      callback: (_e, button) => fromUuidSync(button.form.elements.offerTarget?.value ?? "", { strict: false }) || false,
     }],
     rejectClose: false,
   });
@@ -149,8 +162,9 @@ export const bindOfferCard = (message, html) => {
     + `<span>${esc(game.i18n.format("KNAVERY.Offer.CardBody", n))}</span></div>`
     + `<div class="knavery-offer-state">${esc(game.i18n.format(`KNAVERY.Offer.State.${offer.state}`, n))}</div>`;
   if (offer.state !== "open") return;
-  const target = fromUuidSync(offer.targetActorUuid);
-  const canAnswer = !!target && (game.user.isGM || target.testUserPermission(game.user, "OWNER"));
+  const target = fromUuidSync(offer.targetActorUuid, { strict: false });
+  const canAnswer = !!target && authorGives(message, offer)
+    && (game.user.isGM || !!target.testUserPermission?.(game.user, "OWNER"));
   const canCancel = game.user.isGM || message.isAuthor;
   if (!canAnswer && !canCancel) return;
   const actions = document.createElement("div");
@@ -189,6 +203,10 @@ const onAccept = async (message) => {
       rejectClose: false,
     });
     if (!yes) return;
+  }
+  if (!authorGives(message, offer)) {
+    console.warn(`Base Knavery | refused an offer card whose author does not own its giver (${message.id})`);
+    return;
   }
   const giver = fromUuidSync(offer.giverActorUuid);
   if ((game.user.isGM || message.isAuthor) && giver?.isOwner && target.isOwner) return runLocal(message);
@@ -230,7 +248,7 @@ const deliver = async (target, raw) => {
     await stack.update({ "system.quantity": (stack.system.quantity ?? 1) + 1 }, { knNoLog: true });
     return stack;
   }
-  const [created] = await target.createEmbeddedDocuments("Item", [data]);
+  const [created] = await target.createEmbeddedDocuments("Item", [data], { knNoLog: true });
   return created ?? null;
 };
 
@@ -238,8 +256,8 @@ const removeGiverHalf = async (giver, itemId) => {
   const item = giver?.items.get(itemId);
   if (!item) return;
   const q = (item.system.quantity ?? 1) - 1;
-  if (q > 0) await item.update({ "system.quantity": q });
-  else await item.delete();
+  if (q > 0) await item.update({ "system.quantity": q }, { knNoLog: true });
+  else await item.delete({ knNoLog: true });
 };
 
 const runLocal = async (message) => {
@@ -248,6 +266,8 @@ const runLocal = async (message) => {
   try {
     const offer = message.getFlag(FLAG_SCOPE, FLAG);
     if (offer?.state !== "open") return;
+    // The enforcement, beside the affordance in bindOfferCard.
+    if (!authorGives(message, offer)) return;
     const giver = fromUuidSync(offer.giverActorUuid);
     const target = fromUuidSync(offer.targetActorUuid);
     const item = giver?.items.get(offer.itemId);
@@ -279,6 +299,7 @@ const onGiverSide = async (msg, senderId) => {
   if (!message?.isAuthor) return;
   const offer = message.getFlag(FLAG_SCOPE, FLAG);
   const sender = game.users.get(senderId);
+  if (offer && !authorGives(message, offer)) return;
   if (!offer || offer.state !== "open") {
     if (offer?.acceptorUserId === senderId) return;
     return reply("offerRefused", msg.messageId, { reason: "answered" }, senderId);

@@ -52,30 +52,38 @@ export const parseRows = (raw) => {
   return rows;
 };
 
-/** Create or update the world table `name` from rows. */
-export const importRows = async (name, rows, { mode = "replace", formula = "" } = {}) => {
+/**
+ * Create or update the world table `name` from rows. The new rows are built and
+ * written BEFORE the old ones go: a link that names no document becomes a plain
+ * text row (counted in `report.unlinked` when a report object is passed), and
+ * if writing fails the table is left as it was rather than emptied.
+ * @returns {Promise<RollTable>}
+ */
+export const importRows = async (name, rows, { mode = "replace", formula = "", report = null } = {}) => {
   let table = game.tables.find((t) => t.name === name);
   if (!table) table = await RollTable.create({ name, replacement: true, formula: "1d1" });
-  if (mode === "replace" && table.results.size) {
-    await table.deleteEmbeddedDocuments("TableResult", table.results.map((r) => r.id));
-  }
+  const old = mode === "replace" ? table.results.map((r) => r.id) : [];
   const offset = mode === "append" ? Math.max(0, ...table.results.map((r) => r.range[1])) : 0;
   const results = [];
+  let unlinked = 0;
   for (const r of rows) {
     const range = [r.range[0] + offset, r.range[1] + offset];
-    if (r.uuid) {
-      const doc = await fromUuid(r.uuid).catch(() => null);
+    const weight = range[1] - range[0] + 1;
+    const doc = r.uuid ? await fromUuid(r.uuid).catch(() => null) : null;
+    if (doc) {
       results.push({
-        type: CONST.TABLE_RESULT_TYPES.DOCUMENT, documentUuid: r.uuid, name: r.text || doc?.name || r.uuid,
-        img: doc?.img, range, weight: range[1] - range[0] + 1,
+        type: CONST.TABLE_RESULT_TYPES.DOCUMENT, documentUuid: doc.uuid, name: r.text || doc.name, img: doc.img, range, weight,
       });
     } else {
-      results.push({ type: CONST.TABLE_RESULT_TYPES.TEXT, name: r.text, description: "", range, weight: range[1] - range[0] + 1 });
+      if (r.uuid) unlinked += 1;
+      results.push({ type: CONST.TABLE_RESULT_TYPES.TEXT, name: r.text || r.uuid || "", description: "", range, weight });
     }
   }
   if (results.length) await table.createEmbeddedDocuments("TableResult", results);
+  if (old.length) await table.deleteEmbeddedDocuments("TableResult", old);
   const top = Math.max(1, ...table.results.map((r) => r.range[1]));
   await table.update({ formula: formula || `1d${top}`, [`flags.${FLAG_SCOPE}.imported`]: true });
+  if (report) report.unlinked = unlinked;
   return table;
 };
 
@@ -136,8 +144,16 @@ export const openTableImporter = async (name = "") => {
   if (!data?.name) return;
   const rows = parseRows(data.rows);
   if (!rows.length) return ui.notifications.warn("KNAVERY.Import.NoRows", { localize: true });
-  const table = await importRows(data.name, rows, data);
+  let table;
+  const report = { unlinked: 0 };
+  try {
+    table = await importRows(data.name, rows, { ...data, report });
+  } catch (err) {
+    console.error("Base Knavery | table import failed", err);
+    return ui.notifications.error(F("KNAVERY.Import.Failed", { name: data.name }));
+  }
   ui.notifications.info(F("KNAVERY.Import.Done", { n: rows.length, name: table.name }));
+  if (report.unlinked) ui.notifications.warn(F("KNAVERY.Import.Unlinked", { n: report.unlinked }));
   foundry.applications.instances.get("knavery-gm-dashboard")?.render();
   return table;
 };

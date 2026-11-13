@@ -34,6 +34,42 @@
 - The Configure submenus render again: their template had never been committed. Path settings
   (the portrait folder, the rulebook) get core's file picker.
 - The README shows the yellow Made for Knave logo at a modest size.
+- **Fixes from the first Foundry review:**
+  - Sheets you can only look at (a bestiary creature in its compendium, another player's
+    character) keep their page tabs, the Die of Fate and the NPC Check working.
+  - A career's Active Effects (say +2 max HP) no longer add up on every edit: the sheet's
+    boxes hold the stored value, and a dashed outline and tooltip show the value in play.
+    Level-up works from the stored values too.
+  - Pressing Enter in the roll prompt rolls Normal, not Disadvantage; in the level-up
+    dialog it levels up with the ticked abilities, not at random.
+  - Only the roller and the GM get a damage card's Apply buttons. The GM applies a relayed
+    request only from that card's author, for its total, to targets they can see. An
+    applied card says so, and asks before applying again. Damage to a hidden token is
+    reported to the GM only.
+  - An item offer whose card names someone else's item can no longer be accepted.
+  - Item descriptions, biographies, notes and career texts can no longer carry working
+    sheet buttons or form fields.
+  - Rolls from sheets follow the chat's roll mode; the dashboard's private rolls use
+    Foundry's new message modes.
+  - Duplicating or importing an actor keeps its token settings. New hirelings and
+    companions start friendly, other NPCs neutral, monsters hostile.
+  - The marketplace loads its stock in one request per compendium, takes the coins before
+    handing over the item, rounds a fractional price up, allows one purchase at a time, and
+    offers the free Take only when the player may use the creation tools. Aisle rows are
+    renumbered after an add or a remove.
+  - A rulebook-built table you have linked to items, re-imaged or given a new formula
+    counts as yours, and a rebuild keeps it.
+  - The table importer writes the new rows before removing the old ones, and turns a link
+    that names nothing into a plain text row instead of failing.
+  - A player's Create Character is always answered: refused, failed or made, and only once.
+  - B closes the rulebook while you are reading in it, and the reader keeps its page when
+    popped out or when settings are saved.
+  - A limited viewer sees no page rail. Pick-lists ignore Enter with nothing chosen.
+    "1 wound" and "1 spellbook" read right. A weapon with no dice for damage still attacks.
+    A monster casts at its level.
+  - The disclaimer reads the same everywhere. The rulebook settings say plainly what
+    "Players may read it" does and does not do.
+  - Releases are headed "Base Knavery", and a refused release can be retried.
 
 ## 0.1.0
 

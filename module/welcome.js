@@ -58,7 +58,8 @@ export class WelcomeWindow extends HandlebarsApplicationMixin(ApplicationV2) {
       disclaimer: L("KNAVERY.Disclaimer"),
       credit: L("KNAVERY.LogoCredit"),
       links: BUY_LINKS,
-      isGM: game.user.isGM,
+      // The "show after each update" box writes a world setting.
+      isGM: game.user.isGM && game.user.can("SETTINGS_MODIFY"),
       hasRulebook: hasRulebook(),
       canReadRulebook: canReadRulebook(),
       showOnStart: game.settings.get(SETTINGS_NS, "welcome-on-start"),
@@ -88,7 +89,11 @@ export const openWelcome = () => {
 
 /** Whether this login should open the welcome window (the probes ask too, to wait for it). */
 export const welcomeDue = () => {
-  if (!game.user.isGM || !game.settings.get(SETTINGS_NS, "welcome-on-start")) return false;
+  // Only for a GM who may write world settings: an Assistant GM whose
+  // "Modify Configuration Settings" was taken away could neither mark it seen
+  // nor set the rulebook, so it would reopen at every login.
+  if (!game.user.isGM || !game.user.can("SETTINGS_MODIFY")) return false;
+  if (!game.settings.get(SETTINGS_NS, "welcome-on-start")) return false;
   return game.settings.get(SETTINGS_NS, "welcome-shown-version") !== game.system.version || !hasRulebook();
 };
 

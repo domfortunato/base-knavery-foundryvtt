@@ -71,10 +71,13 @@ export const promptEdge = async ({
     classes: ["knavery", "knavery-roll-prompt"],
     position: { width: 420 },
     content,
+    // Only Normal is a submit button: Enter in the Modifier or Difficulty field
+    // submits through the first submit button in the form, so the edges are
+    // plain buttons (DialogV2 still runs their callbacks on click).
     buttons: [
-      { action: "disadvantage", label: "KNAVERY.Roll.Disadvantage", icon: "fas fa-angles-down", callback: read("disadvantage") },
+      { action: "disadvantage", type: "button", label: "KNAVERY.Roll.Disadvantage", icon: "fas fa-angles-down", callback: read("disadvantage") },
       { action: "normal", label: "KNAVERY.Roll.Normal", icon: "fas fa-dice-d20", default: true, callback: read("normal") },
-      { action: "advantage", label: "KNAVERY.Roll.Advantage", icon: "fas fa-angles-up", callback: read("advantage") },
+      { action: "advantage", type: "button", label: "KNAVERY.Roll.Advantage", icon: "fas fa-angles-up", callback: read("advantage") },
     ],
     rejectClose: false,
   });
@@ -110,13 +113,19 @@ const speakerFor = (actor) => (actor?.token
   ? ChatMessage.getSpeaker({ token: actor.token })
   : ChatMessage.getSpeaker({ actor }));
 
+/** The chat visibility the user picked in the chat controls. */
+export const currentMessageMode = () => game.settings.get("core", "messageMode");
+
+/** Is `formula` a dice formula Foundry can roll? */
+export const isRollable = (formula) => !!formula && foundry.dice.Roll.validate(String(formula));
+
 const postRolls = async (actor, rolls, content, flags = {}) => ChatMessage.create({
   speaker: speakerFor(actor),
   rolls,
   content,
   sound: CONFIG.sounds.dice,
   flags: { [FLAG_SCOPE]: flags },
-});
+}, { messageMode: currentMessageMode() });
 
 /* -------------------------------------------- */
 /*  Checks and saves                             */
@@ -212,7 +221,9 @@ export const rollAttack = async (actor, weapon, { reason = "" } = {}) => {
   const rolls = [roll];
   let damage = null;
   const power = choice.power && anyHit;
-  if (choice.rollDamage && anyHit && weapon.system.damage) {
+  // A free-text damage entry ("special") posts the attack without a damage roll.
+  const rollableDamage = isRollable(normalizeDice(weapon.system.damage));
+  if (choice.rollDamage && anyHit && rollableDamage) {
     const dmgFormula = power ? doubleDice(weapon.system.damage) : normalizeDice(weapon.system.damage);
     const dmgRoll = await new Roll(dmgFormula).evaluate();
     rolls.push(dmgRoll);
@@ -242,7 +253,7 @@ export const rollAttack = async (actor, weapon, { reason = "" } = {}) => {
     power,
     damage,
     applyTargets: JSON.stringify(hitTargets.map((t) => t.uuid)),
-    canRollDamage: !damage && anyHit && !!weapon.system.damage,
+    canRollDamage: !damage && anyHit && rollableDamage,
     weaponUuid: weapon.uuid,
     actorUuid: actor.uuid,
     powerFlag: power ? 1 : 0,
@@ -256,6 +267,10 @@ export const rollAttack = async (actor, weapon, { reason = "" } = {}) => {
 /** Roll a weapon's (or any) damage formula alone and post an apply card. */
 export const rollDamage = async (actor, { formula, label = "", power = false, targets = null, direct = false } = {}) => {
   const f = power ? doubleDice(formula) : normalizeDice(formula);
+  if (!isRollable(f)) {
+    ui.notifications.warn(F("KNAVERY.Notify.NotADamageFormula", { formula: String(formula ?? "") }));
+    return null;
+  }
   const roll = await new Roll(f).evaluate();
   const tgt = targets ?? currentTargets().map((t) => t.uuid);
   const content = await renderCard({
@@ -280,10 +295,13 @@ export const rollDamage = async (actor, { formula, label = "", power = false, ta
  */
 export const castSpell = async (actor, book) => {
   const s = book.system;
-  const int = actor.system.abilities?.INT?.value ?? actor.system.level ?? 0;
+  // A character's INT; a monster's level, when its stat block uses no abilities.
+  const int = actor.abilityBonus("INT");
   if (!s.scroll && actor.type === "character") {
     if (s.castToday) return ui.notifications.warn(F("KNAVERY.Spell.AlreadyCast", { name: book.name }));
-    if (actor.system.spellsCastToday >= int) return ui.notifications.warn(F("KNAVERY.Spell.DailyLimit", { n: int }));
+    if (actor.system.spellsCastToday >= int) {
+      return ui.notifications.warn(F(int === 1 ? "KNAVERY.Spell.DailyLimitOne" : "KNAVERY.Spell.DailyLimit", { n: int }));
+    }
   }
   const description = await foundry.applications.ux.TextEditor.implementation.enrichHTML(s.description ?? "", {
     relativeTo: book, secrets: false,
@@ -296,7 +314,8 @@ export const castSpell = async (actor, book) => {
     chaos: s.chaos,
     scroll: s.scroll,
   });
-  await ChatMessage.create({ speaker: speakerFor(actor), content, flags: { [FLAG_SCOPE]: { spell: book.name } } });
+  await ChatMessage.create({ speaker: speakerFor(actor), content, flags: { [FLAG_SCOPE]: { spell: book.name } } },
+    { messageMode: currentMessageMode() });
   if (s.scroll) {
     if ((s.quantity ?? 1) > 1) await book.update({ "system.quantity": s.quantity - 1 }, { knNoLog: true });
     else await book.delete({ knNoLog: true });

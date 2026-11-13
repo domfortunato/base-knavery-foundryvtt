@@ -35,20 +35,50 @@ export const marketTables = async ({ includeHidden = false } = {}) => {
   return tables.sort((a, b) => order(a) - order(b) || a.name.localeCompare(b.name));
 };
 
-/** The price of a row: its override flag, else the linked item's cost. */
+/**
+ * The price of a row: its override flag, else the linked item's cost. Coins are
+ * whole, so a fractional cost is rounded up (it could never be paid otherwise).
+ */
 export const rowPrice = (result, item) => {
   const override = result.getFlag?.(FLAG_SCOPE, "price") ?? result.flags?.[FLAG_SCOPE]?.price;
-  if (override !== undefined && override !== null && override !== "") return Number(override) || 0;
-  return Number(item?.system?.cost) || 0;
+  const raw = override !== undefined && override !== null && override !== "" ? override : item?.system?.cost;
+  return Math.max(0, Math.ceil(Number(raw) || 0));
+};
+
+/**
+ * Load every document an aisle's rows link to, one request per compendium
+ * (loading them one at a time cost ≈0.6 s each on a small server).
+ * @returns {Promise<Map<string, foundry.abstract.Document>>} by uuid
+ */
+const linkedDocuments = async (results) => {
+  const found = new Map();
+  const byPack = new Map();
+  for (const r of results) {
+    if (!r.documentUuid || found.has(r.documentUuid)) continue;
+    const parsed = foundry.utils.parseUuid(r.documentUuid);
+    const pack = parsed?.collection instanceof foundry.documents.collections.CompendiumCollection ? parsed.collection : null;
+    if (pack && !parsed.embedded?.length) {
+      if (!byPack.has(pack)) byPack.set(pack, new Map());
+      byPack.get(pack).set(parsed.id, r.documentUuid);
+    } else {
+      const doc = fromUuidSync(r.documentUuid, { strict: false });
+      if (doc && !doc.pack) found.set(r.documentUuid, doc);
+    }
+  }
+  for (const [pack, ids] of byPack) {
+    const docs = await pack.getDocuments({ _id__in: [...ids.keys()] }).catch(() => []);
+    for (const doc of docs) found.set(ids.get(doc.id), doc);
+  }
+  return found;
 };
 
 /** Resolve an aisle's rows to {name, img, price, data, slots}. */
 export const aisleStock = async (table) => {
   const rows = [];
+  const linked = await linkedDocuments(table.results);
   for (const r of [...table.results].sort((a, b) => (a.range?.[0] ?? 0) - (b.range?.[0] ?? 0))) {
     if (isPlaceholder(r)) continue;
-    let item = null;
-    if (r.documentUuid) item = await fromUuid(r.documentUuid).catch(() => null);
+    const item = r.documentUuid ? (linked.get(r.documentUuid) ?? null) : null;
     if (item && item.documentName !== "Item") continue;
     const data = item ? item.toObject() : {
       name: plainText(resultText(r)) || "?",
@@ -76,16 +106,35 @@ export const aisleStock = async (table) => {
 /*  The shop                                     */
 /* -------------------------------------------- */
 
+/**
+ * Free Take: the GM, or a character in creation mode whose player may use the
+ * creation tools (the same test the sheet applies to the creation toggle).
+ */
+export const mayTakeFree = (actor) => {
+  if (game.user.isGM) return true;
+  return actor.type === "character" && actor.system.generationEnabled === true
+    && game.settings.get(SETTINGS_NS, "allow-player-randomization");
+};
+
 const acquire = async (actor, data, pay) => {
   if (playerMarketClosed()) return ui.notifications.warn("KNAVERY.Notify.MarketplaceClosed", { localize: true });
-  const cost = data.system.cost ?? 0;
-  if (pay && (actor.system.coins ?? 0) < cost) {
+  if (!pay && !mayTakeFree(actor)) return ui.notifications.warn("KNAVERY.Notify.RandomizationDisabled", { localize: true });
+  const cost = Math.max(0, Math.ceil(Number(data.system.cost) || 0));
+  const coins = actor._source.system.coins ?? 0;
+  if (pay && coins < cost) {
     ui.notifications.warn(F("KNAVERY.Notify.NotEnoughCoins", { name: data.name, cost }));
     return false;
   }
-  await actor.addItems([data], { knNoLog: pay });
+  // The coins go first: an item handed over before a payment that then failed
+  // was free. If the item cannot be added, the coins come back.
+  if (pay && cost) await actor.update({ "system.coins": coins - cost }, { knNoLog: true });
+  try {
+    await actor.addItems([data], { knNoLog: pay });
+  } catch (err) {
+    if (pay && cost) await actor.update({ "system.coins": actor._source.system.coins + cost }, { knNoLog: true });
+    throw err;
+  }
   if (pay) {
-    await actor.update({ "system.coins": actor.system.coins - cost }, { knNoLog: true });
     await ChatMessage.create({
       speaker: ChatMessage.getSpeaker({ actor }),
       content: `<p class="knavery-market-note"><i class="fas fa-store"></i> ${esc(F("KNAVERY.Market.Bought", { name: data.name, cost }))}</p>`,
@@ -106,7 +155,7 @@ export const openMarketplace = async (actor) => {
     if (stock.length) aisles.push({ name: aisleName(t), stock });
   }
   if (!aisles.length) return ui.notifications.warn("KNAVERY.Notify.MarketplaceEmpty", { localize: true });
-  const canTake = game.user.isGM || actor.system.generationEnabled === true;
+  const canTake = mayTakeFree(actor);
   const built = [];
   const sections = aisles.map((a) => `<div class="mkt-cat"><div class="mkt-cat-name">${esc(a.name)}</div>${a.stock.map((row) => {
     const idx = built.push(row) - 1;
@@ -120,7 +169,7 @@ export const openMarketplace = async (actor) => {
           ${canTake ? `<button type="button" class="mkt-take" data-idx="${idx}" data-tooltip="KNAVERY.Market.TakeHint">${L("KNAVERY.Market.Take")}</button>` : ""}
         </span>
       </div>
-      <div class="mkt-desc" hidden>${row.description ? plainText(row.description) : `<em>${L("KNAVERY.NoDescription")}</em>`}</div>
+      <div class="mkt-desc" hidden>${row.description ? esc(plainText(row.description)) : `<em>${esc(L("KNAVERY.NoDescription"))}</em>`}</div>
     </div>`;
   }).join("")}</div>`).join("");
 
@@ -143,8 +192,11 @@ export const openMarketplace = async (actor) => {
     const coins = actor.system.coins ?? 0;
     root.querySelector(".mkt-coins").textContent = coins;
     root.querySelector(".mkt-slotval").textContent = `${actor.calcSlotsUsed()}/${actor.system.slotsMax ?? 0}`;
-    root.querySelectorAll(".mkt-buy").forEach((b) => { b.disabled = coins < Number(b.closest(".mkt-row").dataset.cost); });
+    root.querySelectorAll(".mkt-buy").forEach((b) => { b.disabled = busy || coins < Number(b.closest(".mkt-row").dataset.cost); });
+    root.querySelectorAll(".mkt-take").forEach((b) => { b.disabled = busy; });
   };
+  // One purchase at a time: two quick clicks would both pass the coin check.
+  let busy = false;
   await dialog.render(true);
   const root = dialog.element;
   root.querySelector(".mkt-list").addEventListener("click", async (ev) => {
@@ -152,9 +204,18 @@ export const openMarketplace = async (actor) => {
     if (btn) {
       ev.preventDefault();
       const row = built[Number(btn.dataset.idx)];
-      if (!row) return;
-      btn.disabled = true;
-      try { await acquire(actor, foundry.utils.deepClone(row.data), btn.classList.contains("mkt-buy")); } finally { refresh(); }
+      if (!row || busy) return;
+      busy = true;
+      refresh();
+      try {
+        await acquire(actor, foundry.utils.deepClone(row.data), btn.classList.contains("mkt-buy"));
+      } catch (err) {
+        console.error("Base Knavery | marketplace purchase failed", err);
+        ui.notifications.error("KNAVERY.Notify.PurchaseFailed", { localize: true });
+      } finally {
+        busy = false;
+        refresh();
+      }
       return;
     }
     const main = ev.target.closest(".mkt-row-main");
@@ -216,9 +277,10 @@ export class MarketplaceManager extends HandlebarsApplicationMixin(ApplicationV2
     const table = this.#selected ? await fromUuid(this.#selected) : null;
     const rows = [];
     if (table) {
+      const linked = await linkedDocuments(table.results);
       for (const r of [...table.results].sort((a, b) => (a.range?.[0] ?? 0) - (b.range?.[0] ?? 0))) {
         if (isPlaceholder(r)) continue;
-        const item = r.documentUuid ? await fromUuid(r.documentUuid).catch(() => null) : null;
+        const item = r.documentUuid ? (linked.get(r.documentUuid) ?? null) : null;
         const override = r.getFlag(FLAG_SCOPE, "price");
         rows.push({
           id: r.id,
@@ -246,7 +308,7 @@ export class MarketplaceManager extends HandlebarsApplicationMixin(ApplicationV2
       const v = input.value.trim();
       await table.updateEmbeddedDocuments("TableResult", [{
         _id: input.dataset.rowId,
-        [`flags.${FLAG_SCOPE}.price`]: v === "" ? null : Math.max(0, Number(v) || 0),
+        [`flags.${FLAG_SCOPE}.price`]: v === "" ? null : Math.max(0, Math.ceil(Number(v) || 0)),
       }]);
     }));
     const drop = root.querySelector(".mm-drop");
@@ -260,11 +322,11 @@ export class MarketplaceManager extends HandlebarsApplicationMixin(ApplicationV2
       if (table.pack) return ui.notifications.warn("KNAVERY.Market.CustomizeFirst", { localize: true });
       const item = await fromUuid(data.uuid);
       if (!item) return;
-      const n = table.results.size + 1;
+      const n = nextRow(table);
       await table.createEmbeddedDocuments("TableResult", [{
         type: CONST.TABLE_RESULT_TYPES.DOCUMENT, documentUuid: item.uuid, name: item.name, img: item.img, range: [n, n], weight: 1,
       }]);
-      await table.update({ formula: `1d${table.results.size}` });
+      await renumberAisle(table);
       this.render();
     });
   }
@@ -346,12 +408,12 @@ export class MarketplaceManager extends HandlebarsApplicationMixin(ApplicationV2
       rejectClose: false,
     });
     if (!res?.name) return;
-    const n = table.results.size + 1;
+    const n = nextRow(table);
     await table.createEmbeddedDocuments("TableResult", [{
       type: CONST.TABLE_RESULT_TYPES.TEXT, name: res.name, description: "", range: [n, n], weight: 1,
-      flags: { [FLAG_SCOPE]: { price: res.price } },
+      flags: { [FLAG_SCOPE]: { price: Math.max(0, Math.ceil(res.price)) } },
     }]);
-    await table.update({ formula: `1d${table.results.size}` });
+    await renumberAisle(table);
     this.render();
   }
 
@@ -359,9 +421,25 @@ export class MarketplaceManager extends HandlebarsApplicationMixin(ApplicationV2
     const table = await fromUuid(this.#selected);
     if (!table || table.pack) return;
     await table.deleteEmbeddedDocuments("TableResult", [target.closest("[data-row-id]").dataset.rowId]);
+    await renumberAisle(table);
     this.render();
   }
 }
+
+/** The face after an aisle's highest row. */
+const nextRow = (table) => Math.max(0, ...table.results.map((r) => r.range?.[1] ?? 0)) + 1;
+
+/**
+ * Number an aisle's rows 1…n in shelf order, one face each, and set its die to
+ * match, so a removed row leaves no gap and an added one shares no face.
+ */
+const renumberAisle = async (table) => {
+  const rows = [...table.results].sort((a, b) => (a.range?.[0] ?? 0) - (b.range?.[0] ?? 0));
+  const updates = rows.map((r, i) => ({ _id: r.id, range: [i + 1, i + 1], weight: 1 }))
+    .filter((u, i) => rows[i].range?.[0] !== u.range[0] || rows[i].range?.[1] !== u.range[1] || rows[i].weight !== 1);
+  if (updates.length) await table.updateEmbeddedDocuments("TableResult", updates);
+  await table.update({ formula: `1d${Math.max(1, rows.length)}` });
+};
 
 export const openMarketplaceManager = () => {
   if (!game.user.isGM) return;

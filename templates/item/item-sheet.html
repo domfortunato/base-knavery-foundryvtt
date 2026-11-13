@@ -28,8 +28,8 @@
     <div class="form-group"><label>{{localize "KNAVERY.DamageDie"}}</label><input type="text" name="system.damage" value="{{system.damage}}" /></div>
     <div class="form-group"><label>{{localize "KNAVERY.AttackType"}}</label>
       <select name="system.attackType">
-        <option value="melee" {{#if (eq system.attackType "melee")}}selected{{/if}}>{{localize "KNAVERY.Melee"}} (STR)</option>
-        <option value="ranged" {{#if (eq system.attackType "ranged")}}selected{{/if}}>{{localize "KNAVERY.Ranged"}} (WIS)</option>
+        <option value="melee" {{#if (eq system.attackType "melee")}}selected{{/if}}>{{localize "KNAVERY.Melee"}} ({{localize "KNAVERY.AbilityShort.STR"}})</option>
+        <option value="ranged" {{#if (eq system.attackType "ranged")}}selected{{/if}}>{{localize "KNAVERY.Ranged"}} ({{localize "KNAVERY.AbilityShort.WIS"}})</option>
       </select></div>
     <div class="form-group"><label>{{localize "KNAVERY.Hands"}}</label><input type="number" name="system.hands" value="{{system.hands}}" min="1" max="2" data-dtype="Number" /></div>
     <div class="form-group"><label>{{localize "KNAVERY.Range"}}</label><input type="text" name="system.range" value="{{system.range}}" /></div>
@@ -80,7 +80,7 @@
     {{#each features as |f|}}
     <div class="feature-editor-row">
       <input type="text" name="system.features.{{f.index}}.label" value="{{f.label}}" placeholder="{{localize 'KNAVERY.FeatureLabel'}}" />
-      <input type="text" name="system.features.{{f.index}}.key" value="{{f.key}}" placeholder="key" class="short" />
+      <input type="text" name="system.features.{{f.index}}.key" value="{{f.key}}" placeholder="{{localize 'KNAVERY.FeatureKey'}}" class="short" />
       <select name="system.features.{{f.index}}.type">{{#each ../featureTypes}}<option value="{{this.value}}" {{#if (eq this.value f.type)}}selected{{/if}}>{{this.label}}</option>{{/each}}</select>
       <input type="text" name="system.features.{{f.index}}.initial" value="{{f.initial}}" placeholder="{{localize 'KNAVERY.FeatureInitial'}}" class="short" />
       <input type="number" name="system.features.{{f.index}}.max" value="{{f.max}}" class="short" data-tooltip="KNAVERY.FeatureMax" data-dtype="Number" />

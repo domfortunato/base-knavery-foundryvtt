@@ -33,7 +33,9 @@ export const rollLevelHp = async (level, oldMax) => {
  * means random. Posts a chat card and returns the new level.
  */
 export const applyLevelUp = async (actor, picks = null) => {
-  const s = actor.system;
+  // The stored values, not the ones Active Effects modify: what is written back
+  // must not fold a career's bonus into the character for good.
+  const s = actor._source.system;
   if (s.level >= MAX_LEVEL) return null;
   const values = Object.fromEntries(ABILITIES.map((k) => [k, s.abilities[k].value]));
   const chosen = (picks?.length ? picks : randomAbilityPicks(values)).slice(0, LEVEL_UP_ABILITIES);
@@ -55,7 +57,7 @@ export const applyLevelUp = async (actor, picks = null) => {
   await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor }), content, rolls: [hp.roll],
     flags: { [FLAG_SCOPE]: { levelUp: level } },
-  });
+  }, { messageMode: game.settings.get("core", "messageMode") });
   return level;
 };
 
@@ -85,7 +87,9 @@ export const openLevelUp = async (actor) => {
       boxes.forEach((b) => b.addEventListener("change", sync));
     },
     buttons: [
-      { action: "random", label: "KNAVERY.LevelUpRandom", icon: "fas fa-dice", callback: () => [] },
+      // A plain button: Enter on a ticked box submits through the first submit
+      // button, which must be Level Up, not Random.
+      { action: "random", type: "button", label: "KNAVERY.LevelUpRandom", icon: "fas fa-dice", callback: () => [] },
       {
         action: "ok", label: "KNAVERY.LevelUp", icon: "fas fa-angles-up", default: true,
         callback: (_e, button) => [...button.form.querySelectorAll('input[name="pick"]:checked')].map((b) => b.value),

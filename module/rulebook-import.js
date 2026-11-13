@@ -99,9 +99,17 @@ export const readRulebookTables = async ({ path = rulebookPath(), specs = RULEBO
 /*  Writing                                      */
 /* -------------------------------------------- */
 
-/** A digest of a table's rows, to tell whether the GM has edited it since it was built. */
-const digest = (results) => {
-  const key = [...results].map((r) => `${r.range[0]}-${r.range[1]}|${r.name ?? ""}|${r.description ?? ""}`).sort().join("\n");
+/**
+ * A digest of a table, to tell whether the GM has edited it since it was built.
+ * It covers every row field a GM can change (a row linked to an Item, a new
+ * image, a weight) and the table's formula and replacement, so any such edit
+ * marks the table as the GM's own and a rebuild keeps it.
+ */
+const digest = (table) => {
+  const rows = [...table.results].map((r) => [
+    `${r.range[0]}-${r.range[1]}`, r.type, r.name ?? "", r.description ?? "", r.documentUuid ?? "", r.img ?? "", r.weight ?? "",
+  ].join("|")).sort();
+  const key = [`formula:${table.formula ?? ""}`, `replacement:${table.replacement}`, ...rows].join("\n");
   let h = 5381;
   for (let i = 0; i < key.length; i++) h = ((h << 5) + h + key.charCodeAt(i)) | 0;
   return (h >>> 0).toString(36);
@@ -118,7 +126,7 @@ export const tableStatus = (name) => {
   if (!table) return "new";
   const flag = table.getFlag(FLAG_SCOPE, "rulebook");
   if (!flag?.hash) return "keep";
-  return flag.hash === digest(table.results.contents) ? "replace" : "keep";
+  return flag.hash === digest(table) ? "replace" : "keep";
 };
 
 /** Rows → TableResult data. Spells become a name with the effect as its description. */
@@ -174,7 +182,7 @@ export const writeRulebookTables = async (tables) => {
       report.created.push(t.name);
     }
     // The digest of the rows as Foundry stored them, so a later edit shows.
-    await table.setFlag(FLAG_SCOPE, "rulebook.hash", digest(table.results.contents));
+    await table.setFlag(FLAG_SCOPE, "rulebook.hash", digest(table));
   }
   return report;
 };
@@ -262,7 +270,17 @@ export class RulebookTablesReview extends HandlebarsApplicationMixin(Application
     if (!chosen.length) return ui.notifications.warn("KNAVERY.RulebookTables.NoneChosen", { localize: true });
     const button = form.querySelector('button[type="submit"]');
     if (button) button.disabled = true;
-    const report = await writeRulebookTables(chosen);
+    let report;
+    try {
+      report = await writeRulebookTables(chosen);
+    } catch (err) {
+      console.error("Base Knavery | building the rulebook's tables failed", err);
+      ui.notifications.error("KNAVERY.RulebookTables.BuildFailed", { localize: true });
+      foundry.applications.instances.get("knavery-gm-dashboard")?.render();
+      return null;
+    } finally {
+      if (button) button.disabled = false;
+    }
     ui.notifications.info(F("KNAVERY.RulebookTables.Done", {
       created: report.created.length, replaced: report.replaced.length, kept: report.kept.length,
     }));

@@ -68,7 +68,8 @@ export class CharacterData extends KnaveryActorData {
       age: str(),
       traits: traits(),
       /** Values of career-defined feature fields, keyed `<careerKey>.<featureKey>`. */
-      features: new ObjectField({ required: true, initial: {} }),
+      // A function, so every document gets its own object (a literal would be shared).
+      features: new ObjectField({ required: true, initial: () => ({}) }),
       /** Spellbooks cast since the last rest. The daily limit is INT. */
       spellsCastToday: int(0),
       acOverride: new NumberField({ required: true, nullable: true, integer: true, initial: null, min: 0 }),

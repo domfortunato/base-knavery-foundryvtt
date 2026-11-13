@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Cut a new Air Bladder release — one command, no GitHub UI.
+ * Cut a new Base Knavery release — one command, no GitHub UI.
  *
  *     npm run release 0.1.1
  *     npm run release 0.1.1 -- --dry-run     # every check and the notes, nothing written
@@ -26,7 +26,7 @@
  * carries the tag OBJECT, not just the ref (every tag on GitHub lists a peeled `^{}`
  * entry, which only an annotated tag has), which is what makes the tag a carrier.
  *
- * See RELEASE.md for the full runbook.
+ * The release steps are in CLAUDE.md ("Git and releases").
  */
 import { execSync } from "node:child_process";
 import fs from "node:fs";
@@ -53,7 +53,7 @@ if (!/^\d+\.\d+\.\d+$/.test(version)) die(`Version must be X.Y.Z (digits only, n
 
 // 1. Releases are cut from master, never from a branch. Work lives on `dev` and
 //    reaches master by merge. Without this guard `git push origin HEAD` below would
-//    happily publish a branch and tag unmerged work — see docs/git-flow.md.
+//    happily publish a branch and tag unmerged work.
 //    A dry run on `dev` is the ordinary way to preview the notes before the merge,
 //    so there the guard reports instead of refusing.
 const branch = capture("git rev-parse --abbrev-ref HEAD");
@@ -108,31 +108,48 @@ if (lastTag) {
 console.log(`Release notes (CHANGELOG.md, "## ${version}") — the body of the tag and of the GitHub release:\n`);
 console.log(body.split("\n").map((l) => `  ${l}`).join("\n"));
 
+// A REDO (ported from Air Bladder, review #34 finding 17): a run whose tag push
+// was refused, or whose tag was deleted to retry, leaves a local commit
+// "Release X.Y.Z", so the bump below would change nothing and used to die with
+// a false "Could not find a version field". The tag checks above have proved no
+// tag of this version exists on either side, so a system.json that already
+// reads it means the bump was made and the tag was not: skip the bump and the
+// commit, and tag HEAD.
+const sysPath = path.join(ROOT, "system.json");
+const before = fs.readFileSync(sysPath, "utf8");
+const redo = JSON.parse(before).version === version;
+if (redo) {
+  console.log(`\nsystem.json already reads ${version}: a REDO. No bump, no commit; the tag goes on HEAD:`);
+  console.log(`  ${capture("git log -1 --oneline")}`);
+}
+
 if (dryRun) {
   console.log(`\n(dry run) Nothing written, nothing pushed.\n`);
   process.exit(0);
 }
 
 // 6. Bump system.json version (targeted single-line replace, so the diff stays minimal).
-const sysPath = path.join(ROOT, "system.json");
-const before = fs.readFileSync(sysPath, "utf8");
-const after = before.replace(/("version"\s*:\s*")[^"]*(")/, `$1${version}$2`);
-if (after === before) die(`Could not find a "version" field to update in system.json`);
-fs.writeFileSync(sysPath, after);
-if (JSON.parse(after).version !== version) die(`system.json version did not update cleanly — aborting.`);
-console.log(`\n✓ system.json version → ${version}`);
+if (!redo) {
+  const after = before.replace(/("version"\s*:\s*")[^"]*(")/, `$1${version}$2`);
+  if (after === before) die(`Could not find a "version" field to update in system.json`);
+  fs.writeFileSync(sysPath, after);
+  if (JSON.parse(after).version !== version) die(`system.json version did not update cleanly — aborting.`);
+  console.log(`\n✓ system.json version → ${version}`);
+}
 
 // 7. Commit, tag, push branch + tag to origin.
-run(`git add system.json`);
-run(`git commit -m "Release ${version}"`);
+if (!redo) {
+  run(`git add system.json`);
+  run(`git commit -m "Release ${version}"`);
+}
 // The tag message comes from a file, not `-m`: it is many lines, and a quoted
 // multi-line argument is exactly what PowerShell mangles. `--cleanup=verbatim`
 // is load-bearing — git's default cleanup strips every line beginning with `#` as
 // a comment, so the notes' own headline would vanish from the tag in silence; and
 // `whitespace`, the mode for a day, still dropped a Markdown hard break's two
 // trailing spaces and collapsed blank lines, which made RELEASE.md's "verbatim"
-// false by two characters (review #32, proven in a throwaway repo, all three modes).
-const msgDir = fs.mkdtempSync(path.join(os.tmpdir(), "air-bladder-release-"));
+// false by two characters (Air Bladder review #32, proven in a throwaway repo, all three modes).
+const msgDir = fs.mkdtempSync(path.join(os.tmpdir(), "base-knavery-release-"));
 const msgPath = path.join(msgDir, "tag-message.txt");
 fs.writeFileSync(msgPath, tagMessage(version, body));
 try {

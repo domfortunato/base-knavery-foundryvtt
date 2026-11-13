@@ -2,8 +2,11 @@
 /** system.json sanity: files it names exist, packs have sources, ids are consistent. */
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const root = path.resolve(path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Z]:)/, "$1")), "..", "..");
+// fileURLToPath, not a regex on the URL: the regex wanted an upper-case drive
+// letter, so the check crashed in Git Bash and VS Code tasks ("c:\c:\...").
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const m = JSON.parse(fs.readFileSync(path.join(root, "system.json"), "utf8"));
 const errors = [];
 if (m.id !== "base-knavery") errors.push(`id is "${m.id}"`);

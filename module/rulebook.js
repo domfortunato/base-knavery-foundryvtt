@@ -118,14 +118,22 @@ export class RulebookReader extends HandlebarsApplicationMixin(ApplicationV2) {
     return controls;
   }
 
+  /** The PDF this window was drawn with, so a settings save that keeps it does not reload the book. */
+  shownPath = null;
+
   async _prepareContext() {
-    return { src: viewerUrl(rulebookPath(), { page: this.#page }), title: L("KNAVERY.Rulebook.Title") };
+    // A re-render reopens the book where the reader is, not where it was opened.
+    if (this.#viewer()?.pdfDocument) this.#page = this.currentPage;
+    this.shownPath = rulebookPath();
+    return { src: viewerUrl(this.shownPath, { page: this.#page }), title: L("KNAVERY.Rulebook.Title") };
   }
 
   _onRender(context, options) {
     super._onRender(context, options);
     const frame = this.element.querySelector("iframe.knavery-rulebook-frame");
-    frame?.addEventListener("load", () => this.#bindViewer(frame), { once: true });
+    // Every load, not once: moving the window to a popout and back reloads the
+    // frame, and the viewer's settings and the page must be applied again.
+    frame?.addEventListener("load", () => this.#bindViewer(frame));
   }
 
   /** The frame's PDFViewerApplication, once its script has run. */
@@ -143,16 +151,33 @@ export class RulebookReader extends HandlebarsApplicationMixin(ApplicationV2) {
     await app.initializedPromise;
     // Links out of the book open a new tab, never inside the frame.
     try { app.pdfLinkService.externalLinkTarget = 2; } catch { /* older viewer */ }
+    // Remember the page as it turns, so a reload of the frame comes back to it.
+    app.eventBus?.on("pagechanging", (e) => {
+      if (Number.isFinite(e?.pageNumber)) this.#page = Math.max(1, e.pageNumber - pageOffset());
+    });
     app.eventBus?.on("pagesinit", () => {
       const path = rulebookPath();
       if (app.pagesCount !== RULEBOOK.pdfPages && !warnedEdition.has(path)) {
         warnedEdition.add(path);
         ui.notifications.warn(F("KNAVERY.Rulebook.OtherEdition", { pages: app.pagesCount, expected: RULEBOOK.pdfPages }));
       }
-      if (this.#pending) {
-        app.page = toIndex(this.#pending);
-        this.#pending = null;
-      }
+      const page = this.#pending ?? this.#page;
+      this.#pending = null;
+      if (page) app.page = toIndex(page);
+    });
+    // Key presses inside the PDF never reach Foundry's keyboard manager, so the
+    // reader's own key (B by default) is heard here too, to close it again.
+    frame.contentWindow?.addEventListener("keydown", (event) => {
+      const t = event.target;
+      if (event.repeat || t?.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(t?.tagName)) return;
+      const bindings = game.keybindings.get(SETTINGS_NS, "openRulebook") ?? [];
+      const mods = (b) => (b.modifiers ?? []);
+      const hit = bindings.some((b) => b.key === event.code
+        && mods(b).includes("Control") === event.ctrlKey && mods(b).includes("Shift") === event.shiftKey
+        && mods(b).includes("Alt") === event.altKey);
+      if (!hit) return;
+      event.preventDefault();
+      toggleRulebook();
     });
   }
 
@@ -323,8 +348,9 @@ export const registerRulebook = () => {
   Hooks.on("knaveryRulebookChanged", () => {
     const open = foundry.applications.instances.get(READER_ID);
     if (open) {
-      if (hasRulebook() && canReadRulebook()) open.render();
-      else open.close();
+      if (!hasRulebook() || !canReadRulebook()) open.close();
+      // Only a different book reloads the reader; another setting saved leaves it be.
+      else if (open.shownPath !== rulebookPath()) open.render();
     }
     foundry.applications.instances.get("knavery-gm-dashboard")?.render();
     foundry.applications.instances.get("knavery-welcome")?.render();

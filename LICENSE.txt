@@ -28,8 +28,12 @@ This system contains no text from Dungeon Crawl Classics.
 What ships under which licence
 ------------------------------
 
-Code — MIT
-    module/  templates/  css/  tools/  lang/  src/packs/macros/  system.json
+Code and compendium content — MIT
+    module/  templates/  css/  tools/  lang/  system.json
+    packs/ (in the release zip), built from src/packs/ by
+    tools/content/build-content.mjs: the guide, the bestiary's statistics, the
+    gear, the macros and the table shells. Images they show keep the licences
+    given for them below.
     Descends from Air Bladder (MIT, © Dom Bosco), itself descended from
     Cairn-FoundryVTT by Yochai Gal & Oskar Świda (MIT).
 

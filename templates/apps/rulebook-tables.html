@@ -18,7 +18,7 @@
           <input type="checkbox" name="build-{{this.index}}" {{checked this.checked}} {{disabled this.disabled}}>
           <span class="rt-name">{{this.name}}</span>
           {{#if this.system}}<span class="knavery-item-tag">{{localize "KNAVERY.RulebookTables.UsedBySystem"}}</span>{{/if}}
-          {{#if this.page}}<span class="rt-page">p. {{this.page}}</span>{{/if}}
+          {{#if this.page}}<span class="rt-page">{{localize "KNAVERY.PageN" n=this.page}}</span>{{/if}}
           <span class="rt-count {{#unless this.complete}}rt-short{{/unless}}">{{this.count}} / {{this.expected}}</span>
           <span class="rt-status">{{this.statusLabel}}</span>
         </summary>

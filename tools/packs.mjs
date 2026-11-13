@@ -180,18 +180,30 @@ const canonicalDoc = (v) => {
  */
 const MARKER_FORMAT = 3;
 
-/** A per-pack fingerprint of the CURRENT contents of packs/, or null if unreadable. */
+/**
+ * A per-pack fingerprint of the CURRENT contents of packs/, plus the names of
+ * the built packs that could not be READ.
+ *
+ * An unreadable pack is UNKNOWN, and unknown refuses (ported from Air Bladder,
+ * review #34 finding 19). Skipping it held only on Windows, where a running
+ * server's open handles make the build's rmSync fail. On Linux (CT 127, where
+ * the deploy builds packs) rmSync unlinks a LevelDB the server holds open and
+ * compilePack writes a fresh one, while LevelDB's lock still fails the extract
+ * here, so the guard compared nothing and the build destroyed the edits.
+ */
 const fingerprintBuilt = async () => {
   const scratch = path.join(root, ".pack-guard-tmp");
   fs.rmSync(scratch, { recursive: true, force: true });
   const out = {};
+  const unreadable = [];
   for (const { name } of packs) {
     const built = path.join(outRoot, name);
-    if (!fs.existsSync(built)) continue;
+    if (!fs.existsSync(built)) continue;   // never built: nothing in it to lose
     try {
       await extractPack(built, path.join(scratch, name), { yaml: true, clean: true });
-    } catch {
-      continue;                       // locked or absent: the build itself will report it
+    } catch (err) {
+      unreadable.push(`${name} (${String(err?.message ?? err).split("\n")[0]})`);
+      continue;
     }
     const docs = listYaml(path.join(scratch, name));
     // Keyed by the document's own id, not the filename: `extract` renames files
@@ -207,7 +219,7 @@ const fingerprintBuilt = async () => {
     out[name] = crypto.createHash("sha256").update(canon.join("\n")).digest("hex");
   }
   fs.rmSync(scratch, { recursive: true, force: true });
-  return out;
+  return { hashes: out, unreadable };
 };
 
 if (mode === "build" && !process.argv.includes("--force")) {
@@ -234,19 +246,30 @@ if (mode === "build" && !process.argv.includes("--force")) {
       execFileSync(process.execPath, [path.join(root, "tools", "dev", "backup.mjs"), "--label", "first-build"], { stdio: "inherit" });
     } catch { console.log("  (backup failed; continuing — nothing to compare against anyway)"); }
   } else {
-    const now = await fingerprintBuilt();
+    const { hashes: now, unreadable } = await fingerprintBuilt();
+    if (unreadable.length) {
+      console.error(
+        "\nREFUSING TO BUILD — these built packs could not be read, so the guard cannot tell\n"
+        + "whether they hold edits made inside Foundry:\n\n"
+        + unreadable.map((n) => `  ${n}`).join("\n")
+        + "\n\nUsually a running Foundry server holds them locked. Stop it (or close the world)\n"
+        + "and build again. On Linux the build would NOT fail on that lock by itself.\n\n"
+        + "  npm run build:packs -- --force  only if you mean to discard whatever they hold\n");
+      process.exit(1);
+    }
     const drifted = Object.keys(now).filter((n) => marker[n] && marker[n] !== now[n]);
     if (drifted.length) {
       console.error(
-        "\nREFUSING TO BUILD — packs/ has changed since the last build or extract.\n\n"
+        "\nREFUSING TO BUILD — packs/ has changed since the last build.\n\n"
         + drifted.map((n) => `  ${n}`).join("\n")
         + "\n\nThat means a compendium was edited inside Foundry. A build recompiles\n"
-        + "packs/ FROM src/packs/, so those edits would be destroyed — and nothing can\n"
-        + "recover them: packs/ is gitignored, LevelDB keeps no history, Foundry writes\n"
-        + "no backups, and Volume Shadow Copies are days apart. This exact build cost\n"
-        + "five hours of compendium work on 2026-08-04.\n\n"
-        + "  npm run extract:packs           fold the world's edits into src/packs/ first\n"
-        + "  npm run backup                  snapshot packs/ and both worlds\n"
+        + "packs/ FROM src/packs/, so those edits would be destroyed, and nothing can\n"
+        + "recover them: packs/ is gitignored and LevelDB keeps no history.\n\n"
+        + "src/packs/ is generated (tools/content/build-content.mjs), so an edit worth\n"
+        + "keeping belongs in the generator, not in the YAML: extracting into src/packs/\n"
+        + "would be overwritten by the next build:content.\n\n"
+        + "  copy what you changed into tools/content/build-content.mjs, then\n"
+        + "  npm run build:content && npm run build:packs -- --force\n"
         + "  npm run build:packs -- --force  only if you mean to discard those edits\n");
       process.exit(1);
     }
@@ -311,8 +334,13 @@ if (failed) process.exit(1);
 // a marker that advanced past work nobody folded in would silently re-arm the
 // exact loss this guards.
 try {
+  const { hashes, unreadable } = await fingerprintBuilt();
   fs.writeFileSync(SYNC_MARKER,
-    JSON.stringify({ __format: MARKER_FORMAT, packs: await fingerprintBuilt() }, null, 2) + "\n");
+    JSON.stringify({ __format: MARKER_FORMAT, packs: hashes }, null, 2) + "\n");
+  if (unreadable.length) {
+    console.error(`  WARNING  no baseline recorded for ${unreadable.join(", ")} — the next build `
+      + "cannot compare them");
+  }
 } catch (err) {
   console.error(`  WARNING  could not write ${path.basename(SYNC_MARKER)} — the next build will `
     + `have no baseline and will back up instead of comparing (${err.message})`);

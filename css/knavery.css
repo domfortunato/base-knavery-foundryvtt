@@ -4738,3 +4738,11 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 
 /* ---- Configure submenus (settings.js): one column of core form groups --------- */
 .knavery-settings-menu .knavery-settings-rows { display: flex; flex-direction: column; gap: 4px; }
+
+/* ---- Inputs an Active Effect changes (actor-sheet.js effectAttrs) ------------- */
+.knavery input[data-kn-modified] { outline: 1px dashed var(--kn-accent); outline-offset: -2px; color: var(--kn-accent); }
+
+/* ---- A damage card already applied (damage.js) --------------------------------- */
+.knavery-roll-card .card-apply.applied button { opacity: 0.6; }
+.knavery-roll-card .card-applied { display: block; margin-bottom: 2px; color: var(--kn-muted); font-size: 12px; }
+.knavery.sheet.actor > .window-content > nav.knavery-tab-rail[hidden] { display: none; }

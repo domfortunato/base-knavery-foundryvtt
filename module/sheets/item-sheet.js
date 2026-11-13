@@ -6,6 +6,7 @@
  */
 import { ARMOR_TYPES, FEATURE_TYPES, SYS_PATH } from "../config.js";
 import { pickArt } from "../art.js";
+import { enrichForSheet } from "../clean-html.js";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ItemSheetV2 } = foundry.applications.sheets;
@@ -49,17 +50,19 @@ export class KnaveryItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
       featureTypes: FEATURE_TYPES.map((t) => ({ value: t, label: L(`KNAVERY.FeatureType.${t}`) })),
       features: (s.features ?? []).map((f, i) => ({ ...f, index: i })),
       startingItems: (s.startingItems ?? []).map((entry, i) => ({
-        index: i, entry, label: entry.includes(".") ? (fromUuidSync(entry)?.name ?? entry) : entry,
+        // strict: false — an entry naming an item embedded in a compendium actor
+        // cannot be read synchronously, and a throw here would lock the sheet shut.
+        index: i, entry, label: entry.includes(".") ? (fromUuidSync(entry, { strict: false })?.name ?? entry) : entry,
       })),
       effects: item.effects.map((e) => ({ id: e.id, name: e.name, img: e.img, disabled: e.disabled })),
-      enrichedDescription: await TextEditor.enrichHTML(s.description ?? "", { relativeTo: item, secrets: item.isOwner }),
+      enrichedDescription: await enrichForSheet(s.description ?? "", { relativeTo: item, secrets: item.isOwner }),
       glog: game.settings.get("base-knavery", "enable-glog-grimoire"),
     });
     return context;
   }
 
-  _onRender(context, options) {
-    super._onRender(context, options);
+  async _onRender(context, options) {
+    await super._onRender(context, options);
     // Starting items: type a name, or drop an Item onto the list.
     const input = this.element.querySelector(".starting-item-input");
     input?.addEventListener("keydown", async (e) => {
@@ -76,6 +79,11 @@ export class KnaveryItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
       e.stopPropagation();
       const data = TextEditor.getDragEventData(e);
       if (data?.type !== "Item" || !this.isEditable) return;
+      // An item inside a compendium actor cannot be granted from its uuid later.
+      const parsed = foundry.utils.parseUuid(data.uuid ?? "");
+      if (parsed?.collection instanceof foundry.documents.collections.CompendiumCollection && parsed.embedded?.length) {
+        return ui.notifications.warn("KNAVERY.Notify.EmbeddedStartingItem", { localize: true });
+      }
       await this.item.update({ "system.startingItems": [...this.item.system.startingItems, data.uuid] });
     });
   }

@@ -49,7 +49,7 @@ export const isPlaceholder = (result) => result?.getFlag?.(FLAG_SCOPE, "placehol
 /** The display text of a result (v14: `name` for documents, `description` for text). */
 export const resultText = (result) => {
   if (!result) return "";
-  const raw = result.name || result.description || result.text || "";
+  const raw = result.name || result.description || "";
   return foundry.utils.cleanHTML?.(raw) ?? raw;
 };
 
@@ -139,6 +139,17 @@ export const pickFromList = async (options, { title = "", icon = "fas fa-list-ul
       root.querySelector(".kn-pick-list")?.addEventListener("dblclick", (e) => {
         if (e.target.closest(".kn-pick-row")) root.querySelector('button[data-action="ok"]')?.click();
       });
+      // Enter in the filter chooses the one row left, or the ticked one; with
+      // nothing to choose it does nothing rather than submitting an empty pick.
+      filter?.addEventListener("keydown", (e) => {
+        if (e.key !== "Enter") return;
+        e.preventDefault();
+        const visible = [...root.querySelectorAll(".kn-pick-row:not([hidden]) input[name=pick]")];
+        const pick = visible.find((i) => i.checked) ?? (visible.length === 1 ? visible[0] : null);
+        if (!pick) return;
+        pick.checked = true;
+        root.querySelector('button[data-action="ok"]')?.click();
+      });
       filter?.focus();
     },
     buttons: [{
@@ -146,7 +157,9 @@ export const pickFromList = async (options, { title = "", icon = "fas fa-list-ul
       label: "KNAVERY.Choose",
       icon: "fas fa-check",
       default: true,
-      callback: (_e, button) => button.form.elements.pick?.value || null,
+      // `|| false`, not null: DialogV2 resolves a nullish result to the action
+      // name, and every caller would take "ok" for a chosen value.
+      callback: (_e, button) => button.form.elements.pick?.value || false,
     }],
     rejectClose: false,
   });

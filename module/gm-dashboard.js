@@ -14,7 +14,7 @@ import {
   ABILITIES, CHECK_BASE, DEFAULT_DIFFICULTY, FLAG_SCOPE, SAVE_CATEGORIES, SETTINGS_NS, SYS_PATH, TABLES,
 } from "./config.js";
 import { emit, onSocket } from "./socket.js";
-import { rollCheck, rollHazard, rollMorale, rollSave } from "./rolls.js";
+import { isRollable, rollCheck, rollHazard, rollMorale, rollSave } from "./rolls.js";
 import { actorFromUuid } from "./damage.js";
 import { findTable } from "./compendium.js";
 import { openTableImporter } from "./table-importer.js";
@@ -131,11 +131,32 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     });
   }
 
+  /**
+   * A re-render keeps what the GM was typing. Results arriving in chat re-render
+   * the Requests part, and the importer and the rulebook re-render the whole
+   * window; core restores focus and scroll but not values, so a half-composed
+   * request or damage roll would be wiped by every incoming roll.
+   */
+  _syncPartState(partId, newElement, priorElement, state) {
+    super._syncPartState(partId, newElement, priorElement, state);
+    if (!["requests", "damage"].includes(partId)) return;
+    for (const el of priorElement.querySelectorAll("input[name], select[name], textarea[name]")) {
+      const toggle = el.type === "checkbox" || el.type === "radio";
+      const selector = `[name="${CSS.escape(el.name)}"]${toggle ? `[value="${CSS.escape(el.value)}"]` : ""}`;
+      const twin = newElement.querySelector(selector);
+      if (!twin) continue;
+      if (toggle) twin.checked = el.checked;
+      else twin.value = el.value;
+    }
+  }
+
   _onRender(context, options) {
     super._onRender(context, options);
     const diff = this.element.querySelector('[name="difficulty"]');
     const out = this.element.querySelector(".request-target");
-    diff?.addEventListener("input", () => { if (out) out.textContent = CHECK_BASE + (Number(diff.value) || 0); });
+    const showTarget = () => { if (diff && out) out.textContent = CHECK_BASE + (Number(diff.value) || 0); };
+    showTarget();
+    diff?.addEventListener("input", showTarget);
   }
 
   #form() { return this.element; }
@@ -225,6 +246,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       actors = tokens.map((t) => actorFromUuid(t.document.uuid)).filter(Boolean);
     }
     if (!actors.length) return ui.notifications.warn("KNAVERY.Notify.NoTargets", { localize: true });
+    if (!isRollable(formula)) return ui.notifications.warn(F("KNAVERY.Notify.NotADamageFormula", { formula }));
     const roll = await new Roll(formula).evaluate();
     await roll.toMessage({
       speaker: { alias: L("KNAVERY.GameMaster") },
@@ -244,10 +266,12 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
   static async #onReaction() {
     const table = await findTable(TABLES.reaction);
     const real = table?.results.filter((r) => !r.getFlag(FLAG_SCOPE, "placeholder")) ?? [];
-    if (real.length) return table.draw({ rollMode: CONST.DICE_ROLL_MODES.PRIVATE });
+    // messageMode "gm" (a private GM roll); `rollMode` and CONST.DICE_ROLL_MODES
+    // are deprecated {since: 14, until: 16}.
+    if (real.length) return table.draw({ messageMode: "gm" });
     const roll = await new Roll("2d6").evaluate();
     return roll.toMessage({ flavor: L("KNAVERY.Dashboard.Reaction"), speaker: { alias: L("KNAVERY.GameMaster") } },
-      { rollMode: CONST.DICE_ROLL_MODES.PRIVATE });
+      { messageMode: "gm" });
   }
 
   static async #onEncounterDistance(_e, target) {
@@ -256,7 +280,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     return roll.toMessage({
       flavor: F("KNAVERY.Dashboard.DistanceFlavor", { where: L(wild ? "KNAVERY.Dashboard.Wilderness" : "KNAVERY.Dashboard.Dungeon") }),
       speaker: { alias: L("KNAVERY.GameMaster") },
-    }, { rollMode: CONST.DICE_ROLL_MODES.PRIVATE });
+    }, { messageMode: "gm" });
   }
 
   static async #onMorale() {
@@ -299,6 +323,10 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
 
 /** Flip a player-tool switch and announce it (shared with the macros). */
 export const setToggle = async (key, value) => {
+  // An Assistant GM may have had "Modify Configuration Settings" taken away.
+  if (!game.user.can("SETTINGS_MODIFY")) {
+    return ui.notifications.warn("KNAVERY.Notify.NoSettingsPermission", { localize: true });
+  }
   await game.settings.set(SETTINGS_NS, key, value);
   const t = TOGGLES.find((x) => x.key === key);
   ui.notifications.info(F(value ? "KNAVERY.Macro.TurnedOn" : "KNAVERY.Macro.TurnedOff", { what: L(t?.label ?? key) }));

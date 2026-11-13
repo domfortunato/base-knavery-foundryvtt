@@ -36,7 +36,7 @@
             <a class="name-roll" data-action="rollName" data-tooltip="KNAVERY.RollName" aria-label="{{localize 'KNAVERY.RollName'}}"><i class="fas fa-dice-d20"></i></a>
             <a class="name-pick" data-action="pickName" data-tooltip="KNAVERY.PickName" aria-label="{{localize 'KNAVERY.PickName'}}"><i class="fas fa-list-ul"></i></a>
             {{/if}}
-            <input class="pronouns-input" type="text" name="system.pronouns" value="{{system.pronouns}}" maxlength="24"
+            <input class="pronouns-input" type="text" name="system.pronouns" value="{{source.pronouns}}" maxlength="24"
               placeholder="{{localize 'KNAVERY.Pronouns'}}" data-tooltip="KNAVERY.Pronouns" aria-label="{{localize 'KNAVERY.Pronouns'}}" />
           </div>
 
@@ -55,10 +55,10 @@
 
           <div class="level-line">
             <label for="{{idp}}-level">{{localize "KNAVERY.Level"}}</label>
-            <input type="number" id="{{idp}}-level" class="level-input" name="system.level" value="{{system.level}}" min="1" max="10" step="1" data-dtype="Number" />
+            <input type="number" id="{{idp}}-level" class="level-input" name="system.level" value="{{source.level}}"{{{effAttrs.level}}} min="1" max="10" step="1" data-dtype="Number" />
             <span class="level-title">{{levelTitle}}</span>
             <label for="{{idp}}-xp">{{localize "KNAVERY.XP"}}</label>
-            <input type="number" id="{{idp}}-xp" class="xp-input" name="system.xp" value="{{system.xp}}" min="0" step="1" data-dtype="Number" />
+            <input type="number" id="{{idp}}-xp" class="xp-input" name="system.xp" value="{{source.xp}}"{{{effAttrs.xp}}} min="0" step="1" data-dtype="Number" />
             {{#if system.nextXp}}<span class="xp-next" data-tooltip="KNAVERY.NextLevelTip">/ {{system.nextXp}}</span>{{/if}}
             {{#if showLevelUp}}
             <button type="button" class="level-up-button" data-action="levelUp"><i class="fas fa-angles-up"></i> {{localize "KNAVERY.LevelUp"}}</button>
@@ -69,7 +69,7 @@
             <div class="resource-counter coins-counter">
               <label for="{{idp}}-coins" data-tooltip="KNAVERY.CoinsTip">{{localize "KNAVERY.Coins"}}</label>
               <div class="resource-input-wrapper">
-                <input type="number" min="0" step="1" id="{{idp}}-coins" name="system.coins" value="{{system.coins}}" data-dtype="Number" />
+                <input type="number" min="0" step="1" id="{{idp}}-coins" name="system.coins" value="{{source.coins}}"{{{effAttrs.coins}}} data-dtype="Number" />
               </div>
             </div>
             <div class="resource-counter slots-counter {{#if overburdened}}peril{{/if}}">
@@ -96,10 +96,10 @@
           <div class="knavery-bars">
             <div class="knavery-bar-block hp-bar {{#if hpLow}}low{{/if}} {{#if hpPeril}}peril{{/if}}">
               <label for="{{idp}}-hp-max" data-tooltip="KNAVERY.HPTip">{{localize "KNAVERY.MaxHP"}}</label>
-              <input type="number" min="0" step="1" class="stat-input bar-max" id="{{idp}}-hp-max" name="system.hp.max" value="{{system.hp.max}}" data-dtype="Number" />
+              <input type="number" min="0" step="1" class="stat-input bar-max" id="{{idp}}-hp-max" name="system.hp.max" value="{{source.hp.max}}"{{{effAttrs.hpMax}}} data-dtype="Number" />
               <div class="knavery-bar">
                 <div class="knavery-bar-fill" style="height: {{hpPercent}}%"></div>
-                <input type="number" min="0" step="1" class="stat-input bar-value" id="{{idp}}-hp" name="system.hp.value" value="{{system.hp.value}}" data-dtype="Number" aria-label="{{localize 'KNAVERY.HP'}}" />
+                <input type="number" min="0" step="1" class="stat-input bar-value" id="{{idp}}-hp" name="system.hp.value" value="{{source.hp.value}}"{{{effAttrs.hpValue}}} data-dtype="Number" aria-label="{{localize 'KNAVERY.HP'}}" />
               </div>
               <span class="knavery-bar-name">{{localize "KNAVERY.HP"}}</span>
             </div>
@@ -108,7 +108,7 @@
               <span class="bar-max readout">{{slotsMax}}</span>
               <div class="knavery-bar">
                 <div class="knavery-bar-fill" style="height: {{woundPercent}}%"></div>
-                <input type="number" min="0" step="1" class="stat-input bar-value" id="{{idp}}-wounds" name="system.wounds" value="{{system.wounds}}" data-dtype="Number" aria-label="{{localize 'KNAVERY.Wounds'}}" />
+                <input type="number" min="0" step="1" class="stat-input bar-value" id="{{idp}}-wounds" name="system.wounds" value="{{source.wounds}}"{{{effAttrs.wounds}}} data-dtype="Number" aria-label="{{localize 'KNAVERY.Wounds'}}" />
               </div>
               <span class="knavery-bar-name">{{localize "KNAVERY.Wounds"}}</span>
             </div>
