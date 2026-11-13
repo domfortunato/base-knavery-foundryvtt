@@ -63,7 +63,10 @@ picker, change log and marketplace it ports.
   drives the browsers against the eleven probe boxes, conducted from CT 120, as
   project `base-knavery` of foundry-ops `fleet/projects.tsv` (rows for Foundry
   14.370, 14.369 and 14.368; world `knavery-dev` staged from CT 127). Keep all
-  three green before merging to master.
+  three green before merging to master. **Day to day run only
+  `--project base-knavery`** (the newest build); the `base-knavery-14369` and
+  `-14368` rows run before a release, not on every change (user ruling
+  2026-11-13).
   ```
   ssh fleet@<private-ip> foundry/scripts/fleet-runner.sh start --project base-knavery --ref <sha> [--probes smoke,players,screens]
   ssh fleet@<private-ip> foundry/scripts/fleet-runner.sh last
