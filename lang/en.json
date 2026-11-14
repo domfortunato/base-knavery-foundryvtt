@@ -396,6 +396,21 @@
       "Unconscious": "unconscious",
       "None": "No player characters yet."
     },
+    "SpellGen": {
+      "Title": "Generate a spell",
+      "TitleFor": "A new spell for {name}",
+      "RequestLabel": "Generate a spell",
+      "Formula": "Formula:",
+      "Reroll": "Roll this word again (one word only)",
+      "RerollUsed": "One word has been rolled again already",
+      "Rerolled": "rolled again",
+      "Name": "The spell's name",
+      "Hint": "Adjust the wording if you like. The spell's effect is yours and the GM's to agree.",
+      "Add": "Add as a spellbook",
+      "Missing": "Generating a spell needs these tables, built from the Knave 2e book: {names}. The GM builds them on the dashboard's Tables tab, or imports them.",
+      "CardTitle": "A new spell",
+      "CardBody": "{name} adds it as a spellbook. Its effect is for the player and the GM to agree."
+    },
     "Sell": {
       "Hint": "Sell this: half its price, or its full value for treasure",
       "Title": "Sell {name}",
@@ -755,6 +770,7 @@
       "TabTables": "Tables",
       "TabXp": "XP",
       "TabParty": "Party",
+      "Other": "Other",
       "XpHint": "Award XP to the players' characters: the same to each, a different amount to each, a total split evenly, or (when the Rules give XP for treasure) the treasure they brought back.",
       "XpMode": "How",
       "XpEach": "Same amount to each",

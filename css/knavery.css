@@ -5074,3 +5074,12 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 /* Treasure on the Inventory, and the free repair beside Broken. */
 .knavery .knavery-item-tag.treasure-tag i { color: var(--kn-gold); }
 .knavery-item-sheet .kn-repair-free { flex: 0 0 auto; width: auto; margin-left: 6px; }
+/* The spell generator (Knave 2e p27). */
+.knavery-spell-gen .kn-spell-gen { display: flex; flex-direction: column; gap: 8px; padding: 4px; }
+.knavery-spell-gen .kn-spell-gen-words { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.knavery-spell-gen .kn-spell-gen-words li { display: grid; grid-template-columns: 7.5em minmax(0, 1fr) auto; align-items: center; gap: 8px; }
+.knavery-spell-gen .kn-spell-gen-slot { font-size: calc(12px * var(--kn-text, 1)); color: var(--kn-muted); text-transform: capitalize; }
+.knavery-spell-gen .kn-spell-gen-word { font-weight: bold; }
+.knavery-spell-gen .kn-spell-gen-reroll { flex: none; width: auto; padding: 0 8px; }
+.knavery-spell-gen .kn-spell-gen-missing { color: var(--kn-peril); }
+.knavery .kn-spell-gen-name { font-size: calc(16px * var(--kn-text, 1)); text-align: center; margin: 4px 0; }

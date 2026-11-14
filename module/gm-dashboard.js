@@ -1,7 +1,7 @@
 /**
  * The Game Master's Dashboard.
  *
- *   Requests  ask players for a check or save, saying WHY. Each owning player
+ *   Requests  ask players for a check or save, saying WHY, or to generate a spell (Knave 2e p27). Each owning player
  *             gets the edge prompt with the reason and the difficulty locked;
  *             the results come back here as they land in chat.
  *   Damage    roll or type damage and apply it to chosen characters or to
@@ -31,6 +31,7 @@ import { hasRulebook, openRulebook, pickLocalRulebook, showRulebookPage, tablePa
 import { clock, clockLabel, endTurn, resetClock, setClock, TRAVEL_WATCHES_FREE } from "./hazard.js";
 import { payWage, wageRows } from "./hirelings.js";
 import { scaledPosition } from "./settings.js";
+import { openSpellGenerator } from "./spell-generator.js";
 import { isLight, party } from "./hazard.js";
 import { spellRule, usesWounds } from "./rules.js";
 import { companionsOf, treasureCarried, treasureSplit, treasureXpOn, treasureXpRule, xpForTreasure } from "./treasure.js";
@@ -205,6 +206,11 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     const showTarget = () => { if (diff && out) out.textContent = CHECK_BASE + (Number(diff.value) || 0); };
     showTarget();
     diff?.addEventListener("input", showTarget);
+    // A spell request has no difficulty.
+    const what = this.element.querySelector('[name="check"]');
+    const showDifficulty = () => this.element.querySelector(".dash-request-difficulty")?.toggleAttribute("hidden", what?.value === "spell:generate");
+    showDifficulty();
+    what?.addEventListener("change", showDifficulty);
     // XP: one amount for "same to each" and "split", a box per character for "different to each".
     const mode = this.element.querySelector('[name="xpMode"]');
     const showMode = () => {
@@ -330,6 +336,8 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     const [kind, key] = String(root.querySelector('[name="check"]').value).split(":");
     const difficulty = Math.max(0, Number(root.querySelector('[name="difficulty"]').value) || 0);
     const reason = root.querySelector('[name="reason"]').value.trim().slice(0, 300);
+    // Knave 2e p27: the player generates a spell (spell-generator.js); no roll against a target.
+    if (kind === "spell") return this.#sendSpellRequest(ids, reason);
     const label = kind === "save"
       ? F("KNAVERY.Roll.SaveTitle", { save: L(`KNAVERY.Save.${key}`), ability: L(`KNAVERY.Ability.${SAVE_CATEGORIES[key]}`) })
       : F("KNAVERY.Roll.CheckTitle", { ability: L(`KNAVERY.Ability.${key}`) });
@@ -354,11 +362,34 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     this.render({ parts: ["requests"] });
   }
 
+  /** Ask the chosen characters' players to generate a spell (Knave 2e p27). */
+  async #sendSpellRequest(ids, reason) {
+    const label = L("KNAVERY.SpellGen.RequestLabel");
+    const entry = { id: foundry.utils.randomID(), label, reason, target: null, kind: "spell", key: "generate", difficulty: 0, entries: [] };
+    for (const actorId of ids) {
+      const actor = game.actors.get(actorId);
+      if (!actor) continue;
+      const players = game.users.filter((u) => !u.isGM && u.active && actor.testUserPermission(u, "OWNER"));
+      entry.entries.push({ actorId, name: actor.name, state: players.length ? "waiting" : "offline" });
+      if (players.length) emit("requestRoll", { requestId: entry.id, actorId, kind: "spell", key: "generate", reason }, { recipients: players.map((u) => u.id) });
+    }
+    requestLog.unshift(entry);
+    const esc = (s) => foundry.utils.escapeHTML(String(s ?? ""));
+    await ChatMessage.create({
+      speaker: { alias: L("KNAVERY.GameMaster") },
+      content: `<div class="knavery-roll-card kind-request"><header class="card-title"><h3><i class="fas fa-wand-sparkles"></i> ${esc(label)}</h3></header>`
+        + `<p>${esc(entry.entries.map((e) => e.name).join(", "))}</p>`
+        + (reason ? `<p class="roll-reason"><i class="fas fa-bullhorn"></i> ${esc(reason)}</p>` : "") + "</div>",
+    });
+    this.render({ parts: ["requests"] });
+  }
+
   /** Roll a request on behalf of a character whose player is away. */
   static async #onRollForThem(_e, target) {
     const req = requestLog.find((r) => r.id === target.dataset.request);
     const actor = game.actors.get(target.dataset.actor);
     if (!req || !actor) return;
+    if (req.kind === "spell") return openSpellGenerator(actor, { requestId: req.id, reason: req.reason });
     const opts = { difficulty: req.difficulty, reason: req.reason, requestId: req.id };
     if (req.kind === "save") await rollSave(actor, req.key, opts);
     else await rollCheck(actor, req.key, opts);
@@ -371,6 +402,14 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
 
   /** Called from the createChatMessage hook: a requested roll came back. */
   static noteResult(message) {
+    const spell = message.getFlag?.(FLAG_SCOPE, "spellGen");
+    if (spell?.requestId) {
+      const e = requestLog.find((r) => r.id === spell.requestId)?.entries.find((x) => x.actorId === message.speaker?.actor);
+      if (!e) return;
+      Object.assign(e, { state: "done", total: String(spell.name ?? "") });
+      foundry.applications.instances.get("knavery-gm-dashboard")?.render({ parts: ["requests"] });
+      return;
+    }
     const check = message.getFlag?.(FLAG_SCOPE, "check");
     if (!check?.requestId) return;
     const req = requestLog.find((r) => r.id === check.requestId);
@@ -603,6 +642,7 @@ export const registerRequestSocket = () => {
     const reason = String(msg.reason ?? "").slice(0, 300);
     const difficulty = Math.max(0, Number(msg.difficulty) || 0);
     const opts = { difficulty, reason, requestId: String(msg.requestId ?? "") };
+    if (msg.kind === "spell") return openSpellGenerator(actor, { requestId: opts.requestId, reason });
     if (msg.kind === "save" && Object.hasOwn(SAVE_CATEGORIES, msg.key)) await rollSave(actor, msg.key, opts);
     else if (ABILITIES.includes(msg.key)) await rollCheck(actor, msg.key, opts);
   });

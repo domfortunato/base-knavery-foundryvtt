@@ -20,6 +20,7 @@ import { bindOfferCard, registerOfferSocket } from "./item-offer.js";
 import { rebuildChangeLogCard } from "./change-log.js";
 import { createCharacter, createCharacterInteractive, registerCreationSocket, updateCareerIcons } from "./character-generator.js";
 import { createNpc, createNpcInteractive } from "./npc-generator.js";
+import { openSpellGenerator } from "./spell-generator.js";
 import { GmDashboard, openGmDashboard, registerPartyRefresh, registerRequestSocket, setToggle } from "./gm-dashboard.js";
 import { openMarketplace, openMarketplaceManager } from "./marketplace.js";
 import { openTableImporter, importRows, parseRows } from "./table-importer.js";
@@ -107,6 +108,8 @@ Hooks.once("init", () => {
     showRulebookPage,
     openWelcome,
     buildRulebookTables: openRulebookTablesReview,
+    /** Knave 2e p27: generate a spell for a character (the dashboard's request opens this for the player). */
+    openSpellGenerator,
     /** The edition this world plays ("1e", "2e" or "custom"), and setting every rule to one. */
     currentRules,
     applyRules,

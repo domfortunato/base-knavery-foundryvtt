@@ -728,6 +728,10 @@ journal("Base Knavery Guide", [
 <p>The dashboard's <b>Party</b> tab shows every player character at a glance: HP (and whether they are unconscious or dead), wounds, slots used, coins, their lights and which are lit, and the spellbooks still ready today. Click a name to open the sheet.</p>
 <p>Tick <b>Treasure</b> on an item's sheet for loot found in a dungeon. When the party is back in civilization, open the dashboard's <b>XP</b> tab and choose <i>Treasure brought back</i>: tick who helped, and their treasure is listed and added up with any coins you type in. The XP is split evenly; a companion of one of them takes a half share, noted on the card. Each treasure item counts once.</p>
 <p>The coin icon on an Inventory row sells the item: half its price, or its full value for treasure. Selling follows the player marketplace switch.</p>`],
+  ["Generating Spells", `
+<p>Knave 2e (p27) builds new spells from a formula: a d12 gives a pattern such as <i>[Wizard name]'s [Quality] [Element] [Form]</i>, and each bracketed word is rolled on its own table.</p>
+<p>On the dashboard's <b>Requests</b> tab, choose <b>Generate a spell</b> and the characters, add a reason if you like, and send. Each player's window shows the rolled spell; they may roll one word again and adjust the wording, then <b>Add as a spellbook</b>. Its effect is left for the player and the GM to agree. A player who is away can have the GM generate it for them from the request's result line.</p>
+<p>The six tables (Spell Formulae, Wizard Names, Qualities, Effects, Elements, Forms) are Knave 2e text, so they do not ship: <b>Build tables from the book</b> makes them from your PDF, or import them by name.</p>`],
   ["Levels", `
 <p>XP is earned the Knave way; the GM awards it from the dashboard's <b>XP</b> tab (treasure too, see <i>Treasure and the Party</i>). Once a character's XP reaches the next threshold and <b>Char Gen Mode</b> is on, an up arrow appears in the sheet's title bar (and <b>Level Up</b> on the Growth page). Levelling up:</p>
 <ul>

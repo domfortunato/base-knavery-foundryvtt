@@ -9,7 +9,7 @@
  * default; a blank sheet held to its level's ability points, with HP, coin and career dice; the Attack window's
  * Target list; the narrow header; Rest by the book; red splats; compact attack cards; labels that fit; Create NPC;
  * spell items from the rulebook; weapons and armor first; rations per slot; the review #2 fixes; time and hazards; morale and wages; Backstory and the Knave-page traits; item badges;
- * the Knave 1e rules (part 26) and their second bundle: quality and wear, copper prices, coin slots, daily wages (part 27); the Party tab, treasure to XP, selling and free repair (part 28). GM, Alice and Bob
+ * the Knave 1e rules (part 26) and their second bundle: quality and wear, copper prices, coin slots, daily wages (part 27); the Party tab, treasure to XP, selling and free repair (part 28); generating a spell at the GM's request (part 29). GM, Alice and Bob
  * in three browsers.
  *
  *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/e2e-chargen.mjs   (npm run dev:chargen)
@@ -2372,6 +2372,86 @@ await withSettings(gm, async () => {
       && h.e1.WIS === "Ranged attacks, foraging, navigation, spotting illusions" && h.e1.CHA === "Persuasion, henchmen, blessings"
       && h.e1.STR === h.e2.STR && h.custom === "Physical resistance, item slots, wounds",
       "a 1e world shows the 1e ability taglines (CON healing, INT no spells a day, WIS illusions, CHA henchmen); 2e and Custom the 2e ones", JSON.stringify(h));
+  });
+
+  await section("29. Generate a spell (Knave 2e p27), at the GM's request.", async () => {
+    // The formula pieces, then probe tables where the world has none (the book's words never ship).
+    const g = await gm.evaluate(async (sys) => {
+      const G = await import(`${sys}/spell-generator.js`);
+      const parts = G.parseFormula("[Wizard name]’s [Quality]  [Element] [Form]");
+      const out = {
+        slots: parts.filter((p) => p.slot).map((p) => p.table).join(),
+        name: G.spellName(parts.map((p) => (p.slot ? { ...p, word: p.slot.toUpperCase() } : p))),
+        plural: [G.slotTable("Colour"), G.slotTable("Body"), G.slotTable("Beast")].join(),
+        own: !game.tables.getName(G.FORMULA_TABLE),
+      };
+      out.missing = out.own ? (await G.rollSpell()).missing?.join() : "";
+      const rows = (names) => names.map((name, i) => ({ type: "text", name, range: [i + 1, i + 1], weight: 1 }));
+      const made = [];
+      if (out.own) {
+        made.push((await RollTable.create({ name: G.FORMULA_TABLE, formula: "1d1", results: rows(["[Wizard name]’s [Quality] [Element] [Form]"]) })).id);
+        for (const [name, words] of [["Wizard Names", ["Probezar", "Probelda"]], ["Qualities", ["Probe-glowing", "Probe-silent"]],
+          ["Elements", ["Probe-frost", "Probe-ash"]], ["Forms", ["Probe-ring", "Probe-veil"]], ["Effects", ["Probe-binding", "Probe-folding"]]]) {
+          if (!game.tables.getName(name)) made.push((await RollTable.create({ name, formula: "1d2", results: rows(words) })).id);
+        }
+      }
+      out.made = made;
+      return out;
+    }, SYS);
+    made.tables.push(...g.made);
+    ok(g.slots === "Wizard Names,Qualities,Elements,Forms" && g.name === "WIZARD NAME’s QUALITY ELEMENT FORM" && g.plural === "Colours,Bodies,Beasts",
+      "a formula's bracketed words map to their tables, and the name is put back together", JSON.stringify(g));
+    ok(!g.own || g.missing === "Spell Formulae", "with no formula table, the generator says which table is missing", JSON.stringify(g));
+
+    // The GM sends the request; Alice's window opens.
+    await gm.evaluate(() => game.knavery.openDashboard());
+    await gm.waitForSelector("#knavery-gm-dashboard", { timeout: T(10000) });
+    const D = "#knavery-gm-dashboard";
+    await gm.locator(`${D} nav [data-tab="requests"]`).first().click();
+    await gm.locator(`${D} input[name="pc"][value="${ids.a}"]`).check();
+    await gm.locator(`${D} select[name="check"]`).selectOption("spell:generate");
+    const hiddenDiff = await gm.evaluate((d) => document.querySelector(`${d} .dash-request-difficulty`)?.hidden === true, D);
+    await gm.locator(`${D} input[name="reason"]`).fill("Probe: the tome in the crypt");
+    await gm.locator(`${D} button[data-action="sendRequest"]`).click();
+    await alice.waitForSelector(".knavery-spell-gen .kn-spell-gen-words li", { timeout: T(15000) });
+    const w = await alice.evaluate(() => {
+      const el = document.querySelector(".knavery-spell-gen");
+      const words = [...el.querySelectorAll(".kn-spell-gen-words li")];
+      return {
+        reason: el.querySelector(".roll-reason")?.textContent.trim(), words: words.length,
+        first: words[0]?.querySelector(".kn-spell-gen-word")?.textContent.trim(),
+        name: el.querySelector('input[name="spellName"]')?.value, buttons: el.querySelectorAll('button[data-action="reroll"]:not([disabled])').length,
+      };
+    });
+    await alice.locator('.knavery-spell-gen button[data-action="reroll"]').first().click();
+    await alice.waitForTimeout(T(900));
+    const r = await alice.evaluate(() => {
+      const el = document.querySelector(".knavery-spell-gen");
+      return { open: el.querySelectorAll('button[data-action="reroll"]:not([disabled])').length, marked: el.querySelectorAll(".kn-spell-gen-words .hint").length,
+        name: el.querySelector('input[name="spellName"]')?.value };
+    });
+    await alice.screenshot({ path: `${SHOTS}/spell-generator.png` });
+    await alice.locator('.knavery-spell-gen input[name="spellName"]').fill("Probe Circle of Edits");
+    await alice.locator('.knavery-spell-gen button[data-action="addBook"]').click();
+    await alice.waitForTimeout(T(1500));
+    const done = await gm.evaluate((x) => {
+      const actor = game.actors.get(x);
+      const book = actor.items.getName("Probe Circle of Edits");
+      const msg = game.messages.contents.at(-1);
+      const line = document.querySelector("#knavery-gm-dashboard .request-log li.state-done")?.textContent.replace(/\s+/g, " ").trim();
+      return { book: book?.type, generated: !!book?.getFlag("base-knavery", "generated"), card: msg?.getFlag("base-knavery", "spellGen")?.name,
+        line, closed: !document.querySelector(".knavery-spell-gen") };
+    }, ids.a);
+    const aliceClosed = await alice.evaluate(() => !document.querySelector(".knavery-spell-gen"));
+    ok(hiddenDiff && w.reason === "Probe: the tome in the crypt" && w.words >= 2 && !!w.name && w.buttons === w.words,
+      "the GM's request opens Alice's window with the reason, the spell's words and its name", JSON.stringify(w));
+    ok(r.open === 0 && r.marked === 1 && !!r.name, "one word may be rolled again, and then no other", JSON.stringify(r));
+    ok(done.book === "spellbook" && done.generated && done.card === "Probe Circle of Edits" && /Probe Alice PC.*Probe Circle of Edits/.test(done.line ?? "") && aliceClosed,
+      "Add puts the spellbook (as Alice worded it) in her inventory, posts the card, and the GM's request reads the spell", JSON.stringify(done));
+    await gm.evaluate((x) => {
+      game.actors.get(x).items.getName("Probe Circle of Edits")?.delete();
+      foundry.applications.instances.get("knavery-gm-dashboard")?.close();
+    }, ids.a);
   });
 
   // Cleanup.

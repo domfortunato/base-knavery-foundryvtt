@@ -1,0 +1,28 @@
+{{!-- Generating a new spell (Knave 2e p27): the formula, its words (one may be rolled again), the name. --}}
+<div class="kn-spell-gen">
+  {{#if reason}}<p class="roll-reason"><i class="fas fa-bullhorn"></i> {{reason}}</p>{{/if}}
+  {{#if missing}}
+  <p class="kn-spell-gen-missing"><i class="fas fa-triangle-exclamation"></i> {{missing}}</p>
+  {{else}}
+  <p class="kn-spell-gen-formula"><span class="hint">{{localize "KNAVERY.SpellGen.Formula"}}</span> {{formula}}</p>
+  <ul class="kn-spell-gen-words">
+    {{#each words}}
+    <li>
+      <span class="kn-spell-gen-slot">{{this.slot}}</span>
+      <span class="kn-spell-gen-word">{{this.word}}</span>
+      {{#if this.rerolled}}<span class="hint">{{localize "KNAVERY.SpellGen.Rerolled"}}</span>
+      {{else}}<button type="button" class="kn-spell-gen-reroll" data-action="reroll" data-index="{{this.index}}" {{#if ../rerolled}}disabled{{/if}}
+        data-tooltip="{{#if ../rerolled}}KNAVERY.SpellGen.RerollUsed{{else}}KNAVERY.SpellGen.Reroll{{/if}}"><i class="fas fa-dice"></i></button>{{/if}}
+    </li>
+    {{/each}}
+  </ul>
+  <div class="form-group">
+    <label>{{localize "KNAVERY.SpellGen.Name"}}</label>
+    <input type="text" name="spellName" value="{{name}}" maxlength="120" />
+  </div>
+  <p class="hint">{{localize "KNAVERY.SpellGen.Hint"}}</p>
+  {{/if}}
+  <footer class="form-footer">
+    <button type="button" data-action="addBook" {{#unless canAdd}}disabled{{/unless}}><i class="fas fa-book"></i> {{localize "KNAVERY.SpellGen.Add"}}</button>
+  </footer>
+</div>

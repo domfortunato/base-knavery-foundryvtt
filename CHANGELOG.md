@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- **Generate a spell** (Knave 2e p27), at the GM's request: on the dashboard's Requests tab choose
+  *Generate a spell* and the characters. Each player's window rolls a formula and its words (wizard
+  name, quality, effect, element, form); they may roll one word again and adjust the wording, then add
+  it as a spellbook, its effect left for the player and the GM to agree. A card shows it, and the
+  request's result reads the spell's name. The tables come from your Knave 2e book (the table builder)
+  or the table importer; the window names any that are missing.
+
 ## 0.2.0
 
 - **Knave 1e out of the box.** A new world plays Knave first edition as written; Knave 2e comes with
