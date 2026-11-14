@@ -4703,10 +4703,10 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 /* The head: the title and byline beside the Made for Knave logo. */
 .knavery-welcome-head { display: flex; align-items: center; justify-content: center; gap: 24px; }
 .knavery-welcome-titles { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
-/* The knight and the logo stand at one height either side of the title; the logo is softened
-   (user, 2026-11-14: it overwhelmed the window), the file unaltered. */
+/* The knight and the logo stand either side of the title. The logo is smaller and softened (user,
+   2026-11-14: it overwhelmed the window), the file unaltered; the knight keeps its size. */
 .knavery-welcome-head img { display: block; flex: 0 0 auto; width: auto; height: 116px; border: none; }
-.knavery-welcome-head .knavery-logo-light, .knavery-welcome-head .knavery-logo-dark { opacity: 0.5; }
+.knavery-welcome-head .knavery-logo-light, .knavery-welcome-head .knavery-logo-dark { height: 88px; opacity: 0.5; }
 .knavery-welcome-title sup { font-size: 0.45em; font-variant: normal; vertical-align: super; margin-left: 1px; }
 /* Lydia Comer's knight: her line art on the light theme, her white-filled version on the dark one. */
 .knavery-welcome .knavery-knight-dark { display: none; }
