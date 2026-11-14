@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- **The dashboard's Dice page is now Random**, with an **Events** section: weather, travel and delve
+  shifts, signs, city events and disasters, each rolled (whispered to the GM) from the table built from
+  your Knave 2e book; a button stays off until its table exists.
 - **Difficulty guide** under the Requests tab's Difficulty: 0 to 10, 5 for most tasks; against a creature,
   its ability score or level; the situation sets the edge (Knave 2e p7, Knave 1e p2, in our words).
 - **The Game Master's Dashboard** opens from a big button at the top of the left toolbar (the GM's

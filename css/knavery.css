@@ -5112,3 +5112,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-gm-dashboard .dash-difficulty-guide li { margin: 0; }
 /* The dashboard's Damage page: the splat in the peril red, as the sheet's Attack button. */
 .knavery-gm-dashboard > .window-content > nav.knavery-tab-rail button[data-tab="damage"] i { color: var(--kn-peril); }
+/* A railed window drops the dark theme's backdrop blur (the rail would be clipped), so its
+   see-through background turns solid, as Foundry does for reduced transparency. */
+.theme-dark .knavery.knavery-railed,
+.knavery.knavery-railed.theme-dark { --background: var(--color-cool-5); }

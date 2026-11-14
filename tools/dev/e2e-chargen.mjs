@@ -2480,6 +2480,9 @@ await withSettings(gm, async () => {
         strips: app.querySelectorAll("nav.tabs:not(.knavery-tab-rail)").length,
         outside: nb.left >= fb.right - 1 || nb.right <= fb.left + 1, visible: nb.width > 20 && nb.height > 100,
         guide: app.querySelectorAll(".dash-difficulty-guide li").length,
+        random: nav.querySelector('button[data-tab="dice"]')?.getAttribute("aria-label"),
+        events: app.querySelectorAll('section[data-tab="dice"] .dash-events [data-action="rollEvent"]').length,
+        solid: getComputedStyle(app).getPropertyValue("--background").trim(),
       };
     });
     await gm.locator('#knavery-gm-dashboard nav.knavery-tab-rail button[data-tab="tools"]').click();
@@ -2497,8 +2500,8 @@ await withSettings(gm, async () => {
     await gm.screenshot({ path: `${SHOTS}/dashboard-rail.png` });
     ok(hud.there && hud.inColumn && hud.before && hud.clear && hud.size >= 48 && !aliceHud,
       "the GM has a big dashboard button atop the left toolbar, clear of the scene controls; Alice has none", JSON.stringify({ hud, aliceHud }));
-    ok(rail.tabs === "requests,damage,time,party,dice,xp,tools,tables" && rail.strips === 0 && rail.outside && rail.visible && rail.guide === 3,
-      "the dashboard's pages are on a thumb rail off its edge, with no tab strip; Requests shows the difficulty guide", JSON.stringify(rail));
+    ok(rail.tabs === "requests,damage,time,party,dice,xp,tools,tables" && rail.strips === 0 && rail.outside && rail.visible && rail.guide === 3 && rail.random === "Random" && rail.events === 6,
+      "the dashboard's pages are on a thumb rail off its edge, with no tab strip; Requests shows the difficulty guide; Random has the six events", JSON.stringify(rail));
     ok(tools.active && tools.toggles === 5 && tools.manager && tools.tablesClean && tools.tablesImport,
       "Player Tools holds the five switches and the Marketplace Manager; Tables keeps the importer", JSON.stringify(tools));
     await gm.evaluate(() => foundry.applications.instances.get("knavery-gm-dashboard")?.close());

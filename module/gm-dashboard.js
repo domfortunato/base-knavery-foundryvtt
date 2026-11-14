@@ -9,7 +9,8 @@
  *   Time      dungeon turns or travel watches: end one (the world clock moves on and
  *             the hazard die rolls), the party resting, the die on its own (hazard.js);
  *             hirelings' wages: when each is due, and Pay (hirelings.js).
- *   Dice      reaction, encounter distance, morale.
+ *   Random    reaction, encounter distance, morale; events from the GM's 2e tables (weather,
+ *             shifts, signs, city events, disasters), whispered to the GM.
  *   Party     every player character at a glance: HP, wounds, slots, coins, lights
  *             and spellbooks, each opening its sheet (user, 2026-11-14).
  *   XP        award XP: the same amount to each chosen character, a different
@@ -43,6 +44,16 @@ const F = (k, d) => game.i18n.format(k, d);
 
 /** Requests sent this session, newest first: {id, label, reason, target, entries:[{actorId,name,state,total,success}]} */
 const requestLog = [];
+
+/** The Random page's events: Knave 2e tables, built from the GM's book (never shipped), and their pages. */
+const EVENTS = [
+  { key: "Weather", table: "Weather", icon: "fa-cloud-sun-rain", page: 9 },
+  { key: "TravelShift", table: "Travel Shifts", icon: "fa-route", page: 9 },
+  { key: "DelveShift", table: "Delve Shifts", icon: "fa-dungeon", page: 14 },
+  { key: "Sign", table: "Signs", icon: "fa-paw", page: 10 },
+  { key: "CityEvent", table: "City Events", icon: "fa-city", page: 46 },
+  { key: "Disaster", table: "Disasters", icon: "fa-volcano", page: 31 },
+];
 
 /** The edges a GM may set on a request. */
 const EDGES = ["disadvantage", "normal", "advantage"];
@@ -79,6 +90,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       encounterDistance: GmDashboard.#onEncounterDistance,
       morale: GmDashboard.#onMorale,
       rollTable: GmDashboard.#onRollTable,
+      rollEvent: GmDashboard.#onRollEvent,
       importTable: GmDashboard.#onImportTable,
       marketManager: () => openMarketplaceManager(),
       toggleSetting: GmDashboard.#onToggleSetting,
@@ -180,6 +192,11 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
         };
       })(),
       wages: wageRows(),
+      events: EVENTS.map((e) => {
+        const exists = !!game.tables.getName(e.table);
+        return { ...e, label: L(`KNAVERY.Dashboard.Event.${e.key}`), exists,
+          tip: exists ? F("KNAVERY.Dashboard.EventFrom", { name: e.table, page: e.page }) : F("KNAVERY.Dashboard.EventMissing", { name: e.table }) };
+      }),
       party: partyRows(),
       usesWounds: usesWounds(),
       treasure: treasureContext(),
@@ -528,6 +545,13 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
   /* -------------------------------------------- */
   /*  Tables and switches                          */
   /* -------------------------------------------- */
+
+  /** An event table (the Random page), whispered to the GM like the page's other rolls. */
+  static async #onRollEvent(_e, target) {
+    const table = await findTable(target.dataset.table);
+    if (!table) return ui.notifications.warn("KNAVERY.Dashboard.EventMissing", { format: { name: target.dataset.table } });
+    await table.draw({ rollMode: CONST.DICE_ROLL_MODES.PRIVATE });
+  }
 
   static async #onRollTable(_e, target) {
     const table = await findTable(target.closest("[data-table]").dataset.table);

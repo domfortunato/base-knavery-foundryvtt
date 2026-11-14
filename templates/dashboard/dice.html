@@ -6,5 +6,12 @@
     <button type="button" data-action="encounterDistance" data-where="wilderness"><i class="fas fa-ruler-combined"></i> {{localize "KNAVERY.Dashboard.DistanceWilderness"}}</button>
     <button type="button" data-action="morale"><i class="fas fa-flag"></i> {{localize "KNAVERY.Dashboard.MoraleSelected"}}</button>
   </div>
+  <h3>{{localize "KNAVERY.Dashboard.Events"}}</h3>
+  <div class="dash-buttons dash-events">
+    {{#each events}}
+    <button type="button" data-action="rollEvent" data-table="{{this.table}}"{{#unless this.exists}} disabled{{/unless}} data-tooltip-text="{{this.tip}}"><i class="fas {{this.icon}}"></i> {{this.label}}</button>
+    {{/each}}
+  </div>
+  <p class="hint">{{localize "KNAVERY.Dashboard.EventsHint"}}</p>
   <p class="hint">{{localize "KNAVERY.Dashboard.DiceHint"}}</p>
 </section>
