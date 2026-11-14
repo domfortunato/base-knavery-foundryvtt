@@ -173,6 +173,9 @@ with them.
 
 See [LICENSE.txt](LICENSE.txt).
 - The code is **MIT** and descends from Air Bladder and Cairn-FoundryVTT.
+- The name **Base Knavery** is not part of the MIT licence: fork and change the
+  code freely, but give a modified version you share its own name. Saying it is
+  based on or compatible with Base Knavery is welcome.
 - The character traits, alignment, reaction, starting gear and the 100
   level-less spells are from *Knave* (first edition) by Ben Milton, licensed under
   [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
@@ -180,7 +183,8 @@ See [LICENSE.txt](LICENSE.txt).
   - game-icons.net, CC BY 3.0
   - Jon Aspeheim, CC BY 4.0
   - tlomdev, CC BY-SA 4.0
-  - Lydia Comer, CC BY-NC-SA 4.0 (so the system as a whole may not be sold)
+  - Lydia Comer, CC BY-NC-SA 4.0 (so the system as a whole may not be sold); the
+    welcome window's knight is hers too, used with her permission
 - The "Made for Knave" logo is © Questing Beast LLC, used under the Knave:
   Second Edition Third Party License. Knave: Second Edition is © Ben Milton and
   Questing Beast LLC; its own logo is not used, as that licence requires.

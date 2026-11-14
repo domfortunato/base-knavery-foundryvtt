@@ -32,7 +32,9 @@
   monster description was written by AI (Base Knavery's code is written with the help of an AI coding assistant); the
   art's licences fold under it. A **Licensing** section lists each edition's licence as a folded bullet.
   The window is wider, in two columns (one on a narrow screen), and scrolls within the screen. A knight by
-  Lydia Comer, used with her permission, stands beside the title (her white version on the dark theme). The first
+  Lydia Comer, used with her permission, stands beside the title, cropped to his face (her white version on the dark theme).
+  LICENSE.txt and the README now say the name Base Knavery is not part of the MIT licence: a fork
+  that is shared needs its own name. The first
   edition is called by its title, Knave.
 - **The sheet footer** now reads "...for Knave (first and second editions)...".
 - **Time and hazards** (a new Time tab on the Game Master's Dashboard): end a dungeon turn or a travel

@@ -8,6 +8,16 @@ icons, the fonts and the "Made for Knave" logos are licensed separately by their
 own authors, on terms MIT neither restates nor overrides.
 
 
+The name "Base Knavery"
+-----------------------
+
+"Base Knavery" is the name of this project, used by Dom Bosco. The MIT licence
+covers the code; it does not license the name. You may copy, change and share
+the code, but a modified version you distribute must use a different name and
+must not suggest that it is Base Knavery or comes from its author. Saying that
+your work is based on, forked from or compatible with Base Knavery is welcome.
+
+
 Knave 2e compatibility
 ----------------------
 
@@ -86,8 +96,8 @@ Lydia Comer galleries — CC BY-NC-SA 4.0
     these galleries ship with it, this system as a whole may not be sold.
 
 Welcome window art — used with permission
-    art/welcome/: a knight by Lydia Comer (two versions), © Lydia Comer, used with her
-    permission. Not covered by MIT, nor by the CC BY-NC-SA terms of
+    art/welcome/: a knight by Lydia Comer (two versions, cropped to the head
+    with her permission), © Lydia Comer, used with her permission. Not covered by MIT, nor by the CC BY-NC-SA terms of
     art/lydia-comer/. See art/welcome/CREDITS.md.
 
 Alegreya fonts — SIL Open Font License 1.1

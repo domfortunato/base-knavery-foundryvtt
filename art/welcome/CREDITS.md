@@ -7,5 +7,7 @@
 It is **not** covered by the MIT licence, nor by the CC BY-NC-SA 4.0 terms of the galleries in
 `art/lydia-comer/`. Do not reuse it outside Base Knavery without asking the artist.
 
-Both files are the artist's originals, unchanged: the line art shows on the light theme, the
-white-filled version on the dark theme (`css/knavery.css`, the welcome head).
+Both files are the artist's originals cropped to the head and collar (pixels 170-810 across,
+0-560 down, of her 1000 x 1000 files), which she permits, and otherwise unchanged. The line art
+shows on the light theme, the white-filled version on the dark theme (`css/knavery.css`, the
+welcome head).
