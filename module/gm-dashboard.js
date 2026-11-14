@@ -581,8 +581,8 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   /**
-   * Surprise (p19): the PC with the best WIS makes a WIS check against the creatures' WIS. Sets the
-   * request up on the Requests page; the GM ticks that PC, types the creatures' WIS and sends.
+   * Surprise (p19): within 80', the closest PC makes a WIS check against the closest creature's WIS;
+   * winning by 5 or more surprises. Sets the request up on Requests; the GM ticks that PC and sends.
    */
   static #onSurprise() {
     this.changeTab("requests", "primary");

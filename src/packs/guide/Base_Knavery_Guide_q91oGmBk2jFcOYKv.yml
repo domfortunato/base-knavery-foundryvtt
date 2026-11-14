@@ -155,7 +155,7 @@ pages:
         </ul></li>
         <li><b>Damage</b> comes off HP first. Each point past 0 fills an item slot with a wound, from the bottom of the inventory up: empty slots first, then coins, then the lowest item, which becomes <i>Unusable</i> until the wound heals (whether it was dropped or broken is the table's call). When every slot is wounded, the character dies. <b>Direct</b> damage skips HP. Monsters take direct damage tripled and die at 0 HP. Under Knave 1e's death rule there are no wounds and no direct damage: a character is unconscious at 0 HP and dead below 0.</li>
         <li>The <b>Die of Fate</b> is a d6 for when fate, not skill, decides.</li>
-        <li>The dashboard's <b>Random</b> page rolls for the GM, whispered: an encounter's reaction, activity, distance, morale and a surprise check (set up on Requests); events (weather, shifts, signs, city events, disasters); a monster or a quick NPC; and carousing mishaps. Its tables come from your Knave 2e book.</li>
+        <li>The dashboard's <b>Random</b> page rolls for the GM, whispered: an encounter's reaction, activity, distance, morale and a surprise check (the closest PC's WIS, set up on Requests); events (weather, shifts, signs, city events, disasters); a monster or a quick NPC; and carousing mishaps. Its tables come from your Knave 2e book.</li>
         <li><b>Repair</b>: a hammer on the Inventory row, or beside <i>Broken</i> on the item sheet. Under Knave 1e attacks a worn weapon or armor costs 10% of its price a point; otherwise a broken item is mended for nothing (Knave 2e has no repair rule).</li>
         </ul>
     flags: {}
