@@ -46,16 +46,7 @@
       <section class="knavery-welcome-ai">
         <p class="knavery-welcome-noai"><i class="fa-solid fa-paintbrush" inert></i> <strong>{{localize "KNAVERY.Welcome.NoAiArt"}}</strong> {{localize "KNAVERY.Welcome.NoAiArtBody"}}</p>
         <p class="knavery-welcome-noai knavery-welcome-notext"><i class="fa-solid fa-scroll" inert></i> <strong>{{localize "KNAVERY.Welcome.NoAiText"}}</strong> {{localize "KNAVERY.Welcome.NoAiTextBody"}}</p>
-        <p class="knavery-welcome-aicode">{{localize "KNAVERY.Welcome.AiCode"}}</p>
-        <ul class="knavery-welcome-folds">
-          <li>
-            <details class="knavery-welcome-fold knavery-welcome-art">
-              <summary>{{localize "KNAVERY.Welcome.ArtLicensing"}}</summary>
-              <ul>
-                {{#each art}}
-                <li><a href="{{this.url}}" target="_blank" rel="noopener">{{this.name}}</a>, {{this.by}}: {{#if this.licenseUrl}}<a href="{{this.licenseUrl}}" target="_blank" rel="noopener">{{this.license}}</a>{{else}}{{this.license}}{{/if}}</li>
-                {{/each}}
-              </ul>
+        <p class="knavery-welcome-noai knavery-welcome-aicode"><i class="fa-solid fa-brain-circuit" inert></i> <strong>{{localize "KNAVERY.Welcome.AiCode"}}</strong></p>
             </details>
           </li>
         </ul>
@@ -108,6 +99,16 @@
             </details>
           </li>
         </ul>
+        {{!-- The art's licences, moved here from the AI disclosure (user, 2026-11-14). --}}
+        <ul class="knavery-welcome-folds knavery-welcome-artfolds">
+          <li>
+            <details class="knavery-welcome-fold knavery-welcome-art">
+              <summary>{{localize "KNAVERY.Welcome.ArtLicensing"}}</summary>
+              <ul>
+                {{#each art}}
+                <li><a href="{{this.url}}" target="_blank" rel="noopener">{{this.name}}</a>, {{this.by}}: {{#if this.licenseUrl}}<a href="{{this.licenseUrl}}" target="_blank" rel="noopener">{{this.license}}</a>{{else}}{{this.license}}{{/if}}</li>
+                {{/each}}
+              </ul>
       </section>
     </div>
   </div>
