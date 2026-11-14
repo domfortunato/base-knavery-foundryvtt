@@ -1,0 +1,22 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: PfsD4KsQFjrCkroC
+_key: '!items!PfsD4KsQFjrCkroC'
+name: Shield
+type: armor
+img: systems/base-knavery/art/game-icons/shields/shield.svg
+system:
+  slots: 1
+  quantity: 1
+  armorType: shield
+  points: 1
+  qualityMax: 1
+  cost: 40
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

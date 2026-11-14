@@ -47,7 +47,11 @@
             <input type="text" name="system.numberAppearing" value="{{source.numberAppearing}}" class="short-input" />
             {{#if (eq system.role "hireling")}}
             <label data-tooltip="KNAVERY.WageTip">{{localize "KNAVERY.Wage"}}</label>
-            <input type="number" min="0" step="1" name="system.wage" value="{{source.wage}}" class="short-input" data-dtype="Number" />
+            <span class="kn-wage-field"><input type="number" min="0" step="1" name="system.wage" value="{{source.wage}}" class="short-input" data-dtype="Number" />
+              <select name="system.wagePeriod" class="kn-wage-period" data-tooltip="KNAVERY.WagePeriodTip">
+                <option value="month" {{#if (eq source.wagePeriod "month")}}selected{{/if}}>{{localize "KNAVERY.WagePeriod.month"}}</option>
+                <option value="day" {{#if (eq source.wagePeriod "day")}}selected{{/if}}>{{localize "KNAVERY.WagePeriod.day"}}</option>
+              </select></span>
             <label data-tooltip="KNAVERY.EmployerTip">{{localize "KNAVERY.Employer"}}</label>
             <select name="system.employer" class="employer-select">
               <option value="">—</option>

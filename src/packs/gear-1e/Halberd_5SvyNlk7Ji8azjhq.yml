@@ -1,0 +1,24 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: 5SvyNlk7Ji8azjhq
+_key: '!items!5SvyNlk7Ji8azjhq'
+name: Halberd
+type: weapon
+img: systems/base-knavery/icons/weapons.svg
+system:
+  slots: 3
+  quantity: 1
+  damage: d10
+  hands: 2
+  attackType: melee
+  range: ''
+  cost: 20
+  qualityMax: 3
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

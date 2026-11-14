@@ -4,7 +4,9 @@
  * the items it grants, and its Active Effects (mechanical modifiers that
  * transfer to whoever holds the career).
  */
-import { ARMOR_TYPES, FEATURE_TYPES, ITEM_KINDS, SYS_PATH } from "../config.js";
+import { ARMOR_TYPES, FEATURE_TYPES, ITEM_KINDS, SYS_PATH, defaultQualityMax } from "../config.js";
+import { usesQuality } from "../rules.js";
+import { hasQuality, qualityOf, repairCost, repairItem } from "../quality.js";
 import { pickArt } from "../art.js";
 import { enrichForSheet } from "../clean-html.js";
 
@@ -30,6 +32,7 @@ export class KnaveryItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
       editEffect: KnaveryItemSheet.#onEditEffect,
       deleteEffect: KnaveryItemSheet.#onDeleteEffect,
       toggleEffect: KnaveryItemSheet.#onToggleEffect,
+      repair: KnaveryItemSheet.#onRepair,
     },
   };
 
@@ -65,6 +68,7 @@ export class KnaveryItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
         index: i, entry, label: entry.includes(".") ? (fromUuidSync(entry, { strict: false })?.name ?? entry) : entry,
       })),
       effects: item.effects.map((e) => ({ id: e.id, name: e.name, img: e.img, disabled: e.disabled })),
+      quality: this.#qualityContext(),
       enrichedDescription: await enrichForSheet(s.description ?? "", { relativeTo: item, secrets: item.isOwner }),
     });
     return context;
@@ -97,9 +101,31 @@ export class KnaveryItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     });
   }
 
+  /** Knave 1e quality (p4), for a weapon or armor under the 1e attack rule; else null. */
+  #qualityContext() {
+    const item = this.item;
+    if (!usesQuality() || !hasQuality(item)) return null;
+    const q = qualityOf(item);
+    const cost = repairCost(item);
+    return {
+      ...q, maxInput: item.system.qualityMax ?? "", fallback: defaultQualityMax(item.type, item.system),
+      cost, canRepair: q.value < q.max && this.isEditable,
+      repairLabel: game.i18n.format("KNAVERY.Quality.Repair", { cost }),
+    };
+  }
+
   /** Feature rows are an array: rebuild it from the flat form keys on submit. */
   _processFormData(event, form, formData) {
     const data = super._processFormData(event, form, formData);
+    // Quality is shown as what is left; it is stored as the points lost (system.wear).
+    const left = data.kn?.quality;
+    delete data.kn;
+    if (left !== undefined && left !== null && hasQuality(this.item)) {
+      const sys = { ...this.item.system.toObject(), ...(data.system ?? {}) };
+      const max = sys.qualityMax ?? defaultQualityMax(this.item.type, sys);
+      const value = Math.max(0, Math.min(max, Math.floor(Number(left) || 0)));
+      foundry.utils.setProperty(data, "system.wear", max - value);
+    }
     const f = data.system?.features;
     if (f && !Array.isArray(f)) data.system.features = Object.keys(f).sort((a, b) => a - b).map((k) => f[k]);
     return data;
@@ -143,6 +169,10 @@ export class KnaveryItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
 
   static async #onDeleteEffect(_e, target) {
     await this.item.effects.get(target.closest("[data-effect-id]").dataset.effectId)?.delete();
+  }
+
+  static async #onRepair() {
+    if (this.isEditable) await repairItem(this.item);
   }
 
   static async #onToggleEffect(_e, target) {

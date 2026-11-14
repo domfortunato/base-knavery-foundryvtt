@@ -1,0 +1,22 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: bJvizhXYNDfl4BES
+_key: '!items!bJvizhXYNDfl4BES'
+name: Gambeson
+type: armor
+img: systems/base-knavery/art/game-icons/armor/leather-vest.svg
+system:
+  slots: 1
+  quantity: 1
+  armorType: gambeson
+  points: 1
+  qualityMax: 3
+  cost: 60
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

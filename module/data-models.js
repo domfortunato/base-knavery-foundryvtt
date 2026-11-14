@@ -6,10 +6,10 @@
  * is never sanitized. `npm run check:fields` keeps the two in step.
  */
 import {
-  ABILITIES, ABILITY_MAX, AC_BASE, ARMOR_TYPES, COINS_PER_SLOT, FEATURE_TYPES, HIRELING_SLOTS,
-  ITEM_KINDS, LEVELS, LEVELS_1E, MAX_ARMOR_POINTS, MAX_LEVEL, NPC_ROLES, SLOT_BASE,
+  ABILITIES, ABILITY_MAX, AC_BASE, ARMOR_TYPES, FEATURE_TYPES, HIRELING_SLOTS,
+  ITEM_KINDS, LEVELS, LEVELS_1E, MAX_ARMOR_POINTS, MAX_LEVEL, NPC_ROLES, SLOT_BASE, defaultQualityMax,
 } from "./config.js";
-import { spellRule, usesWounds } from "./rules.js";
+import { coinsPerSlot, spellRule, usesWounds } from "./rules.js";
 
 const {
   SchemaField, StringField, HTMLField, BooleanField, NumberField, ArrayField, ObjectField,
@@ -95,7 +95,7 @@ export class CharacterData extends KnaveryActorData {
     this.ac = this.acOverride ?? this.acDerived;
     this.acOverridden = this.acOverride !== null && this.acOverride !== this.acDerived;
     this.slotsMax = SLOT_BASE + (a.CON?.value ?? 0);
-    this.coinSlots = coinsTakeSlots() ? Math.floor(this.coins / COINS_PER_SLOT) : 0;
+    this.coinSlots = coinsTakeSlots() ? Math.floor(this.coins / coinsPerSlot()) : 0;
     this.levelFromXp = levelForXp(this.xp);
     this.nextXp = nextLevelXp(this.level);
     this.canLevelUp = this.nextXp !== null && this.xp >= this.nextXp;
@@ -131,6 +131,8 @@ export class NpcData extends KnaveryActorData {
       /** A hireling's employer (a character's id), who pays the wage; and when it is next due (world time). */
       employer: str(),
       wageDue: new NumberField({ required: false, nullable: true, initial: null }),
+      /** The wage is by the month (Knave 2e) or by the day (Knave 1e's henchmen, p3). */
+      wagePeriod: new StringField({ required: true, initial: "month", choices: ["month", "day"] }),
       pronouns: str(),
       traits: traits(),
       generationEnabled: bool(false),
@@ -144,7 +146,7 @@ export class NpcData extends KnaveryActorData {
     this.ap = Math.max(0, this.armorClass - AC_BASE) + worn;
     this.ac = this.armorClass + worn;
     this.slotsMax = this.role === "monster" ? 0 : HIRELING_SLOTS;
-    this.coinSlots = coinsTakeSlots() ? Math.floor(this.coins / COINS_PER_SLOT) : 0;
+    this.coinSlots = coinsTakeSlots() ? Math.floor(this.coins / coinsPerSlot()) : 0;
     this.dead = this.hp.value <= 0 && this.hp.max > 0;
     for (const k of ABILITIES) {
       this.abilities[k].defense = 11 + this.abilities[k].value;
@@ -160,6 +162,19 @@ export class NpcData extends KnaveryActorData {
 /* -------------------------------------------- */
 /*  Items                                        */
 /* -------------------------------------------- */
+
+/**
+ * Knave 1e quality (p4): `wear` is the points lost; `qualityMax` null means the default for the
+ * item (config.js defaultQualityMax). Derived: `quality` {value, max}. Read only under the 1e attack rule.
+ */
+const quality = () => ({
+  qualityMax: new NumberField({ required: false, nullable: true, integer: true, initial: null, min: 1 }),
+  wear: int(0),
+});
+const deriveQuality = (data, type) => {
+  const max = data.qualityMax ?? defaultQualityMax(type, data);
+  data.quality = { max, value: Math.max(0, max - (data.wear ?? 0)) };
+};
 
 const universal = () => ({
   description: html(),
@@ -198,7 +213,12 @@ export class WeaponData extends foundry.abstract.TypeDataModel {
       attackType: new StringField({ required: true, initial: "melee", choices: ["melee", "ranged"] }),
       /** Ammunition quantity for bows and slings, tracked on the weapon. */
       ammo: int(0),
+      ...quality(),
     };
+  }
+
+  prepareDerivedData() {
+    deriveQuality(this, "weapon");
   }
 }
 
@@ -208,7 +228,12 @@ export class ArmorData extends foundry.abstract.TypeDataModel {
       ...universal(),
       armorType: new StringField({ required: true, initial: "other", choices: ARMOR_TYPES }),
       points: int(1, { max: MAX_ARMOR_POINTS }),
+      ...quality(),
     };
+  }
+
+  prepareDerivedData() {
+    deriveQuality(this, "armor");
   }
 }
 

@@ -49,6 +49,15 @@
   </div>
   {{/if}}
 
+  {{#if quality}}
+  <div class="item-stats kn-quality-stats">
+    <div class="form-group" data-tooltip="KNAVERY.Quality.Tip"><label>{{localize "KNAVERY.Quality.Label"}}</label>
+      <input type="number" name="kn.quality" value="{{quality.value}}" min="0" max="{{quality.max}}" step="1" data-dtype="Number" class="short" /> /
+      <input type="number" name="system.qualityMax" value="{{quality.maxInput}}" placeholder="{{quality.fallback}}" min="1" step="1" data-dtype="Number" class="short" /></div>
+    {{#if quality.canRepair}}<button type="button" class="kn-repair" data-action="repair" data-tooltip="KNAVERY.Quality.RepairTip"><i class="fas fa-hammer"></i> {{quality.repairLabel}}</button>{{/if}}
+  </div>
+  {{/if}}
+
   {{#if isType.spellbook}}
   <div class="item-stats">
     <div class="form-group"><label>{{localize "KNAVERY.Scroll"}}</label><input type="checkbox" name="system.scroll" {{checked system.scroll}} /></div>

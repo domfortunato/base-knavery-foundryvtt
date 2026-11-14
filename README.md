@@ -41,6 +41,11 @@ A world made before 0.2.0 keeps the Knave 2e rules it played; a new world plays 
 - Abilities as the lowest of 3d6 (swap two if you like), rolled starting gear
   and a weapon of your choice, unconscious at 0 HP and dead below it, d8 + CON
   healing, any number of spellbooks a day.
+- Weapons and armor wear down: a natural 20 adds a damage die and costs the
+  target's armor a point of quality (its owner picks the piece), a natural 1 costs
+  the weapon one, and repairs cost 10% of the price a point.
+- The 1e price list in copper as shop aisles, 100 coins to a slot, and
+  henchmen paid by the day.
 - The Rules choice at the top of **Configure Rules** sets every rule to one
   edition; each rule also has its own switch.
 
@@ -187,7 +192,7 @@ Base Knavery is an independent production of Dom Bosco and is not affiliated wit
 
 <details><summary><b>Knave: CC BY 4.0</b></summary>
 
-The Knave rules, traits, alignment, reaction, starting gear and the 100 level-less spells come from <i>Knave</i> by Ben Milton, licensed under <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0</a>. Changes: the rules set out as Foundry automation and settings, the tables as roll tables, 1e armor as armor points, and "Misfortunes" named Misfortune. A table you build from your Knave 2e book replaces its 1e counterpart.
+The Knave rules, traits, alignment, reaction, starting gear, price list and the 100 level-less spells come from <i>Knave</i> by Ben Milton, licensed under <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0</a>. Changes: the rules set out as Foundry automation and settings, the tables as roll tables, the price list as items and shop aisles with one item per weapon, 1e armor as armor points, and "Misfortunes" named Misfortune. A table you build from your Knave 2e book replaces its 1e counterpart.
 
 </details>
 <details><summary><b>Knave: Second Edition Third Party License</b></summary>

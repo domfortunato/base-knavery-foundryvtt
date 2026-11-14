@@ -1,0 +1,98 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: pffJ1djeKeqOvlAo
+_key: '!tables!pffJ1djeKeqOvlAo'
+name: 'Market 1e: Lodging & Meals'
+img: icons/svg/coins.svg
+description: <p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>
+formula: 1d5
+replacement: true
+displayRoll: true
+results:
+  - _id: 5rWC4FuIgtWBbNst
+    _key: '!tables.results!pffJ1djeKeqOvlAo.5rWC4FuIgtWBbNst'
+    type: text
+    name: Bed, per night
+    description: ''
+    img: icons/svg/coins.svg
+    documentUuid: null
+    weight: 1
+    range:
+      - 1
+      - 1
+    drawn: false
+    flags:
+      base-knavery:
+        price: 1
+        service: true
+  - _id: r4WUjaJhWIZS0Vwj
+    _key: '!tables.results!pffJ1djeKeqOvlAo.r4WUjaJhWIZS0Vwj'
+    type: text
+    name: Private room, per night
+    description: ''
+    img: icons/svg/coins.svg
+    documentUuid: null
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    flags:
+      base-knavery:
+        price: 2
+        service: true
+  - _id: 6LJ38M3kMjN4hYud
+    _key: '!tables.results!pffJ1djeKeqOvlAo.6LJ38M3kMjN4hYud'
+    type: text
+    name: Meal
+    description: ''
+    img: icons/svg/coins.svg
+    documentUuid: null
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    flags:
+      base-knavery:
+        price: 2
+        service: true
+  - _id: mGgwcB8PTrvsRP2P
+    _key: '!tables.results!pffJ1djeKeqOvlAo.mGgwcB8PTrvsRP2P'
+    type: text
+    name: Hot bath
+    description: ''
+    img: icons/svg/coins.svg
+    documentUuid: null
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    flags:
+      base-knavery:
+        price: 2
+        service: true
+  - _id: AR4nc04FlUqjOW6X
+    _key: '!tables.results!pffJ1djeKeqOvlAo.AR4nc04FlUqjOW6X'
+    type: text
+    name: Stabling and fodder
+    description: ''
+    img: icons/svg/coins.svg
+    documentUuid: null
+    weight: 1
+    range:
+      - 5
+      - 5
+    drawn: false
+    flags:
+      base-knavery:
+        price: 2
+        service: true
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

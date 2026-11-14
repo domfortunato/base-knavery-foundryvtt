@@ -1,0 +1,20 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: iPBw6W2mTLMfdFK2
+_key: '!items!iPBw6W2mTLMfdFK2'
+name: Bread, 1 loaf
+type: item
+img: systems/base-knavery/art/game-icons/food/bread.svg
+system:
+  slots: 1
+  quantity: 1
+  bundle: 1
+  cost: 1
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

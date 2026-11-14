@@ -24,7 +24,7 @@ export const MANEUVER_THRESHOLD = 21;
 export const AC_BASE = 11;
 export const MAX_ARMOR_POINTS = 7;
 
-/** Item slots = 10 + CON. Coins fill one slot per 500. Hirelings have 10. */
+/** Item slots = 10 + CON. Coins fill one slot per 500 (2e) or 100 (1e: rule `coins-per-slot`). Hirelings have 10. */
 export const SLOT_BASE = 10;
 export const COINS_PER_SLOT = 500;
 export const HIRELING_SLOTS = 10;
@@ -151,8 +151,11 @@ export const TABLES = {
   reaction: "Reaction",
 };
 
-/** Aisles of the marketplace are RollTables named "Market: <Aisle>". */
+/** Aisles of the marketplace are RollTables named "Market: <Aisle>"; Knave 1e's copper aisles "Market 1e: <Aisle>". */
 export const MARKET_PREFIX = "Market: ";
+export const MARKET_1E_PREFIX = "Market 1e: ";
+/** The Knave 1e price list's pack (rule `price-list`). */
+export const GEAR_1E_PACK = "base-knavery.gear-1e";
 
 /**
  * The GM's own rulebook PDF (module/rulebook.js). Nothing of the book ships:
@@ -194,12 +197,45 @@ export const RULES_PRESETS = {
     "creation-abilities": "lowest", "starting-kit": "knave1e", "show-alignment": true, "show-background": true,
     "first-level-hp": "1d8", "level-hp-rule": "knave1e", "death-rule": "knave1e", "healing-rule": "knave1e",
     "spell-rule": "book-per-day", "spell-list": "1e", "knave1e-xp": true, "knave1e-initiative": true,
+    "attack-rule": "knave1e", "price-list": "knave1e", "coins-per-slot": "100",
   },
   "2e": {
     "creation-abilities": "points", "starting-kit": "careers", "show-alignment": false, "show-background": false,
     "first-level-hp": "1d6", "level-hp-rule": "reroll", "death-rule": "wounds", "healing-rule": "knave2e",
     "spell-rule": "int-per-day", "spell-list": "auto", "knave1e-xp": false, "knave1e-initiative": false,
+    "attack-rule": "knave2e", "price-list": "knave2e", "coins-per-slot": "500",
   },
 };
+/** The rules of 0.2.0's first build; a world stamped then learns the later ones from its own edition (rules.js). */
+export const CORE_RULE_KEYS = [
+  "creation-abilities", "starting-kit", "show-alignment", "show-background", "first-level-hp", "level-hp-rule",
+  "death-rule", "healing-rule", "spell-rule", "spell-list", "knave1e-xp", "knave1e-initiative",
+];
+
+/**
+ * Knave 1e quality (p3, p4): a weapon has 3; a shield or helmet 1; body armor its defense less 9
+ * (gambeson 3 ... full plate 7), which is its armor points + 2. An item's own `qualityMax` wins.
+ */
+export const QUALITY_WEAPON = 3;
+export const QUALITY_ARMOR_EXTRA = 2;
+export const defaultQualityMax = (type, system = {}) => {
+  if (type === "weapon") return QUALITY_WEAPON;
+  if (["shield", "helmet"].includes(system.armorType)) return 1;
+  return Math.max(1, (Number(system.points) || 1) + QUALITY_ARMOR_EXTRA);
+};
+/** Each point of quality costs 10% of the item's cost to repair (p4). */
+export const REPAIR_PER_POINT = 0.1;
+
+/**
+ * Knave 1e henchmen (p3): wages per day, in copper. Their stats are 2e's lines (npc-generator.js HIRELINGS):
+ * the book gives none.
+ */
+export const HENCHMEN_1E = {
+  laborer: { wage: 1, line: "hireling" }, scribe: { wage: 2, line: "expertCommon" }, archer: { wage: 3, line: "mercenary" },
+  mason: { wage: 4, line: "expertCommon" }, manAtArms: { wage: 6, line: "mercenary" }, smith: { wage: 8, line: "expertCommon" },
+  manAtArmsMounted: { wage: 12, line: "mercenary" }, masterBuilder: { wage: 15, line: "expertCommon" },
+  barberSurgeon: { wage: 25, line: "expertCommon" }, knight: { wage: 25, line: "mercenary" },
+};
+
 /** A Knave 1e score is the lowest of 3d6 (p1): 1 to 6 at level 1. */
 export const LOWEST_DIE_MAX = 6;

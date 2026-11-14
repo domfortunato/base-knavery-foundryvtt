@@ -1,0 +1,22 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: DcibTIm1XdQ4iveH
+_key: '!items!DcibTIm1XdQ4iveH'
+name: Pig
+type: transport
+img: systems/base-knavery/icons/stack.svg
+system:
+  slots: 0
+  quantity: 1
+  cost: 30
+  capacity: 0
+  crew: 0
+  speed: ''
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

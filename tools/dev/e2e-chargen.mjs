@@ -8,7 +8,8 @@
  * sheet, its Attack window and raised abilities; the welcome window's licence notice; random creation rolling by
  * default; a blank sheet held to its level's ability points, with HP, coin and career dice; the Attack window's
  * Target list; the narrow header; Rest by the book; red splats; compact attack cards; labels that fit; Create NPC;
- * spell items from the rulebook; weapons and armor first; rations per slot; the review #2 fixes; time and hazards; morale and wages; Backstory and the Knave-page traits; item badges. GM, Alice and Bob
+ * spell items from the rulebook; weapons and armor first; rations per slot; the review #2 fixes; time and hazards; morale and wages; Backstory and the Knave-page traits; item badges;
+ * the Knave 1e rules (part 26) and their second bundle: quality and wear, copper prices, coin slots, daily wages (part 27). GM, Alice and Bob
  * in three browsers.
  *
  *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/e2e-chargen.mjs   (npm run dev:chargen)
@@ -1962,8 +1963,219 @@ await withSettings(gm, async () => {
     ok(w.world === "This world plays Knave." && w.knight && w.worldOneLine && w.watermark && w.booksHeading === "Buy the books!" && w.rulesHeading === "System Rules"
       && w.aiCode === "Base Knavery's code is written with the help of an AI coding assistant." && w.itch1e === "https://questingbeast.itch.io/knave" && w.links2e === 3 && w.smallLast && w.licensing === "Licensing",
       "two knaves as book ends either side of the welcome's title, the logo a watermark in Licensing, says which rules the world plays, and has Buy the books! with Knave's PDF on itch", JSON.stringify(w));
-    ok(h.lines === 5 && h.now2e && h.rules === "2e" && h.hpSame && h.again === true,
+    ok(h.lines === 7 && h.now2e && h.rules === "2e" && h.hpSame && h.again === true,
       "after the 2e book, the GM is asked to switch; yes plays Knave 2e and changes no character", JSON.stringify(h));
+  });
+
+  await section("27. Knave 1e bundle 2: quality and wear, the natural-20 die, repair, copper prices and aisles, 100 coins a slot, daily wages.", async () => {
+    // The new rules reach a stamped world in its own edition; then the world plays 1e for the rest.
+    const p = await gm.evaluate(async (sys) => {
+      const ns = "base-knavery";
+      const R = await import(`${sys}/rules.js`);
+      const { RULES_PRESETS, CORE_RULE_KEYS } = await import(`${sys}/config.js`);
+      const NEW = ["attack-rule", "price-list", "coins-per-slot"];
+      const out = {
+        keys: NEW.every((k) => game.settings.get(ns, "rules-keys").includes(k)),
+        // The world plays 2e after part 26's hand-off, the new rules included.
+        now2e: NEW.every((k) => game.settings.get(ns, k) === RULES_PRESETS["2e"][k]) && R.currentRules() === "2e",
+      };
+      const vals = (e) => Object.fromEntries(CORE_RULE_KEYS.map((k) => [k, RULES_PRESETS[e][k]]));
+      out.edition = [
+        R.editionForNewRules(vals("2e"), CORE_RULE_KEYS, "2e"), R.editionForNewRules(vals("1e"), CORE_RULE_KEYS, "2e"),
+        R.editionForNewRules({ ...vals("2e"), "death-rule": "knave1e" }, CORE_RULE_KEYS, "2e"),
+        R.editionForNewRules({ ...vals("1e"), "death-rule": "wounds" }, CORE_RULE_KEYS, "1e"),
+      ].join();
+      // The Rules window has the three new rows.
+      const menu = game.settings.menus.get(`${ns}.hacks`);
+      const app = new menu.type();
+      await app.render({ force: true });
+      await new Promise((res) => setTimeout(res, 700));
+      out.rows = NEW.every((k) => !!app.element.querySelector(`[name="${ns}.${k}"]`)) && !!app.element.querySelector(`[name="${ns}.weapon-breaks-on-1"]`);
+      await app.close();
+      await R.applyRules("1e");
+      out.as1e = R.currentRules();
+      return out;
+    }, SYS);
+    ok(p.keys && p.now2e && p.edition === "2e,1e,2e,1e",
+      "the three new rules reached the stamped world in the edition its other rules play (2e), and a mixed world takes its stamp's", JSON.stringify(p));
+    ok(p.rows && p.as1e === "1e", "Configure Rules lists Attacks, Prices and wages, and Coins per slot; the 1e preset sets them", JSON.stringify(p));
+
+    // Attacks under 1e: a forced natural 20 (one more die, Wear armor), a natural 1 (the weapon wears).
+    const q = await gm.evaluate(async (sys) => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const { rollAttack } = await import(`${sys}/rolls.js`);
+      const Q = await import(`${sys}/quality.js`);
+      const pack = game.packs.get("base-knavery.gear-1e");
+      const index = await pack.getIndex();
+      const get = async (name) => { const d = (await pack.getDocument(index.getName(name)._id)).toObject(); delete d._id; return d; };
+      const fighter = await Actor.create({ name: "Probe 1e Fighter", type: "character", system: { coins: 250, abilities: { STR: { value: 3 } } } });
+      const sword = await get("Sword");
+      sword.system.equipped = true;
+      await fighter.createEmbeddedDocuments("Item", [sword]);
+      const target = await Actor.create({ name: "Probe 1e Target", type: "character", system: { hp: { value: 30, max: 30 } } });
+      const chain = await get("Chain");
+      const shield = await get("Shield");
+      chain.system.equipped = true;
+      shield.system.equipped = true;
+      await target.createEmbeddedDocuments("Item", [chain, shield]);
+      const out = {
+        coinSlots: fighter.system.coinSlots,
+        chainQ: Q.qualityOf(target.items.getName("Chain")), shieldQ: Q.qualityOf(target.items.getName("Shield")),
+        swordQ: Q.qualityOf(fighter.items.getName("Sword")), ap: target.system.ap,
+      };
+      const scene = canvas.ready ? canvas.scene : null;
+      let tok = null;
+      if (scene) {
+        [tok] = await scene.createEmbeddedDocuments("Token", [(await target.getTokenDocument({ x: 0, y: 0 })).toObject()]);
+        await wait(800);
+        canvas.tokens.setTargets([tok.id], { mode: "replace" });
+      }
+      const real = CONFIG.Dice.randomUniform;
+      const attack = async (u) => {
+        CONFIG.Dice.randomUniform = () => u; // a die's face is ceil((1 - u) × faces): near 0 is the top face
+        try {
+          const pr = rollAttack(fighter, fighter.items.getName("Sword"));
+          await wait(900);
+          const dlg = document.querySelector(".knavery-roll-prompt");
+          const dmg = dlg?.querySelector('input[name="rollDamage"]');
+          if (dmg) dmg.checked = true;
+          out.noPower = !dlg?.querySelector('input[name="power"]') || dlg.querySelector(".power-group")?.hidden === true;
+          dlg?.querySelector('footer button[data-action="normal"]')?.click();
+          await pr;
+        } finally { CONFIG.Dice.randomUniform = real; }
+        await wait(1200);
+        return game.messages.contents.at(-1);
+      };
+      // A natural 20.
+      let msg = await attack(1e-7);
+      let card = document.querySelector(`#chat .chat-message[data-message-id="${msg.id}"] .knavery-roll-card`);
+      out.crit = {
+        flag: msg.getFlag("base-knavery", "attack")?.crit === true, note: !!card?.querySelector(".card-note.crit"),
+        formula: card?.querySelector(".card-damage .dice-formula")?.textContent.trim() ?? "", maneuver: !!card?.querySelector(".card-note.maneuver"),
+        wearButton: !!card?.querySelector("[data-kn-wear]"), scene: !!tok,
+      };
+      if (tok) {
+        card.querySelector("[data-kn-wear]").click();
+        await wait(900);
+        const dlg = [...foundry.applications.instances.values()].find((x) => x.element?.classList.contains("knavery-wear"));
+        out.wearRows = dlg?.element.querySelectorAll(".kn-wear-row").length ?? 0;
+        const radio = dlg?.element.querySelector(`input[value="${target.items.getName("Shield").id}"]`);
+        if (radio) radio.checked = true;
+        dlg?.element.querySelector('button[data-action="ok"]')?.click();
+        await wait(1200);
+        card = document.querySelector(`#chat .chat-message[data-message-id="${msg.id}"] .knavery-roll-card`);
+        const sh = target.items.getName("Shield");
+        out.worn = { shield: Q.qualityOf(sh), broken: sh.system.broken, ap: target.system.ap, done: !!card?.querySelector(".kn-wear-done"),
+          taken: Q.wearTaken(target, msg.id), again: await Q.openWearDialog(target, msg.id) };
+      }
+      // A natural 1: the weapon loses a point.
+      msg = await attack(1 - 1e-7);
+      card = document.querySelector(`#chat .chat-message[data-message-id="${msg.id}"] .knavery-roll-card`);
+      const sw = fighter.items.getName("Sword");
+      out.fumble = { q: Q.qualityOf(sw), broken: sw.system.broken, note: /loses a point of quality \(2\/3\)/.test(card?.textContent ?? "") };
+      // The inventory row and the item sheet.
+      await fighter.sheet.render({ force: true });
+      await wait(900);
+      out.tag = [...fighter.sheet.element.querySelectorAll(".knavery-item-tag")].some((t) => t.textContent.trim() === "Quality 2/3");
+      await fighter.sheet.close();
+      await sw.sheet.render({ force: true });
+      await wait(900);
+      const ie = sw.sheet.element;
+      out.sheet = { line: !!ie.querySelector(".kn-quality-stats"), value: ie.querySelector('input[name="kn.quality"]')?.value,
+        max: ie.querySelector('input[name="system.qualityMax"]')?.value, repair: ie.querySelector('[data-action="repair"]')?.textContent.trim() ?? "" };
+      if (tok) await tok.delete();
+      canvas.tokens?.setTargets([], { mode: "replace" });
+      return out;
+    }, SYS);
+    await gm.screenshot({ path: `${SHOTS}/knave1e-quality.png` });
+    const r = await gm.evaluate(async (sys) => {
+      const ns = "base-knavery";
+      const Q = await import(`${sys}/quality.js`);
+      const fighter = game.actors.getName("Probe 1e Fighter");
+      const sw = fighter.items.getName("Sword");
+      const out = { cost: Q.repairCost(sw) };
+      out.paid = await Q.repairItem(sw);
+      out.after = { q: Q.qualityOf(sw), coins: fighter.system.coins };
+      await sw.sheet.close();
+      // Wear to 0: destroyed, kept, marked Broken; a full repair costs 10% a point.
+      const ch = game.actors.getName("Probe 1e Target").items.getName("Chain");
+      await Q.wearItem(ch, { n: 5, post: false });
+      out.chain = { q: Q.qualityOf(ch), broken: ch.system.broken, kept: !!ch.parent.items.get(ch.id), cost: Q.repairCost(ch) };
+      // Coins per slot: 250 coins are 2 slots at 100, none at 500.
+      out.slots100 = fighter.system.coinSlots;
+      await game.settings.set(ns, "coins-per-slot", "500");
+      out.slots500 = fighter.system.coinSlots;
+      await game.settings.set(ns, "coins-per-slot", "100");
+      return out;
+    }, SYS);
+    ok(q.coinSlots === 2 && q.chainQ?.max === 5 && q.shieldQ?.max === 1 && q.swordQ?.max === 3 && q.ap === 4,
+      "1e gear has the book's quality (sword 3, chain 5, shield 1), and 250 coins fill two slots at 100 a slot", JSON.stringify(q));
+    ok(q.crit.flag && q.crit.note && q.crit.formula.startsWith("2d8") && !q.crit.maneuver && q.noPower,
+      "a natural 20 is a critical hit: one more damage die (2d8 for a sword), no free maneuver, no power attack under 1e", JSON.stringify(q.crit));
+    ok(!q.crit.scene || (q.crit.wearButton && q.wearRows === 2 && q.worn.shield.value === 0 && q.worn.broken && q.worn.ap === 3 && q.worn.done && q.worn.taken && q.worn.again === null),
+      "the card's Wear armor lets the target's owner pick the piece; the shield at 0 is destroyed (Broken, its point gone) and the card reads Armor worn", JSON.stringify({ crit: q.crit, rows: q.wearRows, worn: q.worn }));
+    ok(q.fumble.q.value === 2 && !q.fumble.broken && q.fumble.note && q.tag,
+      "a natural 1 costs the weapon a point of quality, said on the card and on the inventory row", JSON.stringify({ fumble: q.fumble, tag: q.tag }));
+    ok(q.sheet.line && q.sheet.value === "2" && q.sheet.max === "3" && q.sheet.repair === "Repair (1c)",
+      "the item sheet shows Quality 2 / 3 and Repair at 10% of the price a point", JSON.stringify(q.sheet));
+    ok(r.cost === 1 && r.paid === 1 && r.after.q.value === 3 && r.after.coins === 249,
+      "Repair takes the coins from the owner and restores full quality", JSON.stringify(r));
+    ok(r.chain.q.value === 0 && r.chain.broken && r.chain.kept && r.chain.cost === 600 && r.slots100 === 2 && r.slots500 === 0,
+      "at 0 quality the item is kept, marked Broken, and costs 10% of its price a point to repair; coins per slot follows the rule", JSON.stringify(r));
+
+    // Prices: the 1e aisles, starting gear and weapons; henchmen by the day.
+    const m = await gm.evaluate(async (sys) => {
+      const M = await import(`${sys}/marketplace.js`);
+      const G = await import(`${sys}/character-generator.js`);
+      const N = await import(`${sys}/npc-generator.js`);
+      const H = await import(`${sys}/hirelings.js`);
+      const names = async (o) => (await M.marketTables(o)).map((t) => t.name);
+      const out = { shown: await names(), all: await names({ includeHidden: true }) };
+      const weapons = (await M.marketTables()).find((t) => t.name === "Market 1e: Weapons");
+      const stock = weapons ? await M.aisleStock(weapons) : [];
+      out.sword = stock.find((s) => s.name === "Sword")?.price;
+      const halls = (await M.marketTables({ includeHidden: true })).find((t) => t.name === "Market 1e: Buildings");
+      const hs = halls ? await M.aisleStock(halls) : [];
+      out.hovel = hs.find((s) => s.name === "Hovel");
+      out.hovel = out.hovel ? { price: out.hovel.price, service: out.hovel.service, slots: out.hovel.slots } : null;
+      const choices = (await G.weaponChoices()).map((w) => w.name);
+      out.weapons = { long: choices.includes("Long Sword"), generic: choices.includes("One-Handed Weapon") };
+      const built = await G.buildCharacter({ level: 1, weapon: "Crossbow" });
+      const xbow = built.items.find((i) => i.name === "Crossbow");
+      out.built = { xbow: xbow ? { cost: xbow.system.cost, slots: xbow.system.slots, q: xbow.system.qualityMax } : null,
+        rations: built.items.find((i) => i.name === "Rations")?.system?.cost };
+      // A knight at 25c a day, three days owed.
+      const hc = N.hirelingChoices();
+      out.knightLine = hc.knight ? { wage: hc.knight.wage, period: hc.knight.period } : null;
+      const knight = await N.createNpc({ kind: "hireling", hireling: "knight", name: "Probe Knight" });
+      await knight?.sheet.close();
+      const fighter = game.actors.getName("Probe 1e Fighter");
+      const now = game.time.worldTime;
+      await knight.update({ "system.employer": fighter.id, "system.wageDue": now - 2 * H.DAY_SECONDS });
+      out.knight = { name: knight.name, wage: knight.system.wage, period: knight.system.wagePeriod };
+      out.status = H.wageRows().find((x) => x.id === knight.id)?.status;
+      out.amount = H.wageRows().find((x) => x.id === knight.id)?.amount;
+      const before = fighter.system.coins;
+      out.due = await H.payWage(knight);
+      out.paid = before - fighter.system.coins;
+      out.nextDue = out.due === now - 2 * H.DAY_SECONDS + 3 * H.DAY_SECONDS;
+      out.after = H.wageRows().find((x) => x.id === knight.id)?.status;
+      out.days = [H.daysOwed(null, 100), H.daysOwed(200, 100), H.daysOwed(100, 100), H.daysOwed(100, 100 + 2 * H.DAY_SECONDS)].join();
+      return out;
+    }, SYS);
+    ok(m.shown.includes("Market 1e: Weapons") && m.shown.includes("Market 1e: Food") && !m.shown.some((n) => n.startsWith("Market: "))
+      && !m.shown.includes("Market 1e: Buildings") && !m.shown.includes("Market 1e: Lodging & Meals")
+      && m.all.includes("Market 1e: Buildings") && m.all.includes("Market 1e: Lodging & Meals"),
+      "on the 1e price list the shop shows the 1e aisles only; Lodging & Meals and Buildings ship hidden", JSON.stringify(m));
+    ok(m.sword === 10 && m.hovel?.price === 120 && m.hovel.service && m.hovel.slots === 0,
+      "1e prices are in copper (a sword 10, a hovel 120), and a building is a service with no slot", JSON.stringify(m));
+    ok(m.weapons.long && !m.weapons.generic && m.built.xbow?.cost === 60 && m.built.xbow.slots === 3 && m.built.xbow.q === 3 && m.built.rations === 5,
+      "a 1e character chooses from 1e's weapons, and its kit comes from the 1e list with its prices", JSON.stringify({ w: m.weapons, b: m.built }));
+    ok(m.knightLine?.wage === 25 && m.knightLine.period === "day" && m.knight.name === "Probe Knight" && m.knight.wage === 25 && m.knight.period === "day",
+      "Create NPC offers 1e's henchmen at daily wages (a knight 25c a day)", JSON.stringify(m));
+    ok(m.status === "3 days owed (75c)" && m.amount === "25c a day" && m.paid === 75 && m.nextDue && m.after === "Paid up" && m.days === "1,0,1,3",
+      "Pay settles every day owed (three days, 75c) and the hireling is paid up", JSON.stringify(m));
+    await gm.evaluate(async (sys) => { const R = await import(`${sys}/rules.js`); await R.applyRules("2e"); }, SYS);
   });
 
   // Cleanup.

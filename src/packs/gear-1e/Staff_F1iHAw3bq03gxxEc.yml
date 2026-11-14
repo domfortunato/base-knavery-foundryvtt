@@ -1,0 +1,24 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: F1iHAw3bq03gxxEc
+_key: '!items!F1iHAw3bq03gxxEc'
+name: Staff
+type: weapon
+img: systems/base-knavery/art/game-icons/weapons/crescent-staff.svg
+system:
+  slots: 1
+  quantity: 1
+  damage: d6
+  hands: 1
+  attackType: melee
+  range: ''
+  cost: 5
+  qualityMax: 3
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

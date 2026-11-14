@@ -7,8 +7,13 @@
  * or a plain text row; a row's price is the flag `base-knavery.price` when set,
  * else the item's own cost. The GM manages all of this in the Marketplace
  * Manager, and can hide aisles without deleting them.
+ *
+ * A world on Knave 1e's price list (rule `price-list`) shops the "Market 1e: <Aisle>" tables
+ * instead, in copper (Knave 1.0 p3, CC BY 4.0). A row flagged `base-knavery.service` (a bed, a
+ * meal, a house) only takes the coins: nothing goes in the inventory.
  */
-import { FLAG_SCOPE, MARKET_PREFIX, SETTINGS_NS, SYS_PATH } from "./config.js";
+import { FLAG_SCOPE, MARKET_1E_PREFIX, MARKET_PREFIX, SETTINGS_NS, SYS_PATH } from "./config.js";
+import { usesPrices1e } from "./rules.js";
 import { findTablesByPrefix, isPlaceholder, plainText, resultText } from "./compendium.js";
 import { slotsForItem } from "./documents/actor.js";
 
@@ -16,17 +21,21 @@ const { ApplicationV2, HandlebarsApplicationMixin, DialogV2 } = foundry.applicat
 const esc = (s) => foundry.utils.escapeHTML(String(s ?? ""));
 const L = (k) => game.i18n.localize(k);
 const F = (k, d) => game.i18n.format(k, d);
-const AISLE_ORDER = ["Weapons", "Armor", "Gear", "Animals & Transport"];
+const AISLE_ORDER = ["Weapons", "Armor", "Gear", "Food", "Animals & Transport", "Clothing", "Lodging & Meals", "Buildings"];
 
 export const playerMarketClosed = () => !game.user.isGM && !game.settings.get(SETTINGS_NS, "allow-player-marketplace");
 
-const aisleName = (table) => table.name.slice(MARKET_PREFIX.length).trim();
-const hiddenAisles = () => new Set(game.settings.get(SETTINGS_NS, "market-hidden-aisles") ?? []);
+/** The aisle tables' prefix for the world's price list. */
+export const marketPrefix = () => (usesPrices1e() ? MARKET_1E_PREFIX : MARKET_PREFIX);
+const aisleName = (table) => table.name.slice((table.name.startsWith(MARKET_1E_PREFIX) ? MARKET_1E_PREFIX : MARKET_PREFIX).length).trim();
+/** Each price list hides its own aisles (both have a "Weapons"); 1e's services ship hidden. */
+const hiddenKey = () => (usesPrices1e() ? "market-hidden-aisles-1e" : "market-hidden-aisles");
+const hiddenAisles = () => new Set(game.settings.get(SETTINGS_NS, hiddenKey()) ?? []);
 
 /** Every aisle table (world copies shadowing shipped ones), in shelf order. */
 export const marketTables = async ({ includeHidden = false } = {}) => {
   const hidden = hiddenAisles();
-  const tables = (await findTablesByPrefix(MARKET_PREFIX))
+  const tables = (await findTablesByPrefix(marketPrefix()))
     .filter((t) => includeHidden || !hidden.has(aisleName(t)));
   const order = (t) => {
     const i = AISLE_ORDER.indexOf(aisleName(t));
@@ -89,13 +98,15 @@ export const aisleStock = async (table) => {
     delete data._id;
     const price = rowPrice(r, item);
     data.system = { ...(data.system ?? {}), cost: price, equipped: false };
+    const service = !item && (r.getFlag?.(FLAG_SCOPE, "service") ?? r.flags?.[FLAG_SCOPE]?.service) === true;
     rows.push({
       id: r.id,
       name: data.name,
       img: data.img,
       price,
       data,
-      slots: item ? slotsForItem(item) : 1,
+      service,
+      slots: service ? 0 : (item ? slotsForItem(item) : 1),
       description: item?.system?.description ?? r.description ?? "",
     });
   }
@@ -116,7 +127,7 @@ export const mayTakeFree = (actor) => {
     && game.settings.get(SETTINGS_NS, "allow-player-randomization");
 };
 
-const acquire = async (actor, data, pay) => {
+const acquire = async (actor, data, pay, { service = false } = {}) => {
   if (playerMarketClosed()) return ui.notifications.warn("KNAVERY.Notify.MarketplaceClosed", { localize: true });
   if (!pay && !mayTakeFree(actor)) return ui.notifications.warn("KNAVERY.Notify.RandomizationDisabled", { localize: true });
   const cost = Math.max(0, Math.ceil(Number(data.system.cost) || 0));
@@ -129,7 +140,7 @@ const acquire = async (actor, data, pay) => {
   // was free. If the item cannot be added, the coins come back.
   if (pay && cost) await actor.update({ "system.coins": coins - cost }, { knNoLog: true });
   try {
-    await actor.addItems([data], { knNoLog: pay });
+    if (!service) await actor.addItems([data], { knNoLog: pay });
   } catch (err) {
     if (pay && cost) await actor.update({ "system.coins": actor._source.system.coins + cost }, { knNoLog: true });
     throw err;
@@ -162,11 +173,11 @@ export const openMarketplace = async (actor) => {
     return `<div class="mkt-row" data-idx="${idx}" data-cost="${row.price}" data-name="${esc(row.name.toLowerCase())}">
       <div class="mkt-line">
         <div class="mkt-row-main"><img class="mkt-img" src="${esc(row.img)}" alt="" /><span class="mkt-name">${esc(row.name)}</span></div>
-        <span class="mkt-slots">${esc(F(row.slots === 1 ? "KNAVERY.NSlot" : "KNAVERY.NSlots", { n: row.slots }))}</span>
+        <span class="mkt-slots">${row.service ? esc(L("KNAVERY.Market.Service")) : esc(F(row.slots === 1 ? "KNAVERY.NSlot" : "KNAVERY.NSlots", { n: row.slots }))}</span>
         <span class="mkt-cost"><i class="fas fa-coins"></i> ${row.price}</span>
         <span class="mkt-actions">
           <button type="button" class="mkt-buy" data-idx="${idx}">${L("KNAVERY.Market.Buy")}</button>
-          ${canTake ? `<button type="button" class="mkt-take" data-idx="${idx}" data-tooltip="KNAVERY.Market.TakeHint">${L("KNAVERY.Market.Take")}</button>` : ""}
+          ${canTake && !row.service ? `<button type="button" class="mkt-take" data-idx="${idx}" data-tooltip="KNAVERY.Market.TakeHint">${L("KNAVERY.Market.Take")}</button>` : ""}
         </span>
       </div>
       <div class="mkt-desc" hidden>${row.description ? esc(plainText(row.description)) : `<em>${esc(L("KNAVERY.NoDescription"))}</em>`}</div>
@@ -208,7 +219,7 @@ export const openMarketplace = async (actor) => {
       busy = true;
       refresh();
       try {
-        await acquire(actor, foundry.utils.deepClone(row.data), btn.classList.contains("mkt-buy"));
+        await acquire(actor, foundry.utils.deepClone(row.data), btn.classList.contains("mkt-buy"), { service: row.service });
       } catch (err) {
         console.error("Base Knavery | marketplace purchase failed", err);
         ui.notifications.error("KNAVERY.Notify.PurchaseFailed", { localize: true });
@@ -345,7 +356,7 @@ export class MarketplaceManager extends HandlebarsApplicationMixin(ApplicationV2
       rejectClose: false,
     });
     if (!name) return;
-    const table = await RollTable.create({ name: `${MARKET_PREFIX}${name}`, formula: "1d1", replacement: true });
+    const table = await RollTable.create({ name: `${marketPrefix()}${name}`, formula: "1d1", replacement: true });
     this.#selected = table.uuid;
     this.render();
   }
@@ -366,7 +377,7 @@ export class MarketplaceManager extends HandlebarsApplicationMixin(ApplicationV2
     const hidden = hiddenAisles();
     if (hidden.has(name)) hidden.delete(name);
     else hidden.add(name);
-    await game.settings.set(SETTINGS_NS, "market-hidden-aisles", [...hidden]);
+    await game.settings.set(SETTINGS_NS, hiddenKey(), [...hidden]);
     this.render();
   }
 
@@ -380,7 +391,7 @@ export class MarketplaceManager extends HandlebarsApplicationMixin(ApplicationV2
       ok: { callback: (_e2, b) => b.form.elements.aisle.value.trim() },
       rejectClose: false,
     });
-    if (name) await table.update({ name: `${MARKET_PREFIX}${name}` });
+    if (name) await table.update({ name: `${table.name.startsWith(MARKET_1E_PREFIX) ? MARKET_1E_PREFIX : MARKET_PREFIX}${name}` });
     this.render();
   }
 

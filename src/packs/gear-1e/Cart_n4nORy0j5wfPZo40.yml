@@ -1,0 +1,22 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: n4nORy0j5wfPZo40
+_key: '!items!n4nORy0j5wfPZo40'
+name: Cart
+type: transport
+img: systems/base-knavery/icons/handcart.svg
+system:
+  slots: 0
+  quantity: 1
+  cost: 50
+  capacity: 200
+  crew: 0
+  speed: ''
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

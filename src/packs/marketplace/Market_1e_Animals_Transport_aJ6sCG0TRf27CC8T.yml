@@ -1,0 +1,342 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: aJ6sCG0TRf27CC8T
+_key: '!tables!aJ6sCG0TRf27CC8T'
+name: 'Market 1e: Animals & Transport'
+img: icons/svg/coins.svg
+description: <p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>
+formula: 1d24
+replacement: true
+displayRoll: true
+results:
+  - _id: 1s4tu2tKautqYzID
+    _key: '!tables.results!aJ6sCG0TRf27CC8T.1s4tu2tKautqYzID'
+    type: document
+    name: Chicken
+    description: ''
+    img: systems/base-knavery/icons/raven.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.0mF88wb95veSKKWY
+    weight: 1
+    range:
+      - 1
+      - 1
+    drawn: false
+    flags: {}
+  - _id: EnFV52m9nkmHfhfS
+    _key: '!tables.results!aJ6sCG0TRf27CC8T.EnFV52m9nkmHfhfS'
+    type: document
+    name: Cow
+    description: ''
+    img: systems/base-knavery/icons/stack.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.imR2GrXHFRcuGr8m
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    flags: {}
+  - _id: VB3DpCZlNJImleck
+    _key: '!tables.results!aJ6sCG0TRf27CC8T.VB3DpCZlNJImleck'
+    type: document
+    name: Dog, hunting
+    description: ''
+    img: systems/base-knavery/icons/stack.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.Z3gBxGExDKhGUDH9
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    flags: {}
+  - _id: Cti7UuVfJvs3GKBi
+    _key: '!tables.results!aJ6sCG0TRf27CC8T.Cti7UuVfJvs3GKBi'
+    type: document
+    name: Dog, small but vicious
+    description: ''
+    img: systems/base-knavery/icons/stack.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.xAxxf0qLPkSEK4Eq
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    flags: {}
+  - _id: HA2332Bj19KAATLs
+    _key: '!tables.results!aJ6sCG0TRf27CC8T.HA2332Bj19KAATLs'
+    type: document
+    name: Donkey/Pack Horse
+    description: ''
+    img: systems/base-knavery/icons/donkey.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.IvMprnCpNdl1cghQ
+    weight: 1
+    range:
+      - 5
+      - 5
+    drawn: false
+    flags: {}
+  - _id: dZaMRqL7IsRYYfK8
+    _key: '!tables.results!aJ6sCG0TRf27CC8T.dZaMRqL7IsRYYfK8'
+    type: document
+    name: Goat
+    description: ''
+    img: systems/base-knavery/icons/stack.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.UyExAZhsWySmPokR
+    weight: 1
+    range:
+      - 6
+      - 6
+    drawn: false
+    flags: {}
+  - _id: iyR4NfcPhb37jYQv
+    _key: '!tables.results!aJ6sCG0TRf27CC8T.iyR4NfcPhb37jYQv'
+    type: document
+    name: Hawk
+    description: ''
+    img: systems/base-knavery/icons/falcon.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.GnnsljQ792RgpI0d
+    weight: 1
+    range:
+      - 7
+      - 7
+    drawn: false
+    flags: {}
+  - _id: QEMbQAGViA3zCEH0
+    _key: '!tables.results!aJ6sCG0TRf27CC8T.QEMbQAGViA3zCEH0'
+    type: document
+    name: Horse, riding
+    description: ''
+    img: systems/base-knavery/icons/horse.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.O09MqqZhwEBfwBtf
+    weight: 1
+    range:
+      - 8
+      - 8
+    drawn: false
+    flags: {}
+  - _id: JibxQVHVgHBpsQJ8
+    _key: '!tables.results!aJ6sCG0TRf27CC8T.JibxQVHVgHBpsQJ8'
+    type: document
+    name: Horse, war
+    description: ''
+    img: systems/base-knavery/icons/horse.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.0yArHeCHoOCaHnj0
+    weight: 1
+    range:
+      - 9
+      - 9
+    drawn: false
+    flags: {}
+  - _id: m5nN9bDOa29XApPw
+    _key: '!tables.results!aJ6sCG0TRf27CC8T.m5nN9bDOa29XApPw'
+    type: document
+    name: Ox
+    description: ''
+    img: systems/base-knavery/icons/stack.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.lhVOwWpnCEoC6qeD
+    weight: 1
+    range:
+      - 10
+      - 10
+    drawn: false
+    flags: {}
+  - _id: dVMQ4uV8wg7nTExf
+    _key: '!tables.results!aJ6sCG0TRf27CC8T.dVMQ4uV8wg7nTExf'
+    type: document
+    name: Pig
+    description: ''
+    img: systems/base-knavery/icons/stack.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.DcibTIm1XdQ4iveH
+    weight: 1
+    range:
+      - 11
+      - 11
+    drawn: false
+    flags: {}
+  - _id: RAPL90uK5opbWbSK
+    _key: '!tables.results!aJ6sCG0TRf27CC8T.RAPL90uK5opbWbSK'
+    type: document
+    name: Sheep
+    description: ''
+    img: systems/base-knavery/icons/stack.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.wi0PUyJtBGOyErbb
+    weight: 1
+    range:
+      - 12
+      - 12
+    drawn: false
+    flags: {}
+  - _id: rCNt2Ff10pGkg7qM
+    _key: '!tables.results!aJ6sCG0TRf27CC8T.rCNt2Ff10pGkg7qM'
+    type: document
+    name: Cart
+    description: ''
+    img: systems/base-knavery/icons/handcart.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.n4nORy0j5wfPZo40
+    weight: 1
+    range:
+      - 13
+      - 13
+    drawn: false
+    flags: {}
+  - _id: xLIH0HEyC7vUhV2Y
+    _key: '!tables.results!aJ6sCG0TRf27CC8T.xLIH0HEyC7vUhV2Y'
+    type: document
+    name: Carriage
+    description: ''
+    img: systems/base-knavery/icons/wagon.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.IWBU4P5eLdY3NP9C
+    weight: 1
+    range:
+      - 14
+      - 14
+    drawn: false
+    flags: {}
+  - _id: tWgEuTME2PfZp1sV
+    _key: '!tables.results!aJ6sCG0TRf27CC8T.tWgEuTME2PfZp1sV'
+    type: document
+    name: Wagon
+    description: ''
+    img: systems/base-knavery/icons/wagon.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.jhVb8q8t16HoCj4B
+    weight: 1
+    range:
+      - 15
+      - 15
+    drawn: false
+    flags: {}
+  - _id: qRCRbZaxrBdWk25I
+    _key: '!tables.results!aJ6sCG0TRf27CC8T.qRCRbZaxrBdWk25I'
+    type: document
+    name: Raft
+    description: ''
+    img: systems/base-knavery/icons/smallcraft.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.9HBBF7ADnZJPShJB
+    weight: 1
+    range:
+      - 16
+      - 16
+    drawn: false
+    flags: {}
+  - _id: qhh3YtQE3qnkm6cE
+    _key: '!tables.results!aJ6sCG0TRf27CC8T.qhh3YtQE3qnkm6cE'
+    type: document
+    name: Fishing Boat
+    description: ''
+    img: systems/base-knavery/icons/smallcraft.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.FkaWNT8q1Vk6e9mF
+    weight: 1
+    range:
+      - 17
+      - 17
+    drawn: false
+    flags: {}
+  - _id: 2pU64dvWJHZwkglh
+    _key: '!tables.results!aJ6sCG0TRf27CC8T.2pU64dvWJHZwkglh'
+    type: document
+    name: Sloop
+    description: ''
+    img: systems/base-knavery/icons/smallcraft.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.Mr48C70CAB9nOsv0
+    weight: 1
+    range:
+      - 18
+      - 18
+    drawn: false
+    flags: {}
+  - _id: hyaHESHbGiTlC2gl
+    _key: '!tables.results!aJ6sCG0TRf27CC8T.hyaHESHbGiTlC2gl'
+    type: document
+    name: Caravel
+    description: ''
+    img: systems/base-knavery/icons/smallcraft.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.HR9nElH43rOStGcA
+    weight: 1
+    range:
+      - 19
+      - 19
+    drawn: false
+    flags: {}
+  - _id: O2e53OiCtWN7MSFm
+    _key: '!tables.results!aJ6sCG0TRf27CC8T.O2e53OiCtWN7MSFm'
+    type: document
+    name: Galleon
+    description: ''
+    img: systems/base-knavery/icons/smallcraft.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.qg7qWBNsnpdOIZy4
+    weight: 1
+    range:
+      - 20
+      - 20
+    drawn: false
+    flags: {}
+  - _id: NJlXUVSO3R8Gq48F
+    _key: '!tables.results!aJ6sCG0TRf27CC8T.NJlXUVSO3R8Gq48F'
+    type: text
+    name: Ship, high quality (per ton)
+    description: ''
+    img: icons/svg/coins.svg
+    documentUuid: null
+    weight: 1
+    range:
+      - 21
+      - 21
+    drawn: false
+    flags:
+      base-knavery:
+        price: 720
+        service: true
+  - _id: WuCki5JuqlHEkyCI
+    _key: '!tables.results!aJ6sCG0TRf27CC8T.WuCki5JuqlHEkyCI'
+    type: text
+    name: Ship, good quality (per ton)
+    description: ''
+    img: icons/svg/coins.svg
+    documentUuid: null
+    weight: 1
+    range:
+      - 22
+      - 22
+    drawn: false
+    flags:
+      base-knavery:
+        price: 480
+        service: true
+  - _id: 2alKP473PCLdfLk4
+    _key: '!tables.results!aJ6sCG0TRf27CC8T.2alKP473PCLdfLk4'
+    type: text
+    name: Ship, used quality (per ton)
+    description: ''
+    img: icons/svg/coins.svg
+    documentUuid: null
+    weight: 1
+    range:
+      - 23
+      - 23
+    drawn: false
+    flags:
+      base-knavery:
+        price: 240
+        service: true
+  - _id: IC8gPP6nlHsKxHgg
+    _key: '!tables.results!aJ6sCG0TRf27CC8T.IC8gPP6nlHsKxHgg'
+    type: text
+    name: Ship, poor quality (per ton)
+    description: ''
+    img: icons/svg/coins.svg
+    documentUuid: null
+    weight: 1
+    range:
+      - 24
+      - 24
+    drawn: false
+    flags:
+      base-knavery:
+        price: 120
+        service: true
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

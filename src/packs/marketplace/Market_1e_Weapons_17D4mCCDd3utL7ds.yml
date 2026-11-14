@@ -1,0 +1,252 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: 17D4mCCDd3utL7ds
+_key: '!tables!17D4mCCDd3utL7ds'
+name: 'Market 1e: Weapons'
+img: icons/svg/coins.svg
+description: <p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>
+formula: 1d18
+replacement: true
+displayRoll: true
+results:
+  - _id: 6UDkb7GwvlHS1jFN
+    _key: '!tables.results!17D4mCCDd3utL7ds.6UDkb7GwvlHS1jFN'
+    type: document
+    name: Dagger
+    description: ''
+    img: systems/base-knavery/art/game-icons/blade/plain-dagger.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.pCZeJoDjGhawZmaf
+    weight: 1
+    range:
+      - 1
+      - 1
+    drawn: false
+    flags: {}
+  - _id: 9qJrNuUqMIon2tX4
+    _key: '!tables.results!17D4mCCDd3utL7ds.9qJrNuUqMIon2tX4'
+    type: document
+    name: Cudgel
+    description: ''
+    img: systems/base-knavery/art/game-icons/weapons/wood-club.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.GiA4txt5D2l85IEh
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    flags: {}
+  - _id: v8uHOaWzjD42DgRA
+    _key: '!tables.results!17D4mCCDd3utL7ds.v8uHOaWzjD42DgRA'
+    type: document
+    name: Sickle
+    description: ''
+    img: systems/base-knavery/art/game-icons/weapons/scythe.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.H5v6Th6B9lso4eNw
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    flags: {}
+  - _id: 1qBEc4TyIbd4BfZT
+    _key: '!tables.results!17D4mCCDd3utL7ds.1qBEc4TyIbd4BfZT'
+    type: document
+    name: Staff
+    description: ''
+    img: systems/base-knavery/art/game-icons/weapons/crescent-staff.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.F1iHAw3bq03gxxEc
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    flags: {}
+  - _id: I7W4HAcO4iO1WKTj
+    _key: '!tables.results!17D4mCCDd3utL7ds.I7W4HAcO4iO1WKTj'
+    type: document
+    name: Spear
+    description: ''
+    img: systems/base-knavery/art/game-icons/weapons/barbed-spear.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.iBJRqq6SZmZ0OXik
+    weight: 1
+    range:
+      - 5
+      - 5
+    drawn: false
+    flags: {}
+  - _id: Iefg7gkomwmR2PEh
+    _key: '!tables.results!17D4mCCDd3utL7ds.Iefg7gkomwmR2PEh'
+    type: document
+    name: Sword
+    description: ''
+    img: systems/base-knavery/art/game-icons/blade/broadsword.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.O9hz3gZscmT0Ww9o
+    weight: 1
+    range:
+      - 6
+      - 6
+    drawn: false
+    flags: {}
+  - _id: SYAwTjW0fQTJUfVm
+    _key: '!tables.results!17D4mCCDd3utL7ds.SYAwTjW0fQTJUfVm'
+    type: document
+    name: Mace
+    description: ''
+    img: systems/base-knavery/art/game-icons/weapons/mace-head.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.OlbFAaR2mZTtDHMm
+    weight: 1
+    range:
+      - 7
+      - 7
+    drawn: false
+    flags: {}
+  - _id: a6fBAz54YD6mD4nK
+    _key: '!tables.results!17D4mCCDd3utL7ds.a6fBAz54YD6mD4nK'
+    type: document
+    name: Axe
+    description: ''
+    img: systems/base-knavery/art/game-icons/weapons/war-axe.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.qIJlrmErFF5lFArw
+    weight: 1
+    range:
+      - 8
+      - 8
+    drawn: false
+    flags: {}
+  - _id: vUYMd6xlPqdgDfqX
+    _key: '!tables.results!17D4mCCDd3utL7ds.vUYMd6xlPqdgDfqX'
+    type: document
+    name: Flail
+    description: ''
+    img: systems/base-knavery/art/game-icons/weapons/flail.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.Zg9KcHBF14FDWE09
+    weight: 1
+    range:
+      - 9
+      - 9
+    drawn: false
+    flags: {}
+  - _id: Z2QpsDeBULxBsoNG
+    _key: '!tables.results!17D4mCCDd3utL7ds.Z2QpsDeBULxBsoNG'
+    type: document
+    name: Halberd
+    description: ''
+    img: systems/base-knavery/icons/weapons.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.5SvyNlk7Ji8azjhq
+    weight: 1
+    range:
+      - 10
+      - 10
+    drawn: false
+    flags: {}
+  - _id: qVPXhrV8DlFMDJch
+    _key: '!tables.results!17D4mCCDd3utL7ds.qVPXhrV8DlFMDJch'
+    type: document
+    name: War Hammer
+    description: ''
+    img: systems/base-knavery/icons/weapons.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.5qjq5mggT8H9R9wm
+    weight: 1
+    range:
+      - 11
+      - 11
+    drawn: false
+    flags: {}
+  - _id: b8UupKBoSoE819Oo
+    _key: '!tables.results!17D4mCCDd3utL7ds.b8UupKBoSoE819Oo'
+    type: document
+    name: Long Sword
+    description: ''
+    img: systems/base-knavery/art/game-icons/blade/two-handed-sword.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.7cmHyBQXmro5VUH3
+    weight: 1
+    range:
+      - 12
+      - 12
+    drawn: false
+    flags: {}
+  - _id: URPPEwljXgs9qWyI
+    _key: '!tables.results!17D4mCCDd3utL7ds.URPPEwljXgs9qWyI'
+    type: document
+    name: Battle Axe
+    description: ''
+    img: systems/base-knavery/art/game-icons/weapons/battered-axe.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.1UDYrWEeB8VgjVtM
+    weight: 1
+    range:
+      - 13
+      - 13
+    drawn: false
+    flags: {}
+  - _id: An6yVjLqrgK5g9ey
+    _key: '!tables.results!17D4mCCDd3utL7ds.An6yVjLqrgK5g9ey'
+    type: document
+    name: Sling
+    description: ''
+    img: systems/base-knavery/art/game-icons/weapons/sling.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.DcCfgMntpACFkriC
+    weight: 1
+    range:
+      - 14
+      - 14
+    drawn: false
+    flags: {}
+  - _id: ltU3aBnXKeOwvO6k
+    _key: '!tables.results!17D4mCCDd3utL7ds.ltU3aBnXKeOwvO6k'
+    type: document
+    name: Bow
+    description: ''
+    img: systems/base-knavery/art/game-icons/weapons/pocket-bow.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.BPeyii7bYB9Chu49
+    weight: 1
+    range:
+      - 15
+      - 15
+    drawn: false
+    flags: {}
+  - _id: PGA73KrHGEcTvRje
+    _key: '!tables.results!17D4mCCDd3utL7ds.PGA73KrHGEcTvRje'
+    type: document
+    name: Crossbow
+    description: ''
+    img: systems/base-knavery/art/game-icons/weapons/crossbow.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.CGO2odzrOT4mH0Xc
+    weight: 1
+    range:
+      - 16
+      - 16
+    drawn: false
+    flags: {}
+  - _id: DHZrwLIzgki1GqZr
+    _key: '!tables.results!17D4mCCDd3utL7ds.DHZrwLIzgki1GqZr'
+    type: document
+    name: Arrows (20)
+    description: ''
+    img: systems/base-knavery/art/game-icons/weapons/heavy-arrow.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.CX9t6fVVoU6FZEcN
+    weight: 1
+    range:
+      - 17
+      - 17
+    drawn: false
+    flags: {}
+  - _id: zIEDJnbdkv8R8uug
+    _key: '!tables.results!17D4mCCDd3utL7ds.zIEDJnbdkv8R8uug'
+    type: document
+    name: Quiver
+    description: ''
+    img: systems/base-knavery/icons/sack.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.yOvGLSSPEosTAIRE
+    weight: 1
+    range:
+      - 18
+      - 18
+    drawn: false
+    flags: {}
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

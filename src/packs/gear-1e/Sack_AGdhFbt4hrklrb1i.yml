@@ -1,0 +1,20 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: AGdhFbt4hrklrb1i
+_key: '!items!AGdhFbt4hrklrb1i'
+name: Sack
+type: item
+img: systems/base-knavery/icons/sack.svg
+system:
+  slots: 1
+  quantity: 1
+  bundle: 1
+  cost: 1
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

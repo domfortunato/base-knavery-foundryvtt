@@ -1,0 +1,20 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: RUbGmGHVu2dFDFKp
+_key: '!items!RUbGmGHVu2dFDFKp'
+name: Sugar, 1 lb
+type: item
+img: systems/base-knavery/icons/generic-item.svg
+system:
+  slots: 1
+  quantity: 1
+  bundle: 1
+  cost: 12
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

@@ -96,6 +96,19 @@
       "flags": {}
     },
     {
+      "name": "gear-1e",
+      "label": "Gear & Prices (Knave 1e)",
+      "path": "packs/gear-1e",
+      "type": "Item",
+      "system": "base-knavery",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "TRUSTED": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
       "name": "careers",
       "label": "Careers",
       "path": "packs/careers",
@@ -182,6 +195,7 @@
       "packs": [
         "guide",
         "gear",
+        "gear-1e",
         "careers",
         "marketplace",
         "tables",

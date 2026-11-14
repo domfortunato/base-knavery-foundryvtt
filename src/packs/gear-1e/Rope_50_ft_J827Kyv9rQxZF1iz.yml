@@ -1,0 +1,20 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: J827Kyv9rQxZF1iz
+_key: '!items!J827Kyv9rQxZF1iz'
+name: Rope (50 ft)
+type: item
+img: systems/base-knavery/art/game-icons/tools/rope-coil.svg
+system:
+  slots: 1
+  quantity: 1
+  bundle: 1
+  cost: 10
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

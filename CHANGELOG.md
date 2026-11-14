@@ -23,8 +23,20 @@
   - Building tables from your Knave 2e book now asks: "Switch this world to Knave 2e rules?" Characters
     you already have keep their numbers and items either way.
   - In a 1e world, Personality and Mannerism (2e tables) stay hidden until their tables are built.
-  - Not yet: 1e's item quality and wear, the natural-20 extra die, the copper price list, 100 coins a
-    slot and daily wages. A 1e world keeps 2e's on those for now.
+  - Attacks: 1e's quality and critical hits, or 2e's breakage. Under 1e a weapon has 3 quality and armor
+    1 to 7. A natural 20 rolls one more damage die and puts a **Wear armor** button on the card for each
+    target hit: the target's owner (the GM for a monster) picks the piece that loses a point. A natural 1
+    costs the weapon a point. At 0 the item is destroyed and marked Broken; the item sheet's **Repair**
+    restores it at 10% of its price a point, from the owner's coins. There is no power attack and no
+    free maneuver at 21+ under 1e. A worn item shows "Quality 2/3" in the inventory.
+  - Prices and wages: 1e's price list in copper, or 2e's. A new compendium, **Gear & Prices (Knave 1e)**,
+    holds every item on it, and the shop shows its aisles (Weapons, Armor, Gear, Food, Animals &
+    Transport, Clothing); Lodging & Meals and Buildings are there too, hidden until the GM shows them in
+    the Marketplace Manager, and buying one only takes the coins. Starting gear and the weapon choice
+    come from the 1e list. Create NPC offers 1e's ten henchmen at their daily wages, and the Time tab's
+    **Pay** settles every day owed. A hireling's sheet says whether the wage is by the month or the day.
+  - Coins per slot: 100 (1e) or 500 (2e).
+  - A world already on this version's rules gets the three new ones in the edition its others play.
 - **The welcome window** says which rules the world plays, how 1e and 2e fit together, and links the
   Knave 1e PDF on itch beside the Knave 2e book, though the 1e rules are built in. An **AI disclosure**
   says first that there is no AI art: Base Knavery ships with more than 2,900 human-made art assets

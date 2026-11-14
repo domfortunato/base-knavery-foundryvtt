@@ -8,11 +8,11 @@
  * rule it never stored is written with its 2e value (`stampRules`). A brand-new world
  * stores nothing and plays the 1e defaults.
  */
-import { RULES_PRESETS, SETTINGS_NS } from "./config.js";
+import { COINS_PER_SLOT, CORE_RULE_KEYS, RULES_PRESETS, SETTINGS_NS } from "./config.js";
 
 const RULE_KEYS = Object.keys(RULES_PRESETS["1e"]);
 /** Settings a fresh world writes by itself, which do not make it an old world. */
-const AUTOMATIC_KEYS = new Set(["rules-stamp", "welcome-shown-version"]);
+const AUTOMATIC_KEYS = new Set(["rules-stamp", "rules-keys", "welcome-shown-version"]);
 
 /** A rule's value; before settings exist, the 1e default. */
 export const rule = (key) => {
@@ -27,6 +27,12 @@ export const startingKit = () => rule("starting-kit");
 export const usesWounds = () => deathRule() !== "knave1e";
 /** Whether a new character has careers (Knave 2e) or 1e's background and rolled gear. */
 export const usesCareers = () => startingKit() !== "knave1e";
+/** Knave 1e attacks (p4): quality and wear, a natural 20's extra die; no power attack or 21+ maneuver. */
+export const usesQuality = () => rule("attack-rule") === "knave1e";
+/** Knave 1e's copper price list, henchmen and daily wages (p3), or Knave 2e's. */
+export const usesPrices1e = () => rule("price-list") === "knave1e";
+/** Coins to an item slot: 100 (1e, p2) or 500 (2e). */
+export const coinsPerSlot = () => Number(rule("coins-per-slot")) || COINS_PER_SLOT;
 
 /** Which edition a set of rule values matches: "1e", "2e" or "custom". */
 export const rulesFor = (values) => {
@@ -59,17 +65,47 @@ const storedKeys = () => {
 };
 
 /**
+ * Which edition the world's known rules point to, for a rule added since: the edition they
+ * all match, else the stamp's (a custom world was 2e before 0.2.0, or 1e if made since).
+ */
+export const editionForNewRules = (values, known, stamp) => {
+  for (const edition of ["1e", "2e"]) {
+    if (known.length && known.every((k) => values[k] === RULES_PRESETS[edition][k])) return edition;
+  }
+  return stamp === "2e" ? "2e" : "1e";
+};
+
+/**
+ * A stamped world meets a rule added after its stamp: it gets that rule's value in the
+ * edition its other rules play, so a 2e world stays 2e. Returns the keys written.
+ */
+const topUpRules = async (stamp) => {
+  const stored = game.settings.get(SETTINGS_NS, "rules-keys");
+  const known = (Array.isArray(stored) && stored.length ? stored : CORE_RULE_KEYS).filter((k) => RULE_KEYS.includes(k));
+  const added = RULE_KEYS.filter((k) => !known.includes(k));
+  if (!added.length) return [];
+  const edition = editionForNewRules(Object.fromEntries(known.map((k) => [k, rule(k)])), known, stamp);
+  for (const k of added) {
+    if (game.settings.get(SETTINGS_NS, k) !== RULES_PRESETS[edition][k]) await game.settings.set(SETTINGS_NS, k, RULES_PRESETS[edition][k]);
+  }
+  await game.settings.set(SETTINGS_NS, "rules-keys", RULE_KEYS);
+  return added;
+};
+
+/**
  * Once per world, from `ready` on the active GM: an old world keeps Knave 2e, a new one
  * Knave 1e. Returns the stamp written, or null when it was already stamped or this is not
- * the client to do it.
+ * the client to do it. A stamped world still learns rules added since (`topUpRules`).
  */
 export const stampRules = async () => {
   if (!game.user.isGM || !game.users.activeGM?.isSelf) return null;
-  if (game.settings.get(SETTINGS_NS, "rules-stamp")) return null;
+  const stamped = game.settings.get(SETTINGS_NS, "rules-stamp");
+  if (stamped) { await topUpRules(stamped); return null; }
   const stored = storedKeys();
   const documents = game.actors.size + game.items.size + game.journal.size;
   if (!isExistingWorld({ storedKeys: stored, documents })) {
     await game.settings.set(SETTINGS_NS, "rules-stamp", "1e");
+    await game.settings.set(SETTINGS_NS, "rules-keys", RULE_KEYS);
     return "1e";
   }
   for (const [k, v] of Object.entries(RULES_PRESETS["2e"])) {
@@ -81,6 +117,7 @@ export const stampRules = async () => {
     await game.settings.set(SETTINGS_NS, "starting-kit", "careers-1e-gear");
   }
   await game.settings.set(SETTINGS_NS, "rules-stamp", "2e");
+  await game.settings.set(SETTINGS_NS, "rules-keys", RULE_KEYS);
   return "2e";
 };
 
@@ -92,7 +129,7 @@ export const offerRulesSwitch = async () => {
   if (!game.user.isGM || currentRules() === "2e") return currentRules() === "2e";
   const L = (k) => game.i18n.localize(k);
   const esc = foundry.utils.escapeHTML;
-  const lines = ["Careers", "Wounds", "Healing", "Spells", "Advancement"]
+  const lines = ["Careers", "Wounds", "Healing", "Spells", "Attacks", "Gear", "Advancement"]
     .map((k) => `<li>${esc(L(`KNAVERY.RulesSwitch.${k}`))}</li>`).join("");
   const yes = await foundry.applications.api.DialogV2.confirm({
     classes: ["knavery", "knavery-rules-switch"],

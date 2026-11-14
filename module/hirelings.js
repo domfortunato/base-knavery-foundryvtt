@@ -11,6 +11,8 @@
  * Wages: a hireling's sheet names the character who employs them. The Time tab lists
  * each hireling's monthly wage and when it is due (a month is 30 days of the world
  * clock); Pay takes the coins from the employer and moves the due date on a month.
+ * A Knave 1e henchman is paid by the day (p3; `system.wagePeriod`): Pay settles every day
+ * owed since the last payment, at least one (user ruling 2026-11-14).
  */
 import { FLAG_SCOPE } from "./config.js";
 import { onPcSide } from "./initiative.js";
@@ -194,6 +196,12 @@ export const bindMoraleCard = (message, html) => {
 /*  Wages                                        */
 /* -------------------------------------------- */
 
+/** Days a daily wage owes at `now`: from the due date on, counting today; none paid yet is one. */
+export const daysOwed = (due, now) => {
+  if (!Number.isFinite(due)) return 1;
+  return due > now ? 0 : Math.floor((now - due) / DAY_SECONDS) + 1;
+};
+
 /** World hirelings with a wage, as the Time tab lists them. */
 export const wageRows = () => {
   const now = game.time.worldTime;
@@ -205,33 +213,43 @@ export const wageRows = () => {
     let status;
     if (due === null || days <= 0) status = days !== null && days < 0 ? F("KNAVERY.Wages.Overdue", { n: -days }) : L("KNAVERY.Wages.DueNow");
     else status = days === 1 ? L("KNAVERY.Wages.DueTomorrow") : F("KNAVERY.Wages.DueIn", { n: days });
+    const daily = s.wagePeriod === "day";
+    if (daily) {
+      const owed = daysOwed(due, now);
+      status = owed ? F(owed === 1 ? "KNAVERY.Wages.OwedOne" : "KNAVERY.Wages.Owed", { n: owed, total: owed * s.wage }) : L("KNAVERY.Wages.PaidUp");
+    }
     return {
-      id: a.id, name: a.name, img: a.img, wage: s.wage, status, overdue: due === null || days <= 0,
+      id: a.id, name: a.name, img: a.img, wage: s.wage, status, overdue: daily ? daysOwed(due, now) > 0 : due === null || days <= 0,
+      amount: F(daily ? "KNAVERY.Wages.PerDay" : "KNAVERY.Wages.PerMonth", { wage: s.wage }),
       employer: employer?.name ?? L("KNAVERY.Wages.NoEmployer"), hasEmployer: !!employer,
     };
   }).sort((x, y) => Number(y.overdue) - Number(x.overdue) || x.name.localeCompare(y.name));
 };
 
-/** Pay a month: from the employer's coins; the due date moves on 30 days. GM only. */
+/** Pay a month (or, by the day, every day owed): from the employer's coins; the due date moves on. GM only. */
 export const payWage = async (hireling) => {
   if (!game.user.isGM || !hireling) return null;
   const s = hireling.system;
   const employer = s.employer ? game.actors.get(s.employer) : null;
   if (!employer) return ui.notifications.warn("KNAVERY.Wages.ChooseEmployer", { format: { name: hireling.name } });
   const coins = employer.system.coins ?? 0;
-  if (coins < s.wage) {
-    return ui.notifications.warn("KNAVERY.Wages.CannotPay", { format: { name: employer.name, coins, wage: s.wage } });
-  }
   const now = game.time.worldTime;
-  const from = Number.isFinite(s.wageDue) ? Math.max(now, s.wageDue) : now;
-  const due = from + MONTH_SECONDS;
-  await employer.update({ "system.coins": coins - s.wage });
+  const daily = s.wagePeriod === "day";
+  const days = daily ? Math.max(1, daysOwed(s.wageDue, now)) : MONTH_DAYS;
+  const wage = daily ? s.wage * days : s.wage;
+  if (coins < wage) {
+    return ui.notifications.warn("KNAVERY.Wages.CannotPay", { format: { name: employer.name, coins, wage } });
+  }
+  // A month runs from today or the due date, whichever is later; days owed run from the due date.
+  const from = Number.isFinite(s.wageDue) ? (daily ? s.wageDue : Math.max(now, s.wageDue)) : now;
+  const due = from + days * DAY_SECONDS;
+  await employer.update({ "system.coins": coins - wage });
   await hireling.update({ "system.wageDue": due });
   const owners = game.users.filter((u) => !u.isGM && employer.testUserPermission(u, "OWNER")).map((u) => u.id);
   await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor: employer }),
     whisper: [...gmIds(), ...owners],
-    content: `<div class="knavery-roll-card kind-wages"><p>${esc(F("KNAVERY.Wages.Paid", { employer: employer.name, name: hireling.name, wage: s.wage, days: MONTH_DAYS }))}</p></div>`,
+    content: `<div class="knavery-roll-card kind-wages"><p>${esc(F(daily ? (days === 1 ? "KNAVERY.Wages.PaidDay" : "KNAVERY.Wages.PaidDays") : "KNAVERY.Wages.Paid", { employer: employer.name, name: hireling.name, wage, days }))}</p></div>`,
   });
   return due;
 };

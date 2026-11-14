@@ -1,0 +1,22 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: xAxxf0qLPkSEK4Eq
+_key: '!items!xAxxf0qLPkSEK4Eq'
+name: Dog, small but vicious
+type: transport
+img: systems/base-knavery/icons/stack.svg
+system:
+  slots: 0
+  quantity: 1
+  cost: 20
+  capacity: 0
+  crew: 0
+  speed: ''
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

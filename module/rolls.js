@@ -13,7 +13,8 @@ import {
   SAVE_CATEGORIES, SETTINGS_NS, SYS_PATH,
 } from "./config.js";
 import { scaledPosition } from "./settings.js";
-import { spellRule, usesWounds } from "./rules.js";
+import { spellRule, usesQuality, usesWounds } from "./rules.js";
+import { wearItem } from "./quality.js";
 
 const { DialogV2 } = foundry.applications.api;
 const L = (k) => game.i18n.localize(k);
@@ -24,6 +25,8 @@ export const normalizeDice = (formula) => String(formula ?? "").trim().replace(/
 
 /** Double every die count in a formula (power attacks). */
 export const doubleDice = (formula) => normalizeDice(formula).replace(/(\d+)d(\d+)/g, (_, n, f) => `${Number(n) * 2}d${f}`);
+/** One more die of the weapon's type (a Knave 1e critical hit, p4): "d8" -> "2d8", "2d6+1" -> "3d6+1". */
+export const addDie = (formula) => normalizeDice(formula).replace(/(\d+)d(\d+)/, (_, n, f) => `${Number(n) + 1}d${f}`);
 
 const advantageMode = () => game.settings.get(SETTINGS_NS, "advantage-mode");
 
@@ -308,7 +311,7 @@ const chosenTargets = (targetId) => {
 export const rollAttack = async (actor, weapon, { reason = "" } = {}) => {
   const melee = weapon.system.attackType === "melee";
   const choice = await promptEdge({
-    title: F("KNAVERY.Roll.AttackTitle", { weapon: weapon.name }), reason, attack: true, melee: melee && actor.type === "character", actor,
+    title: F("KNAVERY.Roll.AttackTitle", { weapon: weapon.name }), reason, attack: true, melee: melee && canPowerAttack(actor), actor,
   });
   if (!choice) return null;
   return attackWith(actor, weapon, choice, { reason });
@@ -354,7 +357,7 @@ export const openAttack = async (actor, { reason = "" } = {}) => {
     ...attackRow(actor, w), checked: w.id === selected,
     improvised: w.id === IMPROVISED_ID, hint: w.id === IMPROVISED_ID ? L("KNAVERY.ImprovisedHint") : "",
   }));
-  const canPower = actor.type === "character";
+  const canPower = canPowerAttack(actor);
   const choice = await promptEdge({
     title: L("KNAVERY.Roll.AttackTitleAny"), reason, attack: true, melee: canPower && rows.some((r) => r.melee), weapons: rows, actor,
   });
@@ -366,6 +369,9 @@ export const openAttack = async (actor, { reason = "" } = {}) => {
   const power = choice.power && canPower && weapon.system.attackType === "melee";
   return attackWith(actor, weapon, { ...choice, power }, { reason });
 };
+
+/** A character's power attack is Knave 2e's; Knave 1e has none (p4). */
+const canPowerAttack = (actor) => actor.type === "character" && !usesQuality();
 
 /** Roll an attack whose edge and options are chosen: the card, damage, targets and breakage. */
 const attackWith = async (actor, weapon, choice, { reason = "" } = {}) => {
@@ -380,25 +386,31 @@ const attackWith = async (actor, weapon, choice, { reason = "" } = {}) => {
   }));
   const anyHit = targets.length ? targets.some((t) => t.hit) : true;
   const fumble = natural === 1;
-  const maneuver = roll.total >= MANEUVER_THRESHOLD;
+  // Knave 1e (p4): a natural 20 adds a die and wears the target's armor; no free maneuver at 21+.
+  const quality = usesQuality();
+  const crit = quality && natural === 20;
+  const maneuver = !quality && roll.total >= MANEUVER_THRESHOLD;
 
   const rolls = [roll];
   let damage = null;
-  const power = choice.power && anyHit;
+  const power = choice.power && anyHit && !quality;
   // A free-text damage entry ("special") posts the attack without a damage roll.
   const rollableDamage = isRollable(normalizeDice(weapon.system.damage));
   if (choice.rollDamage && anyHit && rollableDamage) {
-    const dmgFormula = power ? doubleDice(weapon.system.damage) : normalizeDice(weapon.system.damage);
+    const base = power ? doubleDice(weapon.system.damage) : normalizeDice(weapon.system.damage);
+    const dmgFormula = crit ? addDie(base) : base;
     const dmgRoll = await new Roll(dmgFormula).evaluate();
     rolls.push(dmgRoll);
     damage = { total: dmgRoll.total, html: await dmgRoll.render() };
   }
 
-  // An improvised attack has no item to break.
-  const breaks = !!weapon.uuid && ((fumble && game.settings.get(SETTINGS_NS, "weapon-breaks-on-1")) || power);
+  // An improvised attack has no item to break. Knave 2e: a natural 1 or a power attack breaks the weapon;
+  // Knave 1e: a natural 1 costs it a point of quality, and 0 is destroyed (quality.js).
+  const breaks = !quality && !!weapon.uuid && ((fumble && game.settings.get(SETTINGS_NS, "weapon-breaks-on-1")) || power);
   if (breaks && weapon.isOwner && !weapon.system.broken) {
     await weapon.update({ "system.broken": true }, { knNoLog: true });
   }
+  const worn = quality && fumble && !!weapon.uuid ? await wearItem(weapon, { post: false }) : null;
 
   const hitTargets = targets.filter((t) => t.hit !== false);
   const content = await renderCard({
@@ -411,9 +423,12 @@ const attackWith = async (actor, weapon, choice, { reason = "" } = {}) => {
       ...t,
       label: t.hit === null ? "" : L(t.hit ? "KNAVERY.Roll.Hit" : "KNAVERY.Roll.Miss"),
       cls: t.hit === null ? "" : (t.hit ? "success" : "failure"),
+      wear: crit && t.hit !== false,
     })),
     maneuver,
     fumble,
+    crit,
+    weaponWorn: worn ? F(worn.destroyed ? "KNAVERY.Quality.Destroyed" : "KNAVERY.Quality.Worn", { name: weapon.name, value: worn.value, max: worn.max }) : "",
     broke: breaks,
     power,
     damage,
@@ -424,16 +439,18 @@ const attackWith = async (actor, weapon, choice, { reason = "" } = {}) => {
     weaponName: weapon.name,
     actorUuid: actor.uuid,
     powerFlag: power ? 1 : 0,
+    critFlag: crit ? 1 : 0,
   });
   await postRolls(actor, rolls, content, {
-    attack: { weapon: weapon.name, total: roll.total, natural, damage: damage?.total ?? null },
+    attack: { weapon: weapon.name, total: roll.total, natural, crit, damage: damage?.total ?? null },
   });
   return { roll, targets, damage };
 };
 
 /** Roll a weapon's (or any) damage formula alone and post an apply card. */
-export const rollDamage = async (actor, { formula, label = "", power = false, targets = null, direct = false } = {}) => {
-  const f = power ? doubleDice(formula) : normalizeDice(formula);
+export const rollDamage = async (actor, { formula, label = "", power = false, crit = false, targets = null, direct = false } = {}) => {
+  const base = power ? doubleDice(formula) : normalizeDice(formula);
+  const f = crit ? addDie(base) : base;
   if (!isRollable(f)) {
     ui.notifications.warn("KNAVERY.Notify.NotADamageFormula", { format: { formula: String(formula ?? "") } });
     return null;

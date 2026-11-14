@@ -14,7 +14,8 @@ import { slotsForItem } from "../documents/actor.js";
 import { levelLadder } from "../data-models.js";
 import { mayEditAbilities, mayEditCareers, mayEditLevelXp, mayUseCharGen } from "../edit-gates.js";
 import { KNAVE_PAGE_TRAITS, scaledPosition, traitShown } from "../settings.js";
-import { healingRule, usesCareers, usesWounds } from "../rules.js";
+import { healingRule, usesCareers, usesQuality, usesWounds } from "../rules.js";
+import { qualityOf } from "../quality.js";
 import { attackRow, castSpell, openAttack, rollAttack, rollCheck, rollDamage, rollDieOfFate, rollMorale } from "../rolls.js";
 import { pickArt, randomPortraitPair, setActorArt } from "../art.js";
 import { drawFrom, pickFrom } from "../compendium.js";
@@ -382,6 +383,9 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
         if (item.system.hands === 2) tags.push(L("KNAVERY.TwoHanded"));
       }
       if (item.type === "armor") tags.push(F("KNAVERY.NAp", { n: item.system.points }));
+      // Knave 1e (p4): a worn weapon or piece of armor shows what quality it has left.
+      const q = usesQuality() ? qualityOf(item) : null;
+      if (q && q.value < q.max && !item.system.broken) tags.push(F("KNAVERY.Quality.Tag", { value: q.value, max: q.max }));
       if (item.type === "spellbook") tags.push(L(item.system.scroll ? "KNAVERY.Scroll" : "KNAVERY.Spellbook"));
       if (item.system.quantity > 1) tags.push(F("KNAVERY.NQuantity", { n: item.system.quantity }));
       return {

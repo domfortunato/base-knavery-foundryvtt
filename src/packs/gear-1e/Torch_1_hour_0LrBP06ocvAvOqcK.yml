@@ -1,0 +1,20 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: 0LrBP06ocvAvOqcK
+_key: '!items!0LrBP06ocvAvOqcK'
+name: Torch (1 hour)
+type: item
+img: systems/base-knavery/art/game-icons/fire/torch.svg
+system:
+  slots: 1
+  quantity: 1
+  bundle: 1
+  cost: 1
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

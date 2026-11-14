@@ -1,0 +1,109 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: JO9HzEXyopLMYXpc
+_key: '!tables!JO9HzEXyopLMYXpc'
+name: 'Market 1e: Armor'
+img: icons/svg/coins.svg
+description: <p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>
+formula: 1d7
+replacement: true
+displayRoll: true
+results:
+  - _id: 4hIMJrbasWr3m19B
+    _key: '!tables.results!JO9HzEXyopLMYXpc.4hIMJrbasWr3m19B'
+    type: document
+    name: Shield
+    description: ''
+    img: systems/base-knavery/art/game-icons/shields/shield.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.PfsD4KsQFjrCkroC
+    weight: 1
+    range:
+      - 1
+      - 1
+    drawn: false
+    flags: {}
+  - _id: fSLwaYRJKUm2fS4k
+    _key: '!tables.results!JO9HzEXyopLMYXpc.fSLwaYRJKUm2fS4k'
+    type: document
+    name: Helmet
+    description: ''
+    img: systems/base-knavery/art/game-icons/armor/visored-helm.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.gAP5MNC1X34rNR07
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    flags: {}
+  - _id: V2sNVhgSNYBHEckd
+    _key: '!tables.results!JO9HzEXyopLMYXpc.V2sNVhgSNYBHEckd'
+    type: document
+    name: Gambeson
+    description: ''
+    img: systems/base-knavery/art/game-icons/armor/leather-vest.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.bJvizhXYNDfl4BES
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    flags: {}
+  - _id: 6y3CYuPTdEAqvCAi
+    _key: '!tables.results!JO9HzEXyopLMYXpc.6y3CYuPTdEAqvCAi'
+    type: document
+    name: Brigandine
+    description: ''
+    img: systems/base-knavery/art/game-icons/armor/lamellar.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.WoBwUZhk6DAm38QT
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    flags: {}
+  - _id: vUEQ2AqE2UA9voqQ
+    _key: '!tables.results!JO9HzEXyopLMYXpc.vUEQ2AqE2UA9voqQ'
+    type: document
+    name: Chain
+    description: ''
+    img: systems/base-knavery/art/game-icons/armor/chain-mail.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.mQcPi3qetTwksO94
+    weight: 1
+    range:
+      - 5
+      - 5
+    drawn: false
+    flags: {}
+  - _id: anMCBOPGqvSmfIGH
+    _key: '!tables.results!JO9HzEXyopLMYXpc.anMCBOPGqvSmfIGH'
+    type: document
+    name: Half Plate
+    description: ''
+    img: systems/base-knavery/art/game-icons/armor/breastplate.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.r66Z9yR6HRkUPTh3
+    weight: 1
+    range:
+      - 6
+      - 6
+    drawn: false
+    flags: {}
+  - _id: RM6UjRPikDbsEx5G
+    _key: '!tables.results!JO9HzEXyopLMYXpc.RM6UjRPikDbsEx5G'
+    type: document
+    name: Full Plate
+    description: ''
+    img: systems/base-knavery/art/game-icons/armor/chest-armor.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.OFef6Mpp46MO1Si4
+    weight: 1
+    range:
+      - 7
+      - 7
+    drawn: false
+    flags: {}
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

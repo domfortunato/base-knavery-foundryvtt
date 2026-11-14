@@ -1,0 +1,24 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: CGO2odzrOT4mH0Xc
+_key: '!items!CGO2odzrOT4mH0Xc'
+name: Crossbow
+type: weapon
+img: systems/base-knavery/art/game-icons/weapons/crossbow.svg
+system:
+  slots: 3
+  quantity: 1
+  damage: d8
+  hands: 2
+  attackType: ranged
+  range: ''
+  cost: 60
+  qualityMax: 3
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

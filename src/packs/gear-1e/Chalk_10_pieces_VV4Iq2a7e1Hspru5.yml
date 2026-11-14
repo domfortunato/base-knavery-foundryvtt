@@ -1,0 +1,20 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: VV4Iq2a7e1Hspru5
+_key: '!items!VV4Iq2a7e1Hspru5'
+name: Chalk (10 pieces)
+type: item
+img: systems/base-knavery/icons/generic-item.svg
+system:
+  slots: 1
+  quantity: 10
+  bundle: 10
+  cost: 1
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

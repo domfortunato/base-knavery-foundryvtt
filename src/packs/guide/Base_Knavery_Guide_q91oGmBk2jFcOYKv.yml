@@ -53,9 +53,11 @@ pages:
         <li><b>Healing.</b> Knave 1e: a night's rest after a meal heals d8 + CON; a safe haven restores all HP. Knave 2e: full HP after two watches of sleep and a meal; a safe haven heals one wound.</li>
         <li><b>Spells.</b> Knave 1e: any number of spellbooks a day, each once, cast at the caster's level. Knave 2e: as many as INT.</li>
         <li><b>Advancement and initiative.</b> Knave 1e: a level every 1,000 XP, a d8 per level for HP, and one d6 a round for the sides. Knave 2e: its own XP table, HP rerolls and individual initiative.</li>
+        <li><b>Attacks.</b> Knave 1e: weapons have 3 quality, armor 1 to 7. A natural 20 adds one damage die, and the card's <i>Wear armor</i> button lets the target's owner pick the piece that loses a point; a natural 1 costs the weapon a point. At 0 the item is destroyed (marked Broken); the item sheet's <i>Repair</i> costs 10% of its price a point. Knave 2e: a natural 1 breaks the weapon, a power attack doubles the damage dice and breaks it, and 21+ earns a free maneuver.</li>
+        <li><b>Prices and wages.</b> Knave 1e: the copper price list (the <i>Gear &amp; Prices (Knave 1e)</i> compendium and its shop aisles), henchmen paid by the day. Knave 2e: its prices and monthly wages.</li>
+        <li><b>Coins per slot.</b> Knave 1e: 100. Knave 2e: 500.</li>
         </ul>
         <p>When you build tables from your Knave 2e book, the system asks whether to switch the world to Knave 2e rules. Switching never changes a character you already have. A world made before version 0.2.0 kept the Knave 2e rules it played.</p>
-        <p>Not yet automated for Knave 1e: item quality and wear, the natural-20 extra die, the copper price list, 100 coins a slot and daily wages.</p>
         <p>Knave 1e's rules are from <i>Knave</i> (first edition) by Ben Milton, CC BY 4.0, adapted here as automation and settings.</p>
     flags: {}
     ownership:
@@ -147,9 +149,8 @@ pages:
         <li><b>Saves</b> from other games use the matching ability: paralysis STR, breath and blast DEX, poison and death CON, magic device INT, spells WIS.</li>
         <li><b>Attacks</b>: d20 + STR (melee) or WIS (ranged) against the target's AC.
         <ul>
-        <li>A total of 21 or more also earns a free maneuver.</li>
-        <li>A natural 1 breaks the weapon.</li>
-        <li>A power attack doubles the damage dice and breaks the weapon.</li>
+        <li>Knave 2e: a total of 21 or more also earns a free maneuver; a natural 1 breaks the weapon; a power attack doubles the damage dice and breaks the weapon.</li>
+        <li>Knave 1e: a natural 20 adds a damage die and wears the target's armor; a natural 1 wears the weapon (see <i>Rules: Knave 1e or 2e</i>).</li>
         </ul></li>
         <li><b>Damage</b> comes off HP first. Each point past 0 fills an item slot with a wound, from the bottom of the inventory up: empty slots first, then coins, then the lowest item, which becomes <i>Unusable</i> until the wound heals (whether it was dropped or broken is the table's call). When every slot is wounded, the character dies. <b>Direct</b> damage skips HP. Monsters take direct damage tripled and die at 0 HP. Under Knave 1e's death rule there are no wounds and no direct damage: a character is unconscious at 0 HP and dead below 0.</li>
         <li>The <b>Die of Fate</b> is a d6 for when fate, not skill, decides.</li>

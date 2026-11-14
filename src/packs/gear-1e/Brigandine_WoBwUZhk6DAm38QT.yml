@@ -1,0 +1,22 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: WoBwUZhk6DAm38QT
+_key: '!items!WoBwUZhk6DAm38QT'
+name: Brigandine
+type: armor
+img: systems/base-knavery/art/game-icons/armor/lamellar.svg
+system:
+  slots: 2
+  quantity: 1
+  armorType: other
+  points: 2
+  qualityMax: 4
+  cost: 500
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

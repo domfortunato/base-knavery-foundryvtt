@@ -63,7 +63,7 @@ export const SETTING_GROUPS = [
     button: "KNAVERY.Settings.GroupGeneralButton",
     hint: "KNAVERY.Settings.GroupGeneralHint",
     icon: "fa-solid fa-gears",
-    keys: ["advantage-mode", "roll-damage-default", "weapon-breaks-on-1", "show-traits", "change-log", "welcome-on-start"],
+    keys: ["advantage-mode", "roll-damage-default", "show-traits", "change-log", "welcome-on-start"],
   },
   {
     id: "generation",
@@ -94,8 +94,8 @@ export const SETTING_GROUPS = [
     preset: true,
     keys: [
       "creation-abilities", "starting-kit", "show-alignment", "show-background", "first-level-hp", "level-hp-rule",
-      "death-rule", "hard-mode-wounds", "healing-rule", "spell-rule", "spell-list", "knave1e-xp",
-      "knave1e-random-raises", "knave1e-initiative", "show-hazard-dice",
+      "death-rule", "hard-mode-wounds", "healing-rule", "spell-rule", "spell-list", "attack-rule", "weapon-breaks-on-1",
+      "price-list", "coins-per-slot", "knave1e-xp", "knave1e-random-raises", "knave1e-initiative", "show-hazard-dice",
     ],
   },
   {
@@ -208,6 +208,19 @@ export const registerSettings = () => {
   reg("knave1e-random-raises", { label: "Knave1eRandomRaises", type: Boolean, default: false });
   reg("knave1e-initiative", { label: "Knave1eInitiative", type: Boolean, default: D["knave1e-initiative"], onChange: () => ui.combat?.render() });
   reg("hard-mode-wounds", { label: "HardModeWounds", type: Boolean, default: false });
+  // Knave 1e's attacks, prices and coin slots (p2-p4); 2e's under the 2e preset.
+  reg("attack-rule", {
+    label: "AttackRule", type: String, choices: choices("AttackRuleChoice", ["knave1e", "knave2e"]),
+    default: D["attack-rule"], onChange: rerenderActorSheets,
+  });
+  reg("price-list", {
+    label: "PriceList", type: String, choices: choices("PriceListChoice", ["knave1e", "knave2e"]),
+    default: D["price-list"], onChange: rerenderActorSheets,
+  });
+  reg("coins-per-slot", {
+    label: "CoinsPerSlot", type: String, choices: { 100: "100", 500: "500" },
+    default: D["coins-per-slot"], onChange: () => { reprepareActors(); rerenderActorSheets(); },
+  });
   reg("show-hazard-dice", { label: "ShowHazardDice", type: Boolean, default: true });
 
   /* Rulebook: the GM's own PDF (module/rulebook.js). Only a path is stored. */
@@ -221,12 +234,20 @@ export const registerSettings = () => {
   game.settings.register(SETTINGS_NS, "market-hidden-aisles", {
     scope: "world", config: false, type: Array, default: [],
   });
+  // The 1e price list's own; its services and property (p3) ship hidden: the GM shows them (user, 2026-11-14).
+  game.settings.register(SETTINGS_NS, "market-hidden-aisles-1e", {
+    scope: "world", config: false, type: Array, default: ["Lodging & Meals", "Buildings"],
+  });
   game.settings.register(SETTINGS_NS, "custom-portrait-list", {
     scope: "world", config: false, type: Array, default: [],
   });
   // Which edition this world was stamped with at its first GM login on 0.2.0 or later (rules.js stampRules).
   game.settings.register(SETTINGS_NS, "rules-stamp", {
     scope: "world", config: false, type: String, default: "",
+  });
+  // The rule keys this world has been given a value for (rules.js topUpRules).
+  game.settings.register(SETTINGS_NS, "rules-keys", {
+    scope: "world", config: false, type: Array, default: [],
   });
   // The system version the welcome window last opened for (module/welcome.js).
   game.settings.register(SETTINGS_NS, "welcome-shown-version", {

@@ -170,8 +170,14 @@ picker, change log and marketplace it ports.
   changes an existing character. Rule settings: `creation-abilities`, `starting-kit`,
   `death-rule`, `healing-rule`, `spell-rule`, plus `first-level-hp`, `level-hp-rule`,
   `knave1e-xp`, `knave1e-initiative`, `show-alignment`, `show-background`, `spell-list`.
-  The 1e quality/wear, natural-20 die, copper prices, 100 coins a slot and daily wages
-  are NOT built yet (the next release); a 1e world keeps 2e's on those.
+  Bundle 2 (user rulings 2026-11-14): `attack-rule` (1e quality and crits, `quality.js`;
+  2e breakage, power attacks, 21+ maneuver), `price-list` (1e: pack `gear-1e`, aisles
+  "Market 1e: ", henchmen paid by the day), `coins-per-slot` ("100"/"500"). A stamped
+  world learns a rule added later from its other rules' edition (`rules-keys`, `topUpRules`).
+- Knave 1e wear: a natural 20's armor wear is picked by the target's owner from the card's
+  Wear armor button (the dialog records the card on the actor, flag `wornBy`); 0 quality
+  = Broken, kept, repairable at 10% of the price a point; daily wages: Pay settles every
+  day owed. Lodging & Meals and Buildings are service rows, hidden by default.
 - Knave 1e death: 0 HP unconscious, -1 dead (character `hp.value` min -1); no direct
   damage, so the Direct button is hidden. 1e healing: d8 + CON after a meal; a safe
   haven, all HP. 1e spells: no daily total; a card's level is the caster's level (L).

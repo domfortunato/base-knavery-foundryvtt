@@ -1,0 +1,22 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: 0yArHeCHoOCaHnj0
+_key: '!items!0yArHeCHoOCaHnj0'
+name: Horse, war
+type: transport
+img: systems/base-knavery/icons/horse.svg
+system:
+  slots: 0
+  quantity: 1
+  cost: 10000
+  capacity: 80
+  crew: 0
+  speed: ''
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

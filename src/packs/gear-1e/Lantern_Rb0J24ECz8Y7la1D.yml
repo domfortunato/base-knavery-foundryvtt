@@ -1,0 +1,20 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: Rb0J24ECz8Y7la1D
+_key: '!items!Rb0J24ECz8Y7la1D'
+name: Lantern
+type: item
+img: systems/base-knavery/art/game-icons/fire/lantern-flame.svg
+system:
+  slots: 1
+  quantity: 1
+  bundle: 1
+  cost: 30
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

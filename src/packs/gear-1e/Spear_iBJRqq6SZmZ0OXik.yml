@@ -1,0 +1,24 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: iBJRqq6SZmZ0OXik
+_key: '!items!iBJRqq6SZmZ0OXik'
+name: Spear
+type: weapon
+img: systems/base-knavery/art/game-icons/weapons/barbed-spear.svg
+system:
+  slots: 2
+  quantity: 1
+  damage: d8
+  hands: 1
+  attackType: melee
+  range: ''
+  cost: 10
+  qualityMax: 3
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

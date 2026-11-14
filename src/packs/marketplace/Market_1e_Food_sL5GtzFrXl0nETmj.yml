@@ -1,0 +1,265 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: sL5GtzFrXl0nETmj
+_key: '!tables!sL5GtzFrXl0nETmj'
+name: 'Market 1e: Food'
+img: icons/svg/coins.svg
+description: <p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>
+formula: 1d19
+replacement: true
+displayRoll: true
+results:
+  - _id: IXx1J90BkHBYAGyu
+    _key: '!tables.results!sL5GtzFrXl0nETmj.IXx1J90BkHBYAGyu'
+    type: document
+    name: Rations
+    description: ''
+    img: systems/base-knavery/icons/sack.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.JV7vYS7JFSzavMCM
+    weight: 1
+    range:
+      - 1
+      - 1
+    drawn: false
+    flags: {}
+  - _id: er28AAgoAHRuslwY
+    _key: '!tables.results!sL5GtzFrXl0nETmj.er28AAgoAHRuslwY'
+    type: document
+    name: Animal Feed (1 day)
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.WiKRFetj8GanADr6
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    flags: {}
+  - _id: j8DWpF4Z18qPtbyW
+    _key: '!tables.results!sL5GtzFrXl0nETmj.j8DWpF4Z18qPtbyW'
+    type: document
+    name: Bacon, side of
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.HDqBmgX4V3GVJWo2
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    flags: {}
+  - _id: 2CwNjBDG6XAsUcQN
+    _key: '!tables.results!sL5GtzFrXl0nETmj.2CwNjBDG6XAsUcQN'
+    type: document
+    name: Bread, 1 loaf
+    description: ''
+    img: systems/base-knavery/art/game-icons/food/bread.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.iPBw6W2mTLMfdFK2
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    flags: {}
+  - _id: psJgE6MzWgmUOG7r
+    _key: '!tables.results!sL5GtzFrXl0nETmj.psJgE6MzWgmUOG7r'
+    type: document
+    name: Cheese, 1 lb
+    description: ''
+    img: systems/base-knavery/art/game-icons/food/cheese-wedge.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.xAURAPjBXHMn5pmC
+    weight: 1
+    range:
+      - 5
+      - 5
+    drawn: false
+    flags: {}
+  - _id: LjwXJ4KdXgB8NyzS
+    _key: '!tables.results!sL5GtzFrXl0nETmj.LjwXJ4KdXgB8NyzS'
+    type: document
+    name: Cider, 4 gallons
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.HlgsG8DEEYkR0Svu
+    weight: 1
+    range:
+      - 6
+      - 6
+    drawn: false
+    flags: {}
+  - _id: rHIcbr42n5EoGM7k
+    _key: '!tables.results!sL5GtzFrXl0nETmj.rHIcbr42n5EoGM7k'
+    type: document
+    name: Cod, whole
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.d1T3OHBBh9Fu4PiL
+    weight: 1
+    range:
+      - 7
+      - 7
+    drawn: false
+    flags: {}
+  - _id: 7sNKNmwyNhjYuX4x
+    _key: '!tables.results!sL5GtzFrXl0nETmj.7sNKNmwyNhjYuX4x'
+    type: document
+    name: Eggs, 24
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.QzB2ANSVTAJxtFXy
+    weight: 1
+    range:
+      - 8
+      - 8
+    drawn: false
+    flags: {}
+  - _id: 07VcN8Cd5XnTXjcX
+    _key: '!tables.results!sL5GtzFrXl0nETmj.07VcN8Cd5XnTXjcX'
+    type: document
+    name: Flour, 5 lbs
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.K4Gdah9jHLcDjlly
+    weight: 1
+    range:
+      - 9
+      - 9
+    drawn: false
+    flags: {}
+  - _id: Pm6to5fsuSFYYNP0
+    _key: '!tables.results!sL5GtzFrXl0nETmj.Pm6to5fsuSFYYNP0'
+    type: document
+    name: Fruit, 1 lb
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.2HZFwFwn1jxKsbXB
+    weight: 1
+    range:
+      - 10
+      - 10
+    drawn: false
+    flags: {}
+  - _id: AiaDfaEmSWtl0EaG
+    _key: '!tables.results!sL5GtzFrXl0nETmj.AiaDfaEmSWtl0EaG'
+    type: document
+    name: Garlic, bunch
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.dL8oiSU7be95ABZE
+    weight: 1
+    range:
+      - 11
+      - 11
+    drawn: false
+    flags: {}
+  - _id: PezPbEBSu42BwJS8
+    _key: '!tables.results!sL5GtzFrXl0nETmj.PezPbEBSu42BwJS8'
+    type: document
+    name: Grain, 1 bushel (8 gal.)
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.VmClbbMVCD8bbz9j
+    weight: 1
+    range:
+      - 12
+      - 12
+    drawn: false
+    flags: {}
+  - _id: qUS0VlWICesjZcO3
+    _key: '!tables.results!sL5GtzFrXl0nETmj.qUS0VlWICesjZcO3'
+    type: document
+    name: Herbs, 1 bunch
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.drKDHEch38zwaHrk
+    weight: 1
+    range:
+      - 13
+      - 13
+    drawn: false
+    flags: {}
+  - _id: BVe6s8H7d7jaRrTc
+    _key: '!tables.results!sL5GtzFrXl0nETmj.BVe6s8H7d7jaRrTc'
+    type: document
+    name: Lard, 5 lbs
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.FfmLDUnLLVkwMhNo
+    weight: 1
+    range:
+      - 14
+      - 14
+    drawn: false
+    flags: {}
+  - _id: 9mrwiQ3lKNVj0Zxa
+    _key: '!tables.results!sL5GtzFrXl0nETmj.9mrwiQ3lKNVj0Zxa'
+    type: document
+    name: Onions, 1 bushel
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.VyW9rFFj15nXRkhr
+    weight: 1
+    range:
+      - 15
+      - 15
+    drawn: false
+    flags: {}
+  - _id: D7g85F7DbElMQISQ
+    _key: '!tables.results!sL5GtzFrXl0nETmj.D7g85F7DbElMQISQ'
+    type: document
+    name: Salt, 1 bushel
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.JQ6yAB3vaZGI4ELx
+    weight: 1
+    range:
+      - 16
+      - 16
+    drawn: false
+    flags: {}
+  - _id: Pv5eGHW832qyVp4P
+    _key: '!tables.results!sL5GtzFrXl0nETmj.Pv5eGHW832qyVp4P'
+    type: document
+    name: Spices, 1 lb
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.F3aWWhZOIE2aJ4AE
+    weight: 1
+    range:
+      - 17
+      - 17
+    drawn: false
+    flags: {}
+  - _id: lsvVdrJpUmKyKz2T
+    _key: '!tables.results!sL5GtzFrXl0nETmj.lsvVdrJpUmKyKz2T'
+    type: document
+    name: Sugar, 1 lb
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.RUbGmGHVu2dFDFKp
+    weight: 1
+    range:
+      - 18
+      - 18
+    drawn: false
+    flags: {}
+  - _id: EKQj5BQK8c5lp4Jf
+    _key: '!tables.results!sL5GtzFrXl0nETmj.EKQj5BQK8c5lp4Jf'
+    type: document
+    name: Wine/Ale, bottle
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.xXm9lIBQW1E0e4Uv
+    weight: 1
+    range:
+      - 19
+      - 19
+    drawn: false
+    flags: {}
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

@@ -1,0 +1,22 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: gAP5MNC1X34rNR07
+_key: '!items!gAP5MNC1X34rNR07'
+name: Helmet
+type: armor
+img: systems/base-knavery/art/game-icons/armor/visored-helm.svg
+system:
+  slots: 1
+  quantity: 1
+  armorType: helmet
+  points: 1
+  qualityMax: 1
+  cost: 40
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

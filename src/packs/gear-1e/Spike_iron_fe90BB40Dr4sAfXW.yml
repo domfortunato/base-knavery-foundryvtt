@@ -1,0 +1,20 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: fe90BB40Dr4sAfXW
+_key: '!items!fe90BB40Dr4sAfXW'
+name: Spike (iron)
+type: item
+img: systems/base-knavery/icons/generic-item.svg
+system:
+  slots: 1
+  quantity: 1
+  bundle: 1
+  cost: 5
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

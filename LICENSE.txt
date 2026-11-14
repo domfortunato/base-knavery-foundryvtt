@@ -45,9 +45,18 @@ Creative Commons Attribution 4.0 International License
 Its rules are set out in this system as Foundry automation and settings (the
 Knave 1e choices under Configure Rules): ability scores as the lowest of 3d6,
 the starting kit, death at below 0 HP, healing, spellbooks once a day,
-advancement and group initiative. Changes: they are adapted as automation and
+advancement and group initiative, item quality and critical hits, 100 coins to a
+slot, and henchmen's daily wages. Changes: they are adapted as automation and
 settings, 1e armor is expressed as armor points, and each can be mixed with the
 Knave 2e rules.
+
+Its price list (Item Costs) is in the Gear & Prices (Knave 1e) compendium and the
+"Market 1e" aisles of the marketplace compendium: item names, prices in copper,
+slots, hands, damage, armor and quality; the henchmen and their wages are in Create
+NPC. Changes: each line of weapons ("Dagger, Cudgel, Sickle, Staff, etc.") is one item
+per weapon, defense is expressed as armor points, travel rations are named Rations,
+some names are reordered ("Rope (50 ft)", "Clothing (poor)"), and the beasts, carts
+and boats carry Knave 2e's capacities.
 
 These tables in the tables compendium are from the same work:
   - the ten character traits (Physique, Face, Skin, Hair, Clothing, Virtue,

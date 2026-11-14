@@ -19,7 +19,7 @@
  * skipped and listed on the summary card, never faked.
  */
 import {
-  ABILITIES, ABILITY_MAX, CREATION_POINTS, FLAG_SCOPE, LEVELS, LOWEST_DIE_MAX, SETTINGS_NS, STARTING_COINS, SYS_PATH, TABLES,
+  ABILITIES, ABILITY_MAX, CREATION_POINTS, FLAG_SCOPE, GEAR_1E_PACK, LEVELS, LOWEST_DIE_MAX, SETTINGS_NS, STARTING_COINS, SYS_PATH, TABLES,
 } from "./config.js";
 import { drawFrom, pickFromList, plainText, realResults, findTable, resultText, spellTableName } from "./compendium.js";
 import { firstLevelHpFormula, randomAbilityPicks, rollLevelHp } from "./level-up.js";
@@ -28,7 +28,7 @@ import { randomPortraitPair } from "./art.js";
 import { emit, onSocket } from "./socket.js";
 import { mayEditCareers } from "./edit-gates.js";
 import { traitShown } from "./settings.js";
-import { creationAbilities, startingKit, usesCareers } from "./rules.js";
+import { creationAbilities, startingKit, usesCareers, usesPrices1e } from "./rules.js";
 
 const L = (k) => game.i18n.localize(k);
 const F = (k, d) => game.i18n.format(k, d);
@@ -72,10 +72,21 @@ const STANDARD_KIT = [
 const KNAVE_1E_KIT = [{ name: "Rations", quantity: 2 }];
 
 /** Every weapon a new character may choose (Knave 1e kit): world items and the Item compendia, by name. */
+/**
+ * Item packs in lookup order: the world's price list first (Knave 1e's gear-1e, or the rest),
+ * so a name both lists know ("Shield") resolves to the price list's item.
+ */
+const itemPacks = ({ only = false } = {}) => {
+  const packs = game.packs.filter((p) => p.documentName === "Item");
+  const mine = (p) => (p.collection === GEAR_1E_PACK) === usesPrices1e();
+  return only ? packs.filter(mine) : [...packs.filter(mine), ...packs.filter((p) => !mine(p))];
+};
+
 export const weaponChoices = async () => {
   const seen = new Map();
   for (const i of game.items.filter((it) => it.type === "weapon")) seen.set(i.name, { name: i.name, img: i.img });
-  for (const pack of game.packs.filter((p) => p.documentName === "Item")) {
+  // Only the price list's own weapons: a 1e world chooses a dagger or a sword, not "One-Handed Weapon".
+  for (const pack of itemPacks({ only: true })) {
     for (const e of pack.index.filter((x) => x.type === "weapon")) if (!seen.has(e.name)) seen.set(e.name, { name: e.name, img: e.img });
   }
   return [...seen.values()].sort((a, b) => a.name.localeCompare(b.name));
@@ -97,7 +108,7 @@ export const findItemByName = async (name, type = null) => {
   const match = (e) => e.name?.toLowerCase() === lc && (!type || e.type === type);
   const world = game.items.find(match);
   if (world) return world;
-  for (const pack of game.packs.filter((p) => p.documentName === "Item")) {
+  for (const pack of itemPacks()) {
     const entry = pack.index.find(match);
     if (entry) return pack.getDocument(entry._id);
   }
@@ -272,6 +283,23 @@ export const rollFullName = async ({ warn = false } = {}) => {
   return [first.text, last].filter(Boolean).join(" ");
 };
 
+/**
+ * The starting-gear tables' words for items the 1e price list names otherwise (both Knave 1e, p2-p3).
+ * A count is a bundle: five torches share a slot.
+ */
+export const GEAR_1E_ALIASES = {
+  "Rope, 50ft": { name: "Rope (50 ft)" }, "Candles, 5": { name: "Candle (4 hours)", quantity: 5 },
+  "Chain, 10ft": { name: "Chain (10 ft)" }, "Chalk, 10": { name: "Chalk (10 pieces)" }, "Lamp oil": { name: "Lamp Oil (4 hours)" },
+  "Padlock": { name: "Padlock and Key" }, "Mirror": { name: "Mirror (small, silver)" }, "Pole, 10ft": { name: "Pole (10 ft)" },
+  "Tent": { name: "Tent (personal)" }, "Spikes, 5": { name: "Spike (iron)", quantity: 5 }, "Torches, 5": { name: "Torch (1 hour)", quantity: 5 },
+  "Grease": { name: "Black Grease" }, "Caltrops": { name: "Caltrops (bag)" }, "Fishing rod": { name: "Fishing Rod/Tackle" },
+  "Marbles": { name: "Glass Marbles (bag)" }, "Glue": { name: "Glue (bottle)" }, "Tongs": { name: "Iron Tongs" },
+  "Nails": { name: "Nails (12)" }, "Incense": { name: "Incense (packet)" }, "Sponge": { name: "Large Sponge" },
+  "Bottle": { name: "Bottle/Vial" }, "Tar pot": { name: "Tar (pot)" }, "Twine": { name: "Twine (300 ft)" },
+  "Blank book": { name: "Book (Blank)" }, "Cook pots": { name: "Cookpots" }, "Face paint": { name: "Face Paint/Makeup" },
+  "Instrument": { name: "Musical Instrument" }, "Quill & Ink": { name: "Quill and Ink" },
+};
+
 /** Knave 1e armor, by its defense: 12/13/14 is 11 + 1/2/3, so 1/2/3 armor points (and as many slots). */
 const KNAVE_1E_ARMOR = { Gambeson: 1, Brigandine: 2, Chain: 3 };
 
@@ -292,8 +320,11 @@ export const rollKnave1eGear = async () => {
   }
   const items = [];
   for (const name of names) {
-    const known = await findItemByName(name);
-    if (known) items.push(itemData(known));
+    // On the 1e price list the gear comes from it (with its price and quality), by the list's own name.
+    const alias = usesPrices1e() ? GEAR_1E_ALIASES[name] : null;
+    const known = await findItemByName(alias?.name ?? name);
+    if (known && alias?.quantity) items.push(itemData(known, { system: { quantity: alias.quantity, bundle: alias.quantity } }));
+    else if (known) items.push(itemData(known));
     else if (KNAVE_1E_ARMOR[name]) {
       const n = KNAVE_1E_ARMOR[name];
       items.push({ name, type: "armor", img: `${SYS_PATH}/icons/armor.svg`, system: { points: n, slots: n, armorType: "other" } });

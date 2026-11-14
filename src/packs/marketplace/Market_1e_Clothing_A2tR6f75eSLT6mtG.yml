@@ -1,0 +1,83 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: A2tR6f75eSLT6mtG
+_key: '!tables!A2tR6f75eSLT6mtG'
+name: 'Market 1e: Clothing'
+img: icons/svg/coins.svg
+description: <p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>
+formula: 1d5
+replacement: true
+displayRoll: true
+results:
+  - _id: yHyRClKKKicUgDjY
+    _key: '!tables.results!A2tR6f75eSLT6mtG.yHyRClKKKicUgDjY'
+    type: document
+    name: Clothing (poor)
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.xpZPOeF6QWk4k1Vu
+    weight: 1
+    range:
+      - 1
+      - 1
+    drawn: false
+    flags: {}
+  - _id: NxSN7m8wR3rtYQKH
+    _key: '!tables.results!A2tR6f75eSLT6mtG.NxSN7m8wR3rtYQKH'
+    type: document
+    name: Clothing (standard)
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.UJTJqifg3PQfEXFy
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    flags: {}
+  - _id: qYE7AluxLio4DCkw
+    _key: '!tables.results!A2tR6f75eSLT6mtG.qYE7AluxLio4DCkw'
+    type: document
+    name: Clothing (noble)
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.PeHVEMo42DlEwzHF
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    flags: {}
+  - _id: nLKR3zXHcgDOeeBz
+    _key: '!tables.results!A2tR6f75eSLT6mtG.nLKR3zXHcgDOeeBz'
+    type: document
+    name: Furs
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.h2l8FHLJW7FsKQ9o
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    flags: {}
+  - _id: cMflzIzG2AoNq2A1
+    _key: '!tables.results!A2tR6f75eSLT6mtG.cMflzIzG2AoNq2A1'
+    type: document
+    name: Winter Clothing
+    description: ''
+    img: systems/base-knavery/icons/generic-item.svg
+    documentUuid: Compendium.base-knavery.gear-1e.Item.n0DNB2VGDx18A88S
+    weight: 1
+    range:
+      - 5
+      - 5
+    drawn: false
+    flags: {}
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

@@ -29,7 +29,7 @@
     <div class="dash-wage{{#if this.overdue}} overdue{{/if}}">
       <img src="{{this.img}}" alt="" />
       <span class="dash-wage-name">{{this.name}} <em>{{this.employer}}</em></span>
-      <span class="dash-wage-amount">{{localize "KNAVERY.Wages.PerMonth" wage=this.wage}}</span>
+      <span class="dash-wage-amount">{{this.amount}}</span>
       <span class="dash-wage-status">{{this.status}}</span>
       <button type="button" data-action="payWage" data-id="{{this.id}}" {{#unless this.hasEmployer}}disabled data-tooltip="KNAVERY.Wages.NeedEmployer"{{/unless}}><i class="fas fa-coins"></i> {{localize "KNAVERY.Wages.Pay"}}</button>
     </div>

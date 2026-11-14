@@ -1,0 +1,22 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: IvMprnCpNdl1cghQ
+_key: '!items!IvMprnCpNdl1cghQ'
+name: Donkey/Pack Horse
+type: transport
+img: systems/base-knavery/icons/donkey.svg
+system:
+  slots: 0
+  quantity: 1
+  cost: 300
+  capacity: 50
+  crew: 0
+  speed: ''
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

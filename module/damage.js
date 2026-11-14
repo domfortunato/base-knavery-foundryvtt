@@ -7,6 +7,7 @@
 import { FLAG_SCOPE } from "./config.js";
 import { emit } from "./socket.js";
 import { rollDamage } from "./rolls.js";
+import { openWearDialog, wearTaken } from "./quality.js";
 
 const { DialogV2 } = foundry.applications.api;
 const L = (k) => game.i18n.localize(k);
@@ -145,7 +146,25 @@ export const bindRollCard = (message, html) => {
       formula,
       label: weapon?.name ?? rollBtn.dataset.label ?? "",
       power: rollBtn.dataset.power === "1",
+      crit: rollBtn.dataset.crit === "1",
       targets,
     });
   });
+
+  // A Knave 1e critical hit: the target's owner (the GM for a monster) picks the worn armor.
+  for (const btn of card.querySelectorAll("[data-kn-wear]")) {
+    const target = actorFromUuid(btn.dataset.knWear);
+    if (!target || !(game.user.isGM || target.isOwner)) { btn.remove(); continue; }
+    if (wearTaken(target, message.id)) {
+      btn.replaceWith(Object.assign(document.createElement("span"), { className: "kn-wear-done", textContent: L("KNAVERY.Quality.WearDone") }));
+      continue;
+    }
+    btn.addEventListener("click", async (event) => {
+      event.preventDefault();
+      btn.disabled = true;
+      await openWearDialog(target, message.id);
+      ui.chat?.updateMessage?.(message);
+      btn.disabled = false;
+    });
+  }
 };

@@ -1,0 +1,24 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: H5v6Th6B9lso4eNw
+_key: '!items!H5v6Th6B9lso4eNw'
+name: Sickle
+type: weapon
+img: systems/base-knavery/art/game-icons/weapons/scythe.svg
+system:
+  slots: 1
+  quantity: 1
+  damage: d6
+  hands: 1
+  attackType: melee
+  range: ''
+  cost: 5
+  qualityMax: 3
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

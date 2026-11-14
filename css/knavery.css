@@ -5030,3 +5030,19 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-lowest .kn-lowest-score { font-weight: bold; font-size: calc(15px * var(--kn-text, 1)); }
 .knavery-lowest .kn-lowest-dice { color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
 .knavery-lowest .form-fields { align-items: center; gap: 6px; }
+
+/* Knave 1e quality and wear (module/quality.js): the card's Wear armor button, the wear window,
+   the item sheet's Quality line, a hireling's wage period. */
+.knavery-roll-card .card-targets li .kn-wear-armor { flex: 0 0 auto; width: auto; line-height: 1.4; padding: 0 6px; font-size: calc(12px * var(--kn-text, 1)); }
+.knavery-roll-card .card-targets li .kn-wear-done { color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
+.knavery-roll-card .card-note.crit { color: var(--kn-accent); }
+.knavery-wear .kn-wear-list { display: flex; flex-direction: column; gap: 4px; margin: 6px 0; }
+.knavery-wear .kn-wear-row { display: flex; align-items: center; gap: 8px; padding: 2px 0; border-bottom: 1px dotted var(--kn-line); }
+.knavery-wear .kn-wear-row img { border: none; flex: 0 0 auto; }
+.knavery-wear .kn-wear-name { flex: 1 1 auto; }
+.knavery-wear .kn-wear-q { color: var(--kn-muted); }
+.knavery-item-sheet .kn-quality-stats { align-items: center; }
+.knavery-item-sheet .kn-quality-stats input.short { width: 4em; flex: 0 0 auto; }
+.knavery-item-sheet .kn-quality-stats .kn-repair { flex: 0 0 auto; width: auto; }
+.knavery .kn-wage-field { display: flex; gap: 4px; align-items: center; }
+.knavery .kn-wage-field select { flex: 0 0 auto; width: auto; }

@@ -1,0 +1,20 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: VyW9rFFj15nXRkhr
+_key: '!items!VyW9rFFj15nXRkhr'
+name: Onions, 1 bushel
+type: item
+img: systems/base-knavery/icons/generic-item.svg
+system:
+  slots: 1
+  quantity: 1
+  bundle: 1
+  cost: 8
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

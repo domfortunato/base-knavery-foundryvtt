@@ -1,0 +1,22 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: OFef6Mpp46MO1Si4
+_key: '!items!OFef6Mpp46MO1Si4'
+name: Full Plate
+type: armor
+img: systems/base-knavery/art/game-icons/armor/chest-armor.svg
+system:
+  slots: 5
+  quantity: 1
+  armorType: other
+  points: 5
+  qualityMax: 7
+  cost: 8000
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

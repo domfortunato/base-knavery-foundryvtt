@@ -1,0 +1,20 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: Tt3P0Sk6n8nAr1h7
+_key: '!items!Tt3P0Sk6n8nAr1h7'
+name: Metal File
+type: item
+img: systems/base-knavery/icons/tools.svg
+system:
+  slots: 1
+  quantity: 1
+  bundle: 1
+  cost: 5
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

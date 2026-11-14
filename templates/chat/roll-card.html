@@ -39,17 +39,20 @@
     {{#each targets}}
     <li class="{{this.cls}}"><span class="target-name">{{this.name}}</span>
       {{#if this.ac}}<span class="target-ac">{{localize "KNAVERY.ACShort"}} {{this.ac}}</span>{{/if}}
-      <strong>{{this.label}}</strong></li>
+      <strong>{{this.label}}</strong>
+      {{#if this.wear}}<button type="button" class="kn-wear-armor" data-kn-wear="{{this.uuid}}" data-tooltip="KNAVERY.Quality.WearHint"><i class="fas fa-shield-halved"></i> {{localize "KNAVERY.Quality.WearButton"}}</button>{{/if}}</li>
     {{/each}}
   </ul>
   {{/if}}
   {{#if maneuver}}<p class="card-note maneuver"><i class="fas fa-person-running"></i> {{localize "KNAVERY.Roll.FreeManeuver"}}</p>{{/if}}
   {{#if power}}<p class="card-note power"><i class="fas fa-hammer"></i> {{localize "KNAVERY.Roll.PowerAttackUsed"}}</p>{{/if}}
+  {{#if crit}}<p class="card-note crit"><i class="fas fa-star"></i> {{localize "KNAVERY.Roll.Natural20"}}</p>{{/if}}
   {{#if fumble}}<p class="card-note fumble"><i class="fas fa-heart-crack"></i> {{localize "KNAVERY.Roll.Natural1"}}</p>{{/if}}
+  {{#if weaponWorn}}<p class="card-note broke"><i class="fas fa-shield-halved"></i> {{weaponWorn}}</p>{{/if}}
   {{#if broke}}<p class="card-note broke"><i class="fas fa-link-slash"></i> {{localize "KNAVERY.Roll.WeaponBroken"}}</p>{{/if}}
   {{#if canRollDamage}}
   <button type="button" class="kn-roll-damage" data-kn-roll-damage data-weapon="{{weaponUuid}}" data-actor="{{actorUuid}}" data-formula="{{weaponDamage}}" data-label="{{weaponName}}"
-    data-power="{{powerFlag}}" data-targets='{{applyTargets}}'><i class="fas fa-dice-d6"></i> {{localize "KNAVERY.Roll.RollDamage"}}</button>
+    data-power="{{powerFlag}}" data-crit="{{critFlag}}" data-targets='{{applyTargets}}'><i class="fas fa-dice-d6"></i> {{localize "KNAVERY.Roll.RollDamage"}}</button>
   {{/if}}
   {{/if}}
 

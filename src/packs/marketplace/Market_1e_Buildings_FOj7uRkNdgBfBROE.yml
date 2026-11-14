@@ -1,0 +1,194 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: FOj7uRkNdgBfBROE
+_key: '!tables!FOj7uRkNdgBfBROE'
+name: 'Market 1e: Buildings'
+img: icons/svg/coins.svg
+description: <p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>
+formula: 1d11
+replacement: true
+displayRoll: true
+results:
+  - _id: CT1KMDS9eVTb9BOv
+    _key: '!tables.results!FOj7uRkNdgBfBROE.CT1KMDS9eVTb9BOv'
+    type: text
+    name: Hovel
+    description: ''
+    img: icons/svg/coins.svg
+    documentUuid: null
+    weight: 1
+    range:
+      - 1
+      - 1
+    drawn: false
+    flags:
+      base-knavery:
+        price: 120
+        service: true
+  - _id: 8Fl4OmI0wIpE1zw2
+    _key: '!tables.results!FOj7uRkNdgBfBROE.8Fl4OmI0wIpE1zw2'
+    type: text
+    name: Row House
+    description: ''
+    img: icons/svg/coins.svg
+    documentUuid: null
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    flags:
+      base-knavery:
+        price: 1200
+        service: true
+  - _id: on4j1WAfzgTIroRq
+    _key: '!tables.results!FOj7uRkNdgBfBROE.on4j1WAfzgTIroRq'
+    type: text
+    name: Craftsman's House
+    description: ''
+    img: icons/svg/coins.svg
+    documentUuid: null
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    flags:
+      base-knavery:
+        price: 2400
+        service: true
+  - _id: n3YJC7JtJGjVuQPq
+    _key: '!tables.results!FOj7uRkNdgBfBROE.n3YJC7JtJGjVuQPq'
+    type: text
+    name: Merchant's House
+    description: ''
+    img: icons/svg/coins.svg
+    documentUuid: null
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    flags:
+      base-knavery:
+        price: 7200
+        service: true
+  - _id: 19C49UfA8OD0WvDv
+    _key: '!tables.results!FOj7uRkNdgBfBROE.19C49UfA8OD0WvDv'
+    type: text
+    name: House with Courtyard
+    description: ''
+    img: icons/svg/coins.svg
+    documentUuid: null
+    weight: 1
+    range:
+      - 5
+      - 5
+    drawn: false
+    flags:
+      base-knavery:
+        price: 21600
+        service: true
+  - _id: Q4CcINQSZhM3xxbE
+    _key: '!tables.results!FOj7uRkNdgBfBROE.Q4CcINQSZhM3xxbE'
+    type: text
+    name: Guildhall
+    description: ''
+    img: icons/svg/coins.svg
+    documentUuid: null
+    weight: 1
+    range:
+      - 6
+      - 6
+    drawn: false
+    flags:
+      base-knavery:
+        price: 32600
+        service: true
+  - _id: xDwBGtxKnd0NpBm8
+    _key: '!tables.results!FOj7uRkNdgBfBROE.xDwBGtxKnd0NpBm8'
+    type: text
+    name: Stone Tower
+    description: ''
+    img: icons/svg/coins.svg
+    documentUuid: null
+    weight: 1
+    range:
+      - 7
+      - 7
+    drawn: false
+    flags:
+      base-knavery:
+        price: 48000
+        service: true
+  - _id: Pe6jAVVGsjOg2FrF
+    _key: '!tables.results!FOj7uRkNdgBfBROE.Pe6jAVVGsjOg2FrF'
+    type: text
+    name: Temple
+    description: ''
+    img: icons/svg/coins.svg
+    documentUuid: null
+    weight: 1
+    range:
+      - 8
+      - 8
+    drawn: false
+    flags:
+      base-knavery:
+        price: 75000
+        service: true
+  - _id: QHB1X4rCKBRpO6VU
+    _key: '!tables.results!FOj7uRkNdgBfBROE.QHB1X4rCKBRpO6VU'
+    type: text
+    name: Stronghold
+    description: ''
+    img: icons/svg/coins.svg
+    documentUuid: null
+    weight: 1
+    range:
+      - 9
+      - 9
+    drawn: false
+    flags:
+      base-knavery:
+        price: 100000
+        service: true
+  - _id: i3scghFp1DReOV9L
+    _key: '!tables.results!FOj7uRkNdgBfBROE.i3scghFp1DReOV9L'
+    type: text
+    name: Cathedral
+    description: ''
+    img: icons/svg/coins.svg
+    documentUuid: null
+    weight: 1
+    range:
+      - 10
+      - 10
+    drawn: false
+    flags:
+      base-knavery:
+        price: 500000
+        service: true
+  - _id: DtnzUAYT8XtPX9ZB
+    _key: '!tables.results!FOj7uRkNdgBfBROE.DtnzUAYT8XtPX9ZB'
+    type: text
+    name: Imperial Palace
+    description: ''
+    img: icons/svg/coins.svg
+    documentUuid: null
+    weight: 1
+    range:
+      - 11
+      - 11
+    drawn: false
+    flags:
+      base-knavery:
+        price: 2500000
+        service: true
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

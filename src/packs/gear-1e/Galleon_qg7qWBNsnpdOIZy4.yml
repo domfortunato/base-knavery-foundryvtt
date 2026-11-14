@@ -1,0 +1,22 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: qg7qWBNsnpdOIZy4
+_key: '!items!qg7qWBNsnpdOIZy4'
+name: Galleon
+type: transport
+img: systems/base-knavery/icons/smallcraft.svg
+system:
+  slots: 0
+  quantity: 1
+  cost: 125000
+  capacity: 200000
+  crew: 200
+  speed: ''
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

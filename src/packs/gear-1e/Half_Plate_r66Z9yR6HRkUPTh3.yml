@@ -1,0 +1,22 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: r66Z9yR6HRkUPTh3
+_key: '!items!r66Z9yR6HRkUPTh3'
+name: Half Plate
+type: armor
+img: systems/base-knavery/art/game-icons/armor/breastplate.svg
+system:
+  slots: 4
+  quantity: 1
+  armorType: other
+  points: 4
+  qualityMax: 6
+  cost: 4000
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

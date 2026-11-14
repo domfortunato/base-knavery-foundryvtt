@@ -1,0 +1,22 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: mQcPi3qetTwksO94
+_key: '!items!mQcPi3qetTwksO94'
+name: Chain
+type: armor
+img: systems/base-knavery/art/game-icons/armor/chain-mail.svg
+system:
+  slots: 3
+  quantity: 1
+  armorType: mail
+  points: 3
+  qualityMax: 5
+  cost: 1200
+effects: []
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.1

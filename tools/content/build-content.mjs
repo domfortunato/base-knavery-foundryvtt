@@ -131,6 +131,112 @@ c("Major Noble", 12000);
 c("Royal", 120000);
 
 /* -------------------------------------------- */
+/*  Knave 1e gear and prices (CC BY 4.0)         */
+/* -------------------------------------------- */
+
+/*
+ * Knave 1.0 p3, in copper pennies, credited in every aisle (KNAVE_1E_CREDIT below), LICENSE.txt,
+ * the README and the welcome window. The book's weapon lines ("Dagger, Cudgel, Sickle, Staff,
+ * etc.") become one item per weapon. Slots, hands, damage and quality are the book's; armor's
+ * defense 12-16 is 11 + 1-5 armor points. Most items take one slot (p2), so the rest do here.
+ * The shop shows these aisles in a world on the 1e price list (rule `price-list`).
+ */
+const gear1e = { weapons: [], armor: [], gear: [], food: [], transport: [], clothing: [] };
+const PACK_1E = "gear-1e";
+const w1 = (name, img, damage, slots, hands, cost, extra = {}) => gear1e.weapons.push(itemDoc(PACK_1E, name, "weapon", img, {
+  slots, quantity: 1, damage, hands, attackType: extra.ranged ? "ranged" : "melee", range: extra.range ?? "", cost, qualityMax: 3,
+}));
+for (const [name, img] of [["Dagger", GI("blade", "plain-dagger")], ["Cudgel", GI("weapons", "wood-club")],
+  ["Sickle", GI("weapons", "scythe")], ["Staff", GI("weapons", "crescent-staff")]]) w1(name, img, "d6", 1, 1, 5);
+for (const [name, img] of [["Spear", GI("weapons", "barbed-spear")], ["Sword", GI("blade", "broadsword")],
+  ["Mace", GI("weapons", "mace-head")], ["Axe", GI("weapons", "war-axe")], ["Flail", GI("weapons", "flail")]]) w1(name, img, "d8", 2, 1, 10);
+for (const [name, img] of [["Halberd", ICON("weapons")], ["War Hammer", ICON("weapons")],
+  ["Long Sword", GI("blade", "two-handed-sword")], ["Battle Axe", GI("weapons", "battered-axe")]]) w1(name, img, "d10", 3, 2, 20);
+w1("Sling", GI("weapons", "sling"), "d4", 1, 1, 5, { ranged: true });
+w1("Bow", GI("weapons", "pocket-bow"), "d6", 2, 2, 15, { ranged: true });
+w1("Crossbow", GI("weapons", "crossbow"), "d8", 3, 2, 60, { ranged: true });
+
+const a1 = (name, img, armorType, points, slots, qualityMax, cost) => gear1e.armor.push(itemDoc(PACK_1E, name, "armor", img, {
+  slots, quantity: 1, armorType, points, qualityMax, cost,
+}));
+a1("Shield", GI("shields", "shield"), "shield", 1, 1, 1, 40);
+a1("Helmet", GI("armor", "visored-helm"), "helmet", 1, 1, 1, 40);
+a1("Gambeson", GI("armor", "leather-vest"), "gambeson", 1, 1, 3, 60);
+a1("Brigandine", GI("armor", "lamellar"), "other", 2, 2, 4, 500);
+a1("Chain", GI("armor", "chain-mail"), "mail", 3, 3, 5, 1200);
+a1("Half Plate", GI("armor", "breastplate"), "other", 4, 4, 6, 4000);
+a1("Full Plate", GI("armor", "chest-armor"), "other", 5, 5, 7, 8000);
+
+const g1 = (list, name, cost, extra = {}) => list.push(itemDoc(PACK_1E, name, "item", extra.img ?? ICON(extra.icon ?? "generic-item"), {
+  slots: 1, quantity: extra.quantity ?? 1, bundle: extra.bundle ?? 1, cost,
+}));
+g1(gear1e.weapons, "Arrows (20)", 5, { img: GI("weapons", "heavy-arrow"), quantity: 20, bundle: 20 });
+g1(gear1e.weapons, "Quiver", 10, { icon: "sack" });
+for (const [name, cost, extra] of [
+  ["Air Bladder", 5], ["Bear Trap", 20], ["Bedroll", 10], ["Bellows", 10], ["Black Grease", 1], ["Block and Tackle", 30],
+  ["Book (Blank)", 300], ["Book (Reading)", 600], ["Bottle/Vial", 1], ["Bucket", 5], ["Caltrops (bag)", 10],
+  ["Cards with an extra Ace", 5], ["Chain (10 ft)", 10], ["Chalk (10 pieces)", 1, { quantity: 10, bundle: 10 }], ["Chisel", 5, { icon: "tools" }],
+  ["Cookpots", 10], ["Crowbar", 10, { img: GI("weapons", "crowbar") }], ["Drill", 10, { icon: "tools" }], ["Face Paint/Makeup", 10],
+  ["Fake Jewels", 50], ["Fishing Rod/Tackle", 10], ["Glass Marbles (bag)", 5], ["Glue (bottle)", 1], ["Grappling Hook", 10],
+  ["Hammer", 10, { icon: "tools" }], ["Holy Water", 25], ["Horn", 10], ["Hourglass", 300], ["Incense (packet)", 10], ["Iron Tongs", 10, { icon: "tools" }],
+  ["Ladder (10 ft)", 10], ["Large Sponge", 5], ["Lens", 100], ["Lockpicks", 100, { icon: "tools" }], ["Manacles", 10], ["Metal File", 5, { icon: "tools" }],
+  ["Mirror (small, silver)", 200], ["Musical Instrument", 200], ["Nails (12)", 5], ["Net", 10], ["Oilskin Bag", 5, { icon: "sack" }],
+  ["Oilskin Trousers", 10], ["Padlock and Key", 20], ["Perfume", 50], ["Pick", 10, { icon: "tools" }], ["Pole (10 ft)", 5],
+  ["Quill and Ink", 1], ["Rope (50 ft)", 10, { img: GI("tools", "rope-coil") }], ["Sack", 1, { icon: "sack" }], ["Saw", 10, { icon: "tools" }],
+  ["Set of Loaded Dice", 5], ["Shovel", 10, { icon: "tools" }], ["Small Bell", 20], ["Soap", 1], ["Spike (iron)", 5], ["Spike (wood)", 1],
+  ["Spiked Boots", 5], ["Spyglass", 1000], ["Tar (pot)", 10], ["Tent (3 man)", 100], ["Tent (personal)", 50], ["Twine (300 ft)", 5],
+  ["Waterskin", 5], ["Whistle", 5],
+  // Light (p3)
+  ["Candle (4 hours)", 1, { img: GI("fire", "candle-light") }], ["Lantern", 30, { img: GI("fire", "lantern-flame") }],
+  ["Lamp Oil (4 hours)", 5], ["Tinderbox", 10], ["Torch (1 hour)", 1, { img: GI("fire", "torch") }],
+]) g1(gear1e.gear, name, cost, extra);
+// "Rations": the sheet's rations rules find them by name (documents/actor.js isRations).
+for (const [name, cost, extra] of [
+  ["Rations", 5, { icon: "sack" }], ["Animal Feed (1 day)", 2], ["Bacon, side of", 10], ["Bread, 1 loaf", 1, { img: GI("food", "bread") }],
+  ["Cheese, 1 lb", 2, { img: GI("food", "cheese-wedge") }], ["Cider, 4 gallons", 1], ["Cod, whole", 20], ["Eggs, 24", 1], ["Flour, 5 lbs", 1],
+  ["Fruit, 1 lb", 1], ["Garlic, bunch", 1], ["Grain, 1 bushel (8 gal.)", 4], ["Herbs, 1 bunch", 1], ["Lard, 5 lbs", 1],
+  ["Onions, 1 bushel", 8], ["Salt, 1 bushel", 3], ["Spices, 1 lb", 100], ["Sugar, 1 lb", 12], ["Wine/Ale, bottle", 1],
+]) g1(gear1e.food, name, cost, extra);
+for (const [name, cost] of [["Clothing (poor)", 10], ["Clothing (standard)", 50], ["Clothing (noble)", 3000], ["Furs", 5000], ["Winter Clothing", 100]]) {
+  g1(gear1e.clothing, name, cost);
+}
+// Animals, transport and ships: no slots. Capacity and crew are the 2e pack's numbers for the same beasts and boats.
+const t1 = (name, cost, capacity, extra = {}) => gear1e.transport.push(itemDoc(PACK_1E, name, "transport", ICON(extra.icon ?? "stack"), {
+  slots: 0, quantity: 1, cost, capacity, crew: extra.crew ?? 0, speed: "",
+}));
+t1("Chicken", 1, 0, { icon: "raven" });
+t1("Cow", 100, 0);
+t1("Dog, hunting", 50, 0);
+t1("Dog, small but vicious", 20, 0);
+t1("Donkey/Pack Horse", 300, 50, { icon: "donkey" });
+t1("Goat", 10, 0);
+t1("Hawk", 1000, 0, { icon: "falcon" });
+t1("Horse, riding", 1000, 80, { icon: "horse" });
+t1("Horse, war", 10000, 80, { icon: "horse" });
+t1("Ox", 300, 0);
+t1("Pig", 30, 0);
+t1("Sheep", 15, 0);
+t1("Cart", 50, 200, { icon: "handcart" });
+t1("Carriage", 320, 200, { icon: "wagon" });
+t1("Wagon", 120, 800, { icon: "wagon" });
+t1("Raft", 50, 320, { icon: "smallcraft" });
+t1("Fishing Boat", 500, 2000, { icon: "smallcraft", crew: 2 });
+t1("Sloop", 5000, 8000, { icon: "smallcraft", crew: 10 });
+t1("Caravel", 25000, 40000, { icon: "smallcraft", crew: 50 });
+t1("Galleon", 125000, 200000, { icon: "smallcraft", crew: 200 });
+
+/** A 1e aisle: linked items, then plain rows. A `service` row only takes the coins (marketplace.js). */
+const aisle1e = (name, docs, rows = []) => tableDoc("marketplace", `Market 1e: ${name}`, `1d${docs.length + rows.length}`, [
+  ...docs.map((d, i) => ({
+    type: "document", name: d.name, img: d.img, documentUuid: `Compendium.base-knavery.${PACK_1E}.Item.${d._id}`, range: [i + 1, i + 1],
+  })),
+  ...rows.map(([text, price], i) => ({
+    name: text, img: "icons/svg/coins.svg", range: [docs.length + i + 1, docs.length + i + 1],
+    flags: { "base-knavery": { price, service: true } },
+  })),
+], { img: "icons/svg/coins.svg", description: KNAVE_1E_CREDIT });
+
+/* -------------------------------------------- */
 /*  Careers: one worked example of a custom one  */
 /* -------------------------------------------- */
 
@@ -256,6 +362,24 @@ knave1e("General Gear 1 (Knave 1e)", "1d20", listRows(["Air bladder", "Bear trap
 knave1e("General Gear 2 (Knave 1e)", "1d20", listRows(["Incense", "Sponge", "Lens", "Perfume", "Horn", "Bottle", "Soap", "Spyglass",
   "Tar pot", "Twine", "Fake jewels", "Blank book", "Card deck", "Dice set", "Cook pots", "Face paint", "Whistle", "Instrument",
   "Quill & Ink", "Small bell"]));
+
+// Knave 1e's shop (p3), in copper: the aisles a world on the 1e price list sees. Lodging & Meals and
+// Buildings are services (buying one takes the coins only) and ship hidden (user, 2026-11-14).
+aisle1e("Weapons", gear1e.weapons);
+aisle1e("Armor", gear1e.armor);
+aisle1e("Gear", gear1e.gear);
+aisle1e("Food", gear1e.food);
+aisle1e("Animals & Transport", gear1e.transport, [
+  ["Ship, high quality (per ton)", 720], ["Ship, good quality (per ton)", 480], ["Ship, used quality (per ton)", 240],
+  ["Ship, poor quality (per ton)", 120],
+]);
+aisle1e("Clothing", gear1e.clothing);
+aisle1e("Lodging & Meals", [], [["Bed, per night", 1], ["Private room, per night", 2], ["Meal", 2], ["Hot bath", 2], ["Stabling and fodder", 2]]);
+aisle1e("Buildings", [], [
+  ["Hovel", 120], ["Row House", 1200], ["Craftsman's House", 2400], ["Merchant's House", 7200], ["House with Courtyard", 21600],
+  ["Guildhall", 32600], ["Stone Tower", 48000], ["Temple", 75000], ["Stronghold", 100000], ["Cathedral", 500000],
+  ["Imperial Palace", 2500000],
+]);
 
 // The 100 level-less spells: the spell list until the GM builds 2e's Spells from the book, and whenever the
 // "Spell list" setting says Knave 1e. Each result is the spell's name, with its effect as the description.
@@ -548,9 +672,11 @@ journal("Base Knavery Guide", [
 <li><b>Healing.</b> Knave 1e: a night's rest after a meal heals d8 + CON; a safe haven restores all HP. Knave 2e: full HP after two watches of sleep and a meal; a safe haven heals one wound.</li>
 <li><b>Spells.</b> Knave 1e: any number of spellbooks a day, each once, cast at the caster's level. Knave 2e: as many as INT.</li>
 <li><b>Advancement and initiative.</b> Knave 1e: a level every 1,000 XP, a d8 per level for HP, and one d6 a round for the sides. Knave 2e: its own XP table, HP rerolls and individual initiative.</li>
+<li><b>Attacks.</b> Knave 1e: weapons have 3 quality, armor 1 to 7. A natural 20 adds one damage die, and the card's <i>Wear armor</i> button lets the target's owner pick the piece that loses a point; a natural 1 costs the weapon a point. At 0 the item is destroyed (marked Broken); the item sheet's <i>Repair</i> costs 10% of its price a point. Knave 2e: a natural 1 breaks the weapon, a power attack doubles the damage dice and breaks it, and 21+ earns a free maneuver.</li>
+<li><b>Prices and wages.</b> Knave 1e: the copper price list (the <i>Gear &amp; Prices (Knave 1e)</i> compendium and its shop aisles), henchmen paid by the day. Knave 2e: its prices and monthly wages.</li>
+<li><b>Coins per slot.</b> Knave 1e: 100. Knave 2e: 500.</li>
 </ul>
 <p>When you build tables from your Knave 2e book, the system asks whether to switch the world to Knave 2e rules. Switching never changes a character you already have. A world made before version 0.2.0 kept the Knave 2e rules it played.</p>
-<p>Not yet automated for Knave 1e: item quality and wear, the natural-20 extra die, the copper price list, 100 coins a slot and daily wages.</p>
 <p>Knave 1e's rules are from <i>Knave</i> (first edition) by Ben Milton, CC BY 4.0, adapted here as automation and settings.</p>`],
   ["Filling the Tables", `
 <p>A world table always wins over the shipped shell with the same name. The importer creates or replaces that world table from pasted rows, one per line:</p>
@@ -590,9 +716,8 @@ journal("Base Knavery Guide", [
 <li><b>Saves</b> from other games use the matching ability: paralysis STR, breath and blast DEX, poison and death CON, magic device INT, spells WIS.</li>
 <li><b>Attacks</b>: d20 + STR (melee) or WIS (ranged) against the target's AC.
 <ul>
-<li>A total of 21 or more also earns a free maneuver.</li>
-<li>A natural 1 breaks the weapon.</li>
-<li>A power attack doubles the damage dice and breaks the weapon.</li>
+<li>Knave 2e: a total of 21 or more also earns a free maneuver; a natural 1 breaks the weapon; a power attack doubles the damage dice and breaks the weapon.</li>
+<li>Knave 1e: a natural 20 adds a damage die and wears the target's armor; a natural 1 wears the weapon (see <i>Rules: Knave 1e or 2e</i>).</li>
 </ul></li>
 <li><b>Damage</b> comes off HP first. Each point past 0 fills an item slot with a wound, from the bottom of the inventory up: empty slots first, then coins, then the lowest item, which becomes <i>Unusable</i> until the wound heals (whether it was dropped or broken is the table's call). When every slot is wounded, the character dies. <b>Direct</b> damage skips HP. Monsters take direct damage tripled and die at 0 HP. Under Knave 1e's death rule there are no wounds and no direct damage: a character is unconscious at 0 HP and dead below 0.</li>
 <li>The <b>Die of Fate</b> is a d6 for when fate, not skill, decides.</li>
