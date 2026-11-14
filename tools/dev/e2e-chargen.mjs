@@ -1213,7 +1213,8 @@ await withSettings(gm, async () => {
       const M = CONST.TOKEN_DISPLAY_MODES;
       const named = await Actor.create({ name: "Probe Named Goblin", type: "npc", system: { role: "monster" } });
       const secret = await Actor.create({ name: "Probe Secret Goblin", type: "npc", system: { role: "monster" } });
-      const scene = await Scene.create({ name: "Probe Names Scene", width: 1000, height: 1000, grid: { size: 100 } });
+      // No token vision: Alice has no token here, and with vision on she would see none at all.
+      const scene = await Scene.create({ name: "Probe Names Scene", width: 1000, height: 1000, grid: { size: 100 }, tokenVision: false });
       const tok = async (a, x, displayName) => ({ ...(await a.getTokenDocument({ x, y: 100 })).toObject(), displayName });
       await scene.createEmbeddedDocuments("Token", [await tok(named, 200, M.ALWAYS), await tok(secret, 400, M.NONE)]);
       await scene.activate();
@@ -1277,22 +1278,29 @@ await withSettings(gm, async () => {
       await combat.createEmbeddedDocuments("Combatant", [{ actorId: pcId }, ...foes.map((f) => ({ actorId: f.id }))]);
       await combat.startCombat();
       const rounds = [];
-      for (let r = 0; r < 8; r++) {
+      for (let r = 0; r < 12; r++) {
         // End the round on its last combatant, as Next Turn would.
         await combat.update({ turn: combat.turns.length - 1 });
         const holder = combat.combatant?.id;
-        let prior = null;
-        const hook = Hooks.on("combatTurnChange", (c, prev) => { if (c === combat) prior = prev.combatantId; });
+        // Core fires combatTurnChange after its own turn events, once the update has returned.
+        let hook;
+        const heard = new Promise((res) => {
+          hook = Hooks.on("combatTurnChange", (c, prev) => { if (c === combat) res(prev.combatantId); });
+          setTimeout(() => res("(none)"), 5000);
+        });
+        const order = combat.turns.map((c) => c.id).join();
         await combat.nextRound();
+        const prior = await heard;
         Hooks.off("combatTurnChange", hook);
-        rounds.push({ ok: prior === holder, stored: combat._source.turn, local: combat.turn });
+        rounds.push({ ok: prior === holder, flipped: order !== combat.turns.map((c) => c.id).join(), stored: combat._source.turn, local: combat.turn,
+          ...(prior === holder ? {} : { prior, holder }) });
       }
       await combat.delete();
       for (const f of foes) await f.delete();
       await game.settings.set("base-knavery", "knave1e-initiative", false);
       return rounds;
     }, ids.a);
-    ok(ini.every((r) => r.ok && r.stored === r.local), "every rollover ends the turn of the combatant who held it; the stored turn matches", JSON.stringify(ini));
+    ok(ini.every((r) => r.ok && r.stored === r.local) && ini.some((r) => r.flipped), "every rollover ends the turn of the combatant who held it; the stored turn matches", JSON.stringify(ini));
   });
 
   // Cleanup.
@@ -1305,7 +1313,8 @@ await withSettings(gm, async () => {
   }, made.tables);
 });
 
-const real = errors.flat().filter((e) => !/favicon|DEPRECATED/i.test(e));
+// Part 21's write to the GM's notes as Alice is refused by the server on purpose, which core logs.
+const real = errors.flat().filter((e) => !/favicon|DEPRECATED/i.test(e) && !/may only be modified by a GM or Assistant GM user/.test(e));
 ok(real.length === 0, "no console errors", `\n    ${real.join("\n    ")}`);
 await browser.close();
 console.log(failures ? `\n${failures} failed.` : "\nall passed.");
