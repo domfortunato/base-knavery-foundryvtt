@@ -1918,6 +1918,9 @@ await withSettings(gm, async () => {
         artFolded: el.querySelector("details.knavery-welcome-art")?.open === false,
         artLinks: el.querySelectorAll("details.knavery-welcome-art li").length,
         author: el.querySelector(".knavery-welcome-author")?.textContent.trim(),
+        fits: el.getBoundingClientRect().bottom <= window.innerHeight + 1,
+        scrolls: getComputedStyle(el.querySelector(".window-content")).overflowY,
+        licences: el.querySelectorAll(".knavery-welcome-licences > li").length,
       };
     }, SYS);
     await gm.screenshot({ path: `${SHOTS}/welcome-1e.png` });
@@ -1937,8 +1940,8 @@ await withSettings(gm, async () => {
     }, SYS);
     ok(w.noAi.startsWith("No AI art.") && /never use AI-generated art/.test(w.noAi) && w.artFolded && w.artLinks === 5,
       "the AI disclosure opens with no AI art, the art's licences folded under it", JSON.stringify(w));
-    ok(w.author === "Knave was created by Ben Milton. Knave: Second Edition was written by Ben Milton.",
-      "the welcome credits Ben Milton for both editions, as each book does", w.author);
+    ok(w.author === "Both editions of Knave were written by Ben Milton.", "the welcome credits Ben Milton for both editions, in one line", w.author);
+    ok(w.fits && w.scrolls === "auto" && w.licences === 2, "the welcome stops at the screen and scrolls; Knave licensing lists the two editions", JSON.stringify(w));
     ok(w.world === "This world plays: Knave 1e." && w.itch1e === "https://questingbeast.itch.io/knave" && w.links2e === 3 && w.smallLast && w.licensing === "Licensing",
       "the welcome says which rules the world plays and links the Knave 1e PDF on itch beside the 2e book", JSON.stringify(w));
     ok(h.lines === 5 && h.now2e && h.rules === "2e" && h.hpSame && h.again === true,

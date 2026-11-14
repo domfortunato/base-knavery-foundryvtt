@@ -30,7 +30,7 @@
   {{/unless}}{{/if}}
 
   <h2 class="knavery-welcome-heading">{{localize "KNAVERY.Welcome.GetTheBook"}}</h2>
-  {{!-- Both books' own author credits: 1e p1 "created by", 2e p5 "writing" (user, 2026-11-14). --}}
+  {{!-- Both books credit Ben Milton as their author (1e p1, 2e p5); one line (user, 2026-11-14). --}}
   <p class="knavery-welcome-author">{{localize "KNAVERY.Welcome.Author"}}</p>
   {{#each books}}
   <div class="knavery-welcome-book" data-edition="{{this.edition}}">
@@ -69,15 +69,21 @@
     </details>
   </section>
 
-  {{!-- Licensing, last: the licence's disclaimer, the logo credit, and Knave 1e's CC BY notice folded (user, 2026-11-14). --}}
+  {{!-- Licensing, last: the 2e licence's disclaimer, then each edition's licence as its own
+       bullet, Knave 1e's CC BY notice folded (user, 2026-11-14). --}}
   <h2 class="knavery-welcome-heading">{{localize "KNAVERY.Welcome.Licensing"}}</h2>
   <section class="knavery-welcome-small">
     <p class="knavery-welcome-disclaimer">{{disclaimer}}</p>
-    <p class="knavery-welcome-credit">{{credit}}</p>
-    <details class="knavery-welcome-license">
-      <summary>{{knave1eHeading}}</summary>
-      <p>{{{knave1eBody}}}</p>
-    </details>
+    <h3 class="knavery-welcome-subheading">{{localize "KNAVERY.Welcome.KnaveLicensing"}}</h3>
+    <ul class="knavery-welcome-licences">
+      <li class="knavery-welcome-credit">{{credit}}</li>
+      <li>
+        <details class="knavery-welcome-license">
+          <summary>{{knave1eHeading}}</summary>
+          <p>{{{knave1eBody}}}</p>
+        </details>
+      </li>
+    </ul>
   </section>
 
   <footer class="knavery-welcome-foot">

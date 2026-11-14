@@ -4695,6 +4695,9 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 
 /* ---- Welcome window (welcome.js) --------------------------------------------- */
 .knavery-welcome .window-content { padding: 16px 20px; }
+/* The welcome is taller than many screens: the window stops at the viewport and its content scrolls (user, 2026-11-14). */
+#knavery-welcome { max-height: calc(100vh - 20px); }
+#knavery-welcome .window-content { overflow-y: auto; min-height: 0; }
 .knavery-welcome-body { display: flex; flex-direction: column; gap: 8px; color: var(--kn-ink); }
 .knavery-welcome-head { display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; }
 .knavery-welcome-head img { display: block; width: 100%; max-width: 220px; height: auto; margin: 8px auto 0; border: none; }
@@ -4983,4 +4986,10 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-welcome-aicode { margin: 0; color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
 .knavery-welcome-art ul { margin: 4px 0 0; padding-left: 18px; color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
 .knavery-welcome-art a { color: var(--kn-ink); text-decoration: underline; }
+.knavery-welcome-subheading {
+    margin: 2px 0 0; border: none; font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
+    font-variant: small-caps; font-weight: bold; font-size: calc(14px * var(--kn-text, 1)); color: var(--kn-ink);
+}
+.knavery-welcome-licences { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; }
+.knavery-welcome-licences details.knavery-welcome-license { margin-left: -4px; }
 .knavery-welcome-small .knavery-welcome-disclaimer { font-size: calc(12px * var(--kn-text, 1)); }
