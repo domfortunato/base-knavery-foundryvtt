@@ -8,6 +8,7 @@
   Unusable (it was "drop it"): the table decides whether it was dropped or broken.
 - Level, XP and Coins sit under the abilities, with a half-width XP bar; Slots sits under the HP and Wounds bars.
 - Brighter glow on the ability rolls, larger defense numbers, and careers side by side on the Growth page.
+- The character sheet opens just tall enough for the Knave page; the traits on the Description page read lighter.
 - **The Knave page, rearranged.** Level, XP (with its progress bar) and Coins sit in a band at the bottom; the head
   keeps the name, Careers and Slots. Level and XP are plain text unless Char Gen Mode is on.
 - HP and Wounds change with + and − under each bar; their current values are no longer typed. Wounds − replaces

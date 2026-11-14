@@ -94,6 +94,8 @@ const mayRandomize = (fn) => function (event, target) {
 
 /** A character sheet's width before the text size scales it. NPCs keep DEFAULT_OPTIONS' 640. */
 const CHARACTER_SHEET_WIDTH = 440;
+/** Tall enough for the Knave page and no more; the longer pages scroll (user, 2026-11-14). */
+const CHARACTER_SHEET_HEIGHT = 660;
 
 export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static DEFAULT_OPTIONS = {
@@ -180,7 +182,7 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     const applied = super._initializeApplicationOptions(options);
     if (options.document?.type === "npc") applied.classes.push("knavery-npc-sheet");
     // A character's sheet is as wide as its abilities and vitals (user, 2026-11-14); attacks are a window.
-    else applied.position.width = CHARACTER_SHEET_WIDTH;
+    else Object.assign(applied.position, { width: CHARACTER_SHEET_WIDTH, height: CHARACTER_SHEET_HEIGHT });
     // Opens larger with the player's text size.
     applied.position = scaledPosition(applied.position);
     return applied;

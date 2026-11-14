@@ -622,7 +622,7 @@ await withSettings(gm, async () => {
       await wait(900);
       const el = pc.sheet.element;
       const out = {
-        k, width: Math.round(el.getBoundingClientRect().width),
+        k, width: Math.round(el.getBoundingClientRect().width), height: Math.round(el.getBoundingClientRect().height), vh: window.innerHeight,
         playColumn: !!el.querySelector(".knavery-page-knave .knavery-play"),
         disabled: !!el.querySelector("#attack-button")?.disabled,
         dexRaised: el.querySelector(".DEX-ability")?.classList.contains("raised") ?? null,
@@ -646,6 +646,7 @@ await withSettings(gm, async () => {
     }, ids.a);
     const exp = 440 * r.k;
     ok(Math.abs(r.width - exp) < 30 && Math.abs(r.npcWidth - 640 * r.k) < 40, "a character sheet opens narrow (440 × text size); an NPC's stays at 640", JSON.stringify(r));
+    ok(Math.abs(r.height - 660 * r.k) < 40 || r.height >= r.vh - 80, "and just tall enough for the Knave page (660 × text size)", JSON.stringify(r));
     ok(!r.playColumn && !r.disabled && r.enabled, "no attacks column; the Attack button is always there (an improvised attack needs no weapon)", JSON.stringify(r));
     ok(r.dexRaised === true && r.strRaised === false, "a score above 0 is marked raised, a 0 is not", JSON.stringify(r));
     ok(r.footer.includes("unofficial fan-made Foundry system for Knave Second Edition"), "the sheet footer reads the new sentence", r.footer);
