@@ -84,8 +84,8 @@ export async function withSettings(page, fn) {
  * prompt, and tour overlays, which cover the screen and swallow pointer events.
  */
 export async function dismissChrome(page) {
-  // The welcome window opens for a GM after an update and at every login while
-  // the world has no rulebook (welcome.js welcomeDue). game.ready is set before
+  // The welcome window opens at every GM login unless the GM turned it off
+  // (welcome.js welcomeDue). game.ready is set before
   // the ready hook runs, so when it is due, wait for it, then close it.
   const due = await page.evaluate(async () => {
     try { return (await import("/systems/base-knavery/module/welcome.js")).welcomeDue(); } catch { return false; }

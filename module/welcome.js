@@ -91,14 +91,14 @@ export const openWelcome = () => {
 /** Whether this login should open the welcome window (the probes ask too, to wait for it). */
 export const welcomeDue = () => {
   // Only for a GM who may write world settings: an Assistant GM whose
-  // "Modify Configuration Settings" was taken away could neither mark it seen
-  // nor set the rulebook, so it would reopen at every login.
+  // "Modify Configuration Settings" was taken away could not switch it off.
   if (!game.user.isGM || !game.user.can("SETTINGS_MODIFY")) return false;
-  if (!game.settings.get(SETTINGS_NS, "welcome-on-start")) return false;
-  return game.settings.get(SETTINGS_NS, "welcome-shown-version") !== game.system.version || !hasRulebook();
+  // At every GM login (user ruling 2026-11-14: "whenever the world is restarted";
+  // a page cannot tell a restart from a fresh login), until the GM turns it off.
+  return game.settings.get(SETTINGS_NS, "welcome-on-start") === true;
 };
 
-/** From `ready`: after an update, and while the world has no rulebook, for a GM who has not turned it off. */
+/** From `ready`: at each GM login, unless the GM turned it off. */
 export const maybeOpenWelcome = async () => {
   if (!welcomeDue()) return;
   await openWelcome();

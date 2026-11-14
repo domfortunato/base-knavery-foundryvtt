@@ -678,7 +678,8 @@ await withSettings(gm, async () => {
       "the Growth ladder and random creation follow the 1000-XP levels", JSON.stringify({ ladder: r.ladder, built3: r.built3 }));
     ok(r.first === "1d8" && r.formula4 === "4d8" && r.low === 31 && r.up.max === r.up.rolled && r.hint.includes("4d8"),
       "Knave 1e HP: 1d8 at first level, then a d8 per level, below the old max +1", JSON.stringify({ first: r.first, f: r.formula4, low: r.low, up: r.up, hint: r.hint }));
-    ok(r.rateOn > 0.9 && r.rateOff < 0.75 && r.picksOk, "Knave 1e random raises favour strong abilities and skip maxed ones",
+    // STR 9 among five 0s: about 83% under 1e (a weak ability can rise first), 50% at random.
+    ok(r.rateOn > 0.72 && r.rateOff < 0.62 && r.picksOk, "Knave 1e random raises favour strong abilities and skip maxed ones",
       JSON.stringify({ on: r.rateOn, off: r.rateOff, picksOk: r.picksOk }));
     ok(r.preRoll.flag?.round === 0 && r.preRoll.inits.join() === "1,2" && r.preRoll.msgs === 1 && r.started.round === 1 && r.started.msgs === 1,
       "group initiative: one d6 lines up both sides, and Begin Combat keeps a roll made before it", JSON.stringify({ pre: r.preRoll, started: r.started }));

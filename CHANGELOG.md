@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- The welcome window opens each time a Game Master loads the world, not only after an update. Turn it off with
+  "Welcome window on start" in the General settings.
 - **Knave 1e rules, one switch each, in the Hacks settings:** a level every 1,000 XP; random ability raises by
   1e's d20 against defense (Level Up's Random button and random creation above level 1); and group initiative,
   one d6 at the start of each round (1–3 the enemies act first, 4–6 the PCs), rolled by the Game Master. The

@@ -696,7 +696,7 @@
       "ChangeLog": "Change log",
       "ChangeLogHint": "Whisper a card listing what anyone changed by hand on a sheet.",
       "WelcomeOnStart": "Welcome window on start",
-      "WelcomeOnStartHint": "Open the welcome window for the GM after each update of Base Knavery, and at each login until the world has a rulebook PDF.",
+      "WelcomeOnStartHint": "Open the welcome window each time a Game Master loads the world: after a restart, a login or a browser refresh. Players never see it.",
       "AllowPlayerGenerate": "Players may create characters",
       "AllowPlayerGenerateHint": "Shows Create Character to players.",
       "AllowPlayerRandomization": "Players may use Char Gen Mode",

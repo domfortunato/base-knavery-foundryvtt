@@ -67,8 +67,8 @@ picker, change log and marketplace it ports.
   - `rulebook.js`: the GM's PDF in Foundry's bundled pdf.js viewer (an iframe
     of `scripts/pdfjs/web/viewer.html`, after Mythic-pwd), the B key, showing
     a page to players; page map in `config.js` `RULEBOOK`
-  - `welcome.js`: the welcome window, after each update and until the world has
-    a rulebook, for the GM
+  - `welcome.js`: the welcome window, at every GM login unless setting
+    `welcome-on-start` is off (user ruling 2026-11-14)
   - `rulebook-import.js`: build world roll tables from the GM's PDF, with a
     review first; a rebuild replaces only tables it built that are unchanged
     (`flags.base-knavery.rulebook.hash`), never the GM's own
