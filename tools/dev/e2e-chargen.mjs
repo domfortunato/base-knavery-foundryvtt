@@ -2537,6 +2537,7 @@ await withSettings(gm, async () => {
         activity: !!sec.querySelector('[data-table="Activities"]'), surprise: !!sec.querySelector('[data-action="surprise"]'),
         monster: !!sec.querySelector('.dash-fly [data-table="Monsters"]'), npc: !!sec.querySelector('.dash-fly [data-action="quickNpc"]'),
         carousing: !!sec.querySelector('.dash-downtime [data-table="Carousing Mishaps"]'),
+        hazard: sec.querySelectorAll('.dash-hazard [data-action="hazard"]').length === 2,
       };
       sec.querySelector('[data-action="quickNpc"]').click();
       await wait(1200);

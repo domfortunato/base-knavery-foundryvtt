@@ -834,6 +834,8 @@
       "HazardDice": "Hazard dice",
       "Encounters": "Encounters",
       "OnTheFly": "On the fly",
+      "HazardDice": "Hazard dice",
+      "HazardDiceHint": "Rolls the die only. The Time page's End turn / End watch also moves the clock on.",
       "Downtime": "Downtime",
       "Surprise": "Surprise",
       "SurpriseTip": "Sets up the check on the Requests page: the PC with the best WIS rolls WIS against the creatures' WIS (p19). Tick that PC, type the creatures' WIS as the difficulty, and send.",

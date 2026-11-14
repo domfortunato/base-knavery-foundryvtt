@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- **The Dungeon and Travel hazard dice** head the Random page too, as plain buttons (the Time page's End
+  turn / End watch still rolls them and moves the clock).
 - **The Random page grows:** Activity and a Surprise shortcut (it sets up the WIS check on Requests) join
   the encounter rolls; **On the fly** rolls a Monster or a quick NPC (name, personality, profession,
   detail in one card); **Downtime** rolls a Carousing mishap. All from your Knave 2e tables, whispered.
