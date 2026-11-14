@@ -36,7 +36,7 @@ https://github.com/domfortunato/base-knavery-foundryvtt/releases/latest/download
 ## What you get
 
 - A complete system that runs Knave (the first edition) out of the box, with its CC BY 4.0 rules included.
-- Full Knave 2e support, with rich content, once you upload your own copy of the Knave 2e PDF to your Foundry server.
+- Full Knave 2e support, with rich content, when you provide your copy of the Knave 2e PDF.
 - Mix the two editions' rules, one switch per rule.
 - Instant random character creation for PCs, NPCs and monsters.
 - A random spell generator.
