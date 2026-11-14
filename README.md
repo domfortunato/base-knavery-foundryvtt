@@ -11,7 +11,7 @@ throughout, for Foundry v14.
   abilities as the lowest of 3d6, rolled starting gear, unconscious at 0 HP
   and dead below it, d8 + CON healing, any number of spellbooks a day. Its
   rules, tables and 100 level-less spells ship with the system (CC BY 4.0).
-  The [Knave 1e PDF is on itch](https://questingbeast.itch.io/knave), if you
+  The [Knave PDF is on itch](https://questingbeast.itch.io/knave), if you
   want to support its author.
 - **Knave 2e relies on your purchased copy of the book.** Upload your Knave 2e PDF and build its tables;
   the system then offers to switch the world to 2e rules (careers, wounds,

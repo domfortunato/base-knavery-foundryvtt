@@ -1924,6 +1924,8 @@ await withSettings(gm, async () => {
         licences: el.querySelectorAll(".knavery-welcome-licences > li > details.knavery-welcome-fold:not([open])").length,
         twoCols: (() => { const c = [...el.querySelectorAll(".knavery-welcome-col")].map((x) => x.getBoundingClientRect()); return c.length === 2 && Math.abs(c[0].top - c[1].top) < 2 && c[1].left > c[0].right; })(),
         width: Math.round(el.getBoundingClientRect().width),
+        knight: (() => { const k = el.querySelector(".knavery-welcome-head .knavery-welcome-knight"); const l = el.querySelector(".knavery-welcome-head .knavery-logo-light, .knavery-welcome-head .knavery-logo-dark:not([style*=none])"); return !!k && k.complete && k.naturalWidth > 0 && Math.round(k.getBoundingClientRect().height) === Math.round([...el.querySelectorAll(".knavery-welcome-head img")].filter((i) => i !== k && i.offsetParent).at(0)?.getBoundingClientRect().height ?? -1); })(),
+        booksHeading: [...el.querySelectorAll(".knavery-welcome-heading")].find((h) => /books/i.test(h.textContent))?.textContent.trim(),
         licenceOrder: [...el.querySelectorAll(".knavery-welcome-licences summary")].map((x) => x.textContent.trim()).join(" | "),
       };
     }, SYS);
@@ -1942,14 +1944,14 @@ await withSettings(gm, async () => {
       const now2e = await p;
       return { lines, now2e, rules: R.currentRules(), hpSame: pc.system.hp.value === hpBefore, again: await R.offerRulesSwitch() };
     }, SYS);
-    ok(w.noAi.startsWith("No AI art.") && /never use AI-generated art/.test(w.noAi) && w.artFolded && w.artLinks === 5
+    ok(w.noAi.startsWith("No AI art.") && /never use AI-generated art/.test(w.noAi) && w.artFolded && w.artLinks === 6
       && w.noAiText === "No AI game text. No spell, item or monster description was written by AI.",
       "the AI disclosure opens with no AI art, the art's licences folded under it", JSON.stringify(w));
     ok(w.author === "Both editions of Knave were written by Ben Milton.", "the welcome credits Ben Milton for both editions, in one line", w.author);
-    ok(w.fits && w.scrolls === "auto" && w.licences === 2 && w.twoCols && w.licenceOrder === "Knave 1e: CC BY 4.0 | Knave 2e: Third Party License",
+    ok(w.fits && w.scrolls === "auto" && w.licences === 2 && w.twoCols && w.licenceOrder === "Knave: CC BY 4.0 | Knave: Second Edition Third Party License",
       "the welcome is wide, in two columns, stops at the screen and scrolls; each edition's licence is a folded bullet, 1e first", JSON.stringify(w));
-    ok(w.world === "This world plays: Knave 1e." && w.itch1e === "https://questingbeast.itch.io/knave" && w.links2e === 3 && w.smallLast && w.licensing === "Licensing",
-      "the welcome says which rules the world plays and links the Knave 1e PDF on itch beside the 2e book", JSON.stringify(w));
+    ok(w.world === "This world plays: Knave." && w.knight && w.booksHeading === "Buy the books!" && w.itch1e === "https://questingbeast.itch.io/knave" && w.links2e === 3 && w.smallLast && w.licensing === "Licensing",
+      "the welcome shows the knight beside the title at the logo's height, says which rules the world plays, and has Buy the books! with Knave's PDF on itch", JSON.stringify(w));
     ok(h.lines === 5 && h.now2e && h.rules === "2e" && h.hpSame && h.again === true,
       "after the 2e book, the GM is asked to switch; yes plays Knave 2e and changes no character", JSON.stringify(h));
   });

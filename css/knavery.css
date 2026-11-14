@@ -4702,7 +4702,11 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 /* The head: the title and byline beside the Made for Knave logo. */
 .knavery-welcome-head { display: flex; align-items: center; justify-content: center; gap: 24px; }
 .knavery-welcome-titles { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
-.knavery-welcome-head img { display: block; flex: 0 0 auto; width: 150px; height: auto; border: none; }
+/* The knight and the logo stand at one height either side of the title. */
+.knavery-welcome-head img { display: block; flex: 0 0 auto; width: auto; height: 116px; border: none; }
+/* Lydia Comer's knight is black line art on transparency: the dark theme shows it white. */
+.theme-dark .knavery-welcome:not(.theme-light) .knavery-welcome-knight,
+.knavery-welcome.theme-dark .knavery-welcome-knight { filter: invert(1); }
 .knavery-welcome .knavery-logo-dark { display: none; }
 .theme-dark .knavery-welcome:not(.theme-light) .knavery-logo-light,
 .knavery-welcome.theme-dark .knavery-logo-light { display: none; }

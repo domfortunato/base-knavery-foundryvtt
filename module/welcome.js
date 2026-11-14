@@ -33,6 +33,7 @@ const ART_CREDITS = [
   { name: "Portraits and tokens", by: "Lydia Comer", url: "https://linktr.ee/lydiadidmyink", license: "CC BY-NC-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-nc-sa/4.0/" },
   { name: "Tlomdev's Tokens", by: "tlomdev", url: "https://tlomdev.itch.io/tlomdevs-tokens", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0/" },
   { name: "Game-icons.net", by: "many artists, each credited in art/game-icons/CREDITS.md", url: "https://game-icons.net", license: "CC BY 3.0", licenseUrl: "https://creativecommons.org/licenses/by/3.0/" },
+  { name: "Knight (this window)", by: "Lydia Comer", url: "https://linktr.ee/lydiadidmyink", license: "used with permission", licenseUrl: null },
   { name: "Alegreya fonts", by: "The Alegreya Project Authors", url: "https://github.com/huertatipografica/Alegreya", license: "SIL OFL 1.1", licenseUrl: "https://openfontlicense.org/" },
 ];
 
@@ -82,6 +83,8 @@ export class WelcomeWindow extends HandlebarsApplicationMixin(ApplicationV2) {
       title: game.system.title,
       byline: F("KNAVERY.Welcome.By", { author: author.name, version: game.system.version }),
       authorUrl: author.url ?? "",
+      // Lydia Comer's knight, used with her permission (art/welcome/CREDITS.md); the dark theme inverts it.
+      knight: `${SYS_PATH}/art/welcome/knight-lydia-comer.png`,
       logo: `${SYS_PATH}/logo/made-for-knave-black.png`,
       logoDark: `${SYS_PATH}/logo/made-for-knave-white.png`,
       disclaimer: L("KNAVERY.Disclaimer"),
@@ -98,7 +101,8 @@ export class WelcomeWindow extends HandlebarsApplicationMixin(ApplicationV2) {
       art: ART_CREDITS,
       rules: currentRules(),
       thisWorld: F("KNAVERY.Welcome.ThisWorld", {
-        rules: L({ "1e": "KNAVERY.Settings.Rules1e", "2e": "KNAVERY.Settings.Rules2e" }[currentRules()] ?? "KNAVERY.Settings.RulesCustom"),
+        // The first edition's title is just "Knave" (user, 2026-11-14).
+        rules: L({ "1e": "KNAVERY.Welcome.ThisWorld1e", "2e": "KNAVERY.Welcome.ThisWorld2e" }[currentRules()] ?? "KNAVERY.Welcome.ThisWorldCustom"),
       }),
       // The "show after each update" box writes a world setting.
       isGM: game.user.isGM && game.user.can("SETTINGS_MODIFY"),

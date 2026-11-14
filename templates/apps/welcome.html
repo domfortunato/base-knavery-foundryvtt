@@ -8,6 +8,8 @@
      is a bullet whose marker is the fold's own arrow. --}}
 <div class="knavery-welcome-body">
   <header class="knavery-welcome-head">
+    {{!-- Lydia Comer's knight, used with her permission, left of the title at the logo's height (user, 2026-11-14). --}}
+    <img class="knavery-welcome-knight" src="{{knight}}" alt="{{localize 'KNAVERY.Welcome.KnightAlt'}}">
     <div class="knavery-welcome-titles">
       <h1 class="knavery-welcome-title">{{title}}</h1>
       <p class="knavery-welcome-byline">
@@ -51,7 +53,7 @@
               <summary>{{localize "KNAVERY.Welcome.ArtLicensing"}}</summary>
               <ul>
                 {{#each art}}
-                <li><a href="{{this.url}}" target="_blank" rel="noopener">{{this.name}}</a>, {{this.by}}: <a href="{{this.licenseUrl}}" target="_blank" rel="noopener">{{this.license}}</a></li>
+                <li><a href="{{this.url}}" target="_blank" rel="noopener">{{this.name}}</a>, {{this.by}}: {{#if this.licenseUrl}}<a href="{{this.licenseUrl}}" target="_blank" rel="noopener">{{this.license}}</a>{{else}}{{this.license}}{{/if}}</li>
                 {{/each}}
               </ul>
             </details>
