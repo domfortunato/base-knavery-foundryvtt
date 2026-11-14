@@ -1915,6 +1915,7 @@ await withSettings(gm, async () => {
         smallLast: el.querySelector(".knavery-welcome-small details.knavery-welcome-license")?.open === false,
         licensing: [...el.querySelectorAll(".knavery-welcome-heading")].at(-1)?.textContent.trim(),
         noAi: el.querySelector(".knavery-welcome-ai p")?.textContent.trim() ?? "",
+        noAiText: el.querySelector(".knavery-welcome-notext")?.textContent.trim() ?? "",
         artFolded: el.querySelector("details.knavery-welcome-art")?.open === false,
         artLinks: el.querySelectorAll("details.knavery-welcome-art li").length,
         author: el.querySelector(".knavery-welcome-author")?.textContent.trim(),
@@ -1938,7 +1939,8 @@ await withSettings(gm, async () => {
       const now2e = await p;
       return { lines, now2e, rules: R.currentRules(), hpSame: pc.system.hp.value === hpBefore, again: await R.offerRulesSwitch() };
     }, SYS);
-    ok(w.noAi.startsWith("No AI art.") && /never use AI-generated art/.test(w.noAi) && w.artFolded && w.artLinks === 5,
+    ok(w.noAi.startsWith("No AI art.") && /never use AI-generated art/.test(w.noAi) && w.artFolded && w.artLinks === 5
+      && w.noAiText === "No AI game text. No spell, item or monster description was written by AI.",
       "the AI disclosure opens with no AI art, the art's licences folded under it", JSON.stringify(w));
     ok(w.author === "Both editions of Knave were written by Ben Milton.", "the welcome credits Ben Milton for both editions, in one line", w.author);
     ok(w.fits && w.scrolls === "auto" && w.licences === 2, "the welcome stops at the screen and scrolls; Knave licensing lists the two editions", JSON.stringify(w));

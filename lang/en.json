@@ -1080,6 +1080,8 @@
       "AiHeading": "AI disclosure",
       "NoAiArt": "No AI art.",
       "NoAiArtBody": "Base Knavery ships with more than 2,900 human-made art assets (portraits, tokens and icons) and will never use AI-generated art.",
+      "NoAiText": "No AI game text.",
+      "NoAiTextBody": "No spell, item or monster description was written by AI.",
       "AiCode": "Its code is written with the help of an AI coding assistant.",
       "ArtLicensing": "Art licensing",
       "BuyDtrpg": "PDF on DriveThruRPG",
