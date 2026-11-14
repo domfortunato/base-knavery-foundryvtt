@@ -115,7 +115,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     primary: {
       tabs: [
         { id: "requests", icon: "fas fa-bullhorn", label: "KNAVERY.Dashboard.TabRequests" },
-        { id: "damage", icon: "fas fa-skull-crossbones", label: "KNAVERY.Dashboard.TabDamage" },
+        { id: "damage", icon: "fas fa-burst", label: "KNAVERY.Dashboard.TabDamage" },
         { id: "time", icon: "fas fa-hourglass-half", label: "KNAVERY.Dashboard.TabTime" },
         { id: "party", icon: "fas fa-users", label: "KNAVERY.Dashboard.TabParty" },
         { id: "dice", icon: "fas fa-dice", label: "KNAVERY.Dashboard.TabDice" },
