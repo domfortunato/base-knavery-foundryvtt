@@ -1293,10 +1293,16 @@ await withSettings(gm, async () => {
         await combat.update({ turn: combat.turns.length - 1 });
         await moved;
         const holder = combat.combatant?.id;
+        // Whose turn core ends at the rollover (the hook's `previous` is a live object, so count the
+        // end-of-turn calls themselves; the active GM runs them).
+        const ended = [];
+        combat._onEndTurn = async function (c, ctx) { ended.push(c.id); return Object.getPrototypeOf(this)._onEndTurn.call(this, c, ctx); };
         const heard = change();
         const order = combat.turns.map((c) => c.id).join();
         await combat.nextRound();
-        const prior = await heard;
+        await heard;
+        delete combat._onEndTurn;
+        const prior = ended.join();
         rounds.push({ ok: prior === holder, flipped: order !== combat.turns.map((c) => c.id).join(), stored: combat._source.turn, local: combat.turn,
           ...(prior === holder ? {} : { prior, holder }) });
       }
