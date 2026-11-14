@@ -24,7 +24,7 @@ const CC_BY_URL = "https://creativecommons.org/licenses/by/4.0/";
 
 /**
  * The art that ships, for the AI disclosure's folded Art licensing (user, 2026-11-14): every
- * piece is human-made, and the system will never use AI-generated art. Names and licences
+ * piece is human-made (2,935 image files in art/ and icons/ at 0.2.0, so "more than 2,900"), and the system will never use AI-generated art. Names and licences
  * are proper names, so they live here, not in the language file; LICENSE.txt has the detail.
  */
 const ART_CREDITS = [

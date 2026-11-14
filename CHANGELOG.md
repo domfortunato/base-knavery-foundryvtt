@@ -27,8 +27,8 @@
     slot and daily wages. A 1e world keeps 2e's on those for now.
 - **The welcome window** says which rules the world plays, how 1e and 2e fit together, and links the
   Knave 1e PDF on itch beside the Knave 2e book, though the 1e rules are built in. An **AI disclosure**
-  says first that there is no AI art: Base Knavery ships with more than 400 human-made art assets and
-  will never use AI-generated art (its code is written with the help of an AI coding assistant); the
+  says first that there is no AI art: Base Knavery ships with more than 2,900 human-made art assets
+  (portraits, tokens and icons) and will never use AI-generated art (its code is written with the help of an AI coding assistant); the
   art's licences fold under it. The licences move to a **Licensing** section at the bottom, Knave 1e's
   notice folded.
 - **The sheet footer** now reads "...for Knave (first and second editions)...".
