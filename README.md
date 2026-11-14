@@ -184,7 +184,7 @@ See [LICENSE.txt](LICENSE.txt).
   - Jon Aspeheim, CC BY 4.0
   - tlomdev, CC BY-SA 4.0
   - Lydia Comer, CC BY-NC-SA 4.0 (so the system as a whole may not be sold); the
-    welcome window's knight is hers too, used with her permission
+    welcome window's knaves are hers too, used with her permission
 - The "Made for Knave" logo is © Questing Beast LLC, used under the Knave:
   Second Edition Third Party License. Knave: Second Edition is © Ben Milton and
   Questing Beast LLC; its own logo is not used, as that licence requires.

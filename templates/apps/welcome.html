@@ -8,9 +8,13 @@
      is a bullet whose marker is the fold's own arrow. --}}
 <div class="knavery-welcome-body">
   <header class="knavery-welcome-head">
-    {{!-- Lydia Comer's knight, used with her permission, left of the title at the logo's height (user, 2026-11-14). --}}
-    <img class="knavery-welcome-knight knavery-knight-light" src="{{knight}}" alt="{{localize 'KNAVERY.Welcome.KnightAlt'}}">
-    <img class="knavery-welcome-knight knavery-knight-dark" src="{{knightDark}}" alt="{{localize 'KNAVERY.Welcome.KnightAlt'}}">
+    {{!-- A frieze of knaves by Lydia Comer, used and cropped with her permission (user, 2026-11-14). --}}
+    <div class="knavery-welcome-frieze">
+      {{#each portraits}}
+      <img class="knavery-welcome-portrait knavery-portrait-light" src="{{this.light}}" alt="{{localize 'KNAVERY.Welcome.PortraitAlt'}}">
+      <img class="knavery-welcome-portrait knavery-portrait-dark" src="{{this.dark}}" alt="{{localize 'KNAVERY.Welcome.PortraitAlt'}}">
+      {{/each}}
+    </div>
     <div class="knavery-welcome-titles">
       {{!-- The name is marked as the author's (user, 2026-11-14; LICENSE.txt "The name"). --}}
       <h1 class="knavery-welcome-title">{{title}}<sup>™</sup></h1>
@@ -18,8 +22,6 @@
         {{#if authorUrl}}<a href="{{authorUrl}}" target="_blank" rel="noopener">{{byline}}</a>{{else}}{{byline}}{{/if}}
       </p>
     </div>
-    <img class="knavery-logo-light" src="{{logo}}" alt="{{localize 'KNAVERY.MadeForKnave'}}">
-    <img class="knavery-logo-dark" src="{{logoDark}}" alt="{{localize 'KNAVERY.MadeForKnave'}}">
   </header>
 
   <p class="knavery-welcome-unofficial">{{localize "KNAVERY.Welcome.Unofficial"}}</p>
@@ -49,9 +51,6 @@
         <p class="knavery-welcome-noai"><i class="fa-solid fa-paintbrush" inert></i> <strong>{{localize "KNAVERY.Welcome.NoAiArt"}}</strong> {{localize "KNAVERY.Welcome.NoAiArtBody"}}</p>
         <p class="knavery-welcome-noai knavery-welcome-notext"><i class="fa-solid fa-scroll" inert></i> <strong>{{localize "KNAVERY.Welcome.NoAiText"}}</strong> {{localize "KNAVERY.Welcome.NoAiTextBody"}}</p>
         <p class="knavery-welcome-noai knavery-welcome-aicode"><i class="fa-solid fa-brain-circuit" inert></i> <strong>{{localize "KNAVERY.Welcome.AiCode"}}</strong></p>
-            </details>
-          </li>
-        </ul>
       </section>
     </div>
 
@@ -84,7 +83,7 @@
       {{!-- Licensing, last: the 2e licence's disclaimer stays in view; each edition's licence is a bullet
            that folds open (user, 2026-11-14). --}}
       <h2 class="knavery-welcome-heading">{{localize "KNAVERY.Welcome.Licensing"}}</h2>
-      <section class="knavery-welcome-small">
+      <section class="knavery-welcome-small knavery-welcome-licensing">
         <p class="knavery-welcome-disclaimer">{{disclaimer}}</p>
         <h3 class="knavery-welcome-subheading">{{localize "KNAVERY.Welcome.KnaveLicensing"}}</h3>
         <ul class="knavery-welcome-folds knavery-welcome-licences">
@@ -111,6 +110,12 @@
                 <li><a href="{{this.url}}" target="_blank" rel="noopener">{{this.name}}</a>, {{this.by}}: {{#if this.licenseUrl}}<a href="{{this.licenseUrl}}" target="_blank" rel="noopener">{{this.license}}</a>{{else}}{{this.license}}{{/if}}</li>
                 {{/each}}
               </ul>
+            </details>
+          </li>
+        </ul>
+        {{!-- The Made for Knave logo, faint behind this section at its bottom right (user, 2026-11-14). --}}
+        <img class="knavery-welcome-watermark knavery-logo-light" src="{{logo}}" alt="{{localize 'KNAVERY.MadeForKnave'}}">
+        <img class="knavery-welcome-watermark knavery-logo-dark" src="{{logoDark}}" alt="{{localize 'KNAVERY.MadeForKnave'}}">
       </section>
     </div>
   </div>

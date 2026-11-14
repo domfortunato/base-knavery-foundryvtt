@@ -25,7 +25,7 @@ const CC_BY_URL = "https://creativecommons.org/licenses/by/4.0/";
 
 /**
  * The art that ships, for the AI disclosure's folded Art licensing (user, 2026-11-14): every
- * piece is human-made (2,935 image files in art/ and icons/ at 0.2.0, so "more than 2,900"), and the system will never use AI-generated art. Names and licences
+ * piece is human-made (2,949 image files in art/ and icons/ at 0.2.0, so "more than 2,900"), and the system will never use AI-generated art. Names and licences
  * are proper names, so they live here, not in the language file; LICENSE.txt has the detail.
  */
 const ART_CREDITS = [
@@ -33,9 +33,12 @@ const ART_CREDITS = [
   { name: "Portraits and tokens", by: "Lydia Comer", url: "https://linktr.ee/lydiadidmyink", license: "CC BY-NC-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-nc-sa/4.0/" },
   { name: "Tlomdev's Tokens", by: "tlomdev", url: "https://tlomdev.itch.io/tlomdevs-tokens", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0/" },
   { name: "Game-icons.net", by: "many artists, each credited in art/game-icons/CREDITS.md", url: "https://game-icons.net", license: "CC BY 3.0", licenseUrl: "https://creativecommons.org/licenses/by/3.0/" },
-  { name: "Knight (this window)", by: "Lydia Comer", url: "https://linktr.ee/lydiadidmyink", license: "used with permission", licenseUrl: null },
+  { name: "The knaves across this window's top", by: "Lydia Comer", url: "https://linktr.ee/lydiadidmyink", license: "used with permission", licenseUrl: null },
   { name: "Alegreya fonts", by: "The Alegreya Project Authors", url: "https://github.com/huertatipografica/Alegreya", license: "SIL OFL 1.1", licenseUrl: "https://openfontlicense.org/" },
 ];
+
+/** The frieze across the top, left to right: the ones on the left look in, the knight stands mid-way. */
+const WELCOME_PORTRAITS = ["femme", "hooded", "peasant", "knight", "bandit", "knight-grin", "jester"];
 
 /** Where to buy Knave (first edition): its rules ship here, and the PDF supports its author (user, 2026-11-14). */
 const BUY_LINKS_1E = [
@@ -83,10 +86,11 @@ export class WelcomeWindow extends HandlebarsApplicationMixin(ApplicationV2) {
       title: game.system.title,
       byline: F("KNAVERY.Welcome.By", { author: author.name, version: game.system.version }),
       authorUrl: author.url ?? "",
-      // Lydia Comer's knight, used with her permission (art/welcome/CREDITS.md): her line art for the
-      // light theme, her white-filled version for the dark one.
-      knight: `${SYS_PATH}/art/welcome/knight-lydia-comer.png`,
-      knightDark: `${SYS_PATH}/art/welcome/knight-lydia-comer-white.png`,
+      // Lydia Comer's knaves across the top, used and cropped with her permission (art/welcome/CREDITS.md):
+      // her line art for the light theme, her white-filled versions for the dark one.
+      portraits: WELCOME_PORTRAITS.map((n) => ({
+        light: `${SYS_PATH}/art/welcome/portraits/${n}.png`, dark: `${SYS_PATH}/art/welcome/portraits/${n}-white.png`,
+      })),
       logo: `${SYS_PATH}/logo/made-for-knave-black.png`,
       logoDark: `${SYS_PATH}/logo/made-for-knave-white.png`,
       disclaimer: L("KNAVERY.Disclaimer"),

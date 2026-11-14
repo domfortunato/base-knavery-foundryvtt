@@ -4681,8 +4681,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
     display: flex; align-items: center; gap: 12px; margin-top: 12px; padding-top: 6px;
     border-top: 1px solid var(--kn-rule); text-align: left;
 }
-.knavery .knavery-compat-footer img { display: block; width: 84px; height: auto; margin: 0; border: none; opacity: 0.5; }
-/* The Made for Knave logo is shown softened (user, 2026-11-14: it overwhelmed the sheet); the file is unaltered. */
+.knavery .knavery-compat-footer img { display: block; width: 84px; height: auto; margin: 0; border: none; }
 .knavery .knavery-compat-footer .knavery-logo-dark { display: none; }
 .theme-dark .knavery:not(.theme-light) .knavery-compat-footer .knavery-logo-light,
 .knavery.theme-dark .knavery-compat-footer .knavery-logo-light { display: none; }
@@ -4700,20 +4699,20 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 #knavery-welcome { max-height: calc(100vh - 20px); }
 #knavery-welcome .window-content { padding: 14px 20px; overflow-y: auto; min-height: 0; container-type: inline-size; }
 .knavery-welcome-body { display: flex; flex-direction: column; gap: 8px; color: var(--kn-ink); }
-/* The head: the title and byline beside the Made for Knave logo. */
-.knavery-welcome-head { display: flex; align-items: center; justify-content: center; gap: 24px; }
-.knavery-welcome-titles { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
-/* The knight and the logo stand either side of the title. The logo is smaller and softened (user,
-   2026-11-14: it overwhelmed the window), the file unaltered; the knight keeps its size. */
-.knavery-welcome-head img { display: block; flex: 0 0 auto; width: auto; height: 116px; border: none; }
-.knavery-welcome-head .knavery-logo-light, .knavery-welcome-head .knavery-logo-dark { height: 88px; opacity: 0.5; }
+/* The head: a frieze of knaves by Lydia Comer across the top row (user, 2026-11-14), the title and
+   byline centred under it. Her line art on the light theme, her white-filled versions on the dark. */
+.knavery-welcome-head { display: flex; flex-direction: column; align-items: stretch; gap: 4px; }
+.knavery-welcome-frieze { display: flex; justify-content: space-between; align-items: flex-end; gap: 6px; }
+.knavery-welcome-frieze img {
+    display: block; flex: 0 1 auto; min-width: 0; width: 112px; height: 112px; object-fit: contain; border: none;
+}
+.knavery-welcome .knavery-portrait-dark { display: none; }
+.theme-dark .knavery-welcome:not(.theme-light) .knavery-portrait-light,
+.knavery-welcome.theme-dark .knavery-portrait-light { display: none; }
+.theme-dark .knavery-welcome:not(.theme-light) .knavery-portrait-dark,
+.knavery-welcome.theme-dark .knavery-portrait-dark { display: block; }
+.knavery-welcome-titles { display: flex; flex-direction: column; align-items: center; gap: 0; }
 .knavery-welcome-title sup { font-size: 0.45em; font-variant: normal; vertical-align: super; margin-left: 1px; }
-/* Lydia Comer's knight: her line art on the light theme, her white-filled version on the dark one. */
-.knavery-welcome .knavery-knight-dark { display: none; }
-.theme-dark .knavery-welcome:not(.theme-light) .knavery-knight-light,
-.knavery-welcome.theme-dark .knavery-knight-light { display: none; }
-.theme-dark .knavery-welcome:not(.theme-light) .knavery-knight-dark,
-.knavery-welcome.theme-dark .knavery-knight-dark { display: block; }
 .knavery-welcome .knavery-logo-dark { display: none; }
 .theme-dark .knavery-welcome:not(.theme-light) .knavery-logo-light,
 .knavery-welcome.theme-dark .knavery-logo-light { display: none; }
@@ -4783,6 +4782,13 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 
 /* Licensing: the 2e licence's disclaimer in view, then the editions' licences as folds. */
 .knavery-welcome-small { display: flex; flex-direction: column; gap: 4px; }
+/* The Made for Knave logo, faint behind the licensing text at its bottom right (user, 2026-11-14);
+   the file is unaltered. */
+.knavery-welcome-licensing { position: relative; isolation: isolate; min-height: 120px; }
+.knavery-welcome-licensing .knavery-welcome-watermark {
+    position: absolute; right: 0; bottom: 0; z-index: -1; width: 150px; height: auto; border: none;
+    opacity: 0.14; pointer-events: none;
+}
 .knavery-welcome-disclaimer { margin: 0; font-weight: bold; font-size: calc(12px * var(--kn-text, 1)); }
 
 /* Folds as bullets (user, 2026-11-14): each fold's arrow is its bullet; open, the arrow turns and the
