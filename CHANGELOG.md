@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.1
 
 - **Foundry review #2 fixes:**
   - Changing *Rations per slot* or the Knave 1e XP hack no longer adds a career's effects a second time.
