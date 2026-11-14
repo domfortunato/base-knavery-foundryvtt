@@ -6,26 +6,271 @@ _id: HtqAXJNfQ7MdccHt
 _key: '!tables!HtqAXJNfQ7MdccHt'
 name: Misfortune
 img: icons/svg/d20-grey.svg
-description: '<p>Empty. The Game Master fills this table: GM Dashboard → Tables → Import.</p>'
+description: <p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>
 formula: 1d20
 replacement: true
 displayRoll: true
 results:
-  - _id: xbv32aNPBucOJOdQ
-    _key: '!tables.results!HtqAXJNfQ7MdccHt.xbv32aNPBucOJOdQ'
+  - _id: Dngu8SL2rTepjzLx
+    _key: '!tables.results!HtqAXJNfQ7MdccHt.Dngu8SL2rTepjzLx'
     type: text
-    name: 'Empty. The Game Master fills this table: GM Dashboard → Tables → Import.'
+    name: Abandoned
     description: ''
     img: null
     documentUuid: null
     weight: 1
     range:
       - 1
+      - 1
+    drawn: false
+    flags: {}
+  - _id: m2EHnYtuynbRNrv0
+    _key: '!tables.results!HtqAXJNfQ7MdccHt.m2EHnYtuynbRNrv0'
+    type: text
+    name: Addicted
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    flags: {}
+  - _id: gkx6YugoLgoiiNy0
+    _key: '!tables.results!HtqAXJNfQ7MdccHt.gkx6YugoLgoiiNy0'
+    type: text
+    name: Blackmailed
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    flags: {}
+  - _id: RftHdSiXUeQTS2QJ
+    _key: '!tables.results!HtqAXJNfQ7MdccHt.RftHdSiXUeQTS2QJ'
+    type: text
+    name: Condemned
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    flags: {}
+  - _id: 5nfKzdzMTHR93JJC
+    _key: '!tables.results!HtqAXJNfQ7MdccHt.5nfKzdzMTHR93JJC'
+    type: text
+    name: Cursed
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 5
+      - 5
+    drawn: false
+    flags: {}
+  - _id: Rsu1jTF8fPzEjF9S
+    _key: '!tables.results!HtqAXJNfQ7MdccHt.Rsu1jTF8fPzEjF9S'
+    type: text
+    name: Defrauded
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 6
+      - 6
+    drawn: false
+    flags: {}
+  - _id: FZhKNFF1yFvGuRQz
+    _key: '!tables.results!HtqAXJNfQ7MdccHt.FZhKNFF1yFvGuRQz'
+    type: text
+    name: Demoted
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 7
+      - 7
+    drawn: false
+    flags: {}
+  - _id: JEFRebOfBzpbOzSp
+    _key: '!tables.results!HtqAXJNfQ7MdccHt.JEFRebOfBzpbOzSp'
+    type: text
+    name: Discredited
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 8
+      - 8
+    drawn: false
+    flags: {}
+  - _id: 6hYg3BLTKH537mUF
+    _key: '!tables.results!HtqAXJNfQ7MdccHt.6hYg3BLTKH537mUF'
+    type: text
+    name: Disowned
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 9
+      - 9
+    drawn: false
+    flags: {}
+  - _id: qkYjAKVjy5UqFqbr
+    _key: '!tables.results!HtqAXJNfQ7MdccHt.qkYjAKVjy5UqFqbr'
+    type: text
+    name: Exiled
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 10
+      - 10
+    drawn: false
+    flags: {}
+  - _id: aauizqyabuXMyBh9
+    _key: '!tables.results!HtqAXJNfQ7MdccHt.aauizqyabuXMyBh9'
+    type: text
+    name: Framed
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 11
+      - 11
+    drawn: false
+    flags: {}
+  - _id: IXBb7kbMyvvHbUUd
+    _key: '!tables.results!HtqAXJNfQ7MdccHt.IXBb7kbMyvvHbUUd'
+    type: text
+    name: Haunted
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 12
+      - 12
+    drawn: false
+    flags: {}
+  - _id: B0XQN57XbzNduIEG
+    _key: '!tables.results!HtqAXJNfQ7MdccHt.B0XQN57XbzNduIEG'
+    type: text
+    name: Kidnapped
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 13
+      - 13
+    drawn: false
+    flags: {}
+  - _id: wFZTRYWj1ne4wmHu
+    _key: '!tables.results!HtqAXJNfQ7MdccHt.wFZTRYWj1ne4wmHu'
+    type: text
+    name: Mutilated
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 14
+      - 14
+    drawn: false
+    flags: {}
+  - _id: gXQqqdze2vvFUhlw
+    _key: '!tables.results!HtqAXJNfQ7MdccHt.gXQqqdze2vvFUhlw'
+    type: text
+    name: Poor
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 15
+      - 15
+    drawn: false
+    flags: {}
+  - _id: O9BatB4pTdsCIdz6
+    _key: '!tables.results!HtqAXJNfQ7MdccHt.O9BatB4pTdsCIdz6'
+    type: text
+    name: Pursued
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 16
+      - 16
+    drawn: false
+    flags: {}
+  - _id: ydLpGuLiIGBjyFmn
+    _key: '!tables.results!HtqAXJNfQ7MdccHt.ydLpGuLiIGBjyFmn'
+    type: text
+    name: Rejected
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 17
+      - 17
+    drawn: false
+    flags: {}
+  - _id: oBmQUHAa1IPG7H0p
+    _key: '!tables.results!HtqAXJNfQ7MdccHt.oBmQUHAa1IPG7H0p'
+    type: text
+    name: Replaced
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 18
+      - 18
+    drawn: false
+    flags: {}
+  - _id: CLQcQMXIO6BwkbtQ
+    _key: '!tables.results!HtqAXJNfQ7MdccHt.CLQcQMXIO6BwkbtQ'
+    type: text
+    name: Robbed
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 19
+      - 19
+    drawn: false
+    flags: {}
+  - _id: juSgBgxb3DcOaW0g
+    _key: '!tables.results!HtqAXJNfQ7MdccHt.juSgBgxb3DcOaW0g'
+    type: text
+    name: Suspected
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 20
       - 20
     drawn: false
-    flags:
-      base-knavery:
-        placeholder: true
+    flags: {}
 flags: {}
 _stats:
   coreVersion: '14.370'

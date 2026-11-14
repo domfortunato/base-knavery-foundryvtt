@@ -25,6 +25,19 @@ logo are not used anywhere in this system.
 This system contains no text from Dungeon Crawl Classics.
 
 
+Knave (first edition) — CC BY 4.0
+---------------------------------
+
+The ten character-trait tables (Physique, Face, Skin, Hair, Clothing, Virtue,
+Vice, Speech, Background, Misfortune) in the tables compendium are from Knave
+(first edition, version 1.0) by Ben Milton, licensed under the Creative
+Commons Attribution 4.0 International License
+(https://creativecommons.org/licenses/by/4.0/). They are reproduced unchanged,
+except that "Misfortunes" is named Misfortune. Knave's first edition is a
+different work from Knave: Second Edition, whose text this system does not
+ship.
+
+
 What ships under which licence
 ------------------------------
 
@@ -32,7 +45,8 @@ Code and compendium content — MIT
     module/  templates/  css/  tools/  lang/  system.json
     packs/ (in the release zip), built from src/packs/ by
     tools/content/build-content.mjs: the guide, the bestiary's statistics, the
-    gear, the macros and the table shells. Images they show keep the licences
+    gear, the macros and the table shells (but not the Knave 1e trait tables,
+    CC BY 4.0, above). Images they show keep the licences
     given for them below.
     Descends from Air Bladder (MIT, © Dom Bosco), itself descended from
     Cairn-FoundryVTT by Yochai Gal & Oskar Świda (MIT).

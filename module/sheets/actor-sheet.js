@@ -370,9 +370,16 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       : F("KNAVERY.Growth.EachLevel", { n: LEVEL_UP_ABILITIES, hp: hpRuleHint(s.level + 1, actor._source.system.hp.max) });
 
     const traitKeys = Object.keys(TABLES.traits);
-    const traitRows = traitKeys.map((key) => ({
-      key, label: L(`KNAVERY.Trait.${key}`), value: actor._source.system.traits?.[key] ?? "", table: TABLES.traits[key],
-    }));
+    // Knave 2e's traits first (filled from the GM's PDF), then Knave 1e's (shipped); each group headed once.
+    const KNAVE_2E_TRAITS = ["personality", "mannerism"];
+    const traitRows = traitKeys.map((key, i) => {
+      const group = KNAVE_2E_TRAITS.includes(key) ? "2e" : "1e";
+      const prev = i ? (KNAVE_2E_TRAITS.includes(traitKeys[i - 1]) ? "2e" : "1e") : null;
+      return {
+        key, label: L(`KNAVERY.Trait.${key}`), value: actor._source.system.traits?.[key] ?? "", table: TABLES.traits[key],
+        heading: group !== prev ? L(group === "2e" ? "KNAVERY.TraitGroup2e" : "KNAVERY.TraitGroup1e") : null,
+      };
+    });
 
     Object.assign(context, {
       actor,

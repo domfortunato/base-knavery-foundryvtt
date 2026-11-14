@@ -384,20 +384,23 @@ await withSettings(gm, async () => {
   await section("11. Traits: expanded, rolled for a blank sheet, pick-lists in Char Gen Mode.", async () => {
     const r = await gm.evaluate(async (sys) => {
       const made = [];
-      if (!game.tables.getName("Physique")) {
-        made.push((await RollTable.create({ name: "Physique", formula: "1d1", results: [{ type: "text", name: "Probe Wiry", range: [1, 1], weight: 1 }] })).id);
-      }
       const { createCharacter } = await import(`${sys}/character-generator.js`);
       const blank = await createCharacter({ mode: "blank", name: "Probe Blank" });
       await new Promise((res) => setTimeout(res, 600));
       const el = blank.sheet.element;
-      const out = { made, physique: blank.system.traits.physique, rows: el.querySelectorAll(".trait-row").length };
+      const t = blank.system.traits;
+      const out = {
+        made, rows: el.querySelectorAll(".trait-row").length, groups: el.querySelectorAll(".trait-group-heading").length,
+        // The ten Knave 1e traits come from the shipped tables (a world table of the same name would win, so only count, not compare).
+        filled1e: ["physique", "face", "skin", "hair", "clothing", "virtue", "vice", "speech", "background", "misfortune"].filter((k) => t[k]).length,
+        own: ["Physique", "Face", "Skin", "Hair", "Clothing", "Virtue", "Vice", "Speech", "Background", "Misfortune"].filter((n) => game.tables.getName(n)).length,
+      };
       await blank.sheet.close();
       return out;
     }, SYS);
     made.tables.push(...r.made);
-    ok(!!r.physique, "a Blank character starts with its traits rolled", JSON.stringify(r));
-    ok(r.rows === 10, "the traits section opens expanded, every trait showing", JSON.stringify(r));
+    ok(r.filled1e === 10, "a Blank character starts with all ten Knave 1e traits rolled from the shipped tables", JSON.stringify(r));
+    ok(r.rows === 12 && r.groups === 2, "the traits section opens expanded: the two 2e traits, then the ten 1e ones", JSON.stringify(r));
     await gm.evaluate((x) => game.actors.get(x).update({ "system.generationEnabled": true }), ids.a);
     await openAs(alice, ids.a);
     await settle();
@@ -405,7 +408,7 @@ await withSettings(gm, async () => {
       const el = game.actors.get(x).sheet.element;
       return { picks: el.querySelectorAll(".trait-pick").length, all: !!el.querySelector(".trait-roll-all") };
     }, ids.a);
-    ok(ctl.picks === 10 && ctl.all, "in Char Gen Mode Alice gets a pick-list per trait and Roll every trait", JSON.stringify(ctl));
+    ok(ctl.picks === 12 && ctl.all, "in Char Gen Mode Alice gets a pick-list per trait and Roll every trait", JSON.stringify(ctl));
   });
 
   /* ------------------------------------------------------------------ */

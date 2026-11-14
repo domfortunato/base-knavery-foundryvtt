@@ -31,6 +31,7 @@ const abilities = () => new SchemaField(Object.fromEntries(ABILITIES.map((k) =>
   [k, new SchemaField({ value: int(0, { min: 0, max: ABILITY_MAX }) })])));
 
 const traits = () => new SchemaField({
+  personality: str(), mannerism: str(),
   physique: str(), face: str(), skin: str(), hair: str(), clothing: str(),
   virtue: str(), vice: str(), speech: str(), background: str(), misfortune: str(),
 });

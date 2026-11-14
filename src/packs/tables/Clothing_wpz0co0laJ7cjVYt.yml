@@ -6,26 +6,271 @@ _id: wpz0co0laJ7cjVYt
 _key: '!tables!wpz0co0laJ7cjVYt'
 name: Clothing
 img: icons/svg/d20-grey.svg
-description: '<p>Empty. The Game Master fills this table: GM Dashboard → Tables → Import.</p>'
+description: <p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>
 formula: 1d20
 replacement: true
 displayRoll: true
 results:
-  - _id: TqSkbr1kXPMzw9S9
-    _key: '!tables.results!wpz0co0laJ7cjVYt.TqSkbr1kXPMzw9S9'
+  - _id: KgZwKgjXkHPbhx3s
+    _key: '!tables.results!wpz0co0laJ7cjVYt.KgZwKgjXkHPbhx3s'
     type: text
-    name: 'Empty. The Game Master fills this table: GM Dashboard → Tables → Import.'
+    name: Antique
     description: ''
     img: null
     documentUuid: null
     weight: 1
     range:
       - 1
+      - 1
+    drawn: false
+    flags: {}
+  - _id: 1sdlhNvvCYgZpkfG
+    _key: '!tables.results!wpz0co0laJ7cjVYt.1sdlhNvvCYgZpkfG'
+    type: text
+    name: Bloody
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    flags: {}
+  - _id: abSmtnIy5PP8Tk1h
+    _key: '!tables.results!wpz0co0laJ7cjVYt.abSmtnIy5PP8Tk1h'
+    type: text
+    name: Ceremonial
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    flags: {}
+  - _id: iiHjHyOGNSZ9tqiq
+    _key: '!tables.results!wpz0co0laJ7cjVYt.iiHjHyOGNSZ9tqiq'
+    type: text
+    name: Decorated
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    flags: {}
+  - _id: TQwTYgCS1F6jId5s
+    _key: '!tables.results!wpz0co0laJ7cjVYt.TQwTYgCS1F6jId5s'
+    type: text
+    name: Eccentric
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 5
+      - 5
+    drawn: false
+    flags: {}
+  - _id: 5cpHp4aNWjnIDnAo
+    _key: '!tables.results!wpz0co0laJ7cjVYt.5cpHp4aNWjnIDnAo'
+    type: text
+    name: Elegant
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 6
+      - 6
+    drawn: false
+    flags: {}
+  - _id: pJSk6izZvh017QFJ
+    _key: '!tables.results!wpz0co0laJ7cjVYt.pJSk6izZvh017QFJ'
+    type: text
+    name: Fashionable
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 7
+      - 7
+    drawn: false
+    flags: {}
+  - _id: PsEXV79Y3AC2hVd3
+    _key: '!tables.results!wpz0co0laJ7cjVYt.PsEXV79Y3AC2hVd3'
+    type: text
+    name: Filthy
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 8
+      - 8
+    drawn: false
+    flags: {}
+  - _id: Ay3QnhU3oUnPL3sO
+    _key: '!tables.results!wpz0co0laJ7cjVYt.Ay3QnhU3oUnPL3sO'
+    type: text
+    name: Flamboyant
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 9
+      - 9
+    drawn: false
+    flags: {}
+  - _id: 2hxgCiUS4WcEyFNh
+    _key: '!tables.results!wpz0co0laJ7cjVYt.2hxgCiUS4WcEyFNh'
+    type: text
+    name: Stained
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 10
+      - 10
+    drawn: false
+    flags: {}
+  - _id: Vv0Z1RnvdfUVw1UT
+    _key: '!tables.results!wpz0co0laJ7cjVYt.Vv0Z1RnvdfUVw1UT'
+    type: text
+    name: Foreign
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 11
+      - 11
+    drawn: false
+    flags: {}
+  - _id: lrC2ExAAJVC7RKJP
+    _key: '!tables.results!wpz0co0laJ7cjVYt.lrC2ExAAJVC7RKJP'
+    type: text
+    name: Frayed
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 12
+      - 12
+    drawn: false
+    flags: {}
+  - _id: 1fo3na3uG5YX8P9L
+    _key: '!tables.results!wpz0co0laJ7cjVYt.1fo3na3uG5YX8P9L'
+    type: text
+    name: Frumpy
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 13
+      - 13
+    drawn: false
+    flags: {}
+  - _id: nA8Bb2M20bxIogZS
+    _key: '!tables.results!wpz0co0laJ7cjVYt.nA8Bb2M20bxIogZS'
+    type: text
+    name: Livery
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 14
+      - 14
+    drawn: false
+    flags: {}
+  - _id: c8YwHfBW4z1C7BPZ
+    _key: '!tables.results!wpz0co0laJ7cjVYt.c8YwHfBW4z1C7BPZ'
+    type: text
+    name: Oversized
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 15
+      - 15
+    drawn: false
+    flags: {}
+  - _id: 3mGHVHOqob99BImT
+    _key: '!tables.results!wpz0co0laJ7cjVYt.3mGHVHOqob99BImT'
+    type: text
+    name: Patched
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 16
+      - 16
+    drawn: false
+    flags: {}
+  - _id: abJAFj6c4BtkUQMp
+    _key: '!tables.results!wpz0co0laJ7cjVYt.abJAFj6c4BtkUQMp'
+    type: text
+    name: Perfumed
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 17
+      - 17
+    drawn: false
+    flags: {}
+  - _id: kDa28QNUByEeq7Za
+    _key: '!tables.results!wpz0co0laJ7cjVYt.kDa28QNUByEeq7Za'
+    type: text
+    name: Rancid
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 18
+      - 18
+    drawn: false
+    flags: {}
+  - _id: zlGE3apGqgLMRgCH
+    _key: '!tables.results!wpz0co0laJ7cjVYt.zlGE3apGqgLMRgCH'
+    type: text
+    name: Torn
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 19
+      - 19
+    drawn: false
+    flags: {}
+  - _id: RvPu5zUJ9cnoShkM
+    _key: '!tables.results!wpz0co0laJ7cjVYt.RvPu5zUJ9cnoShkM'
+    type: text
+    name: Undersized
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 20
       - 20
     drawn: false
-    flags:
-      base-knavery:
-        placeholder: true
+    flags: {}
 flags: {}
 _stats:
   coreVersion: '14.370'

@@ -1,0 +1,33 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: snTnyEARO2d5Bsjc
+_key: '!tables!snTnyEARO2d5Bsjc'
+name: Mannerisms
+img: icons/svg/d20-grey.svg
+description: '<p>Empty. The Game Master fills this table: GM Dashboard → Tables → Import.</p>'
+formula: 1d100
+replacement: true
+displayRoll: true
+results:
+  - _id: msC44FdnLWldAHYc
+    _key: '!tables.results!snTnyEARO2d5Bsjc.msC44FdnLWldAHYc'
+    type: text
+    name: 'Empty. The Game Master fills this table: GM Dashboard → Tables → Import.'
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 1
+      - 100
+    drawn: false
+    flags:
+      base-knavery:
+        placeholder: true
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.0

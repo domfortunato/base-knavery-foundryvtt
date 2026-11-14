@@ -6,26 +6,271 @@ _id: eBA8HA3X4fhGIWnF
 _key: '!tables!eBA8HA3X4fhGIWnF'
 name: Virtue
 img: icons/svg/d20-grey.svg
-description: '<p>Empty. The Game Master fills this table: GM Dashboard → Tables → Import.</p>'
+description: <p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>
 formula: 1d20
 replacement: true
 displayRoll: true
 results:
-  - _id: EZG9lHCiPfsQ8InF
-    _key: '!tables.results!eBA8HA3X4fhGIWnF.EZG9lHCiPfsQ8InF'
+  - _id: CmzSwMBfnzPPOstl
+    _key: '!tables.results!eBA8HA3X4fhGIWnF.CmzSwMBfnzPPOstl'
     type: text
-    name: 'Empty. The Game Master fills this table: GM Dashboard → Tables → Import.'
+    name: Ambitious
     description: ''
     img: null
     documentUuid: null
     weight: 1
     range:
       - 1
+      - 1
+    drawn: false
+    flags: {}
+  - _id: 8iGsc1Qwbwx6oe28
+    _key: '!tables.results!eBA8HA3X4fhGIWnF.8iGsc1Qwbwx6oe28'
+    type: text
+    name: Cautious
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    flags: {}
+  - _id: 6wuJOgtEGHb3CSSK
+    _key: '!tables.results!eBA8HA3X4fhGIWnF.6wuJOgtEGHb3CSSK'
+    type: text
+    name: Courageous
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    flags: {}
+  - _id: mW6HfTRaHZb2hxlF
+    _key: '!tables.results!eBA8HA3X4fhGIWnF.mW6HfTRaHZb2hxlF'
+    type: text
+    name: Courteous
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    flags: {}
+  - _id: JtuqsWNH4AfvNz3V
+    _key: '!tables.results!eBA8HA3X4fhGIWnF.JtuqsWNH4AfvNz3V'
+    type: text
+    name: Curious
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 5
+      - 5
+    drawn: false
+    flags: {}
+  - _id: mRAuLnUjdcLp2BIr
+    _key: '!tables.results!eBA8HA3X4fhGIWnF.mRAuLnUjdcLp2BIr'
+    type: text
+    name: Disciplined
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 6
+      - 6
+    drawn: false
+    flags: {}
+  - _id: H87t5yz83IxAMJLV
+    _key: '!tables.results!eBA8HA3X4fhGIWnF.H87t5yz83IxAMJLV'
+    type: text
+    name: Focused
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 7
+      - 7
+    drawn: false
+    flags: {}
+  - _id: AkQAfd2gJ0gy2BAI
+    _key: '!tables.results!eBA8HA3X4fhGIWnF.AkQAfd2gJ0gy2BAI'
+    type: text
+    name: Generous
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 8
+      - 8
+    drawn: false
+    flags: {}
+  - _id: J301CBMZ09bPDUVe
+    _key: '!tables.results!eBA8HA3X4fhGIWnF.J301CBMZ09bPDUVe'
+    type: text
+    name: Gregarious
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 9
+      - 9
+    drawn: false
+    flags: {}
+  - _id: ILxmzeBGgzMmZAFN
+    _key: '!tables.results!eBA8HA3X4fhGIWnF.ILxmzeBGgzMmZAFN'
+    type: text
+    name: Honest
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 10
+      - 10
+    drawn: false
+    flags: {}
+  - _id: MYktwI5cbCo398f2
+    _key: '!tables.results!eBA8HA3X4fhGIWnF.MYktwI5cbCo398f2'
+    type: text
+    name: Honorable
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 11
+      - 11
+    drawn: false
+    flags: {}
+  - _id: WZsqTJkxnMhXOacD
+    _key: '!tables.results!eBA8HA3X4fhGIWnF.WZsqTJkxnMhXOacD'
+    type: text
+    name: Humble
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 12
+      - 12
+    drawn: false
+    flags: {}
+  - _id: 80NjAnXv0KcdtfB8
+    _key: '!tables.results!eBA8HA3X4fhGIWnF.80NjAnXv0KcdtfB8'
+    type: text
+    name: Idealistic
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 13
+      - 13
+    drawn: false
+    flags: {}
+  - _id: DwKSFuGRP9FHDrEJ
+    _key: '!tables.results!eBA8HA3X4fhGIWnF.DwKSFuGRP9FHDrEJ'
+    type: text
+    name: Just
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 14
+      - 14
+    drawn: false
+    flags: {}
+  - _id: DjzumhALDiJLK4jJ
+    _key: '!tables.results!eBA8HA3X4fhGIWnF.DjzumhALDiJLK4jJ'
+    type: text
+    name: Loyal
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 15
+      - 15
+    drawn: false
+    flags: {}
+  - _id: Bi4CjONhn9saHuiF
+    _key: '!tables.results!eBA8HA3X4fhGIWnF.Bi4CjONhn9saHuiF'
+    type: text
+    name: Merciful
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 16
+      - 16
+    drawn: false
+    flags: {}
+  - _id: TwMJshfLEhGSSalG
+    _key: '!tables.results!eBA8HA3X4fhGIWnF.TwMJshfLEhGSSalG'
+    type: text
+    name: Righteous
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 17
+      - 17
+    drawn: false
+    flags: {}
+  - _id: evBNCOAz4TIIsIg6
+    _key: '!tables.results!eBA8HA3X4fhGIWnF.evBNCOAz4TIIsIg6'
+    type: text
+    name: Serene
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 18
+      - 18
+    drawn: false
+    flags: {}
+  - _id: 5sCH4s5o6ASo9zQW
+    _key: '!tables.results!eBA8HA3X4fhGIWnF.5sCH4s5o6ASo9zQW'
+    type: text
+    name: Stoic
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 19
+      - 19
+    drawn: false
+    flags: {}
+  - _id: lZcIGetQMsYQd5CN
+    _key: '!tables.results!eBA8HA3X4fhGIWnF.lZcIGetQMsYQd5CN'
+    type: text
+    name: Tolerant
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 20
       - 20
     drawn: false
-    flags:
-      base-knavery:
-        placeholder: true
+    flags: {}
 flags: {}
 _stats:
   coreVersion: '14.370'

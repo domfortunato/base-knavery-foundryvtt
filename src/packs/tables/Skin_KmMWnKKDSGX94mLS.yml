@@ -6,26 +6,271 @@ _id: KmMWnKKDSGX94mLS
 _key: '!tables!KmMWnKKDSGX94mLS'
 name: Skin
 img: icons/svg/d20-grey.svg
-description: '<p>Empty. The Game Master fills this table: GM Dashboard → Tables → Import.</p>'
+description: <p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>
 formula: 1d20
 replacement: true
 displayRoll: true
 results:
-  - _id: 3nAsozy0AhQfS18w
-    _key: '!tables.results!KmMWnKKDSGX94mLS.3nAsozy0AhQfS18w'
+  - _id: FRopbidiaqdG6Do4
+    _key: '!tables.results!KmMWnKKDSGX94mLS.FRopbidiaqdG6Do4'
     type: text
-    name: 'Empty. The Game Master fills this table: GM Dashboard → Tables → Import.'
+    name: Battle Scar
     description: ''
     img: null
     documentUuid: null
     weight: 1
     range:
       - 1
+      - 1
+    drawn: false
+    flags: {}
+  - _id: R0sNi7TuDj6sA5cU
+    _key: '!tables.results!KmMWnKKDSGX94mLS.R0sNi7TuDj6sA5cU'
+    type: text
+    name: Birthmark
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    flags: {}
+  - _id: Vn47KLvkLjjwyH6m
+    _key: '!tables.results!KmMWnKKDSGX94mLS.Vn47KLvkLjjwyH6m'
+    type: text
+    name: Burn Scar
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    flags: {}
+  - _id: IZA4UIeNi7A97ge1
+    _key: '!tables.results!KmMWnKKDSGX94mLS.IZA4UIeNi7A97ge1'
+    type: text
+    name: Dark
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    flags: {}
+  - _id: b3UOMqXKTEROiFVD
+    _key: '!tables.results!KmMWnKKDSGX94mLS.b3UOMqXKTEROiFVD'
+    type: text
+    name: Makeup
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 5
+      - 5
+    drawn: false
+    flags: {}
+  - _id: nDgbFrEtVTbr4BNa
+    _key: '!tables.results!KmMWnKKDSGX94mLS.nDgbFrEtVTbr4BNa'
+    type: text
+    name: Oily
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 6
+      - 6
+    drawn: false
+    flags: {}
+  - _id: BO13DbKiZYyxjo6C
+    _key: '!tables.results!KmMWnKKDSGX94mLS.BO13DbKiZYyxjo6C'
+    type: text
+    name: Pale
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 7
+      - 7
+    drawn: false
+    flags: {}
+  - _id: QA6ZyDVZgWATtesC
+    _key: '!tables.results!KmMWnKKDSGX94mLS.QA6ZyDVZgWATtesC'
+    type: text
+    name: Perfect
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 8
+      - 8
+    drawn: false
+    flags: {}
+  - _id: Db32kiHFZjg22wPH
+    _key: '!tables.results!KmMWnKKDSGX94mLS.Db32kiHFZjg22wPH'
+    type: text
+    name: Pierced
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 9
+      - 9
+    drawn: false
+    flags: {}
+  - _id: Foe3cjltFMjMHJWo
+    _key: '!tables.results!KmMWnKKDSGX94mLS.Foe3cjltFMjMHJWo'
+    type: text
+    name: Pockmarked
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 10
+      - 10
+    drawn: false
+    flags: {}
+  - _id: EvfBW9GGyOLFFkZj
+    _key: '!tables.results!KmMWnKKDSGX94mLS.EvfBW9GGyOLFFkZj'
+    type: text
+    name: Reeking
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 11
+      - 11
+    drawn: false
+    flags: {}
+  - _id: byUgBzvEvXsC4GHC
+    _key: '!tables.results!KmMWnKKDSGX94mLS.byUgBzvEvXsC4GHC'
+    type: text
+    name: Tattooed
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 12
+      - 12
+    drawn: false
+    flags: {}
+  - _id: YFTrxYfMETgtZUnM
+    _key: '!tables.results!KmMWnKKDSGX94mLS.YFTrxYfMETgtZUnM'
+    type: text
+    name: Rosy
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 13
+      - 13
+    drawn: false
+    flags: {}
+  - _id: jXlLur5K46OvKGu2
+    _key: '!tables.results!KmMWnKKDSGX94mLS.jXlLur5K46OvKGu2'
+    type: text
+    name: Rough
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 14
+      - 14
+    drawn: false
+    flags: {}
+  - _id: LvuMdAZy9ItywCKI
+    _key: '!tables.results!KmMWnKKDSGX94mLS.LvuMdAZy9ItywCKI'
+    type: text
+    name: Sallow
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 15
+      - 15
+    drawn: false
+    flags: {}
+  - _id: 3WBl2x8P44wD5y1k
+    _key: '!tables.results!KmMWnKKDSGX94mLS.3WBl2x8P44wD5y1k'
+    type: text
+    name: Sunburned
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 16
+      - 16
+    drawn: false
+    flags: {}
+  - _id: IRBb4uIGKhkWROHa
+    _key: '!tables.results!KmMWnKKDSGX94mLS.IRBb4uIGKhkWROHa'
+    type: text
+    name: Tanned
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 17
+      - 17
+    drawn: false
+    flags: {}
+  - _id: ZKDD8Fno2wmm7uoo
+    _key: '!tables.results!KmMWnKKDSGX94mLS.ZKDD8Fno2wmm7uoo'
+    type: text
+    name: War Paint
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 18
+      - 18
+    drawn: false
+    flags: {}
+  - _id: jo2bKoAFgotydshV
+    _key: '!tables.results!KmMWnKKDSGX94mLS.jo2bKoAFgotydshV'
+    type: text
+    name: Weathered
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 19
+      - 19
+    drawn: false
+    flags: {}
+  - _id: jg0zCK3pwVqVyEr1
+    _key: '!tables.results!KmMWnKKDSGX94mLS.jg0zCK3pwVqVyEr1'
+    type: text
+    name: Whip Scar
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 20
       - 20
     drawn: false
-    flags:
-      base-knavery:
-        placeholder: true
+    flags: {}
 flags: {}
 _stats:
   coreVersion: '14.370'

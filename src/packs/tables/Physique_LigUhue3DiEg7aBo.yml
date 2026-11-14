@@ -6,26 +6,271 @@ _id: LigUhue3DiEg7aBo
 _key: '!tables!LigUhue3DiEg7aBo'
 name: Physique
 img: icons/svg/d20-grey.svg
-description: '<p>Empty. The Game Master fills this table: GM Dashboard → Tables → Import.</p>'
+description: <p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>
 formula: 1d20
 replacement: true
 displayRoll: true
 results:
-  - _id: 4AypKNUwqlRLTzX2
-    _key: '!tables.results!LigUhue3DiEg7aBo.4AypKNUwqlRLTzX2'
+  - _id: yERh1Mb6tgJwBOiB
+    _key: '!tables.results!LigUhue3DiEg7aBo.yERh1Mb6tgJwBOiB'
     type: text
-    name: 'Empty. The Game Master fills this table: GM Dashboard → Tables → Import.'
+    name: Athletic
     description: ''
     img: null
     documentUuid: null
     weight: 1
     range:
       - 1
+      - 1
+    drawn: false
+    flags: {}
+  - _id: rdEpia4B9xuzuRcY
+    _key: '!tables.results!LigUhue3DiEg7aBo.rdEpia4B9xuzuRcY'
+    type: text
+    name: Brawny
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    flags: {}
+  - _id: UQTtxq222HPzaRMr
+    _key: '!tables.results!LigUhue3DiEg7aBo.UQTtxq222HPzaRMr'
+    type: text
+    name: Corpulent
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    flags: {}
+  - _id: xHHPogRGqvyLuPCy
+    _key: '!tables.results!LigUhue3DiEg7aBo.xHHPogRGqvyLuPCy'
+    type: text
+    name: Delicate
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    flags: {}
+  - _id: rX2O6cqn2Hv9cyMS
+    _key: '!tables.results!LigUhue3DiEg7aBo.rX2O6cqn2Hv9cyMS'
+    type: text
+    name: Gaunt
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 5
+      - 5
+    drawn: false
+    flags: {}
+  - _id: MscWGK6Gd2pKNHA1
+    _key: '!tables.results!LigUhue3DiEg7aBo.MscWGK6Gd2pKNHA1'
+    type: text
+    name: Hulking
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 6
+      - 6
+    drawn: false
+    flags: {}
+  - _id: 8nqi63O6AqOnKYrc
+    _key: '!tables.results!LigUhue3DiEg7aBo.8nqi63O6AqOnKYrc'
+    type: text
+    name: Lanky
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 7
+      - 7
+    drawn: false
+    flags: {}
+  - _id: 8EHMyOlrqTWMnaSs
+    _key: '!tables.results!LigUhue3DiEg7aBo.8EHMyOlrqTWMnaSs'
+    type: text
+    name: Ripped
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 8
+      - 8
+    drawn: false
+    flags: {}
+  - _id: HYWQ0YGYmDCzgdD2
+    _key: '!tables.results!LigUhue3DiEg7aBo.HYWQ0YGYmDCzgdD2'
+    type: text
+    name: Rugged
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 9
+      - 9
+    drawn: false
+    flags: {}
+  - _id: hzlTnFECnYnK46Nb
+    _key: '!tables.results!LigUhue3DiEg7aBo.hzlTnFECnYnK46Nb'
+    type: text
+    name: Scrawny
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 10
+      - 10
+    drawn: false
+    flags: {}
+  - _id: GR9Wd81ODQ5r71dL
+    _key: '!tables.results!LigUhue3DiEg7aBo.GR9Wd81ODQ5r71dL'
+    type: text
+    name: Short
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 11
+      - 11
+    drawn: false
+    flags: {}
+  - _id: hXxNSdYFJov63i6Z
+    _key: '!tables.results!LigUhue3DiEg7aBo.hXxNSdYFJov63i6Z'
+    type: text
+    name: Sinewy
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 12
+      - 12
+    drawn: false
+    flags: {}
+  - _id: cAfDEY1Wuv9AMmLL
+    _key: '!tables.results!LigUhue3DiEg7aBo.cAfDEY1Wuv9AMmLL'
+    type: text
+    name: Slender
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 13
+      - 13
+    drawn: false
+    flags: {}
+  - _id: pL2GCZ7eBcQSrhz0
+    _key: '!tables.results!LigUhue3DiEg7aBo.pL2GCZ7eBcQSrhz0'
+    type: text
+    name: Flabby
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 14
+      - 14
+    drawn: false
+    flags: {}
+  - _id: NpKEgqHZMbP7fXON
+    _key: '!tables.results!LigUhue3DiEg7aBo.NpKEgqHZMbP7fXON'
+    type: text
+    name: Statuesque
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 15
+      - 15
+    drawn: false
+    flags: {}
+  - _id: tDQzl0liSSxaftfr
+    _key: '!tables.results!LigUhue3DiEg7aBo.tDQzl0liSSxaftfr'
+    type: text
+    name: Stout
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 16
+      - 16
+    drawn: false
+    flags: {}
+  - _id: VdCx4bDh5vi8WSEF
+    _key: '!tables.results!LigUhue3DiEg7aBo.VdCx4bDh5vi8WSEF'
+    type: text
+    name: Tiny
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 17
+      - 17
+    drawn: false
+    flags: {}
+  - _id: JRqzFdOthaOHOwf1
+    _key: '!tables.results!LigUhue3DiEg7aBo.JRqzFdOthaOHOwf1'
+    type: text
+    name: Towering
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 18
+      - 18
+    drawn: false
+    flags: {}
+  - _id: NEAbXAhQ9790e4Tf
+    _key: '!tables.results!LigUhue3DiEg7aBo.NEAbXAhQ9790e4Tf'
+    type: text
+    name: Willowy
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 19
+      - 19
+    drawn: false
+    flags: {}
+  - _id: fksJJjTfqTE1LBvC
+    _key: '!tables.results!LigUhue3DiEg7aBo.fksJJjTfqTE1LBvC'
+    type: text
+    name: Wiry
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 20
       - 20
     drawn: false
-    flags:
-      base-knavery:
-        placeholder: true
+    flags: {}
 flags: {}
 _stats:
   coreVersion: '14.370'

@@ -199,7 +199,38 @@ shell("Careers", 100);
 shell("Spells", 100);
 shell("Names", 100);
 shell("Surnames", 100);
-for (const n of ["Physique", "Face", "Skin", "Hair", "Clothing", "Virtue", "Vice", "Speech", "Background", "Misfortune"]) shell(n, 20);
+// Knave 2e's descriptive tables, filled from the GM's own PDF (rulebook-catalogue.js).
+shell("Personalities", 100);
+shell("Mannerisms", 100);
+
+/*
+ * The character traits of Knave's FIRST edition, which (unlike 2e) is licensed
+ * CC BY 4.0: "You are free to share and adapt this material for any purpose,
+ * including commercially, as long as you give attribution" (Knave 1.0, p1).
+ * Shipped whole, d20 each, credited in every table, LICENSE.txt, the README
+ * and the welcome window. ("Misfortunes" in the book; the sheet's trait is
+ * Misfortune.)
+ */
+// Plain text, no link: a launch must leave pack HTML exactly as built.
+const KNAVE_1E_CREDIT = "<p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 "
+  + "(https://creativecommons.org/licenses/by/4.0/).</p>";
+const KNAVE_1E_TRAITS = {
+  "Physique": ["Athletic", "Brawny", "Corpulent", "Delicate", "Gaunt", "Hulking", "Lanky", "Ripped", "Rugged", "Scrawny", "Short", "Sinewy", "Slender", "Flabby", "Statuesque", "Stout", "Tiny", "Towering", "Willowy", "Wiry"],
+  "Face": ["Bloated", "Blunt", "Bony", "Chiseled", "Delicate", "Elongated", "Patrician", "Pinched", "Hawkish", "Broken", "Impish", "Narrow", "Ratlike", "Round", "Sunken", "Sharp", "Soft", "Square", "Wide", "Wolfish"],
+  "Skin": ["Battle Scar", "Birthmark", "Burn Scar", "Dark", "Makeup", "Oily", "Pale", "Perfect", "Pierced", "Pockmarked", "Reeking", "Tattooed", "Rosy", "Rough", "Sallow", "Sunburned", "Tanned", "War Paint", "Weathered", "Whip Scar"],
+  "Hair": ["Bald", "Braided", "Bristly", "Cropped", "Curly", "Disheveled", "Dreadlocks", "Filthy", "Frizzy", "Greased", "Limp", "Long", "Luxurious", "Mohawk", "Oily", "Ponytail", "Silky", "Topknot", "Wavy", "Wispy"],
+  "Clothing": ["Antique", "Bloody", "Ceremonial", "Decorated", "Eccentric", "Elegant", "Fashionable", "Filthy", "Flamboyant", "Stained", "Foreign", "Frayed", "Frumpy", "Livery", "Oversized", "Patched", "Perfumed", "Rancid", "Torn", "Undersized"],
+  "Virtue": ["Ambitious", "Cautious", "Courageous", "Courteous", "Curious", "Disciplined", "Focused", "Generous", "Gregarious", "Honest", "Honorable", "Humble", "Idealistic", "Just", "Loyal", "Merciful", "Righteous", "Serene", "Stoic", "Tolerant"],
+  "Vice": ["Aggressive", "Arrogant", "Bitter", "Cowardly", "Cruel", "Deceitful", "Flippant", "Gluttonous", "Greedy", "Irascible", "Lazy", "Nervous", "Prejudiced", "Reckless", "Rude", "Suspicious", "Vain", "Vengeful", "Wasteful", "Whiny"],
+  "Speech": ["Blunt", "Booming", "Breathy", "Cryptic", "Drawling", "Droning", "Flowery", "Formal", "Gravelly", "Hoarse", "Mumbling", "Precise", "Quaint", "Rambling", "Rapid-fire", "Dialect", "Slow", "Squeaky", "Stuttering", "Whispery"],
+  "Background": ["Alchemist", "Beggar", "Butcher", "Burglar", "Charlatan", "Cleric", "Cook", "Cultist", "Gambler", "Herbalist", "Magician", "Mariner", "Mercenary", "Merchant", "Outlaw", "Performer", "Pickpocket", "Smuggler", "Student", "Tracker"],
+  "Misfortune": ["Abandoned", "Addicted", "Blackmailed", "Condemned", "Cursed", "Defrauded", "Demoted", "Discredited", "Disowned", "Exiled", "Framed", "Haunted", "Kidnapped", "Mutilated", "Poor", "Pursued", "Rejected", "Replaced", "Robbed", "Suspected"],
+};
+for (const [name, rows] of Object.entries(KNAVE_1E_TRAITS)) {
+  tableDoc("tables", name, "1d20", rows.map((row, i) => ({ name: row, range: [i + 1, i + 1], weight: 1 })), {
+    description: KNAVE_1E_CREDIT,
+  });
+}
 shell("Reaction", 12, "2d6");
 shell("Mishaps", 20);
 

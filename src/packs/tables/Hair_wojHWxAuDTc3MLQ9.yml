@@ -6,26 +6,271 @@ _id: wojHWxAuDTc3MLQ9
 _key: '!tables!wojHWxAuDTc3MLQ9'
 name: Hair
 img: icons/svg/d20-grey.svg
-description: '<p>Empty. The Game Master fills this table: GM Dashboard → Tables → Import.</p>'
+description: <p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>
 formula: 1d20
 replacement: true
 displayRoll: true
 results:
-  - _id: kC3d1C5QCU4u0ops
-    _key: '!tables.results!wojHWxAuDTc3MLQ9.kC3d1C5QCU4u0ops'
+  - _id: bYSfSl03zEWVHEMj
+    _key: '!tables.results!wojHWxAuDTc3MLQ9.bYSfSl03zEWVHEMj'
     type: text
-    name: 'Empty. The Game Master fills this table: GM Dashboard → Tables → Import.'
+    name: Bald
     description: ''
     img: null
     documentUuid: null
     weight: 1
     range:
       - 1
+      - 1
+    drawn: false
+    flags: {}
+  - _id: ZiWzCGz4e7G2ULdp
+    _key: '!tables.results!wojHWxAuDTc3MLQ9.ZiWzCGz4e7G2ULdp'
+    type: text
+    name: Braided
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    flags: {}
+  - _id: VGZNmaPZccapxBy6
+    _key: '!tables.results!wojHWxAuDTc3MLQ9.VGZNmaPZccapxBy6'
+    type: text
+    name: Bristly
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    flags: {}
+  - _id: zYpEcqA4adE0yWzh
+    _key: '!tables.results!wojHWxAuDTc3MLQ9.zYpEcqA4adE0yWzh'
+    type: text
+    name: Cropped
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    flags: {}
+  - _id: cBmBQOhDvx3g227Q
+    _key: '!tables.results!wojHWxAuDTc3MLQ9.cBmBQOhDvx3g227Q'
+    type: text
+    name: Curly
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 5
+      - 5
+    drawn: false
+    flags: {}
+  - _id: 4kvCUBvCGtFvwESr
+    _key: '!tables.results!wojHWxAuDTc3MLQ9.4kvCUBvCGtFvwESr'
+    type: text
+    name: Disheveled
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 6
+      - 6
+    drawn: false
+    flags: {}
+  - _id: 7BHuBWCGlGhAuxLV
+    _key: '!tables.results!wojHWxAuDTc3MLQ9.7BHuBWCGlGhAuxLV'
+    type: text
+    name: Dreadlocks
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 7
+      - 7
+    drawn: false
+    flags: {}
+  - _id: c1g5HBcuLa5UkWlx
+    _key: '!tables.results!wojHWxAuDTc3MLQ9.c1g5HBcuLa5UkWlx'
+    type: text
+    name: Filthy
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 8
+      - 8
+    drawn: false
+    flags: {}
+  - _id: 8fwQ5AaqLJ36d7eC
+    _key: '!tables.results!wojHWxAuDTc3MLQ9.8fwQ5AaqLJ36d7eC'
+    type: text
+    name: Frizzy
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 9
+      - 9
+    drawn: false
+    flags: {}
+  - _id: ozCB60WEY1j8KFFy
+    _key: '!tables.results!wojHWxAuDTc3MLQ9.ozCB60WEY1j8KFFy'
+    type: text
+    name: Greased
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 10
+      - 10
+    drawn: false
+    flags: {}
+  - _id: 90Xli9pHhKzxCEwH
+    _key: '!tables.results!wojHWxAuDTc3MLQ9.90Xli9pHhKzxCEwH'
+    type: text
+    name: Limp
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 11
+      - 11
+    drawn: false
+    flags: {}
+  - _id: jdfNaj9zTaGfn8zY
+    _key: '!tables.results!wojHWxAuDTc3MLQ9.jdfNaj9zTaGfn8zY'
+    type: text
+    name: Long
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 12
+      - 12
+    drawn: false
+    flags: {}
+  - _id: z5pCAjDaqH9HJFTc
+    _key: '!tables.results!wojHWxAuDTc3MLQ9.z5pCAjDaqH9HJFTc'
+    type: text
+    name: Luxurious
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 13
+      - 13
+    drawn: false
+    flags: {}
+  - _id: mcGTOrBbVUpKc3GO
+    _key: '!tables.results!wojHWxAuDTc3MLQ9.mcGTOrBbVUpKc3GO'
+    type: text
+    name: Mohawk
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 14
+      - 14
+    drawn: false
+    flags: {}
+  - _id: A9g6MMOdatwjzqHb
+    _key: '!tables.results!wojHWxAuDTc3MLQ9.A9g6MMOdatwjzqHb'
+    type: text
+    name: Oily
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 15
+      - 15
+    drawn: false
+    flags: {}
+  - _id: yGFaReglmpJHnRGP
+    _key: '!tables.results!wojHWxAuDTc3MLQ9.yGFaReglmpJHnRGP'
+    type: text
+    name: Ponytail
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 16
+      - 16
+    drawn: false
+    flags: {}
+  - _id: H8Dszz78jWjFUrt6
+    _key: '!tables.results!wojHWxAuDTc3MLQ9.H8Dszz78jWjFUrt6'
+    type: text
+    name: Silky
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 17
+      - 17
+    drawn: false
+    flags: {}
+  - _id: hu1xI29GqqJjSrCG
+    _key: '!tables.results!wojHWxAuDTc3MLQ9.hu1xI29GqqJjSrCG'
+    type: text
+    name: Topknot
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 18
+      - 18
+    drawn: false
+    flags: {}
+  - _id: pc7t2RcLKoLgctsJ
+    _key: '!tables.results!wojHWxAuDTc3MLQ9.pc7t2RcLKoLgctsJ'
+    type: text
+    name: Wavy
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 19
+      - 19
+    drawn: false
+    flags: {}
+  - _id: mY1goYHM5oexgknn
+    _key: '!tables.results!wojHWxAuDTc3MLQ9.mY1goYHM5oexgknn'
+    type: text
+    name: Wispy
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 20
       - 20
     drawn: false
-    flags:
-      base-knavery:
-        placeholder: true
+    flags: {}
 flags: {}
 _stats:
   coreVersion: '14.370'

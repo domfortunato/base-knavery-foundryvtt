@@ -215,6 +215,7 @@
             </div>
             <div class="trait-grid">
               {{#each traitRows}}
+              {{#if this.heading}}<div class="trait-group-heading">{{this.heading}}</div>{{/if}}
               {{#if (or this.value (not @root.traitsCollapsed))}}
               <div class="trait-row">
                 <label class="trait-label">{{this.label}}</label>

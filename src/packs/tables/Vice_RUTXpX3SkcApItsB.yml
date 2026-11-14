@@ -6,26 +6,271 @@ _id: RUTXpX3SkcApItsB
 _key: '!tables!RUTXpX3SkcApItsB'
 name: Vice
 img: icons/svg/d20-grey.svg
-description: '<p>Empty. The Game Master fills this table: GM Dashboard → Tables → Import.</p>'
+description: <p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>
 formula: 1d20
 replacement: true
 displayRoll: true
 results:
-  - _id: ED6wfxnsKcg0tME5
-    _key: '!tables.results!RUTXpX3SkcApItsB.ED6wfxnsKcg0tME5'
+  - _id: T5mnr4Hn4c0mIcbM
+    _key: '!tables.results!RUTXpX3SkcApItsB.T5mnr4Hn4c0mIcbM'
     type: text
-    name: 'Empty. The Game Master fills this table: GM Dashboard → Tables → Import.'
+    name: Aggressive
     description: ''
     img: null
     documentUuid: null
     weight: 1
     range:
       - 1
+      - 1
+    drawn: false
+    flags: {}
+  - _id: GyGrnKwbJV81JDdo
+    _key: '!tables.results!RUTXpX3SkcApItsB.GyGrnKwbJV81JDdo'
+    type: text
+    name: Arrogant
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    flags: {}
+  - _id: x5eDqWTXXBawRZmE
+    _key: '!tables.results!RUTXpX3SkcApItsB.x5eDqWTXXBawRZmE'
+    type: text
+    name: Bitter
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    flags: {}
+  - _id: FQ5FtFOuEClPxRcG
+    _key: '!tables.results!RUTXpX3SkcApItsB.FQ5FtFOuEClPxRcG'
+    type: text
+    name: Cowardly
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    flags: {}
+  - _id: TrbKi1RqSwCeIVvA
+    _key: '!tables.results!RUTXpX3SkcApItsB.TrbKi1RqSwCeIVvA'
+    type: text
+    name: Cruel
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 5
+      - 5
+    drawn: false
+    flags: {}
+  - _id: bbbt8Z6lSTNSJ7VU
+    _key: '!tables.results!RUTXpX3SkcApItsB.bbbt8Z6lSTNSJ7VU'
+    type: text
+    name: Deceitful
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 6
+      - 6
+    drawn: false
+    flags: {}
+  - _id: KnlgiZC4D7KuTCWM
+    _key: '!tables.results!RUTXpX3SkcApItsB.KnlgiZC4D7KuTCWM'
+    type: text
+    name: Flippant
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 7
+      - 7
+    drawn: false
+    flags: {}
+  - _id: rbhfH0G3E4PkuYcS
+    _key: '!tables.results!RUTXpX3SkcApItsB.rbhfH0G3E4PkuYcS'
+    type: text
+    name: Gluttonous
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 8
+      - 8
+    drawn: false
+    flags: {}
+  - _id: aLfIa1hDNPwJOJ9P
+    _key: '!tables.results!RUTXpX3SkcApItsB.aLfIa1hDNPwJOJ9P'
+    type: text
+    name: Greedy
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 9
+      - 9
+    drawn: false
+    flags: {}
+  - _id: sJGNbDGkVeMl3w4w
+    _key: '!tables.results!RUTXpX3SkcApItsB.sJGNbDGkVeMl3w4w'
+    type: text
+    name: Irascible
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 10
+      - 10
+    drawn: false
+    flags: {}
+  - _id: Pmccn4TKl0XORKvn
+    _key: '!tables.results!RUTXpX3SkcApItsB.Pmccn4TKl0XORKvn'
+    type: text
+    name: Lazy
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 11
+      - 11
+    drawn: false
+    flags: {}
+  - _id: ZzjqQIJzn3jZL8d1
+    _key: '!tables.results!RUTXpX3SkcApItsB.ZzjqQIJzn3jZL8d1'
+    type: text
+    name: Nervous
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 12
+      - 12
+    drawn: false
+    flags: {}
+  - _id: yRwNBLSfsmmHO0h1
+    _key: '!tables.results!RUTXpX3SkcApItsB.yRwNBLSfsmmHO0h1'
+    type: text
+    name: Prejudiced
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 13
+      - 13
+    drawn: false
+    flags: {}
+  - _id: QxNuvT32YxH7Jo1S
+    _key: '!tables.results!RUTXpX3SkcApItsB.QxNuvT32YxH7Jo1S'
+    type: text
+    name: Reckless
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 14
+      - 14
+    drawn: false
+    flags: {}
+  - _id: WAaBIcFzTaFONUfT
+    _key: '!tables.results!RUTXpX3SkcApItsB.WAaBIcFzTaFONUfT'
+    type: text
+    name: Rude
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 15
+      - 15
+    drawn: false
+    flags: {}
+  - _id: eGy0d6IVYgmDe6xD
+    _key: '!tables.results!RUTXpX3SkcApItsB.eGy0d6IVYgmDe6xD'
+    type: text
+    name: Suspicious
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 16
+      - 16
+    drawn: false
+    flags: {}
+  - _id: ZS36GcEY96ZuLHG9
+    _key: '!tables.results!RUTXpX3SkcApItsB.ZS36GcEY96ZuLHG9'
+    type: text
+    name: Vain
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 17
+      - 17
+    drawn: false
+    flags: {}
+  - _id: EvErMGL2YSgMhvZ2
+    _key: '!tables.results!RUTXpX3SkcApItsB.EvErMGL2YSgMhvZ2'
+    type: text
+    name: Vengeful
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 18
+      - 18
+    drawn: false
+    flags: {}
+  - _id: xAJ2CxBQ6RiQDmGF
+    _key: '!tables.results!RUTXpX3SkcApItsB.xAJ2CxBQ6RiQDmGF'
+    type: text
+    name: Wasteful
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 19
+      - 19
+    drawn: false
+    flags: {}
+  - _id: dFNziH3Fy82VCFBH
+    _key: '!tables.results!RUTXpX3SkcApItsB.dFNziH3Fy82VCFBH'
+    type: text
+    name: Whiny
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 20
       - 20
     drawn: false
-    flags:
-      base-knavery:
-        placeholder: true
+    flags: {}
 flags: {}
 _stats:
   coreVersion: '14.370'

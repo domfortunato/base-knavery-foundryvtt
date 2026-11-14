@@ -19,6 +19,7 @@
     "Disclaimer": "Base Knavery is an independent production of Dom Bosco and is not affiliated with Questing Beast LLC.",
     "MadeForKnave": "Made for Knave",
     "DisclaimerShort": "Base Knavery is not affiliated with Questing Beast LLC.",
+    "Knave1eCredit": "The character traits tables (Physique to Misfortune) are from Knave (first edition) by Ben Milton, licensed under CC BY 4.0.",
     "LogoCredit": "Knave: Second Edition is © Ben Milton and Questing Beast LLC. The “Made for Knave” logo is © Questing Beast LLC, used under the Knave: Second Edition Third Party License.",
 
     "Name": "Name",
@@ -188,6 +189,8 @@
 
     "Traits": "Traits",
     "Trait": {
+      "personality": "Personality",
+      "mannerism": "Mannerism",
       "physique": "Physique",
       "face": "Face",
       "skin": "Skin",
@@ -200,6 +203,8 @@
       "misfortune": "Misfortune"
     },
     "RollTrait": "Roll this trait",
+    "TraitGroup2e": "From your Knave 2e rulebook",
+    "TraitGroup1e": "From Knave, first edition (CC BY 4.0)",
     "RollAllTraits": "Roll every trait",
     "PickTrait": "Pick this trait",
     "RollName": "Roll a name",
@@ -778,7 +783,7 @@
     "Welcome": {
       "Title": "Welcome to Base Knavery",
       "By": "by {author} · version {version}",
-      "Unofficial": "Base Knavery is an unofficial, fan-made game system for Foundry VTT, compatible with Knave: Second Edition. It is not a Questing Beast LLC product and is not approved or endorsed by them. It ships none of the book's text or art: you play with your own copy of the rules, and its tables start empty for you to fill.",
+      "Unofficial": "Base Knavery is an unofficial, fan-made game system for Foundry VTT, compatible with Knave: Second Edition. It is not a Questing Beast LLC product and is not approved or endorsed by them. It ships none of the book's text or art: you play with your own copy of the rules, and its tables start empty for you to fill. The character trait tables come from Knave's first edition, which is free to share.",
       "GetTheBook": "Get the book",
       "BuyDtrpg": "PDF on DriveThruRPG",
       "BuyItch": "PDF on Itch",

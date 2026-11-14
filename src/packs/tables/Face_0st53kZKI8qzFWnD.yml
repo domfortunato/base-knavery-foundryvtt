@@ -6,26 +6,271 @@ _id: 0st53kZKI8qzFWnD
 _key: '!tables!0st53kZKI8qzFWnD'
 name: Face
 img: icons/svg/d20-grey.svg
-description: '<p>Empty. The Game Master fills this table: GM Dashboard → Tables → Import.</p>'
+description: <p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>
 formula: 1d20
 replacement: true
 displayRoll: true
 results:
-  - _id: m8SvpUwP6GrIiVMg
-    _key: '!tables.results!0st53kZKI8qzFWnD.m8SvpUwP6GrIiVMg'
+  - _id: fRaC4El0VVqO5CKH
+    _key: '!tables.results!0st53kZKI8qzFWnD.fRaC4El0VVqO5CKH'
     type: text
-    name: 'Empty. The Game Master fills this table: GM Dashboard → Tables → Import.'
+    name: Bloated
     description: ''
     img: null
     documentUuid: null
     weight: 1
     range:
       - 1
+      - 1
+    drawn: false
+    flags: {}
+  - _id: N0J6g1BiN8Oxudeb
+    _key: '!tables.results!0st53kZKI8qzFWnD.N0J6g1BiN8Oxudeb'
+    type: text
+    name: Blunt
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    flags: {}
+  - _id: 0doFtd2Ql3iC4ePO
+    _key: '!tables.results!0st53kZKI8qzFWnD.0doFtd2Ql3iC4ePO'
+    type: text
+    name: Bony
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    flags: {}
+  - _id: 4ixkiZb3B8zAXqIw
+    _key: '!tables.results!0st53kZKI8qzFWnD.4ixkiZb3B8zAXqIw'
+    type: text
+    name: Chiseled
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    flags: {}
+  - _id: VImAHz7b8zB0Hf02
+    _key: '!tables.results!0st53kZKI8qzFWnD.VImAHz7b8zB0Hf02'
+    type: text
+    name: Delicate
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 5
+      - 5
+    drawn: false
+    flags: {}
+  - _id: o1k0cEe0DiEnRsqA
+    _key: '!tables.results!0st53kZKI8qzFWnD.o1k0cEe0DiEnRsqA'
+    type: text
+    name: Elongated
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 6
+      - 6
+    drawn: false
+    flags: {}
+  - _id: pSmOEo11rvyB7PmD
+    _key: '!tables.results!0st53kZKI8qzFWnD.pSmOEo11rvyB7PmD'
+    type: text
+    name: Patrician
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 7
+      - 7
+    drawn: false
+    flags: {}
+  - _id: 9ODxtstZGHCfadQo
+    _key: '!tables.results!0st53kZKI8qzFWnD.9ODxtstZGHCfadQo'
+    type: text
+    name: Pinched
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 8
+      - 8
+    drawn: false
+    flags: {}
+  - _id: t7jxvLoFJpbvCgck
+    _key: '!tables.results!0st53kZKI8qzFWnD.t7jxvLoFJpbvCgck'
+    type: text
+    name: Hawkish
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 9
+      - 9
+    drawn: false
+    flags: {}
+  - _id: bKjHD1zPi9bkLn0U
+    _key: '!tables.results!0st53kZKI8qzFWnD.bKjHD1zPi9bkLn0U'
+    type: text
+    name: Broken
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 10
+      - 10
+    drawn: false
+    flags: {}
+  - _id: m7dCR7glpM9XLJUw
+    _key: '!tables.results!0st53kZKI8qzFWnD.m7dCR7glpM9XLJUw'
+    type: text
+    name: Impish
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 11
+      - 11
+    drawn: false
+    flags: {}
+  - _id: K8m9NJEMNfEWuGqf
+    _key: '!tables.results!0st53kZKI8qzFWnD.K8m9NJEMNfEWuGqf'
+    type: text
+    name: Narrow
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 12
+      - 12
+    drawn: false
+    flags: {}
+  - _id: chvhkDixJCB5N4hn
+    _key: '!tables.results!0st53kZKI8qzFWnD.chvhkDixJCB5N4hn'
+    type: text
+    name: Ratlike
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 13
+      - 13
+    drawn: false
+    flags: {}
+  - _id: Lgosqgpc578WGTwC
+    _key: '!tables.results!0st53kZKI8qzFWnD.Lgosqgpc578WGTwC'
+    type: text
+    name: Round
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 14
+      - 14
+    drawn: false
+    flags: {}
+  - _id: 09AVcFRcdE95Sy0E
+    _key: '!tables.results!0st53kZKI8qzFWnD.09AVcFRcdE95Sy0E'
+    type: text
+    name: Sunken
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 15
+      - 15
+    drawn: false
+    flags: {}
+  - _id: HbEpOgu7M7NIbExL
+    _key: '!tables.results!0st53kZKI8qzFWnD.HbEpOgu7M7NIbExL'
+    type: text
+    name: Sharp
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 16
+      - 16
+    drawn: false
+    flags: {}
+  - _id: CNFEhFUPD2WRxbVa
+    _key: '!tables.results!0st53kZKI8qzFWnD.CNFEhFUPD2WRxbVa'
+    type: text
+    name: Soft
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 17
+      - 17
+    drawn: false
+    flags: {}
+  - _id: kgA9MU1UnY564LWS
+    _key: '!tables.results!0st53kZKI8qzFWnD.kgA9MU1UnY564LWS'
+    type: text
+    name: Square
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 18
+      - 18
+    drawn: false
+    flags: {}
+  - _id: ChfERa8GkfV6vkIS
+    _key: '!tables.results!0st53kZKI8qzFWnD.ChfERa8GkfV6vkIS'
+    type: text
+    name: Wide
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 19
+      - 19
+    drawn: false
+    flags: {}
+  - _id: SRSjtEL0iusjDFN5
+    _key: '!tables.results!0st53kZKI8qzFWnD.SRSjtEL0iusjDFN5'
+    type: text
+    name: Wolfish
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 20
       - 20
     drawn: false
-    flags:
-      base-knavery:
-        placeholder: true
+    flags: {}
 flags: {}
 _stats:
   coreVersion: '14.370'

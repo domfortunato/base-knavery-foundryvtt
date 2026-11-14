@@ -1798,8 +1798,7 @@
 .character-traits .trait-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: repeat(4, auto);
-    grid-auto-flow: column;
+    grid-auto-flow: row;
     column-gap: 16px;
     row-gap: 4px;
     margin-top: 6px;
@@ -4698,6 +4697,11 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 
 /* Failed careers: a chip and a card marked failed, and the petty item. */
 .knavery .failed-career-line .background-label { color: var(--kn-peril); }
+/* The traits' two groups: Knave 2e's (from the GM's PDF), then Knave 1e's (shipped). */
+.character-traits .trait-group-heading {
+    grid-column: 1 / -1; margin-top: 6px; font-size: calc(12px * var(--kn-text, 1));
+    font-variant: small-caps; letter-spacing: 0.05em; color: var(--kn-muted); border-bottom: 1px solid var(--kn-line);
+}
 .knavery .failed-career-line .failed-petty { font-size: calc(12px * var(--kn-text, 1)); color: var(--kn-muted); }
 .knavery .knavery-career.failed { border-style: dashed; border-color: var(--kn-peril); }
 .knavery .career-failed-band {

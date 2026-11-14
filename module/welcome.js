@@ -57,6 +57,7 @@ export class WelcomeWindow extends HandlebarsApplicationMixin(ApplicationV2) {
       logoDark: `${SYS_PATH}/logo/made-for-knave-white.png`,
       disclaimer: L("KNAVERY.Disclaimer"),
       credit: L("KNAVERY.LogoCredit"),
+      credit1e: L("KNAVERY.Knave1eCredit"),
       links: BUY_LINKS,
       // The "show after each update" box writes a world setting.
       isGM: game.user.isGM && game.user.can("SETTINGS_MODIFY"),

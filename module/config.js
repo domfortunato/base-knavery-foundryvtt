@@ -112,7 +112,10 @@ export const TABLES = {
   surnames: "Surnames",
   /** The book's second surname table: a Surnames draw ending in "-" is joined to one of these. */
   surnameEndings: "Surname Endings",
+  /** Personality and Mannerism are Knave 2e tables (from the GM's PDF); the rest are Knave 1e's, shipped (CC BY 4.0). */
   traits: {
+    personality: "Personalities",
+    mannerism: "Mannerisms",
     physique: "Physique",
     face: "Face",
     skin: "Skin",
@@ -148,6 +151,8 @@ export const RULEBOOK = {
     [TABLES.spells]: 22,
     [TABLES.namesA]: 54,
     [TABLES.surnames]: 55,
+    ["Personalities"]: 56,
+    ["Mannerisms"]: 59,
     [TABLES.reaction]: 19,
     [`${MARKET_PREFIX}Gear`]: 38,
     [`${MARKET_PREFIX}Weapons`]: 38,

@@ -6,26 +6,271 @@ _id: ANFt6np8jFXXsgPA
 _key: '!tables!ANFt6np8jFXXsgPA'
 name: Background
 img: icons/svg/d20-grey.svg
-description: '<p>Empty. The Game Master fills this table: GM Dashboard → Tables → Import.</p>'
+description: <p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>
 formula: 1d20
 replacement: true
 displayRoll: true
 results:
-  - _id: B1kNZwLbXh1QjU84
-    _key: '!tables.results!ANFt6np8jFXXsgPA.B1kNZwLbXh1QjU84'
+  - _id: 3tm9W4D2ZxYC5K25
+    _key: '!tables.results!ANFt6np8jFXXsgPA.3tm9W4D2ZxYC5K25'
     type: text
-    name: 'Empty. The Game Master fills this table: GM Dashboard → Tables → Import.'
+    name: Alchemist
     description: ''
     img: null
     documentUuid: null
     weight: 1
     range:
       - 1
+      - 1
+    drawn: false
+    flags: {}
+  - _id: BPtEZvos850B11oM
+    _key: '!tables.results!ANFt6np8jFXXsgPA.BPtEZvos850B11oM'
+    type: text
+    name: Beggar
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    flags: {}
+  - _id: bEYzE0v7kDEanMeV
+    _key: '!tables.results!ANFt6np8jFXXsgPA.bEYzE0v7kDEanMeV'
+    type: text
+    name: Butcher
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    flags: {}
+  - _id: Iiq5LGQHR4X4QGeg
+    _key: '!tables.results!ANFt6np8jFXXsgPA.Iiq5LGQHR4X4QGeg'
+    type: text
+    name: Burglar
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    flags: {}
+  - _id: 0tjTaFgS9UasHT28
+    _key: '!tables.results!ANFt6np8jFXXsgPA.0tjTaFgS9UasHT28'
+    type: text
+    name: Charlatan
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 5
+      - 5
+    drawn: false
+    flags: {}
+  - _id: wHE6Jk344VGg7W1f
+    _key: '!tables.results!ANFt6np8jFXXsgPA.wHE6Jk344VGg7W1f'
+    type: text
+    name: Cleric
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 6
+      - 6
+    drawn: false
+    flags: {}
+  - _id: B9sKFEySUVkjQppD
+    _key: '!tables.results!ANFt6np8jFXXsgPA.B9sKFEySUVkjQppD'
+    type: text
+    name: Cook
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 7
+      - 7
+    drawn: false
+    flags: {}
+  - _id: HvZFgiU66pHW2Djm
+    _key: '!tables.results!ANFt6np8jFXXsgPA.HvZFgiU66pHW2Djm'
+    type: text
+    name: Cultist
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 8
+      - 8
+    drawn: false
+    flags: {}
+  - _id: aQGXLclewooQgjc4
+    _key: '!tables.results!ANFt6np8jFXXsgPA.aQGXLclewooQgjc4'
+    type: text
+    name: Gambler
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 9
+      - 9
+    drawn: false
+    flags: {}
+  - _id: PXcNKfv9WKHccslm
+    _key: '!tables.results!ANFt6np8jFXXsgPA.PXcNKfv9WKHccslm'
+    type: text
+    name: Herbalist
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 10
+      - 10
+    drawn: false
+    flags: {}
+  - _id: r1Dr2APvTPMWSPgA
+    _key: '!tables.results!ANFt6np8jFXXsgPA.r1Dr2APvTPMWSPgA'
+    type: text
+    name: Magician
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 11
+      - 11
+    drawn: false
+    flags: {}
+  - _id: XOg8A1KKqW5rqjfV
+    _key: '!tables.results!ANFt6np8jFXXsgPA.XOg8A1KKqW5rqjfV'
+    type: text
+    name: Mariner
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 12
+      - 12
+    drawn: false
+    flags: {}
+  - _id: UNMAJF9hoCoULGDd
+    _key: '!tables.results!ANFt6np8jFXXsgPA.UNMAJF9hoCoULGDd'
+    type: text
+    name: Mercenary
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 13
+      - 13
+    drawn: false
+    flags: {}
+  - _id: tjzpp7TVksUpD3Kt
+    _key: '!tables.results!ANFt6np8jFXXsgPA.tjzpp7TVksUpD3Kt'
+    type: text
+    name: Merchant
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 14
+      - 14
+    drawn: false
+    flags: {}
+  - _id: CXTSeP4OPjJfzd9u
+    _key: '!tables.results!ANFt6np8jFXXsgPA.CXTSeP4OPjJfzd9u'
+    type: text
+    name: Outlaw
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 15
+      - 15
+    drawn: false
+    flags: {}
+  - _id: emWkwkwMftaMNVuw
+    _key: '!tables.results!ANFt6np8jFXXsgPA.emWkwkwMftaMNVuw'
+    type: text
+    name: Performer
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 16
+      - 16
+    drawn: false
+    flags: {}
+  - _id: eCvP83tQPVD7yoDQ
+    _key: '!tables.results!ANFt6np8jFXXsgPA.eCvP83tQPVD7yoDQ'
+    type: text
+    name: Pickpocket
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 17
+      - 17
+    drawn: false
+    flags: {}
+  - _id: CWGGveAukdwi5gJ8
+    _key: '!tables.results!ANFt6np8jFXXsgPA.CWGGveAukdwi5gJ8'
+    type: text
+    name: Smuggler
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 18
+      - 18
+    drawn: false
+    flags: {}
+  - _id: sApZkj4vFH4yDJEB
+    _key: '!tables.results!ANFt6np8jFXXsgPA.sApZkj4vFH4yDJEB'
+    type: text
+    name: Student
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 19
+      - 19
+    drawn: false
+    flags: {}
+  - _id: 8hNOKLLto3sFjY5C
+    _key: '!tables.results!ANFt6np8jFXXsgPA.8hNOKLLto3sFjY5C'
+    type: text
+    name: Tracker
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 20
       - 20
     drawn: false
-    flags:
-      base-knavery:
-        placeholder: true
+    flags: {}
 flags: {}
 _stats:
   coreVersion: '14.370'

@@ -6,26 +6,271 @@ _id: D8sDlCEyLeSxBjAa
 _key: '!tables!D8sDlCEyLeSxBjAa'
 name: Speech
 img: icons/svg/d20-grey.svg
-description: '<p>Empty. The Game Master fills this table: GM Dashboard → Tables → Import.</p>'
+description: <p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>
 formula: 1d20
 replacement: true
 displayRoll: true
 results:
-  - _id: 9NFKe6IrVfjypOnj
-    _key: '!tables.results!D8sDlCEyLeSxBjAa.9NFKe6IrVfjypOnj'
+  - _id: wMmBhpCuPu0aQWZf
+    _key: '!tables.results!D8sDlCEyLeSxBjAa.wMmBhpCuPu0aQWZf'
     type: text
-    name: 'Empty. The Game Master fills this table: GM Dashboard → Tables → Import.'
+    name: Blunt
     description: ''
     img: null
     documentUuid: null
     weight: 1
     range:
       - 1
+      - 1
+    drawn: false
+    flags: {}
+  - _id: N3QnAyIi9mt3dsBT
+    _key: '!tables.results!D8sDlCEyLeSxBjAa.N3QnAyIi9mt3dsBT'
+    type: text
+    name: Booming
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    flags: {}
+  - _id: RFAbJTcAcSF5lYbb
+    _key: '!tables.results!D8sDlCEyLeSxBjAa.RFAbJTcAcSF5lYbb'
+    type: text
+    name: Breathy
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    flags: {}
+  - _id: GjAeGPqhZTJXaRKv
+    _key: '!tables.results!D8sDlCEyLeSxBjAa.GjAeGPqhZTJXaRKv'
+    type: text
+    name: Cryptic
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    flags: {}
+  - _id: IHHHfC6eAGFlKqUs
+    _key: '!tables.results!D8sDlCEyLeSxBjAa.IHHHfC6eAGFlKqUs'
+    type: text
+    name: Drawling
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 5
+      - 5
+    drawn: false
+    flags: {}
+  - _id: 4covWTY5XH1dWLic
+    _key: '!tables.results!D8sDlCEyLeSxBjAa.4covWTY5XH1dWLic'
+    type: text
+    name: Droning
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 6
+      - 6
+    drawn: false
+    flags: {}
+  - _id: k6tRoE8isSPantbd
+    _key: '!tables.results!D8sDlCEyLeSxBjAa.k6tRoE8isSPantbd'
+    type: text
+    name: Flowery
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 7
+      - 7
+    drawn: false
+    flags: {}
+  - _id: 9b6HEwYxoOAhrDA8
+    _key: '!tables.results!D8sDlCEyLeSxBjAa.9b6HEwYxoOAhrDA8'
+    type: text
+    name: Formal
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 8
+      - 8
+    drawn: false
+    flags: {}
+  - _id: wemz1QYAeWeLsGgx
+    _key: '!tables.results!D8sDlCEyLeSxBjAa.wemz1QYAeWeLsGgx'
+    type: text
+    name: Gravelly
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 9
+      - 9
+    drawn: false
+    flags: {}
+  - _id: NkatukL0JhyZz9QN
+    _key: '!tables.results!D8sDlCEyLeSxBjAa.NkatukL0JhyZz9QN'
+    type: text
+    name: Hoarse
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 10
+      - 10
+    drawn: false
+    flags: {}
+  - _id: FxfeDCistAxhWu0I
+    _key: '!tables.results!D8sDlCEyLeSxBjAa.FxfeDCistAxhWu0I'
+    type: text
+    name: Mumbling
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 11
+      - 11
+    drawn: false
+    flags: {}
+  - _id: hxAvpYxYtuG8q7gr
+    _key: '!tables.results!D8sDlCEyLeSxBjAa.hxAvpYxYtuG8q7gr'
+    type: text
+    name: Precise
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 12
+      - 12
+    drawn: false
+    flags: {}
+  - _id: l8ayD3ndohNND1rs
+    _key: '!tables.results!D8sDlCEyLeSxBjAa.l8ayD3ndohNND1rs'
+    type: text
+    name: Quaint
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 13
+      - 13
+    drawn: false
+    flags: {}
+  - _id: 1sHggI7gqUTBcCvg
+    _key: '!tables.results!D8sDlCEyLeSxBjAa.1sHggI7gqUTBcCvg'
+    type: text
+    name: Rambling
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 14
+      - 14
+    drawn: false
+    flags: {}
+  - _id: tDfpGkV3tl5havC4
+    _key: '!tables.results!D8sDlCEyLeSxBjAa.tDfpGkV3tl5havC4'
+    type: text
+    name: Rapid-fire
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 15
+      - 15
+    drawn: false
+    flags: {}
+  - _id: 8iKJB2UHhhAmEtuh
+    _key: '!tables.results!D8sDlCEyLeSxBjAa.8iKJB2UHhhAmEtuh'
+    type: text
+    name: Dialect
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 16
+      - 16
+    drawn: false
+    flags: {}
+  - _id: RiBAJ7xvCvoM3Q8f
+    _key: '!tables.results!D8sDlCEyLeSxBjAa.RiBAJ7xvCvoM3Q8f'
+    type: text
+    name: Slow
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 17
+      - 17
+    drawn: false
+    flags: {}
+  - _id: THvzhZ56lTgIBsMS
+    _key: '!tables.results!D8sDlCEyLeSxBjAa.THvzhZ56lTgIBsMS'
+    type: text
+    name: Squeaky
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 18
+      - 18
+    drawn: false
+    flags: {}
+  - _id: Wy9WnAoT1uBciqXU
+    _key: '!tables.results!D8sDlCEyLeSxBjAa.Wy9WnAoT1uBciqXU'
+    type: text
+    name: Stuttering
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 19
+      - 19
+    drawn: false
+    flags: {}
+  - _id: 5VdBelHCYCYy31ZF
+    _key: '!tables.results!D8sDlCEyLeSxBjAa.5VdBelHCYCYy31ZF'
+    type: text
+    name: Whispery
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 20
       - 20
     drawn: false
-    flags:
-      base-knavery:
-        placeholder: true
+    flags: {}
 flags: {}
 _stats:
   coreVersion: '14.370'

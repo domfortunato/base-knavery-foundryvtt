@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- **Traits that fill.** The ten character traits (Physique to Misfortune) were Knave 1st-edition tables that
+  Knave 2e's book does not have, so they always came out blank. Their tables now ship filled from Knave's first
+  edition, which is CC BY 4.0 (credited in each table, LICENSE.txt, the README and the welcome window). Two
+  Knave 2e traits, Personality and Mannerism, come first and fill from your rulebook PDF.
 - Create Character is two big buttons: Randomly Generated and Blank Sheet, each with one line.
 - The name d20 on the sheet joins a surname's two halves ("Adder-" + "bald") instead of leaving a trailing hyphen.
 - The portrait picker rolls a random portrait in Char Gen Mode.
