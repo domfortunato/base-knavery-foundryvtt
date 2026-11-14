@@ -44,7 +44,7 @@ export const SETTING_GROUPS = [
     icon: "fa-solid fa-user-plus",
     keys: [
       "allow-player-generate", "allow-player-randomization", "allow-player-level-xp", "min-creation-level",
-      "max-creation-level", "first-level-hp", "level-hp-rule", "custom-portrait-folder",
+      "max-creation-level", "first-level-hp", "level-hp-rule", "spell-list", "custom-portrait-folder",
     ],
   },
   {
@@ -61,7 +61,7 @@ export const SETTING_GROUPS = [
     button: "KNAVERY.Settings.GroupHacksButton",
     hint: "KNAVERY.Settings.GroupHacksHint",
     icon: "fa-solid fa-flask",
-    keys: ["failed-career", "failed-career-item", "hard-mode-wounds", "show-hazard-dice"],
+    keys: ["failed-career", "failed-career-item", "knave1e-starting-gear", "hard-mode-wounds", "show-hazard-dice"],
   },
   {
     id: "rulebook",
@@ -102,6 +102,10 @@ export const registerSettings = () => {
     label: "AllowPlayerLevelXp", type: Boolean, default: true, onChange: rerenderActorSheets,
   });
   reg("first-level-hp", { label: "FirstLevelHp", type: String, choices: FIRST_LEVEL_HP, default: "1d6", onChange: rerenderActorSheets });
+  reg("spell-list", {
+    label: "SpellList", type: String, default: "auto",
+    choices: { auto: "KNAVERY.Settings.SpellListAuto", "1e": "KNAVERY.Settings.SpellList1e" },
+  });
   reg("level-hp-rule", { label: "LevelHpRule", type: String, choices: LEVEL_HP_RULES, default: "reroll", onChange: rerenderActorSheets });
   const levels = Object.fromEntries(Array.from({ length: MAX_LEVEL }, (_, i) => [i + 1, String(i + 1)]));
   reg("min-creation-level", { label: "MinCreationLevel", type: Number, choices: levels, default: 1 });
@@ -130,6 +134,7 @@ export const registerSettings = () => {
   /* Hacks */
   reg("failed-career", { label: "FailedCareer", type: Boolean, default: false, onChange: rerenderActorSheets });
   reg("failed-career-item", { label: "FailedCareerItem", type: Boolean, default: true });
+  reg("knave1e-starting-gear", { label: "Knave1eStartingGear", type: Boolean, default: false });
   reg("hard-mode-wounds", { label: "HardModeWounds", type: Boolean, default: false });
   reg("show-hazard-dice", { label: "ShowHazardDice", type: Boolean, default: true });
 

@@ -400,7 +400,7 @@ await withSettings(gm, async () => {
     }, SYS);
     made.tables.push(...r.made);
     ok(r.filled1e === 10, "a Blank character starts with all ten Knave 1e traits rolled from the shipped tables", JSON.stringify(r));
-    ok(r.rows === 12 && r.groups === 2, "the traits section opens expanded: the two 2e traits, then the ten 1e ones", JSON.stringify(r));
+    ok(r.rows === 13 && r.groups === 2, "the traits section opens expanded: the two 2e traits, then the eleven 1e ones", JSON.stringify(r));
     await gm.evaluate((x) => game.actors.get(x).update({ "system.generationEnabled": true }), ids.a);
     await openAs(alice, ids.a);
     await settle();
@@ -408,7 +408,7 @@ await withSettings(gm, async () => {
       const el = game.actors.get(x).sheet.element;
       return { picks: el.querySelectorAll(".trait-pick").length, all: !!el.querySelector(".trait-roll-all") };
     }, ids.a);
-    ok(ctl.picks === 12 && ctl.all, "in Char Gen Mode Alice gets a pick-list per trait and Roll every trait", JSON.stringify(ctl));
+    ok(ctl.picks === 13 && ctl.all, "in Char Gen Mode Alice gets a pick-list per trait and Roll every trait", JSON.stringify(ctl));
   });
 
   /* ------------------------------------------------------------------ */
@@ -561,6 +561,42 @@ await withSettings(gm, async () => {
       return has;
     }, ids.a);
     ok(pic.has && pic.changed && !offHas, "the portrait picker rolls a portrait in Char Gen Mode only", JSON.stringify({ ...pic, offHas }));
+  });
+
+  /* ------------------------------------------------------------------ */
+  await section("14. Knave 1e: the spell list and its switch, starting gear, reaction.", async () => {
+    const r = await gm.evaluate(async (sys) => {
+      const { spellTableName, findTable, realResults } = await import(`${sys}/compendium.js`);
+      const { buildCharacter } = await import(`${sys}/character-generator.js`);
+      const set = (k, v) => game.settings.set("base-knavery", k, v);
+      const pack1e = await findTable("Spells (Knave 1e)");
+      const names1e = new Set(realResults(pack1e).map((x) => x.name));
+      const out = { rows1e: names1e.size, hasWorldSpells: !!game.tables.getName("Spells") };
+      await set("spell-list", "auto");
+      out.auto = spellTableName();
+      await set("spell-list", "1e");
+      out.forced = spellTableName();
+      const built = await buildCharacter({ level: 1, abilities: { INT: 3 } });
+      const books = built.items.filter((i) => i.type === "spellbook");
+      out.books = books.length;
+      out.booksFrom1e = books.filter((b) => names1e.has(b.name)).length;
+      out.withEffect = books.filter((b) => (b.system?.description ?? "").length > 10).length;
+      await set("spell-list", "auto");
+      await set("knave1e-starting-gear", true);
+      const geared = await buildCharacter({ level: 1, abilities: { STR: 3 } });
+      out.gearNote = geared.notes.find((n) => n.startsWith("Knave 1e starting gear")) ?? "";
+      await set("knave1e-starting-gear", false);
+      const reaction = await findTable("Reaction");
+      out.reactionRows = realResults(reaction).length;
+      out.reactionWorld = !!game.tables.getName("Reaction");
+      return out;
+    }, SYS);
+    ok(r.rows1e === 100, "Knave 1e's 100 level-less spells ship", JSON.stringify(r));
+    ok(r.auto === (r.hasWorldSpells ? "Spells" : "Spells (Knave 1e)") && r.forced === "Spells (Knave 1e)",
+      "the world's own Spells table wins, and the GM can switch back to 1e", JSON.stringify(r));
+    ok(r.books === 3 && r.booksFrom1e === 3 && r.withEffect === 3, "on 1e, three INT draw three 1e spellbooks, each with its effect", JSON.stringify(r));
+    ok(r.gearNote.split(",").length >= 4, "the starting-gear hack rolls Knave 1e gear at creation", r.gearNote);
+    ok(r.reactionWorld || r.reactionRows === 5, "Reaction ships filled from Knave 1e", JSON.stringify(r));
   });
 
   // Cleanup.

@@ -1,0 +1,57 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: UJfhz7pU2FWrAj5Q
+_key: '!tables!UJfhz7pU2FWrAj5Q'
+name: Alignment
+img: icons/svg/d20-grey.svg
+description: <p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>
+formula: 1d20
+replacement: true
+displayRoll: true
+results:
+  - _id: 0mUuPq5LDtWr7AMs
+    _key: '!tables.results!UJfhz7pU2FWrAj5Q.0mUuPq5LDtWr7AMs'
+    type: text
+    name: Law
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 5
+    range:
+      - 1
+      - 5
+    drawn: false
+    flags: {}
+  - _id: AWGfwei7WqzIi7qJ
+    _key: '!tables.results!UJfhz7pU2FWrAj5Q.AWGfwei7WqzIi7qJ'
+    type: text
+    name: Neutrality
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 10
+    range:
+      - 6
+      - 15
+    drawn: false
+    flags: {}
+  - _id: tJUye9iJKw0UzP1C
+    _key: '!tables.results!UJfhz7pU2FWrAj5Q.tJUye9iJKw0UzP1C'
+    type: text
+    name: Chaos
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 5
+    range:
+      - 16
+      - 20
+    drawn: false
+    flags: {}
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.0

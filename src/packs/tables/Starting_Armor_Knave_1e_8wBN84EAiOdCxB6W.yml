@@ -1,0 +1,70 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: 8wBN84EAiOdCxB6W
+_key: '!tables!8wBN84EAiOdCxB6W'
+name: Starting Armor (Knave 1e)
+img: icons/svg/d20-grey.svg
+description: <p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>
+formula: 1d20
+replacement: true
+displayRoll: true
+results:
+  - _id: 2gNfyfr5HgN8PFSB
+    _key: '!tables.results!8wBN84EAiOdCxB6W.2gNfyfr5HgN8PFSB'
+    type: text
+    name: No armor
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 3
+    range:
+      - 1
+      - 3
+    drawn: false
+    flags: {}
+  - _id: 6SPAo6MXDyHVG4Il
+    _key: '!tables.results!8wBN84EAiOdCxB6W.6SPAo6MXDyHVG4Il'
+    type: text
+    name: Gambeson
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 11
+    range:
+      - 4
+      - 14
+    drawn: false
+    flags: {}
+  - _id: eZHMJFrJYpX1uQbH
+    _key: '!tables.results!8wBN84EAiOdCxB6W.eZHMJFrJYpX1uQbH'
+    type: text
+    name: Brigandine
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 5
+    range:
+      - 15
+      - 19
+    drawn: false
+    flags: {}
+  - _id: eAluoY04CNptona1
+    _key: '!tables.results!8wBN84EAiOdCxB6W.eAluoY04CNptona1'
+    type: text
+    name: Chain
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 20
+      - 20
+    drawn: false
+    flags: {}
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.0

@@ -28,12 +28,19 @@ This system contains no text from Dungeon Crawl Classics.
 Knave (first edition) — CC BY 4.0
 ---------------------------------
 
-The ten character-trait tables (Physique, Face, Skin, Hair, Clothing, Virtue,
-Vice, Speech, Background, Misfortune) in the tables compendium are from Knave
-(first edition, version 1.0) by Ben Milton, licensed under the Creative
-Commons Attribution 4.0 International License
-(https://creativecommons.org/licenses/by/4.0/). They are reproduced unchanged,
-except that "Misfortunes" is named Misfortune. Knave's first edition is a
+These tables in the tables compendium are from Knave (first edition, version
+1.0) by Ben Milton, licensed under the Creative Commons Attribution 4.0
+International License (https://creativecommons.org/licenses/by/4.0/):
+  - the ten character traits (Physique, Face, Skin, Hair, Clothing, Virtue,
+    Vice, Speech, Background, Misfortune) and Alignment;
+  - Reaction;
+  - the starting gear (Starting Armor, Helmets and Shields, Dungeoneering
+    Gear, General Gear 1 and 2);
+  - Spells (Knave 1e), the 100 level-less spells, with the book's note on
+    what "L" means.
+They are reproduced unchanged, except that "Misfortunes" is named
+Misfortune, the armor table is named Starting Armor, and the spells' note is
+shortened. Knave's first edition is a
 different work from Knave: Second Edition, whose text this system does not
 ship.
 

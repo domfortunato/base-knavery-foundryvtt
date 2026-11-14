@@ -122,8 +122,10 @@ https://github.com/domfortunato/base-knavery-foundryvtt/releases/latest/download
 
 Knave 2e's text is not licensed for reuse, so **every rollable table ships as
 an empty shell**. That covers careers, spells, names, reaction and mishaps.
-(The character-trait tables are the exception: they come from Knave's first
-edition, which is CC BY 4.0, and ship filled.) Each shell has the right name and dice. With your own copy of the PDF,
+(The exceptions come from Knave's first edition, which is CC BY 4.0, and ship
+filled: the character traits, alignment, reaction, starting gear and 100
+level-less spells. A table you build from your 2e book replaces its 1e
+counterpart; the spell list can be switched back to 1e in the settings.) Each shell has the right name and dice. With your own copy of the PDF,
 **Build tables from the book** fills them for you (see above); otherwise:
 
 To fill a table:
@@ -138,8 +140,8 @@ with them.
 
 See [LICENSE.txt](LICENSE.txt).
 - The code is **MIT** and descends from Air Bladder and Cairn-FoundryVTT.
-- The ten character-trait tables (Physique to Misfortune) are from *Knave*
-  (first edition) by Ben Milton, licensed under
+- The character traits, alignment, reaction, starting gear and the 100
+  level-less spells are from *Knave* (first edition) by Ben Milton, licensed under
   [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 - The art keeps its own licences:
   - game-icons.net, CC BY 3.0

@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **More of Knave 1e, which is CC BY 4.0.** Reaction, Alignment (a new trait), the starting-gear tables and the
+  100 level-less spells ship filled. A table you build from your 2e book replaces its 1e counterpart by name.
+  Random spellbooks draw from your own Spells table once it has rows, otherwise from 1e's; the new "Spell list"
+  setting can switch back to 1e. A new hack, "Knave 1e starting gear", rolls 1e's armor, helmet and shield and
+  four items at creation (1e armor at AC 12/13/14 becomes 1/2/3 armor points).
 - **Traits that fill.** The ten character traits (Physique to Misfortune) were Knave 1st-edition tables that
   Knave 2e's book does not have, so they always came out blank. Their tables now ship filled from Knave's first
   edition, which is CC BY 4.0 (credited in each table, LICENSE.txt, the README and the welcome window). Two

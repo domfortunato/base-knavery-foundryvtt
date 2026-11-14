@@ -19,7 +19,7 @@
     "Disclaimer": "Base Knavery is an independent production of Dom Bosco and is not affiliated with Questing Beast LLC.",
     "MadeForKnave": "Made for Knave",
     "DisclaimerShort": "Base Knavery is not affiliated with Questing Beast LLC.",
-    "Knave1eCredit": "The character traits tables (Physique to Misfortune) are from Knave (first edition) by Ben Milton, licensed under CC BY 4.0.",
+    "Knave1eCredit": "The character traits, alignment, reaction, starting gear and the 100 level-less spells are from Knave (first edition) by Ben Milton, licensed under CC BY 4.0.",
     "LogoCredit": "Knave: Second Edition is © Ben Milton and Questing Beast LLC. The “Made for Knave” logo is © Questing Beast LLC, used under the Knave: Second Edition Third Party License.",
 
     "Name": "Name",
@@ -200,7 +200,8 @@
       "vice": "Vice",
       "speech": "Speech",
       "background": "Background",
-      "misfortune": "Misfortune"
+      "misfortune": "Misfortune",
+      "alignment": "Alignment"
     },
     "RollTrait": "Roll this trait",
     "TraitGroup2e": "From your Knave 2e rulebook",
@@ -573,6 +574,7 @@
       "LevelStep": "Level {level}: +1 {abilities}; HP roll {rolled}, max {max}.",
       "AbilityPoints": "Abilities placed: {list}.",
       "FailedCareer": "Failed career: {name}.",
+      "Knave1eGear": "Knave 1e starting gear: {list}.",
       "PointsTitle": "Your ability scores",
       "PointsBody": "Place {n} points in your abilities. At first level only, more than one may go in the same ability. Everything else is rolled.",
       "PointsLeft": "Points left: {n}",
@@ -703,6 +705,12 @@
       "HpRuleBest": "Reroll one d6 per level; keep the higher",
       "FailedCareer": "Give Knaves a failed career",
       "FailedCareerHint": "Random creation rolls a third career the Knave failed at. It counts as a career (its features and effects), but grants none of its items.",
+      "Knave1eStartingGear": "Knave 1e starting gear",
+      "Knave1eStartingGearHint": "Random creation also rolls Knave 1e's starting gear: armor, helmet and shield, two dungeoneering items and two general items.",
+      "SpellList": "Spell list for random spellbooks",
+      "SpellListHint": "Knave 1e's 100 level-less spells ship with the system. Once you build or import a Spells table, it is used instead, unless you choose Knave 1e here. In 1e's spells, L is the caster's level.",
+      "SpellListAuto": "Your Spells table once it has rows, otherwise Knave 1e",
+      "SpellList1e": "Knave 1e's 100 level-less spells, always",
       "FailedCareerItem": "…and one random item from it, marked petty",
       "FailedCareerItemHint": "The failed career grants one random item from its list. It fills no slot while that Knave holds it.",
       "TextSize": "Text size in Base Knavery windows",
@@ -783,7 +791,7 @@
     "Welcome": {
       "Title": "Welcome to Base Knavery",
       "By": "by {author} · version {version}",
-      "Unofficial": "Base Knavery is an unofficial, fan-made game system for Foundry VTT, compatible with Knave: Second Edition. It is not a Questing Beast LLC product and is not approved or endorsed by them. It ships none of the book's text or art: you play with your own copy of the rules, and its tables start empty for you to fill. The character trait tables come from Knave's first edition, which is free to share.",
+      "Unofficial": "Base Knavery is an unofficial, fan-made game system for Foundry VTT, compatible with Knave: Second Edition. It is not a Questing Beast LLC product and is not approved or endorsed by them. It ships none of the book's text or art: you play with your own copy of the rules, and its tables start empty for you to fill. The character traits, reaction, starting gear and a spell list come from Knave's first edition, which is free to share, until your own book replaces them.",
       "GetTheBook": "Get the book",
       "BuyDtrpg": "PDF on DriveThruRPG",
       "BuyItch": "PDF on Itch",

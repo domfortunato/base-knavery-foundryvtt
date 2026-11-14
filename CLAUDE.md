@@ -10,8 +10,10 @@ picker, change log and marketplace it ports.
 - **No Knave 2e text.** Its licence allows mechanics and numbers, not
   verbatim text or art.
 - **No Dungeon Crawl Classics text, ever.**
-- Knave **first** edition is CC BY 4.0 (Knave 1.0, p1). Its ten character
-  trait tables ship filled in the tables pack (generator `KNAVE_1E_TRAITS`),
+- Knave **first** edition is CC BY 4.0 (Knave 1.0, p1). Its traits, alignment,
+  reaction, starting gear and 100 level-less spells ship filled in the tables
+  pack (generator `KNAVE_1E_*`); a 2e table the GM builds wins by name, and
+  `spell-list` can force the 1e spells (`compendium.js` `spellTableName`),
   credited in each table, LICENSE.txt, README.md and the welcome window (user
   ruling 2026-11-14). Anything else from 1e needs the same credit.
 - Shipped tables are **shells**: the right name and dice, plus one placeholder

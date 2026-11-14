@@ -6,26 +6,76 @@ _id: 0M68PcJYBBD92IUw
 _key: '!tables!0M68PcJYBBD92IUw'
 name: Reaction
 img: icons/svg/d20-grey.svg
-description: '<p>Empty. The Game Master fills this table: GM Dashboard → Tables → Import.</p>'
+description: <p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>
 formula: 2d6
 replacement: true
 displayRoll: true
 results:
-  - _id: Onw5mkhDpyEAk8s9
-    _key: '!tables.results!0M68PcJYBBD92IUw.Onw5mkhDpyEAk8s9'
+  - _id: HZGw1Bxj6lMjmv8O
+    _key: '!tables.results!0M68PcJYBBD92IUw.HZGw1Bxj6lMjmv8O'
     type: text
-    name: 'Empty. The Game Master fills this table: GM Dashboard → Tables → Import.'
+    name: Hostile
     description: ''
     img: null
     documentUuid: null
     weight: 1
     range:
       - 2
+      - 2
+    drawn: false
+    flags: {}
+  - _id: WW2inoOPKW4AmmA3
+    _key: '!tables.results!0M68PcJYBBD92IUw.WW2inoOPKW4AmmA3'
+    type: text
+    name: Unfriendly
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 3
+    range:
+      - 3
+      - 5
+    drawn: false
+    flags: {}
+  - _id: DYr2qHJrgN6CCN0D
+    _key: '!tables.results!0M68PcJYBBD92IUw.DYr2qHJrgN6CCN0D'
+    type: text
+    name: Unsure
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 3
+    range:
+      - 6
+      - 8
+    drawn: false
+    flags: {}
+  - _id: Ce4ZjygujEd6cAG9
+    _key: '!tables.results!0M68PcJYBBD92IUw.Ce4ZjygujEd6cAG9'
+    type: text
+    name: Talkative
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 3
+    range:
+      - 9
+      - 11
+    drawn: false
+    flags: {}
+  - _id: BOArO6bDE9ywiCO5
+    _key: '!tables.results!0M68PcJYBBD92IUw.BOArO6bDE9ywiCO5'
+    type: text
+    name: Helpful
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 12
       - 12
     drawn: false
-    flags:
-      base-knavery:
-        placeholder: true
+    flags: {}
 flags: {}
 _stats:
   coreVersion: '14.370'

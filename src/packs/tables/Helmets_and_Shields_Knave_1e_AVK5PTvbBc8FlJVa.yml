@@ -1,0 +1,70 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: AVK5PTvbBc8FlJVa
+_key: '!tables!AVK5PTvbBc8FlJVa'
+name: Helmets and Shields (Knave 1e)
+img: icons/svg/d20-grey.svg
+description: <p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>
+formula: 1d20
+replacement: true
+displayRoll: true
+results:
+  - _id: j1yw85KgwEmDG13j
+    _key: '!tables.results!AVK5PTvbBc8FlJVa.j1yw85KgwEmDG13j'
+    type: text
+    name: None
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 13
+    range:
+      - 1
+      - 13
+    drawn: false
+    flags: {}
+  - _id: B5prkZkIF9A8NP7c
+    _key: '!tables.results!AVK5PTvbBc8FlJVa.B5prkZkIF9A8NP7c'
+    type: text
+    name: Helmet
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 3
+    range:
+      - 14
+      - 16
+    drawn: false
+    flags: {}
+  - _id: 19RiEBcLXId4f9Sx
+    _key: '!tables.results!AVK5PTvbBc8FlJVa.19RiEBcLXId4f9Sx'
+    type: text
+    name: Shield
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 3
+    range:
+      - 17
+      - 19
+    drawn: false
+    flags: {}
+  - _id: 611E0zAN99CnxebB
+    _key: '!tables.results!AVK5PTvbBc8FlJVa.611E0zAN99CnxebB'
+    type: text
+    name: Helmet and Shield
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 20
+      - 20
+    drawn: false
+    flags: {}
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.0

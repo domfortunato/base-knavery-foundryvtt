@@ -1,0 +1,278 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: yHKeRh6FfSQwEvaD
+_key: '!tables!yHKeRh6FfSQwEvaD'
+name: Dungeoneering Gear (Knave 1e)
+img: icons/svg/d20-grey.svg
+description: <p>Roll twice on this table, and once on each General Gear table.</p><p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>
+formula: 1d20
+replacement: true
+displayRoll: true
+results:
+  - _id: NRQ4xqehuUPtnd0f
+    _key: '!tables.results!yHKeRh6FfSQwEvaD.NRQ4xqehuUPtnd0f'
+    type: text
+    name: Rope, 50ft
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 1
+      - 1
+    drawn: false
+    flags: {}
+  - _id: pEgxawcm5ExOaphB
+    _key: '!tables.results!yHKeRh6FfSQwEvaD.pEgxawcm5ExOaphB'
+    type: text
+    name: Pulleys
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    flags: {}
+  - _id: hNwDMwzQ7QNxgeCK
+    _key: '!tables.results!yHKeRh6FfSQwEvaD.hNwDMwzQ7QNxgeCK'
+    type: text
+    name: Candles, 5
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    flags: {}
+  - _id: z5kPStf73AcVs1RF
+    _key: '!tables.results!yHKeRh6FfSQwEvaD.z5kPStf73AcVs1RF'
+    type: text
+    name: Chain, 10ft
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    flags: {}
+  - _id: a6hDP41o9gwoA3qf
+    _key: '!tables.results!yHKeRh6FfSQwEvaD.a6hDP41o9gwoA3qf'
+    type: text
+    name: Chalk, 10
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 5
+      - 5
+    drawn: false
+    flags: {}
+  - _id: AcgLCjrHQ06HPDwb
+    _key: '!tables.results!yHKeRh6FfSQwEvaD.AcgLCjrHQ06HPDwb'
+    type: text
+    name: Crowbar
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 6
+      - 6
+    drawn: false
+    flags: {}
+  - _id: pmWXWsYPhH4PtPWF
+    _key: '!tables.results!yHKeRh6FfSQwEvaD.pmWXWsYPhH4PtPWF'
+    type: text
+    name: Tinderbox
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 7
+      - 7
+    drawn: false
+    flags: {}
+  - _id: CbHjg4gx3Er6SgEv
+    _key: '!tables.results!yHKeRh6FfSQwEvaD.CbHjg4gx3Er6SgEv'
+    type: text
+    name: Grappling hook
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 8
+      - 8
+    drawn: false
+    flags: {}
+  - _id: P1fOmjEQxKGKh7LM
+    _key: '!tables.results!yHKeRh6FfSQwEvaD.P1fOmjEQxKGKh7LM'
+    type: text
+    name: Hammer
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 9
+      - 9
+    drawn: false
+    flags: {}
+  - _id: VcAYjrpNIcE2YUNg
+    _key: '!tables.results!yHKeRh6FfSQwEvaD.VcAYjrpNIcE2YUNg'
+    type: text
+    name: Waterskin
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 10
+      - 10
+    drawn: false
+    flags: {}
+  - _id: rlNyt6Wq5fOEeTm5
+    _key: '!tables.results!yHKeRh6FfSQwEvaD.rlNyt6Wq5fOEeTm5'
+    type: text
+    name: Lantern
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 11
+      - 11
+    drawn: false
+    flags: {}
+  - _id: 9Ag9PSkJWhm81Z13
+    _key: '!tables.results!yHKeRh6FfSQwEvaD.9Ag9PSkJWhm81Z13'
+    type: text
+    name: Lamp oil
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 12
+      - 12
+    drawn: false
+    flags: {}
+  - _id: WKRXBYFBeY65ki4D
+    _key: '!tables.results!yHKeRh6FfSQwEvaD.WKRXBYFBeY65ki4D'
+    type: text
+    name: Padlock
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 13
+      - 13
+    drawn: false
+    flags: {}
+  - _id: tkhw4R8siCZ9vADC
+    _key: '!tables.results!yHKeRh6FfSQwEvaD.tkhw4R8siCZ9vADC'
+    type: text
+    name: Manacles
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 14
+      - 14
+    drawn: false
+    flags: {}
+  - _id: T6avWHJ5o8pXa8JZ
+    _key: '!tables.results!yHKeRh6FfSQwEvaD.T6avWHJ5o8pXa8JZ'
+    type: text
+    name: Mirror
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 15
+      - 15
+    drawn: false
+    flags: {}
+  - _id: B9x4DGxNxKfwwE0X
+    _key: '!tables.results!yHKeRh6FfSQwEvaD.B9x4DGxNxKfwwE0X'
+    type: text
+    name: Pole, 10ft
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 16
+      - 16
+    drawn: false
+    flags: {}
+  - _id: InZc1DWeiznv7pLR
+    _key: '!tables.results!yHKeRh6FfSQwEvaD.InZc1DWeiznv7pLR'
+    type: text
+    name: Sack
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 17
+      - 17
+    drawn: false
+    flags: {}
+  - _id: E6TCEx1DN5eSldbT
+    _key: '!tables.results!yHKeRh6FfSQwEvaD.E6TCEx1DN5eSldbT'
+    type: text
+    name: Tent
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 18
+      - 18
+    drawn: false
+    flags: {}
+  - _id: UmsUKRpMkj1dj9Xa
+    _key: '!tables.results!yHKeRh6FfSQwEvaD.UmsUKRpMkj1dj9Xa'
+    type: text
+    name: Spikes, 5
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 19
+      - 19
+    drawn: false
+    flags: {}
+  - _id: iJ6IXM1jTgFkP9yw
+    _key: '!tables.results!yHKeRh6FfSQwEvaD.iJ6IXM1jTgFkP9yw'
+    type: text
+    name: Torches, 5
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 20
+      - 20
+    drawn: false
+    flags: {}
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.0

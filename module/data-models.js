@@ -33,7 +33,7 @@ const abilities = () => new SchemaField(Object.fromEntries(ABILITIES.map((k) =>
 const traits = () => new SchemaField({
   personality: str(), mannerism: str(),
   physique: str(), face: str(), skin: str(), hair: str(), clothing: str(),
-  virtue: str(), vice: str(), speech: str(), background: str(), misfortune: str(),
+  virtue: str(), vice: str(), speech: str(), background: str(), misfortune: str(), alignment: str(),
 });
 
 /** Coins fill slots unless the GM switched that off. Safe before settings exist. */

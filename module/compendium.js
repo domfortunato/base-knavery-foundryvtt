@@ -9,7 +9,7 @@
  * `base-knavery.placeholder`. Knave 2e's table text is not ours to ship. A
  * draw that lands only on placeholders reports "empty" instead of pretending.
  */
-import { FLAG_SCOPE } from "./config.js";
+import { FLAG_SCOPE, SETTINGS_NS, TABLES } from "./config.js";
 
 const L = (k) => game.i18n.localize(k);
 
@@ -62,6 +62,17 @@ export const plainText = (html) => {
 
 /** The real (non-placeholder) results of a table. */
 export const realResults = (table) => (table?.results?.contents ?? []).filter((r) => !isPlaceholder(r));
+
+/**
+ * The spell list random spellbooks draw from. `auto`: the world's own Spells
+ * table once it has rows (built from the GM's 2e book, or imported), otherwise
+ * Knave 1e's 100 level-less spells, which ship. `1e`: Knave 1e's, always.
+ */
+export const spellTableName = () => {
+  if (game.settings.get(SETTINGS_NS, "spell-list") === "1e") return TABLES.spells1e;
+  const world = game.tables.find((t) => t.name === TABLES.spells);
+  return world && realResults(world).length ? TABLES.spells : TABLES.spells1e;
+};
 
 /**
  * Draw a result without posting to chat. Returns {result, text, table} or null,

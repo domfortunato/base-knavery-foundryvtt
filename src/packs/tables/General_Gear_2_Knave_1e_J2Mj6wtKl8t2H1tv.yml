@@ -1,0 +1,278 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: J2Mj6wtKl8t2H1tv
+_key: '!tables!J2Mj6wtKl8t2H1tv'
+name: General Gear 2 (Knave 1e)
+img: icons/svg/d20-grey.svg
+description: <p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>
+formula: 1d20
+replacement: true
+displayRoll: true
+results:
+  - _id: K0FGmio0MsBDzfGF
+    _key: '!tables.results!J2Mj6wtKl8t2H1tv.K0FGmio0MsBDzfGF'
+    type: text
+    name: Incense
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 1
+      - 1
+    drawn: false
+    flags: {}
+  - _id: TaHlO3pHHAKFSUm6
+    _key: '!tables.results!J2Mj6wtKl8t2H1tv.TaHlO3pHHAKFSUm6'
+    type: text
+    name: Sponge
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    flags: {}
+  - _id: QEAuSMl9qpYYHxyU
+    _key: '!tables.results!J2Mj6wtKl8t2H1tv.QEAuSMl9qpYYHxyU'
+    type: text
+    name: Lens
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    flags: {}
+  - _id: cxpUwvhTzpza2AVL
+    _key: '!tables.results!J2Mj6wtKl8t2H1tv.cxpUwvhTzpza2AVL'
+    type: text
+    name: Perfume
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    flags: {}
+  - _id: csMF91jT7qZgZGwE
+    _key: '!tables.results!J2Mj6wtKl8t2H1tv.csMF91jT7qZgZGwE'
+    type: text
+    name: Horn
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 5
+      - 5
+    drawn: false
+    flags: {}
+  - _id: 55LQm0Rv7888Mw56
+    _key: '!tables.results!J2Mj6wtKl8t2H1tv.55LQm0Rv7888Mw56'
+    type: text
+    name: Bottle
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 6
+      - 6
+    drawn: false
+    flags: {}
+  - _id: hIfwXEGKYt2cMXlJ
+    _key: '!tables.results!J2Mj6wtKl8t2H1tv.hIfwXEGKYt2cMXlJ'
+    type: text
+    name: Soap
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 7
+      - 7
+    drawn: false
+    flags: {}
+  - _id: RwVldJtSlzwFOCcm
+    _key: '!tables.results!J2Mj6wtKl8t2H1tv.RwVldJtSlzwFOCcm'
+    type: text
+    name: Spyglass
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 8
+      - 8
+    drawn: false
+    flags: {}
+  - _id: tsCDxqdVnkbPKfo7
+    _key: '!tables.results!J2Mj6wtKl8t2H1tv.tsCDxqdVnkbPKfo7'
+    type: text
+    name: Tar pot
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 9
+      - 9
+    drawn: false
+    flags: {}
+  - _id: ItuiMXuBXHKGmG9Y
+    _key: '!tables.results!J2Mj6wtKl8t2H1tv.ItuiMXuBXHKGmG9Y'
+    type: text
+    name: Twine
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 10
+      - 10
+    drawn: false
+    flags: {}
+  - _id: Fjg3FqCiGGzjUwEA
+    _key: '!tables.results!J2Mj6wtKl8t2H1tv.Fjg3FqCiGGzjUwEA'
+    type: text
+    name: Fake jewels
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 11
+      - 11
+    drawn: false
+    flags: {}
+  - _id: hqp3opNDC20lXNCA
+    _key: '!tables.results!J2Mj6wtKl8t2H1tv.hqp3opNDC20lXNCA'
+    type: text
+    name: Blank book
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 12
+      - 12
+    drawn: false
+    flags: {}
+  - _id: gueQlEVQ7SibSoCM
+    _key: '!tables.results!J2Mj6wtKl8t2H1tv.gueQlEVQ7SibSoCM'
+    type: text
+    name: Card deck
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 13
+      - 13
+    drawn: false
+    flags: {}
+  - _id: Wr3JPSIeWg2HBhZs
+    _key: '!tables.results!J2Mj6wtKl8t2H1tv.Wr3JPSIeWg2HBhZs'
+    type: text
+    name: Dice set
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 14
+      - 14
+    drawn: false
+    flags: {}
+  - _id: 0gsktZDa1nsCGonY
+    _key: '!tables.results!J2Mj6wtKl8t2H1tv.0gsktZDa1nsCGonY'
+    type: text
+    name: Cook pots
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 15
+      - 15
+    drawn: false
+    flags: {}
+  - _id: gNqByzfbp4tXLStU
+    _key: '!tables.results!J2Mj6wtKl8t2H1tv.gNqByzfbp4tXLStU'
+    type: text
+    name: Face paint
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 16
+      - 16
+    drawn: false
+    flags: {}
+  - _id: 3g6f7B3HWLNT2FhN
+    _key: '!tables.results!J2Mj6wtKl8t2H1tv.3g6f7B3HWLNT2FhN'
+    type: text
+    name: Whistle
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 17
+      - 17
+    drawn: false
+    flags: {}
+  - _id: A2mn6yjlrVVWpZvV
+    _key: '!tables.results!J2Mj6wtKl8t2H1tv.A2mn6yjlrVVWpZvV'
+    type: text
+    name: Instrument
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 18
+      - 18
+    drawn: false
+    flags: {}
+  - _id: xUFWPVrHw7S6wgm7
+    _key: '!tables.results!J2Mj6wtKl8t2H1tv.xUFWPVrHw7S6wgm7'
+    type: text
+    name: Quill & Ink
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 19
+      - 19
+    drawn: false
+    flags: {}
+  - _id: WJw9KW1m6Jh4k3yY
+    _key: '!tables.results!J2Mj6wtKl8t2H1tv.WJw9KW1m6Jh4k3yY'
+    type: text
+    name: Small bell
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 20
+      - 20
+    drawn: false
+    flags: {}
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.0

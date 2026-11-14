@@ -24,7 +24,7 @@
 import {
   ABILITIES, ABILITY_MAX, CREATION_POINTS, FLAG_SCOPE, LEVELS, SETTINGS_NS, STARTING_COINS, SYS_PATH, TABLES,
 } from "./config.js";
-import { drawFrom, pickFromList, plainText, realResults, findTable, resultText } from "./compendium.js";
+import { drawFrom, pickFromList, plainText, realResults, findTable, resultText, spellTableName } from "./compendium.js";
 import { firstLevelHpFormula, randomAbilityPicks, rollLevelHp } from "./level-up.js";
 import { randomPortraitPair, pairedTokenFor } from "./art.js";
 import { emit, onSocket } from "./socket.js";
@@ -270,6 +270,36 @@ export const rollFullName = async ({ warn = false } = {}) => {
   return [first.text, last].filter(Boolean).join(" ");
 };
 
+/** Knave 1e armor, by its defense: 12/13/14 is 11 + 1/2/3, so 1/2/3 armor points (and as many slots). */
+const KNAVE_1E_ARMOR = { Gambeson: 1, Brigandine: 2, Chain: 3 };
+
+/**
+ * The Knave 1e starting gear: armor, helmet and shield, two dungeoneering
+ * items and one from each General Gear table. Items the gear packs know by
+ * name (Gambeson, Helmet, Shield, Crowbar…) come from them; the rest are
+ * plain one-slot items. Returns {items, names}.
+ */
+export const rollKnave1eGear = async () => {
+  const T = TABLES.gear1e;
+  const names = [];
+  for (const t of [T.armor, T.helmets, T.dungeon, T.dungeon, T.general1, T.general2]) {
+    const r = await drawFrom(t, { warn: false });
+    if (!r) continue;
+    if (r.text === "Helmet and Shield") names.push("Helmet", "Shield");
+    else if (!["No armor", "None"].includes(r.text)) names.push(r.text);
+  }
+  const items = [];
+  for (const name of names) {
+    const known = await findItemByName(name);
+    if (known) items.push(itemData(known));
+    else if (KNAVE_1E_ARMOR[name]) {
+      const n = KNAVE_1E_ARMOR[name];
+      items.push({ name, type: "armor", img: `${SYS_PATH}/icons/armor.svg`, system: { points: n, slots: n, armorType: "other" } });
+    } else items.push({ name, type: "item", img: `${SYS_PATH}/icons/generic-item.svg`, system: { slots: 1, quantity: 1 } });
+  }
+  return { items, names };
+};
+
 /** Every trait drawn from its table; a table still an empty shell leaves its trait out. */
 export const rollTraits = async () => {
   const traits = {};
@@ -338,8 +368,9 @@ export const buildCharacter = async ({ level = 1, abilities = null } = {}) => {
     const doc = await findItemByName(k.name);
     if (doc) items.push(itemData(doc, { system: { quantity: k.quantity } }));
   }
+  const spellTable = spellTableName();
   for (let i = 0; i < startingInt; i++) {
-    const r = await drawFrom(TABLES.spells, { warn: false });
+    const r = await drawFrom(spellTable, { warn: false });
     if (!r) { notes.push(L("KNAVERY.Gen.NoSpellTable")); break; }
     const linked = r.result.documentUuid ? await fromUuid(r.result.documentUuid).catch(() => null) : null;
     // A row built from the rulebook carries the spell's effect as its description.
@@ -348,6 +379,12 @@ export const buildCharacter = async ({ level = 1, abilities = null } = {}) => {
         name: r.text, type: "spellbook", img: `${SYS_PATH}/icons/spellbook.svg`,
         system: { slots: 1, description: r.result?.description ?? "" },
       });
+  }
+
+  if (game.settings.get(SETTINGS_NS, "knave1e-starting-gear")) {
+    const gear = await rollKnave1eGear();
+    items.push(...gear.items);
+    if (gear.names.length) notes.push(F("KNAVERY.Gen.Knave1eGear", { list: gear.names.join(", ") }));
   }
 
   const coins = (await new Roll(STARTING_COINS).evaluate()).total;

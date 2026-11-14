@@ -1,0 +1,1318 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: zqmyEG0v7rAwITJG
+_key: '!tables!zqmyEG0v7rAwITJG'
+name: Spells (Knave 1e)
+img: icons/svg/d20-grey.svg
+description: <p>“L” is a number equal to the caster’s level, an item is an object able to be lifted with one hand, and an object is anything up to human size. Unless otherwise noted, all spells with ongoing effects last up to L×10 minutes, and have a range of up to 40 feet. If a spell directly affects another creature, the creature may make a save to avoid it. Success reduces or negates the spell’s effects.</p><p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>
+formula: 1d100
+replacement: true
+displayRoll: true
+results:
+  - _id: kTRD8jwpV3goQI0A
+    _key: '!tables.results!zqmyEG0v7rAwITJG.kTRD8jwpV3goQI0A'
+    type: text
+    name: Adhere
+    description: Object is covered in extremely sticky slime.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 1
+      - 1
+    drawn: false
+    flags: {}
+  - _id: xy5aoBXbn01NVGm4
+    _key: '!tables.results!zqmyEG0v7rAwITJG.xy5aoBXbn01NVGm4'
+    type: text
+    name: Animate Object
+    description: Object obeys your commands as best it can. It can walk 15ft per round.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    flags: {}
+  - _id: fUoFIwkbdWMOqoT4
+    _key: '!tables.results!zqmyEG0v7rAwITJG.fUoFIwkbdWMOqoT4'
+    type: text
+    name: Anthropomorphize
+    description: A touched animal either gains human intelligence or human appearance for L days.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    flags: {}
+  - _id: xW702X7aSRZAEyX3
+    _key: '!tables.results!zqmyEG0v7rAwITJG.xW702X7aSRZAEyX3'
+    type: text
+    name: Arcane Eye
+    description: You can see through a magical floating eyeball that flies around at your command.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    flags: {}
+  - _id: UtIYqc3Z5aYpRr27
+    _key: '!tables.results!zqmyEG0v7rAwITJG.UtIYqc3Z5aYpRr27'
+    type: text
+    name: Astral Prison
+    description: An object is frozen in time and space within an invulnerable crystal shell.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 5
+      - 5
+    drawn: false
+    flags: {}
+  - _id: sMzlhRODrtwfCtBf
+    _key: '!tables.results!zqmyEG0v7rAwITJG.sMzlhRODrtwfCtBf'
+    type: text
+    name: Attract
+    description: L+1 objects are strongly magnetically attracted to each other if they come within 10 feet.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 6
+      - 6
+    drawn: false
+    flags: {}
+  - _id: fHSMhxHNIQhx6mDZ
+    _key: '!tables.results!zqmyEG0v7rAwITJG.fHSMhxHNIQhx6mDZ'
+    type: text
+    name: Auditory Illusion
+    description: You create illusory sounds that seem to come from a direction of your choice.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 7
+      - 7
+    drawn: false
+    flags: {}
+  - _id: aBoFvWDXuVVCTTO9
+    _key: '!tables.results!zqmyEG0v7rAwITJG.aBoFvWDXuVVCTTO9'
+    type: text
+    name: Babble
+    description: A creature must loudly and clearly repeat everything you think. It is otherwise mute.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 8
+      - 8
+    drawn: false
+    flags: {}
+  - _id: gL9nM3oUReSqPJPI
+    _key: '!tables.results!zqmyEG0v7rAwITJG.gL9nM3oUReSqPJPI'
+    type: text
+    name: Beast Form
+    description: You and your possessions transform into a mundane animal.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 9
+      - 9
+    drawn: false
+    flags: {}
+  - _id: CscvkwEoeWcV4hsi
+    _key: '!tables.results!zqmyEG0v7rAwITJG.CscvkwEoeWcV4hsi'
+    type: text
+    name: Befuddle
+    description: L creatures of your choice are unable to form new short-term memories for the duration of the spell.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 10
+      - 10
+    drawn: false
+    flags: {}
+  - _id: hljnYGkxi1mRcQAa
+    _key: '!tables.results!zqmyEG0v7rAwITJG.hljnYGkxi1mRcQAa'
+    type: text
+    name: Bend Fate
+    description: Roll L+1 d20s. Whenever you must roll a d20 after casting the spell, you must choose and then discard one of the rolled results until they are all gone.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 11
+      - 11
+    drawn: false
+    flags: {}
+  - _id: wfUzuzfBEUpO19t9
+    _key: '!tables.results!zqmyEG0v7rAwITJG.wfUzuzfBEUpO19t9'
+    type: text
+    name: Bird Person
+    description: Your arms turn into huge bird wings.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 12
+      - 12
+    drawn: false
+    flags: {}
+  - _id: QtGxGHBz6wl9yALB
+    _key: '!tables.results!zqmyEG0v7rAwITJG.QtGxGHBz6wl9yALB'
+    type: text
+    name: Body Swap
+    description: You switch bodies with a creature you touch. If one body dies, the other dies as well.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 13
+      - 13
+    drawn: false
+    flags: {}
+  - _id: 3gjxnfrrusH85T46
+    _key: '!tables.results!zqmyEG0v7rAwITJG.3gjxnfrrusH85T46'
+    type: text
+    name: Catherine
+    description: A woman wearing a blue dress appears until end of spell. She will obey polite, safe requests.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 14
+      - 14
+    drawn: false
+    flags: {}
+  - _id: LAiaCJ2B7kLeMIiS
+    _key: '!tables.results!zqmyEG0v7rAwITJG.LAiaCJ2B7kLeMIiS'
+    type: text
+    name: Charm
+    description: L creatures treat you like a friend.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 15
+      - 15
+    drawn: false
+    flags: {}
+  - _id: NJJSrLb2o381wzCc
+    _key: '!tables.results!zqmyEG0v7rAwITJG.NJJSrLb2o381wzCc'
+    type: text
+    name: Command
+    description: A creature obeys a single, three-word command that does not harm it.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 16
+      - 16
+    drawn: false
+    flags: {}
+  - _id: lEsF5vQOmQRWZpPd
+    _key: '!tables.results!zqmyEG0v7rAwITJG.lEsF5vQOmQRWZpPd'
+    type: text
+    name: Comprehend
+    description: You become fluent in all languages.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 17
+      - 17
+    drawn: false
+    flags: {}
+  - _id: AZtUBM3qXaGP0XHc
+    _key: '!tables.results!zqmyEG0v7rAwITJG.AZtUBM3qXaGP0XHc'
+    type: text
+    name: Control Plants
+    description: Nearby plants and trees obey you and gain the ability to move at 5 feet per round.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 18
+      - 18
+    drawn: false
+    flags: {}
+  - _id: HawLCv4noW72IweA
+    _key: '!tables.results!zqmyEG0v7rAwITJG.HawLCv4noW72IweA'
+    type: text
+    name: Control Weather
+    description: You may alter the type of weather at will, but you do not otherwise control it.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 19
+      - 19
+    drawn: false
+    flags: {}
+  - _id: aijsDHYdiCCLgz0E
+    _key: '!tables.results!zqmyEG0v7rAwITJG.aijsDHYdiCCLgz0E'
+    type: text
+    name: Counterspell
+    description: Make an opposed Intelligence save against the Intelligence of the caster of a nearby spell. You may do this out of turn as a reaction, or against an ongoing magical effect. On a success, you may cancel the spell.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 20
+      - 20
+    drawn: false
+    flags: {}
+  - _id: KpBivymiO8kz7guA
+    _key: '!tables.results!zqmyEG0v7rAwITJG.KpBivymiO8kz7guA'
+    type: text
+    name: Deafen
+    description: All nearby creatures are deafened.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 21
+      - 21
+    drawn: false
+    flags: {}
+  - _id: JqguzjCAZQAaCcDD
+    _key: '!tables.results!zqmyEG0v7rAwITJG.JqguzjCAZQAaCcDD'
+    type: text
+    name: Detect Magic
+    description: You hear nearby magical auras singing. Volume and harmony signify the aura’s power and refinement.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 22
+      - 22
+    drawn: false
+    flags: {}
+  - _id: 4ylq6J6KrKiPnuZk
+    _key: '!tables.results!zqmyEG0v7rAwITJG.4ylq6J6KrKiPnuZk'
+    type: text
+    name: Disassemble
+    description: Any of your body parts may be detached and reattached at will, without causing pain or damage. You can still control them.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 23
+      - 23
+    drawn: false
+    flags: {}
+  - _id: XBZtjO3CgWacldc5
+    _key: '!tables.results!zqmyEG0v7rAwITJG.XBZtjO3CgWacldc5'
+    type: text
+    name: Disguise
+    description: You may alter the appearance of L characters at will as long as they remain humanoid. Attempts to duplicate other characters will seem uncanny.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 24
+      - 24
+    drawn: false
+    flags: {}
+  - _id: GWYsvuQKBWRusiIn
+    _key: '!tables.results!zqmyEG0v7rAwITJG.GWYsvuQKBWRusiIn'
+    type: text
+    name: Displace
+    description: An object appears to be up to L×10ft from its actual position.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 25
+      - 25
+    drawn: false
+    flags: {}
+  - _id: GjZMuZ98BHeoG6vK
+    _key: '!tables.results!zqmyEG0v7rAwITJG.GjZMuZ98BHeoG6vK'
+    type: text
+    name: Earthquake
+    description: The ground begins shaking violently. Structures may be damaged or collapse.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 26
+      - 26
+    drawn: false
+    flags: {}
+  - _id: 9VFiIK6YJjfJJ6mY
+    _key: '!tables.results!zqmyEG0v7rAwITJG.9VFiIK6YJjfJJ6mY'
+    type: text
+    name: Elasticity
+    description: Your body can stretch up to L×10ft.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 27
+      - 27
+    drawn: false
+    flags: {}
+  - _id: isqwAmeWAnmEV8Gp
+    _key: '!tables.results!zqmyEG0v7rAwITJG.isqwAmeWAnmEV8Gp'
+    type: text
+    name: Elemental Wall
+    description: A straight wall of ice or fire L×40ft long and 10ft high rises from the ground.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 28
+      - 28
+    drawn: false
+    flags: {}
+  - _id: Mf1IQFrCaBmSFDXN
+    _key: '!tables.results!zqmyEG0v7rAwITJG.Mf1IQFrCaBmSFDXN'
+    type: text
+    name: Filch
+    description: L visible items teleport to your hands.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 29
+      - 29
+    drawn: false
+    flags: {}
+  - _id: WCeFudnNMn6A39tm
+    _key: '!tables.results!zqmyEG0v7rAwITJG.WCeFudnNMn6A39tm'
+    type: text
+    name: Fog Cloud
+    description: Dense fog spreads out from you.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 30
+      - 30
+    drawn: false
+    flags: {}
+  - _id: HFJTYfyEHTOZXkAs
+    _key: '!tables.results!zqmyEG0v7rAwITJG.HFJTYfyEHTOZXkAs'
+    type: text
+    name: Frenzy
+    description: L creatures erupt in a frenzy of violence.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 31
+      - 31
+    drawn: false
+    flags: {}
+  - _id: jfLWlLErgTKj1Gee
+    _key: '!tables.results!zqmyEG0v7rAwITJG.jfLWlLErgTKj1Gee'
+    type: text
+    name: Gate
+    description: A portal to a random plane opens.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 32
+      - 32
+    drawn: false
+    flags: {}
+  - _id: cgNIjg6SrWmVWrvH
+    _key: '!tables.results!zqmyEG0v7rAwITJG.cgNIjg6SrWmVWrvH'
+    type: text
+    name: Gravity Shift
+    description: You can change the direction of gravity (for yourself only) up to once per round.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 33
+      - 33
+    drawn: false
+    flags: {}
+  - _id: 9XNpx4Sp3Hno0QiX
+    _key: '!tables.results!zqmyEG0v7rAwITJG.9XNpx4Sp3Hno0QiX'
+    type: text
+    name: Greed
+    description: L creatures develop an overwhelming urge to possess a visible item of your choice.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 34
+      - 34
+    drawn: false
+    flags: {}
+  - _id: gCoTEWDHawwaMfOG
+    _key: '!tables.results!zqmyEG0v7rAwITJG.gCoTEWDHawwaMfOG'
+    type: text
+    name: Haste
+    description: Your movement speed is tripled.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 35
+      - 35
+    drawn: false
+    flags: {}
+  - _id: IaGkCGPWHN5AkvoS
+    _key: '!tables.results!zqmyEG0v7rAwITJG.IaGkCGPWHN5AkvoS'
+    type: text
+    name: Hatred
+    description: L creatures develop a deep hatred of another creature or group of creatures and wish to destroy it.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 36
+      - 36
+    drawn: false
+    flags: {}
+  - _id: LfAjBKuDYg7jz3Ws
+    _key: '!tables.results!zqmyEG0v7rAwITJG.LfAjBKuDYg7jz3Ws'
+    type: text
+    name: Hear Whispers
+    description: You can hear faint sounds clearly.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 37
+      - 37
+    drawn: false
+    flags: {}
+  - _id: vJciEK3ddmksJTce
+    _key: '!tables.results!zqmyEG0v7rAwITJG.vJciEK3ddmksJTce'
+    type: text
+    name: Hover
+    description: An object hovers, frictionless, 2ft above the ground. It can hold up to L humanoids.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 38
+      - 38
+    drawn: false
+    flags: {}
+  - _id: VmgmNq7cCI0NazRS
+    _key: '!tables.results!zqmyEG0v7rAwITJG.VmgmNq7cCI0NazRS'
+    type: text
+    name: Hypnotize
+    description: A creature enters a trance and will truthfully answer L yes or no questions you ask it.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 39
+      - 39
+    drawn: false
+    flags: {}
+  - _id: X41NdrmUNSWkA88g
+    _key: '!tables.results!zqmyEG0v7rAwITJG.X41NdrmUNSWkA88g'
+    type: text
+    name: Icy Touch
+    description: A thick ice layer spreads across a touched surface, up to L×10ft in radius.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 40
+      - 40
+    drawn: false
+    flags: {}
+  - _id: OgmwnZQrOCrRnrYa
+    _key: '!tables.results!zqmyEG0v7rAwITJG.OgmwnZQrOCrRnrYa'
+    type: text
+    name: Illuminate
+    description: A floating light moves as you command.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 41
+      - 41
+    drawn: false
+    flags: {}
+  - _id: 9f3sMG8MmUejwlW4
+    _key: '!tables.results!zqmyEG0v7rAwITJG.9f3sMG8MmUejwlW4'
+    type: text
+    name: Increase Gravity
+    description: The gravity in an area triples.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 42
+      - 42
+    drawn: false
+    flags: {}
+  - _id: pfJCFTsAixH0TjMT
+    _key: '!tables.results!zqmyEG0v7rAwITJG.pfJCFTsAixH0TjMT'
+    type: text
+    name: Invisible Tether
+    description: Two objects within 10ft of each other cannot be moved more than 10ft apart.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 43
+      - 43
+    drawn: false
+    flags: {}
+  - _id: HRgPh46hNIWjDHbH
+    _key: '!tables.results!zqmyEG0v7rAwITJG.HRgPh46hNIWjDHbH'
+    type: text
+    name: Knock
+    description: L nearby mundane or magical locks unlock.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 44
+      - 44
+    drawn: false
+    flags: {}
+  - _id: sGkDmTIjZBb4usjV
+    _key: '!tables.results!zqmyEG0v7rAwITJG.sGkDmTIjZBb4usjV'
+    type: text
+    name: Leap
+    description: You can jump up to L×10ft in the air.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 45
+      - 45
+    drawn: false
+    flags: {}
+  - _id: NOTLd29QH3S5o0O5
+    _key: '!tables.results!zqmyEG0v7rAwITJG.NOTLd29QH3S5o0O5'
+    type: text
+    name: Liquid Air
+    description: The air around you becomes swimmable.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 46
+      - 46
+    drawn: false
+    flags: {}
+  - _id: EVDXWYHR3HZpYEl8
+    _key: '!tables.results!zqmyEG0v7rAwITJG.EVDXWYHR3HZpYEl8'
+    type: text
+    name: Magic Dampener
+    description: All nearby magical effects have their effectiveness halved.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 47
+      - 47
+    drawn: false
+    flags: {}
+  - _id: 3FY0uXKxSk9PkZBC
+    _key: '!tables.results!zqmyEG0v7rAwITJG.3FY0uXKxSk9PkZBC'
+    type: text
+    name: Manse
+    description: A sturdy, furnished cottage appears for L×12 hours. You can permit and forbid entry to it at will.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 48
+      - 48
+    drawn: false
+    flags: {}
+  - _id: SwtbsRF6WsENUDog
+    _key: '!tables.results!zqmyEG0v7rAwITJG.SwtbsRF6WsENUDog'
+    type: text
+    name: Marble Madness
+    description: Your pockets are full of marbles, and will refill every round.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 49
+      - 49
+    drawn: false
+    flags: {}
+  - _id: nPX0cig868Z7MT7A
+    _key: '!tables.results!zqmyEG0v7rAwITJG.nPX0cig868Z7MT7A'
+    type: text
+    name: Masquerade
+    description: L characters’ appearances and voices become identical to a touched character.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 50
+      - 50
+    drawn: false
+    flags: {}
+  - _id: USXKEBUyV6QBk1nz
+    _key: '!tables.results!zqmyEG0v7rAwITJG.USXKEBUyV6QBk1nz'
+    type: text
+    name: Miniaturize
+    description: You and L other touched creatures are reduced to the size of a mouse.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 51
+      - 51
+    drawn: false
+    flags: {}
+  - _id: jHOzZuXAtzMqtJwQ
+    _key: '!tables.results!zqmyEG0v7rAwITJG.jHOzZuXAtzMqtJwQ'
+    type: text
+    name: Mirror Image
+    description: L illusory duplicates of yourself appear under your control.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 52
+      - 52
+    drawn: false
+    flags: {}
+  - _id: WJWuM93chWTtT7mY
+    _key: '!tables.results!zqmyEG0v7rAwITJG.WJWuM93chWTtT7mY'
+    type: text
+    name: Mirrorwalk
+    description: A mirror becomes a gateway to another mirror that you looked into today.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 53
+      - 53
+    drawn: false
+    flags: {}
+  - _id: 7bS9QymJDMweHBWO
+    _key: '!tables.results!zqmyEG0v7rAwITJG.7bS9QymJDMweHBWO'
+    type: text
+    name: Multiarm
+    description: You gain L extra arms.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 54
+      - 54
+    drawn: false
+    flags: {}
+  - _id: IAAXoxFXPCXeX4bk
+    _key: '!tables.results!zqmyEG0v7rAwITJG.IAAXoxFXPCXeX4bk'
+    type: text
+    name: Night Sphere
+    description: An L×40ft wide sphere of darkness displaying the night sky appears.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 55
+      - 55
+    drawn: false
+    flags: {}
+  - _id: bwWY3grd5yr1NL9r
+    _key: '!tables.results!zqmyEG0v7rAwITJG.bwWY3grd5yr1NL9r'
+    type: text
+    name: Objectify
+    description: You become any inanimate object between the size of a grand piano and an apple.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 56
+      - 56
+    drawn: false
+    flags: {}
+  - _id: 27lRPHdSd5CLchIF
+    _key: '!tables.results!zqmyEG0v7rAwITJG.27lRPHdSd5CLchIF'
+    type: text
+    name: Ooze Form
+    description: You become a living jelly.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 57
+      - 57
+    drawn: false
+    flags: {}
+  - _id: E2jRoooj5hD8t4ys
+    _key: '!tables.results!zqmyEG0v7rAwITJG.E2jRoooj5hD8t4ys'
+    type: text
+    name: Pacify
+    description: L creatures have an aversion to violence.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 58
+      - 58
+    drawn: false
+    flags: {}
+  - _id: M9remcC79O37w4Vw
+    _key: '!tables.results!zqmyEG0v7rAwITJG.M9remcC79O37w4Vw'
+    type: text
+    name: Phantom Coach
+    description: A ghostly coach appears until end of spell. It moves unnaturally fast over any terrain, including water.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 59
+      - 59
+    drawn: false
+    flags: {}
+  - _id: gMvyNZOB7TecEYxl
+    _key: '!tables.results!zqmyEG0v7rAwITJG.gMvyNZOB7TecEYxl'
+    type: text
+    name: Phobia
+    description: L creatures become terrified of an object of your choice.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 60
+      - 60
+    drawn: false
+    flags: {}
+  - _id: OEO00LC91ODu4eEs
+    _key: '!tables.results!zqmyEG0v7rAwITJG.OEO00LC91ODu4eEs'
+    type: text
+    name: Pit
+    description: A pit 10ft wide and L×5ft deep opens in the ground.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 61
+      - 61
+    drawn: false
+    flags: {}
+  - _id: NtKn6cGRi7imBySP
+    _key: '!tables.results!zqmyEG0v7rAwITJG.NtKn6cGRi7imBySP'
+    type: text
+    name: Primeval Surge
+    description: An object grows to the size of an elephant. If it is an animal, it is enraged.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 62
+      - 62
+    drawn: false
+    flags: {}
+  - _id: QpnADeCzv9t1A8R6
+    _key: '!tables.results!zqmyEG0v7rAwITJG.QpnADeCzv9t1A8R6'
+    type: text
+    name: Psychometry
+    description: The referee answers L yes or no questions about a touched object.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 63
+      - 63
+    drawn: false
+    flags: {}
+  - _id: 4A7ANj5qJxnoWGGN
+    _key: '!tables.results!zqmyEG0v7rAwITJG.4A7ANj5qJxnoWGGN'
+    type: text
+    name: Pull
+    description: An object of any size is pulled directly towards you with the strength of L men for one round.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 64
+      - 64
+    drawn: false
+    flags: {}
+  - _id: 595y1mKliR2Irk6A
+    _key: '!tables.results!zqmyEG0v7rAwITJG.595y1mKliR2Irk6A'
+    type: text
+    name: Push
+    description: An object of any size is pushed directly away from you with the strength of L men for one round.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 65
+      - 65
+    drawn: false
+    flags: {}
+  - _id: xrkcShbBHhbP7eQA
+    _key: '!tables.results!zqmyEG0v7rAwITJG.xrkcShbBHhbP7eQA'
+    type: text
+    name: Raise Dead
+    description: L skeletons rise from the ground to serve you. They are incredibly stupid and can only obey simple orders.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 66
+      - 66
+    drawn: false
+    flags: {}
+  - _id: ZAQE5E3nrayHu5Ym
+    _key: '!tables.results!zqmyEG0v7rAwITJG.ZAQE5E3nrayHu5Ym'
+    type: text
+    name: Raise Spirit
+    description: The spirit of a dead body manifests and will answer L questions.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 67
+      - 67
+    drawn: false
+    flags: {}
+  - _id: 7zaDV1m8nvSzuSTk
+    _key: '!tables.results!zqmyEG0v7rAwITJG.7zaDV1m8nvSzuSTk'
+    type: text
+    name: Read Mind
+    description: You can hear the surface thoughts of nearby creatures.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 68
+      - 68
+    drawn: false
+    flags: {}
+  - _id: aRBNd0khRopgPS5a
+    _key: '!tables.results!zqmyEG0v7rAwITJG.aRBNd0khRopgPS5a'
+    type: text
+    name: Repel
+    description: L+1 objects are strongly magnetically repelled from each other if they come within 10 feet.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 69
+      - 69
+    drawn: false
+    flags: {}
+  - _id: vlTyHEyqo7TFRmER
+    _key: '!tables.results!zqmyEG0v7rAwITJG.vlTyHEyqo7TFRmER'
+    type: text
+    name: Scry
+    description: You can see through the eyes of a creature you touched earlier today.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 70
+      - 70
+    drawn: false
+    flags: {}
+  - _id: GtCzDcvGWGJmQ3WD
+    _key: '!tables.results!zqmyEG0v7rAwITJG.GtCzDcvGWGJmQ3WD'
+    type: text
+    name: Sculpt Elements
+    description: All inanimate material behaves like clay in your hands.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 71
+      - 71
+    drawn: false
+    flags: {}
+  - _id: 5vuNQB3e7fvGDtjA
+    _key: '!tables.results!zqmyEG0v7rAwITJG.5vuNQB3e7fvGDtjA'
+    type: text
+    name: Shroud
+    description: L creatures are invisible until they move.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 72
+      - 72
+    drawn: false
+    flags: {}
+  - _id: p1nqZ0DLOSsV4Ulg
+    _key: '!tables.results!zqmyEG0v7rAwITJG.p1nqZ0DLOSsV4Ulg'
+    type: text
+    name: Shuffle
+    description: L creatures instantly switch places. Determine where they end up randomly.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 73
+      - 73
+    drawn: false
+    flags: {}
+  - _id: OzoCGtHPv0U9BwYf
+    _key: '!tables.results!zqmyEG0v7rAwITJG.OzoCGtHPv0U9BwYf'
+    type: text
+    name: Sleep
+    description: L creatures fall into a light sleep.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 74
+      - 74
+    drawn: false
+    flags: {}
+  - _id: 2fPyLIyouNd7D4XY
+    _key: '!tables.results!zqmyEG0v7rAwITJG.2fPyLIyouNd7D4XY'
+    type: text
+    name: Smoke Form
+    description: Your body becomes living smoke.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 75
+      - 75
+    drawn: false
+    flags: {}
+  - _id: rtRaEqlSCsmyPsKa
+    _key: '!tables.results!zqmyEG0v7rAwITJG.rtRaEqlSCsmyPsKa'
+    type: text
+    name: Snail Knight
+    description: 10 minutes after casting, a knight sitting astride a giant snail rides into view. He is able to answer most questions related to quests and chivalry, and may aid you if he finds you worthy.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 76
+      - 76
+    drawn: false
+    flags: {}
+  - _id: qTi7g2XRD6uHh9al
+    _key: '!tables.results!zqmyEG0v7rAwITJG.qTi7g2XRD6uHh9al'
+    type: text
+    name: Sniff
+    description: You can smell even the faintest traces of scents.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 77
+      - 77
+    drawn: false
+    flags: {}
+  - _id: O0F4PPzr4cHoj48L
+    _key: '!tables.results!zqmyEG0v7rAwITJG.O0F4PPzr4cHoj48L'
+    type: text
+    name: Sort
+    description: Inanimate items sort themselves according to categories you set. The categories must be visually verifiable.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 78
+      - 78
+    drawn: false
+    flags: {}
+  - _id: 2ClBjwdwlJktv3XV
+    _key: '!tables.results!zqmyEG0v7rAwITJG.2ClBjwdwlJktv3XV'
+    type: text
+    name: Spectacle
+    description: A clearly unreal but impressive illusion of your choice appears, under your control. It may be up to the size of a palace and has full motion and sound.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 79
+      - 79
+    drawn: false
+    flags: {}
+  - _id: xCdou3jFVPiXtQnR
+    _key: '!tables.results!zqmyEG0v7rAwITJG.xCdou3jFVPiXtQnR'
+    type: text
+    name: Spellseize
+    description: Cast this as a reaction to another spell going off to make a temporary copy of it that you can cast at any time before this spell ends.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 80
+      - 80
+    drawn: false
+    flags: {}
+  - _id: jAjZ0nBu5P6TxAvR
+    _key: '!tables.results!zqmyEG0v7rAwITJG.jAjZ0nBu5P6TxAvR'
+    type: text
+    name: Spider Climb
+    description: You can climb surfaces like a spider.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 81
+      - 81
+    drawn: false
+    flags: {}
+  - _id: 6xK9OuFexgupHSzo
+    _key: '!tables.results!zqmyEG0v7rAwITJG.6xK9OuFexgupHSzo'
+    type: text
+    name: Summon Cube
+    description: Once per second, (6 times per round) you may summon or banish a 3-foot-wide cube of earth. New cubes must be affixed to the earth or to other cubes.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 82
+      - 82
+    drawn: false
+    flags: {}
+  - _id: VHTYQRBUBSS9deJY
+    _key: '!tables.results!zqmyEG0v7rAwITJG.VHTYQRBUBSS9deJY'
+    type: text
+    name: Swarm
+    description: You become a swarm of crows, rats, or piranhas. You only take damage from area effects.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 83
+      - 83
+    drawn: false
+    flags: {}
+  - _id: Z2cCCX38wVC0BsIf
+    _key: '!tables.results!zqmyEG0v7rAwITJG.Z2cCCX38wVC0BsIf'
+    type: text
+    name: Telekinesis
+    description: You may mentally move L items.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 84
+      - 84
+    drawn: false
+    flags: {}
+  - _id: LrFOK2g0R0VIxiEc
+    _key: '!tables.results!zqmyEG0v7rAwITJG.LrFOK2g0R0VIxiEc'
+    type: text
+    name: Telepathy
+    description: L+1 creatures can hear each other’s thoughts, no matter how far apart they move.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 85
+      - 85
+    drawn: false
+    flags: {}
+  - _id: 74g4YfkVcc0Zlx4E
+    _key: '!tables.results!zqmyEG0v7rAwITJG.74g4YfkVcc0Zlx4E'
+    type: text
+    name: Teleport
+    description: An object disappears and reappears on the ground in a visible, clear area up to L×40ft away.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 86
+      - 86
+    drawn: false
+    flags: {}
+  - _id: i9gtMt2k1guFGVye
+    _key: '!tables.results!zqmyEG0v7rAwITJG.i9gtMt2k1guFGVye'
+    type: text
+    name: Thaumaturgic Anchor
+    description: Object becomes the target of every spell cast near it.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 87
+      - 87
+    drawn: false
+    flags: {}
+  - _id: BcOyKCtN2jKcCht4
+    _key: '!tables.results!zqmyEG0v7rAwITJG.BcOyKCtN2jKcCht4'
+    type: text
+    name: Thicket
+    description: A thicket of trees and dense brush up to L×40ft wide suddenly sprouts up.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 88
+      - 88
+    drawn: false
+    flags: {}
+  - _id: ioJ6qL4bND5Ff1pN
+    _key: '!tables.results!zqmyEG0v7rAwITJG.ioJ6qL4bND5Ff1pN'
+    type: text
+    name: Time Jump
+    description: An object disappears as it jumps L×10 minutes into the future. When it returns, it appears in the unoccupied area nearest to where it left.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 89
+      - 89
+    drawn: false
+    flags: {}
+  - _id: jCzZRHM1v5dhHAVS
+    _key: '!tables.results!zqmyEG0v7rAwITJG.jCzZRHM1v5dhHAVS'
+    type: text
+    name: Summon Idol
+    description: A carved stone statue the size of a four poster bed rises from the ground.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 90
+      - 90
+    drawn: false
+    flags: {}
+  - _id: CBWad6q6ZIZTL41x
+    _key: '!tables.results!zqmyEG0v7rAwITJG.CBWad6q6ZIZTL41x'
+    type: text
+    name: Time Rush
+    description: Time in a 40ft bubble starts moving 10 times faster.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 91
+      - 91
+    drawn: false
+    flags: {}
+  - _id: 5sk5MH0QltSzlJum
+    _key: '!tables.results!zqmyEG0v7rAwITJG.5sk5MH0QltSzlJum'
+    type: text
+    name: Time Slow
+    description: Time in a 40ft bubble slows to 10%.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 92
+      - 92
+    drawn: false
+    flags: {}
+  - _id: DM0dnSp2waZdC0py
+    _key: '!tables.results!zqmyEG0v7rAwITJG.DM0dnSp2waZdC0py'
+    type: text
+    name: True Sight
+    description: You see through all nearby illusions.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 93
+      - 93
+    drawn: false
+    flags: {}
+  - _id: Hraq4KCDWrW9Dh0J
+    _key: '!tables.results!zqmyEG0v7rAwITJG.Hraq4KCDWrW9Dh0J'
+    type: text
+    name: Upwell
+    description: A spring of seawater appears.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 94
+      - 94
+    drawn: false
+    flags: {}
+  - _id: 4Y3Xm4LndP4MqvqK
+    _key: '!tables.results!zqmyEG0v7rAwITJG.4Y3Xm4LndP4MqvqK'
+    type: text
+    name: Vision
+    description: You completely control what a creature sees.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 95
+      - 95
+    drawn: false
+    flags: {}
+  - _id: tHj6bs0DIsbMpNhd
+    _key: '!tables.results!zqmyEG0v7rAwITJG.tHj6bs0DIsbMpNhd'
+    type: text
+    name: Visual Illusion
+    description: A silent, immobile, illusion of your choice appears, up to the size of a bedroom.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 96
+      - 96
+    drawn: false
+    flags: {}
+  - _id: mZD3OImXuBsTMw7F
+    _key: '!tables.results!zqmyEG0v7rAwITJG.mZD3OImXuBsTMw7F'
+    type: text
+    name: Ward
+    description: 'A silver circle 40ft across appears on the ground. Choose one thing that cannot cross it: Living creatures, dead creatures, projectiles or metal.'
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 97
+      - 97
+    drawn: false
+    flags: {}
+  - _id: 1m0wJ9ZnXljLkkzF
+    _key: '!tables.results!zqmyEG0v7rAwITJG.1m0wJ9ZnXljLkkzF'
+    type: text
+    name: Web
+    description: Your wrists can shoot thick webbing.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 98
+      - 98
+    drawn: false
+    flags: {}
+  - _id: GfNbynCpY0T3d2R5
+    _key: '!tables.results!zqmyEG0v7rAwITJG.GfNbynCpY0T3d2R5'
+    type: text
+    name: Wizard Mark
+    description: Your finger can shoot a stream of ulfire-colored paint. This paint is only visible to you, and can be seen at any distance, even through solid objects.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 99
+      - 99
+    drawn: false
+    flags: {}
+  - _id: AMQnBWTFwOuBIca0
+    _key: '!tables.results!zqmyEG0v7rAwITJG.AMQnBWTFwOuBIca0'
+    type: text
+    name: X-Ray Vision
+    description: You gain X-Ray vision.
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 100
+      - 100
+    drawn: false
+    flags: {}
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.0

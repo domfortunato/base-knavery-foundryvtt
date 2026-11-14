@@ -1,0 +1,278 @@
+folder: null
+sort: 0
+ownership:
+  default: 0
+_id: ePnwI2trGgy4IPYY
+_key: '!tables!ePnwI2trGgy4IPYY'
+name: General Gear 1 (Knave 1e)
+img: icons/svg/d20-grey.svg
+description: <p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>
+formula: 1d20
+replacement: true
+displayRoll: true
+results:
+  - _id: xQoypDV4qSDCxbKo
+    _key: '!tables.results!ePnwI2trGgy4IPYY.xQoypDV4qSDCxbKo'
+    type: text
+    name: Air bladder
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 1
+      - 1
+    drawn: false
+    flags: {}
+  - _id: HUzPThn63C5xYFdN
+    _key: '!tables.results!ePnwI2trGgy4IPYY.HUzPThn63C5xYFdN'
+    type: text
+    name: Bear trap
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    flags: {}
+  - _id: GDJIKSfHWakdn5Yv
+    _key: '!tables.results!ePnwI2trGgy4IPYY.GDJIKSfHWakdn5Yv'
+    type: text
+    name: Shovel
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    flags: {}
+  - _id: KDh7KAF53aHKdttH
+    _key: '!tables.results!ePnwI2trGgy4IPYY.KDh7KAF53aHKdttH'
+    type: text
+    name: Bellows
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    flags: {}
+  - _id: jIhUVbLpyeZkCEkf
+    _key: '!tables.results!ePnwI2trGgy4IPYY.jIhUVbLpyeZkCEkf'
+    type: text
+    name: Grease
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 5
+      - 5
+    drawn: false
+    flags: {}
+  - _id: SuhF9CgQcAJdpbiO
+    _key: '!tables.results!ePnwI2trGgy4IPYY.SuhF9CgQcAJdpbiO'
+    type: text
+    name: Saw
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 6
+      - 6
+    drawn: false
+    flags: {}
+  - _id: BSpQncNPKNGafkBR
+    _key: '!tables.results!ePnwI2trGgy4IPYY.BSpQncNPKNGafkBR'
+    type: text
+    name: Bucket
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 7
+      - 7
+    drawn: false
+    flags: {}
+  - _id: Bz7T2gwNDjRrxd2w
+    _key: '!tables.results!ePnwI2trGgy4IPYY.Bz7T2gwNDjRrxd2w'
+    type: text
+    name: Caltrops
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 8
+      - 8
+    drawn: false
+    flags: {}
+  - _id: 3wk9phzbEwWJhlyq
+    _key: '!tables.results!ePnwI2trGgy4IPYY.3wk9phzbEwWJhlyq'
+    type: text
+    name: Chisel
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 9
+      - 9
+    drawn: false
+    flags: {}
+  - _id: sDnlpZK6tltY2cpG
+    _key: '!tables.results!ePnwI2trGgy4IPYY.sDnlpZK6tltY2cpG'
+    type: text
+    name: Drill
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 10
+      - 10
+    drawn: false
+    flags: {}
+  - _id: 72AdFaZavIRAlC98
+    _key: '!tables.results!ePnwI2trGgy4IPYY.72AdFaZavIRAlC98'
+    type: text
+    name: Fishing rod
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 11
+      - 11
+    drawn: false
+    flags: {}
+  - _id: sAgnCIR7McOzecWI
+    _key: '!tables.results!ePnwI2trGgy4IPYY.sAgnCIR7McOzecWI'
+    type: text
+    name: Marbles
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 12
+      - 12
+    drawn: false
+    flags: {}
+  - _id: d8Go61m1rMJdeobj
+    _key: '!tables.results!ePnwI2trGgy4IPYY.d8Go61m1rMJdeobj'
+    type: text
+    name: Glue
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 13
+      - 13
+    drawn: false
+    flags: {}
+  - _id: mK6D80jUZSsQp6Zm
+    _key: '!tables.results!ePnwI2trGgy4IPYY.mK6D80jUZSsQp6Zm'
+    type: text
+    name: Pick
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 14
+      - 14
+    drawn: false
+    flags: {}
+  - _id: 0GF0nJ1q2rNkPkBM
+    _key: '!tables.results!ePnwI2trGgy4IPYY.0GF0nJ1q2rNkPkBM'
+    type: text
+    name: Hourglass
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 15
+      - 15
+    drawn: false
+    flags: {}
+  - _id: u7NB2fm5xwXdgdhQ
+    _key: '!tables.results!ePnwI2trGgy4IPYY.u7NB2fm5xwXdgdhQ'
+    type: text
+    name: Net
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 16
+      - 16
+    drawn: false
+    flags: {}
+  - _id: pS6g7wQiuHUYFGFu
+    _key: '!tables.results!ePnwI2trGgy4IPYY.pS6g7wQiuHUYFGFu'
+    type: text
+    name: Tongs
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 17
+      - 17
+    drawn: false
+    flags: {}
+  - _id: 1lLm5ZHRo9FjxExH
+    _key: '!tables.results!ePnwI2trGgy4IPYY.1lLm5ZHRo9FjxExH'
+    type: text
+    name: Lockpicks
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 18
+      - 18
+    drawn: false
+    flags: {}
+  - _id: 6nw6QuFQfsAG5ts5
+    _key: '!tables.results!ePnwI2trGgy4IPYY.6nw6QuFQfsAG5ts5'
+    type: text
+    name: Metal file
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 19
+      - 19
+    drawn: false
+    flags: {}
+  - _id: eSx8MCSUEZY80oV6
+    _key: '!tables.results!ePnwI2trGgy4IPYY.eSx8MCSUEZY80oV6'
+    type: text
+    name: Nails
+    description: ''
+    img: null
+    documentUuid: null
+    weight: 1
+    range:
+      - 20
+      - 20
+    drawn: false
+    flags: {}
+flags: {}
+_stats:
+  coreVersion: '14.370'
+  systemId: base-knavery
+  systemVersion: 0.1.0

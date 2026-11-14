@@ -108,6 +108,16 @@ export const HAZARD_DICE = {
 export const TABLES = {
   careers: "Careers",
   spells: "Spells",
+  /** Knave 1e's 100 level-less spells (CC BY 4.0, shipped): the spell list until 2e's Spells is built, or by choice. */
+  spells1e: "Spells (Knave 1e)",
+  /** Knave 1e starting gear (the starting-gear hack). */
+  gear1e: {
+    armor: "Starting Armor (Knave 1e)",
+    helmets: "Helmets and Shields (Knave 1e)",
+    dungeon: "Dungeoneering Gear (Knave 1e)",
+    general1: "General Gear 1 (Knave 1e)",
+    general2: "General Gear 2 (Knave 1e)",
+  },
   namesA: "Names",
   surnames: "Surnames",
   /** The book's second surname table: a Surnames draw ending in "-" is joined to one of these. */
@@ -126,6 +136,7 @@ export const TABLES = {
     speech: "Speech",
     background: "Background",
     misfortune: "Misfortune",
+    alignment: "Alignment",
   },
   mishaps: "Mishaps",
   reaction: "Reaction",
