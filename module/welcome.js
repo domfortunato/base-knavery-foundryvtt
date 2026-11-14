@@ -90,12 +90,17 @@ export class WelcomeWindow extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   static async #onOpenGuide() {
-    const pack = game.packs.get(`${SYSTEM_ID}.guide`);
-    const entry = pack?.index.contents[0];
-    const doc = entry ? await pack.getDocument(entry._id) : null;
-    doc?.sheet.render({ force: true });
+    await openGuide();
   }
 }
+
+/** Open the Base Knavery guide (the guide compendium's journal): the welcome, the dashboard's rail. */
+export const openGuide = async () => {
+  const pack = game.packs.get(`${SYSTEM_ID}.guide`);
+  const entry = pack?.index.contents[0];
+  const doc = entry ? await pack.getDocument(entry._id) : null;
+  return doc?.sheet.render({ force: true });
+};
 
 export const openWelcome = () => {
   const open = foundry.applications.instances.get(WELCOME_ID);

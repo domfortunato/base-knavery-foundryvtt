@@ -1,16 +1,27 @@
+{{!-- The Random page: the encounter procedure (p19), events, things made on the fly, downtime.
+      Table buttons roll the GM's own Knave 2e tables, whispered; one stays off until its table exists. --}}
 <section class="tab {{tab.cssClass}}" data-tab="dice" data-group="primary">
   <h3>{{localize "KNAVERY.Dashboard.Encounters"}}</h3>
   <div class="dash-buttons">
     <button type="button" data-action="reaction"><i class="fas fa-face-meh"></i> {{localize "KNAVERY.Dashboard.Reaction"}}</button>
+    {{#each random.encounters}}<button type="button" data-action="rollEvent" data-table="{{this.table}}"{{#unless this.exists}} disabled{{/unless}} data-tooltip-text="{{this.tip}}"><i class="fas {{this.icon}}"></i> {{this.label}}</button>{{/each}}
+    <button type="button" data-action="surprise" data-tooltip="KNAVERY.Dashboard.SurpriseTip"><i class="fas fa-eye"></i> {{localize "KNAVERY.Dashboard.Surprise"}}</button>
     <button type="button" data-action="encounterDistance" data-where="dungeon"><i class="fas fa-ruler"></i> {{localize "KNAVERY.Dashboard.DistanceDungeon"}}</button>
     <button type="button" data-action="encounterDistance" data-where="wilderness"><i class="fas fa-ruler-combined"></i> {{localize "KNAVERY.Dashboard.DistanceWilderness"}}</button>
     <button type="button" data-action="morale"><i class="fas fa-flag"></i> {{localize "KNAVERY.Dashboard.MoraleSelected"}}</button>
   </div>
   <h3>{{localize "KNAVERY.Dashboard.Events"}}</h3>
   <div class="dash-buttons dash-events">
-    {{#each events}}
-    <button type="button" data-action="rollEvent" data-table="{{this.table}}"{{#unless this.exists}} disabled{{/unless}} data-tooltip-text="{{this.tip}}"><i class="fas {{this.icon}}"></i> {{this.label}}</button>
-    {{/each}}
+    {{#each random.events}}<button type="button" data-action="rollEvent" data-table="{{this.table}}"{{#unless this.exists}} disabled{{/unless}} data-tooltip-text="{{this.tip}}"><i class="fas {{this.icon}}"></i> {{this.label}}</button>{{/each}}
+  </div>
+  <h3>{{localize "KNAVERY.Dashboard.OnTheFly"}}</h3>
+  <div class="dash-buttons dash-fly">
+    {{#each random.fly}}<button type="button" data-action="rollEvent" data-table="{{this.table}}"{{#unless this.exists}} disabled{{/unless}} data-tooltip-text="{{this.tip}}"><i class="fas {{this.icon}}"></i> {{this.label}}</button>{{/each}}
+    <button type="button" data-action="quickNpc" data-tooltip="KNAVERY.Dashboard.QuickNpcTip"><i class="fas fa-user-secret"></i> {{localize "KNAVERY.Dashboard.QuickNpc"}}</button>
+  </div>
+  <h3>{{localize "KNAVERY.Dashboard.Downtime"}}</h3>
+  <div class="dash-buttons dash-downtime">
+    {{#each random.downtime}}<button type="button" data-action="rollEvent" data-table="{{this.table}}"{{#unless this.exists}} disabled{{/unless}} data-tooltip-text="{{this.tip}}"><i class="fas {{this.icon}}"></i> {{this.label}}</button>{{/each}}
   </div>
   <p class="hint">{{localize "KNAVERY.Dashboard.EventsHint"}}</p>
   <p class="hint">{{localize "KNAVERY.Dashboard.DiceHint"}}</p>

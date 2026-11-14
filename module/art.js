@@ -8,6 +8,7 @@
  * players (who usually cannot browse files) see it too.
  */
 import { SETTINGS_NS, SYS_PATH } from "./config.js";
+import { ART_CREDITS } from "./welcome-data.js";
 
 const L = (k) => game.i18n.localize(k);
 const attr = (s) => String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
@@ -117,6 +118,20 @@ export const setActorArt = async (actor, img) => {
  * @param {"person"|"monster"|"item"} [o.kind]
  * @param {(src:string)=>Promise} o.onPick
  */
+/** Each gallery's credit, its artist linked to the gallery's page (ART_CREDITS, the welcome's list). */
+const CREDIT_LINKS = {
+  "KNAVERY.Art.CreditAspeheim": { credit: "Lemurs Portraits", text: "Jon Aspeheim" },
+  "KNAVERY.Art.CreditLydia": { credit: "Portraits and tokens", text: "Lydia Comer" },
+  "KNAVERY.Art.CreditTlomdev": { credit: "Tlomdev's Tokens", text: "tlomdev" },
+  "KNAVERY.Art.CreditGameIcons": { credit: "Game-icons.net", text: "game-icons.net" },
+};
+const creditHtml = (key) => {
+  const c = CREDIT_LINKS[key];
+  const url = ART_CREDITS.find((a) => a.name === c?.credit)?.url;
+  const link = url ? `<a href="${attr(url)}" target="_blank" rel="noopener">${attr(c.text)}</a>` : attr(c?.text ?? "");
+  return game.i18n.format(key, { link });
+};
+
 export async function pickArt({ current, title, kind = "person", onPick, onRoll = null }) {
   const isGM = game.user.isGM;
   const cellFor = (src, label = null) => {
@@ -132,7 +147,7 @@ export async function pickArt({ current, title, kind = "person", onPick, onRoll 
       <button type="button" class="knavery-icon-back"><i class="fas fa-chevron-left"></i> ${L("KNAVERY.Art.Back")}</button>
       <div class="knavery-portrait-grid"></div>
     </div>
-    ${credit ? `<div class="knavery-portrait-credit">${L(credit)}</div>` : ""}`;
+    ${credit ? `<div class="knavery-portrait-credit">${creditHtml(credit)}</div>` : ""}`;
 
   const panes = [];
   const shipped = await getPortraitManifest();
@@ -155,7 +170,7 @@ export async function pickArt({ current, title, kind = "person", onPick, onRoll 
       id: "shipped",
       label: L("KNAVERY.Art.TabAspeheim"),
       body: `<div class="knavery-portrait-grid">${shipped.names.map((n) => cellFor(`${shipped.portraitDir}/${n}`)).join("")}</div>
-        <div class="knavery-portrait-credit">${L("KNAVERY.Art.CreditAspeheim")}</div>`,
+        <div class="knavery-portrait-credit">${creditHtml("KNAVERY.Art.CreditAspeheim")}</div>`,
     });
   }
   const lset = lydia.sets?.[kind === "monster" ? "monsters" : "characters"];
@@ -165,7 +180,7 @@ export async function pickArt({ current, title, kind = "person", onPick, onRoll 
       label: L("KNAVERY.Art.TabLydia"),
       body: `<div class="knavery-portrait-grid">${lset.pairs.map(({ portrait }) =>
         cellFor(`${lset.portraitDir}/${portrait}`)).join("")}</div>
-        <div class="knavery-portrait-credit">${L("KNAVERY.Art.CreditLydia")}</div>`,
+        <div class="knavery-portrait-credit">${creditHtml("KNAVERY.Art.CreditLydia")}</div>`,
     });
   }
   if (tlom.categories?.length && kind !== "item") {

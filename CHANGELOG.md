@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **The Random page grows:** Activity and a Surprise shortcut (it sets up the WIS check on Requests) join
+  the encounter rolls; **On the fly** rolls a Monster or a quick NPC (name, personality, profession,
+  detail in one card); **Downtime** rolls a Carousing mishap. All from your Knave 2e tables, whispered.
+- **The dashboard's title bar names the page** ("Game Master's Dashboard: Party"), and its rail has a
+  **Guide** button that opens the Base Knavery guide.
+- **Show to players** sits in words on the rulebook's title bar for the GM, no longer in the ⋮ menu.
+- **The portrait picker's credits link** to each gallery's page (game-icons.net for the icons).
 - **The dashboard's Dice page is now Random**, with an **Events** section: weather, travel and delve
   shifts, signs, city events and disasters, each rolled (whispered to the GM) from the table built from
   your Knave 2e book; a button stays off until its table exists.

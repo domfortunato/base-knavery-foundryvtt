@@ -14,6 +14,14 @@
     <i class="{{tab.icon}}" inert></i>
   </button>
   {{/each}}
+  {{#if railGuide}}
+  {{!-- Not a page: the Base Knavery guide (the dashboard). --}}
+  <span class="knavery-rail-divider" aria-hidden="true"></span>
+  <button type="button" class="knavery-rail-guide" data-action="openGuide" data-always-live
+    aria-label="{{localize 'KNAVERY.Welcome.OpenGuide'}}" data-tooltip-text="{{localize 'KNAVERY.Welcome.OpenGuide'}}">
+    <i class="fas fa-book-open-reader" inert></i>
+  </button>
+  {{/if}}
   {{#if isCharacter}}
   {{!-- Not a page: the Attack window, from any page (an improvised attack needs no weapon). --}}
   <span class="knavery-rail-divider" aria-hidden="true"></span>

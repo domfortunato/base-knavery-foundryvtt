@@ -105,12 +105,33 @@ export class RulebookReader extends HandlebarsApplicationMixin(ApplicationV2) {
     this.#page = page;
   }
 
+  /** The GM's Show to players, in words on the title bar (user, 2026-11-14: the ⋮ menu hid it). */
+  _getFrameButtons(options) {
+    const buttons = super._getFrameButtons(options);
+    if (!game.user.isGM) return buttons;
+    return [{ action: "showPage", icon: "fa-solid fa-eye", label: "KNAVERY.Rulebook.ShowPlayers" }, ...buttons];
+  }
+
+  async _renderFrame(options) {
+    const frame = await super._renderFrame(options);
+    const button = frame.querySelector('.window-header button[data-action="showPage"]');
+    if (button) {
+      const glyph = [...button.classList].filter((c) => c === "fa-solid" || c.startsWith("fa-"));
+      button.classList.remove(...glyph, "icon");
+      button.classList.add("knavery-header-button");
+      const icon = document.createElement("i");
+      icon.className = glyph.join(" ");
+      button.removeAttribute("data-tooltip");
+      button.append(icon, document.createTextNode(button.getAttribute("aria-label") ?? ""));
+    }
+    return frame;
+  }
+
   _getHeaderControls() {
     const controls = super._getHeaderControls();
     controls.push({ action: "openTab", icon: "fa-solid fa-up-right-from-square", label: "KNAVERY.Rulebook.OpenTab" });
     if (game.user.isGM) {
       controls.push(
-        { action: "showPage", icon: "fa-solid fa-eye", label: "KNAVERY.Rulebook.Show" },
         { action: "choosePdf", icon: "fa-solid fa-file-arrow-up", label: "KNAVERY.Rulebook.FromComputer" },
       );
     }

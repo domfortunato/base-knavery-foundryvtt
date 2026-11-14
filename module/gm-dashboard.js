@@ -25,7 +25,8 @@ import {
 import { emit, onSocket } from "./socket.js";
 import { isRollable, rollCheck, rollHazard, rollMorale, rollSave } from "./rolls.js";
 import { actorFromUuid } from "./damage.js";
-import { findTable } from "./compendium.js";
+import { drawFrom, findTable } from "./compendium.js";
+import { openGuide } from "./welcome.js";
 import { openTableImporter } from "./table-importer.js";
 import { openMarketplaceManager } from "./marketplace.js";
 import { hasRulebook, openRulebook, pickLocalRulebook, showRulebookPage, tablePage } from "./rulebook.js";
@@ -45,14 +46,22 @@ const F = (k, d) => game.i18n.format(k, d);
 /** Requests sent this session, newest first: {id, label, reason, target, entries:[{actorId,name,state,total,success}]} */
 const requestLog = [];
 
-/** The Random page's events: Knave 2e tables, built from the GM's book (never shipped), and their pages. */
-const EVENTS = [
-  { key: "Weather", table: "Weather", icon: "fa-cloud-sun-rain", page: 9 },
-  { key: "TravelShift", table: "Travel Shifts", icon: "fa-route", page: 9 },
-  { key: "DelveShift", table: "Delve Shifts", icon: "fa-dungeon", page: 14 },
-  { key: "Sign", table: "Signs", icon: "fa-paw", page: 10 },
-  { key: "CityEvent", table: "City Events", icon: "fa-city", page: 46 },
-  { key: "Disaster", table: "Disasters", icon: "fa-volcano", page: 31 },
+/** The Random page's table rolls, by section: Knave 2e tables, built from the GM's book (never shipped). */
+const RANDOM_TABLES = [
+  { key: "Activity", table: "Activities", icon: "fa-person-running", page: 19, section: "encounters" },
+  { key: "Weather", table: "Weather", icon: "fa-cloud-sun-rain", page: 9, section: "events" },
+  { key: "TravelShift", table: "Travel Shifts", icon: "fa-route", page: 9, section: "events" },
+  { key: "DelveShift", table: "Delve Shifts", icon: "fa-dungeon", page: 14, section: "events" },
+  { key: "Sign", table: "Signs", icon: "fa-paw", page: 10, section: "events" },
+  { key: "CityEvent", table: "City Events", icon: "fa-city", page: 46, section: "events" },
+  { key: "Disaster", table: "Disasters", icon: "fa-volcano", page: 31, section: "events" },
+  { key: "Monster", table: "Monsters", icon: "fa-dragon", page: 61, section: "fly" },
+  { key: "Carousing", table: "Carousing Mishaps", icon: "fa-beer-mug-empty", page: 52, section: "downtime" },
+];
+/** A quick NPC (the Random page): each of these that the world has, drawn into one card (pp54-57). */
+const QUICK_NPC = [
+  { key: "Name", tables: ["Names", "Surnames"] }, { key: "Personality", tables: ["Personalities"] },
+  { key: "Profession", tables: ["Professions"] }, { key: "Detail", tables: ["NPC Details"] },
 ];
 
 /** The edges a GM may set on a request. */
@@ -91,6 +100,9 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       morale: GmDashboard.#onMorale,
       rollTable: GmDashboard.#onRollTable,
       rollEvent: GmDashboard.#onRollEvent,
+      surprise: GmDashboard.#onSurprise,
+      quickNpc: GmDashboard.#onQuickNpc,
+      openGuide: () => openGuide(),
       importTable: GmDashboard.#onImportTable,
       marketManager: () => openMarketplaceManager(),
       toggleSetting: GmDashboard.#onToggleSetting,
@@ -192,11 +204,13 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
         };
       })(),
       wages: wageRows(),
-      events: EVENTS.map((e) => {
+      random: RANDOM_TABLES.reduce((out, e) => {
         const exists = !!game.tables.getName(e.table);
-        return { ...e, label: L(`KNAVERY.Dashboard.Event.${e.key}`), exists,
-          tip: exists ? F("KNAVERY.Dashboard.EventFrom", { name: e.table, page: e.page }) : F("KNAVERY.Dashboard.EventMissing", { name: e.table }) };
-      }),
+        (out[e.section] ??= []).push({ ...e, label: L(`KNAVERY.Dashboard.Event.${e.key}`), exists,
+          tip: exists ? F("KNAVERY.Dashboard.EventFrom", { name: e.table, page: e.page }) : F("KNAVERY.Dashboard.EventMissing", { name: e.table }) });
+        return out;
+      }, {}),
+      railGuide: true,
       party: partyRows(),
       usesWounds: usesWounds(),
       treasure: treasureContext(),
@@ -228,6 +242,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
   _onRender(context, options) {
     super._onRender(context, options);
     placeRailSoon(this);
+    if (this.window?.title) this.window.title.textContent = this.title;
     const diff = this.element.querySelector('[name="difficulty"]');
     const out = this.element.querySelector(".request-target");
     const showTarget = () => { if (diff && out) out.textContent = CHECK_BASE + (Number(diff.value) || 0); };
@@ -291,6 +306,18 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
   _onPosition(position) {
     super._onPosition(position);
     placeRail(this, position);
+  }
+
+  /** The open page's name in the title bar (user, 2026-11-14). */
+  get title() {
+    const id = this.tabGroups?.primary;
+    const tab = GmDashboard.TABS.primary.tabs.find((t) => t.id === id);
+    return tab ? F("KNAVERY.Dashboard.TitlePage", { page: L(tab.label) }) : L(this.options.window.title);
+  }
+
+  changeTab(tab, group, options) {
+    super.changeTab(tab, group, options);
+    if (this.window?.title) this.window.title.textContent = this.title;
   }
 
   #form() { return this.element; }
@@ -551,6 +578,42 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     const table = await findTable(target.dataset.table);
     if (!table) return ui.notifications.warn("KNAVERY.Dashboard.EventMissing", { format: { name: target.dataset.table } });
     await table.draw({ rollMode: CONST.DICE_ROLL_MODES.PRIVATE });
+  }
+
+  /**
+   * Surprise (p19): the PC with the best WIS makes a WIS check against the creatures' WIS. Sets the
+   * request up on the Requests page; the GM ticks that PC, types the creatures' WIS and sends.
+   */
+  static #onSurprise() {
+    this.changeTab("requests", "primary");
+    const root = this.element;
+    const what = root.querySelector('[name="check"]');
+    if (what) { what.value = "ability:WIS"; what.dispatchEvent(new Event("change", { bubbles: true })); }
+    const reason = root.querySelector('[name="reason"]');
+    if (reason) reason.value = L("KNAVERY.Dashboard.SurpriseReason");
+    root.querySelector('[name="difficulty"]')?.focus();
+  }
+
+  /** A quick NPC: a name, a personality, a profession and a detail from the tables the world has, whispered. */
+  static async #onQuickNpc() {
+    const lines = [];
+    for (const { key, tables } of QUICK_NPC) {
+      const words = [];
+      for (const name of tables) {
+        const text = (await drawFrom(name, { warn: false }))?.text;
+        if (text) words.push(text);
+      }
+      if (words.length) lines.push({ label: L(`KNAVERY.Dashboard.Npc.${key}`), text: words.join(" ") });
+    }
+    if (!lines.length) return ui.notifications.warn("KNAVERY.Dashboard.QuickNpcMissing", { localize: true });
+    const esc = (s) => foundry.utils.escapeHTML(String(s ?? ""));
+    await ChatMessage.create({
+      speaker: { alias: L("KNAVERY.GameMaster") },
+      whisper: game.users.filter((u) => u.isGM).map((u) => u.id),
+      content: `<div class="knavery-roll-card kind-npc"><header class="card-title"><h3><i class="fas fa-user-secret"></i> ${esc(L("KNAVERY.Dashboard.QuickNpc"))}</h3></header>`
+        + `<ul>${lines.map((l) => `<li><strong>${esc(l.label)}:</strong> ${esc(l.text)}</li>`).join("")}</ul></div>`,
+      flags: { [FLAG_SCOPE]: { quickNpc: true } },
+    });
   }
 
   static async #onRollTable(_e, target) {

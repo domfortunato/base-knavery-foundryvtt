@@ -2507,6 +2507,82 @@ await withSettings(gm, async () => {
     await gm.evaluate(() => foundry.applications.instances.get("knavery-gm-dashboard")?.close());
   });
 
+  await section("31. The dashboard names its page, opens the guide and grows the Random page; the reader's Show to players; linked art credits.", async () => {
+    const made31 = await gm.evaluate(async () => {
+      const rows = (names) => names.map((name, i) => ({ type: "text", name, range: [i + 1, i + 1], weight: 1 }));
+      const out = [];
+      for (const [name, words] of [["Personalities", ["Probe-gruff"]], ["Professions", ["Probe-tanner"]]]) {
+        if (!game.tables.getName(name)) out.push((await RollTable.create({ name, formula: "1d1", results: rows(words) })).id);
+      }
+      return out;
+    });
+    made.tables.push(...made31);
+    const d = await gm.evaluate(async (sys) => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      game.knavery.openDashboard();
+      await wait(1200);
+      const app = foundry.applications.instances.get("knavery-gm-dashboard");
+      app.changeTab("requests", "primary");
+      await wait(300);
+      const title = () => app.element.querySelector(".window-title")?.textContent.trim();
+      const out = { first: title() };
+      app.changeTab("party", "primary");
+      await wait(300);
+      out.party = title();
+      // Random: the new buttons.
+      app.changeTab("dice", "primary");
+      await wait(300);
+      const sec = app.element.querySelector('section[data-tab="dice"]');
+      out.buttons = {
+        activity: !!sec.querySelector('[data-table="Activities"]'), surprise: !!sec.querySelector('[data-action="surprise"]'),
+        monster: !!sec.querySelector('.dash-fly [data-table="Monsters"]'), npc: !!sec.querySelector('.dash-fly [data-action="quickNpc"]'),
+        carousing: !!sec.querySelector('.dash-downtime [data-table="Carousing Mishaps"]'),
+      };
+      sec.querySelector('[data-action="quickNpc"]').click();
+      await wait(1200);
+      const msg = game.messages.contents.at(-1);
+      out.npc = { flag: msg.getFlag("base-knavery", "quickNpc") === true, whisper: msg.whisper.length > 0,
+        words: /Probe-gruff/.test(msg.content) && /Probe-tanner/.test(msg.content) };
+      sec.querySelector('[data-action="surprise"]').click();
+      await wait(500);
+      out.surprise = { tab: app.tabGroups.primary, check: app.element.querySelector('[name="check"]')?.value,
+        reason: /Surprise!/.test(app.element.querySelector('[name="reason"]')?.value ?? ""), title: title() };
+      // The guide, from the rail.
+      app.element.querySelector('nav.knavery-tab-rail [data-action="openGuide"]')?.click();
+      await wait(1500);
+      out.guide = [...foundry.applications.instances.values()].some((x) => x.document?.documentName === "JournalEntry" && x.document.pack === "base-knavery.guide" && x.rendered);
+      for (const x of [...foundry.applications.instances.values()]) if (x.document?.pack === "base-knavery.guide") await x.close();
+      // The reader's Show to players.
+      const R = await import(`${sys}/rulebook.js`);
+      out.reader = R.hasRulebook?.() ? "book" : "none";
+      if (out.reader === "book") {
+        R.openRulebook();
+        await wait(1500);
+        const rd = document.querySelector(".knavery-rulebook .window-header button[data-action=\"showPage\"]");
+        out.show = rd?.textContent.trim();
+        foundry.applications.instances.get("knavery-rulebook")?.close();
+      }
+      // The picker's credits.
+      const { pickArt } = await import(`${sys}/art.js`);
+      pickArt({ current: "", title: "Probe picker", kind: "person", onPick: () => {} });
+      await wait(1500);
+      out.links = [...document.querySelectorAll(".knavery-portrait-credit a")].map((a) => a.href).join(" ");
+      for (const x of [...foundry.applications.instances.values()]) if (x.element?.querySelector?.(".knavery-portrait-gallery")) await x.close();
+      return out;
+    }, SYS);
+    await gm.screenshot({ path: `${SHOTS}/dashboard-random.png` });
+    ok(d.first === "Game Master's Dashboard: Requests" && d.party === "Game Master's Dashboard: Party",
+      "the dashboard's title bar names the open page", JSON.stringify(d));
+    ok(Object.values(d.buttons).every(Boolean) && d.npc.flag && d.npc.whisper && d.npc.words,
+      "Random has Activity, Surprise, Monster, NPC and Carousing; a quick NPC is one whispered card from the world's tables", JSON.stringify(d));
+    ok(d.surprise.tab === "requests" && d.surprise.check === "ability:WIS" && d.surprise.reason && d.surprise.title === "Game Master's Dashboard: Requests",
+      "Surprise sets up a WIS check on Requests", JSON.stringify(d.surprise));
+    ok(d.guide, "the rail's Guide button opens the Base Knavery guide", JSON.stringify(d));
+    ok(d.reader === "none" || d.show === "Show to players", "the open rulebook shows Show to players in words on its title bar", JSON.stringify(d));
+    ok(/jonaspeheim\.itch\.io/.test(d.links) && /game-icons\.net/.test(d.links), "the portrait picker's credits link to each gallery's page", d.links);
+    await gm.evaluate(() => foundry.applications.instances.get("knavery-gm-dashboard")?.close());
+  });
+
   // Cleanup.
   await gm.evaluate(async (tables) => {
     for (const app of [...foundry.applications.instances.values()]) if (app.id !== "sidebar") app.close?.();
