@@ -18,7 +18,7 @@ import { pickArt, randomPortraitPair, setActorArt } from "../art.js";
 import { drawFrom, pickFrom } from "../compendium.js";
 import {
   addCareer, careerFromText, chooseCareer, drawCareerExcept, failedCareersOn, pickCareerItem, regenerateCharacter,
-  removeCareer, replaceCareer, rollFailedCareer, rollTraits,
+  removeCareer, replaceCareer, rollFailedCareer, rollFullName, rollTraits,
 } from "../character-generator.js";
 import { hpRuleHint, openLevelUp } from "../level-up.js";
 import { canOfferItem, offerFromDrop, promptOfferTarget } from "../item-offer.js";
@@ -398,7 +398,12 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
         enriched: await enrichForSheet(s.gmNotes ?? "", { relativeTo: actor, secrets: game.user.isGM }),
       } : null,
       careerEdit,
+      // The failed career sits on a line of its own, labelled, never mixed with the careers.
+      realCareers: careers.filter((c) => !c.failed),
+      failedCareer: careers.find((c) => c.failed) ?? null,
+      showFailedLine: isChar && (failedCareersOn() || careers.some((c) => c.failed)),
       showFailedCareerRoll: careerEdit && failedCareersOn() && !careers.some((c) => c.failed),
+      coinsTakeSlots: game.settings.get(SETTINGS_NS, "coins-take-slots"),
       abilities,
       attacks,
       items,
@@ -584,6 +589,8 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       title: F("KNAVERY.Art.ChooseFor", { name: this.actor.name }),
       kind: this.actor.type === "npc" && this.actor.system.role === "monster" ? "monster" : "person",
       onPick: (src) => setActorArt(this.actor, src),
+      onRoll: this.actor.system.generationEnabled === true && this._mayRandomize()
+        ? () => KnaveryActorSheet.#onRollPortrait.call(this) : null,
     });
   }
 
@@ -594,11 +601,8 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
   }
 
   static async #onRollName() {
-    const first = await drawFrom(TABLES.namesA);
-    if (!first) return;
-    const last = await drawFrom(TABLES.surnames, { warn: false });
-    await this.actor.update({ name: last ? `${first.text} ${last.text}` : first.text,
-      "prototypeToken.name": last ? `${first.text} ${last.text}` : first.text });
+    const name = await rollFullName({ warn: true });
+    if (name) await this.actor.update({ name, "prototypeToken.name": name });
   }
 
   static async #onPickName() {

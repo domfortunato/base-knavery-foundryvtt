@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Create Character is two big buttons: Randomly Generated and Blank Sheet, each with one line.
+- The name d20 on the sheet joins a surname's two halves ("Adder-" + "bald") instead of leaving a trailing hyphen.
+- The portrait picker rolls a random portrait in Char Gen Mode.
+- The Inventory tab says how many coins the character has.
+- The failed career stands on its own "Failed Career" line on the Knave page, and its Growth card carries a
+  "Failed Career" band.
 - **Bigger text, and your own text size.** Base Knavery's windows default to Large, and each player picks
   Normal, Large, Larger or Largest under Configure Settings → Base Knavery. Sheets and the dashboard open
   larger to match. Chat cards keep their size.

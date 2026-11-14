@@ -233,7 +233,7 @@ await withSettings(gm, async () => {
         tag: [...el.querySelectorAll(".knavery-item-tag")].some((t) => t.textContent.trim() === game.i18n.localize("KNAVERY.Petty")),
       };
     }, ids.a);
-    ok(ui.chip.includes("Probe Lutist") && ui.chip.includes(await alice.evaluate(() => game.i18n.localize("KNAVERY.FailedSuffix"))), "the Knave page marks the failed career", JSON.stringify(ui));
+    ok(ui.chip.includes("Probe Lutist"), "the Knave page shows the failed career", JSON.stringify(ui));
     ok(ui.petty.includes("Probe Lute") && ui.tag, "the Growth page names the petty item, and the inventory tags it", JSON.stringify(ui));
   });
 
@@ -478,6 +478,85 @@ await withSettings(gm, async () => {
       return !!a.items.getName("Probe Forger");
     }, [SYS, ids.a]);
     ok(gmCan, "the GM still can", String(gmCan));
+  });
+
+  /* ------------------------------------------------------------------ */
+  await section("13. Create window, rolled names, coins, the Failed Career line, the portrait roll.", async () => {
+    alice.evaluate(() => { game.knavery.createCharacterInteractive(); });
+    await alice.waitForSelector(".knavery-create .form-footer", { timeout: T(10000) });
+    const win = await alice.evaluate(() => {
+      const el = document.querySelector(".knavery-create");
+      return {
+        subs: [...el.querySelectorAll(".form-footer .kn-create-sub")].map((s) => s.textContent.trim()),
+        list: !!el.querySelector(".knavery-create-branches, ul"),
+        titles: [...el.querySelectorAll(".form-footer button")].map((b) => b.textContent.trim()),
+      };
+    });
+    await alice.locator('.knavery-create button[data-action="close"]').click().catch(() => {});
+    await closeDialogs();
+    ok(win.subs.length === 2 && win.subs[0].startsWith("Rolled stats") && win.subs[1].startsWith("An empty sheet") && !win.list,
+      "Create Character: two big buttons with a line each, no list", JSON.stringify(win));
+
+    const names = await gm.evaluate(async ([sys, x]) => {
+      const made = [];
+      const mk = async (name, rows) => {
+        const t = await RollTable.create({ name, formula: `1d${rows.length}`, results: rows.map((r, i) => ({ type: "text", name: r, range: [i + 1, i + 1], weight: 1 })) });
+        made.push(t.id);
+        return t;
+      };
+      // Only when the world has none of its own: otherwise the world's rows are what get drawn.
+      const own = ["Names", "Surnames", "Surname Endings"].some((n) => game.tables.getName(n));
+      if (own) return { skipped: true, made };
+      await mk("Names", ["Probe Wren"]); await mk("Surnames", ["Probe Adder-"]);
+      const endings = await mk("Surname Endings", ["bald"]);
+      const { rollFullName } = await import(`${sys}/character-generator.js`);
+      const joined = await rollFullName();
+      await endings.delete(); made.pop();
+      const bare = await rollFullName();
+      return { joined, bare, made };
+    }, [SYS, ids.a]);
+    made.tables.push(...names.made);
+    ok(names.skipped || (names.joined === "Probe Wren Probe Adderbald" && names.bare === "Probe Wren Probe Adder"),
+      "a rolled surname joins its ending, and never ends in a hyphen", JSON.stringify(names));
+
+    await gm.evaluate((x) => game.actors.get(x).update({ "system.coins": 90, "system.level": 1, "system.generationEnabled": true }), ids.a);
+    await openAs(alice, ids.a);
+    await settle();
+    const page = await alice.evaluate((x) => {
+      const el = game.actors.get(x).sheet.element;
+      return {
+        coins: el.querySelector(".summary-coins")?.textContent.trim() ?? "",
+        failedLabel: el.querySelector(".failed-career-line .background-label")?.textContent.trim() ?? "",
+        failedName: el.querySelector(".failed-career-line .career-chip")?.textContent.trim() ?? "",
+        inCareers: [...el.querySelectorAll(".career-line:not(.failed-career-line) .career-chip")].map((c) => c.textContent.trim()),
+        band: el.querySelector(".career-failed-band")?.textContent.trim() ?? "",
+      };
+    }, ids.a);
+    ok(page.coins.startsWith("90 coins"), "the Inventory tab says how many coins", page.coins);
+    ok(page.failedLabel === "Failed Career" && page.failedName && !page.inCareers.includes(page.failedName) && page.band === "Failed Career",
+      "the failed career stands on its own labelled line, and its Growth card is banded", JSON.stringify(page));
+
+    const pic = await alice.evaluate(async (x) => {
+      const a = game.actors.get(x);
+      const before = a.img;
+      a.sheet.element.querySelector('img.portrait[data-action="editPortrait"]').click();
+      await new Promise((r) => setTimeout(r, 1500));
+      const btn = document.querySelector(".knavery-portrait-roll");
+      const has = !!btn;
+      btn?.click();
+      await new Promise((r) => setTimeout(r, 1500));
+      return { has, changed: a.img !== before };
+    }, ids.a);
+    await gm.evaluate((x) => game.actors.get(x).update({ "system.generationEnabled": false }), ids.a);
+    await settle();
+    const offHas = await alice.evaluate(async (x) => {
+      game.actors.get(x).sheet.element.querySelector('img.portrait[data-action="editPortrait"]').click();
+      await new Promise((r) => setTimeout(r, 1500));
+      const has = !!document.querySelector(".knavery-portrait-roll");
+      for (const app of [...foundry.applications.instances.values()]) if (app instanceof foundry.applications.api.DialogV2) await app.close();
+      return has;
+    }, ids.a);
+    ok(pic.has && pic.changed && !offHas, "the portrait picker rolls a portrait in Char Gen Mode only", JSON.stringify({ ...pic, offHas }));
   });
 
   // Cleanup.

@@ -253,6 +253,23 @@ export const chooseCareer = async () => {
 /*  Generation                                   */
 /* -------------------------------------------- */
 
+/**
+ * A first name and a surname. The book builds a surname from two halves
+ * ("Adder-" + "bald"): a Surnames draw ending in "-" is joined to one from
+ * Surname Endings, or loses its hyphen when the world has no such table.
+ * Null when the Names table is still an empty shell.
+ */
+export const rollFullName = async ({ warn = false } = {}) => {
+  const first = await drawFrom(TABLES.namesA, { warn });
+  if (!first) return null;
+  let last = (await drawFrom(TABLES.surnames, { warn: false }))?.text ?? null;
+  if (last?.endsWith("-")) {
+    const end = (await drawFrom(TABLES.surnameEndings, { warn: false }))?.text;
+    last = end ? last.slice(0, -1) + end.replace(/^-/, "") : last.slice(0, -1);
+  }
+  return [first.text, last].filter(Boolean).join(" ");
+};
+
 /** Every trait drawn from its table; a table still an empty shell leaves its trait out. */
 export const rollTraits = async () => {
   const traits = {};
@@ -334,16 +351,8 @@ export const buildCharacter = async ({ level = 1, abilities = null } = {}) => {
   }
 
   const coins = (await new Roll(STARTING_COINS).evaluate()).total;
-  const first = await drawFrom(TABLES.namesA, { warn: false });
-  let last = first ? (await drawFrom(TABLES.surnames, { warn: false }))?.text : null;
-  // The book builds a surname from two halves ("Adder-" + "-bald"): a draw ending
-  // in "-" is joined to one from Surname Endings, when the world has that table.
-  if (last?.endsWith("-")) {
-    const end = (await drawFrom(TABLES.surnameEndings, { warn: false }))?.text;
-    last = end ? last.slice(0, -1) + end.replace(/^-/, "") : last.slice(0, -1);
-  }
-  const name = first ? [first.text, last].filter(Boolean).join(" ") : L("KNAVERY.DefaultCharacterName");
-  if (!first) notes.push(L("KNAVERY.Gen.NoNameTable"));
+  const name = (await rollFullName()) ?? L("KNAVERY.DefaultCharacterName");
+  if (name === L("KNAVERY.DefaultCharacterName")) notes.push(L("KNAVERY.Gen.NoNameTable"));
 
   const traits = await rollTraits();
   const art = await randomPortraitPair("person");
@@ -510,15 +519,26 @@ export const createCharacterInteractive = async () => {
   const choice = await foundry.applications.api.DialogV2.wait({
     window: { title: L("KNAVERY.CreateCharacter"), icon: "fas fa-user-plus" },
     classes: ["knavery", "knavery-create"],
-    position: { width: 440 },
+    position: { width: 480 },
     content,
+    // Each choice is a big tile with its own one-line description (core escapes labels, so it goes in here).
+    render: (_e, dialog) => {
+      for (const [action, key] of [["random", "KNAVERY.Gen.RandomHint"], ["blank", "KNAVERY.Gen.BlankHint"]]) {
+        const button = dialog.element.querySelector(`.form-footer button[data-action="${action}"]`);
+        if (!button || button.querySelector(".kn-create-sub")) continue;
+        const sub = document.createElement("span");
+        sub.className = "kn-create-sub";
+        sub.textContent = L(key);
+        button.append(sub);
+      }
+    },
     buttons: [
       {
         action: "random", label: "KNAVERY.Gen.Random", icon: "fas fa-dice-d6", default: true,
         callback: (_e, b) => ({ mode: "random", level: Number(b.form.elements.level.value) || min, name: b.form.elements.name.value.trim() }),
       },
       {
-        action: "blank", label: "KNAVERY.Gen.Blank", icon: "fas fa-file",
+        action: "blank", label: "KNAVERY.Gen.Blank", icon: "fas fa-file-lines",
         callback: (_e, b) => ({ mode: "blank", level: Number(b.form.elements.level.value) || min, name: b.form.elements.name.value.trim() }),
       },
     ],

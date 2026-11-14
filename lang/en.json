@@ -108,6 +108,8 @@
     "Slots": "Slots",
     "SlotsTip": "Item slots: 10 + CON. Coins and wounds take slots too.",
     "CoinSlots": "Coin slots: {n}",
+    "CoinsCount": "{n} coins",
+    "CoinsCountSlots": "{n} coins · {slots} slots",
     "WoundSlots": "Wound slots: {n}",
     "Advancement": "Advancement",
     "XpProgress": "{xp} / {next} XP to the next level",
@@ -145,8 +147,7 @@
     "Petty": "Petty",
     "PettyItem": "Petty item:",
     "PettyTip": "From the failed career. It fills no slot while this Knave carries it.",
-    "FailedCareer": "Failed career",
-    "FailedSuffix": "(failed)",
+    "FailedCareer": "Failed Career",
     "FailedCareerTip": "A career this Knave failed at.",
     "RollFailedCareer": "Roll a failed career",
 
@@ -554,13 +555,11 @@
     },
 
     "Gen": {
-      "Intro": "Roll a knave at random, or start from a blank sheet and build one by hand.",
       "NameHint": "optional",
-      "LevelHint": "The Game Master sets which levels you may start at.",
-      "Random": "Random",
-      "RandomHint": "abilities, HP, careers, coins, spellbooks and portrait, rolled for the chosen level.",
-      "Blank": "Blank sheet",
-      "BlankHint": "an empty sheet in Char Gen Mode, for building by hand.",
+      "Random": "Randomly Generated",
+      "RandomHint": "Rolled stats, careers, coins, portrait, etc.",
+      "Blank": "Blank Sheet",
+      "BlankHint": "An empty sheet for building your character yourself.",
       "ChooseLevel": "Choose a level",
       "RerollConfirm": "Reroll {name} from scratch? Items and careers are replaced.",
       "Summary": "{name}, level {level}",
@@ -570,7 +569,7 @@
       "AbilityPoints": "Abilities placed: {list}.",
       "FailedCareer": "Failed career: {name}.",
       "PointsTitle": "Your ability scores",
-      "PointsBody": "Place {n} points in your abilities. More than one may go in the same ability. Everything else is rolled.",
+      "PointsBody": "Place {n} points in your abilities. At first level only, more than one may go in the same ability. Everything else is rolled.",
       "PointsLeft": "Points left: {n}",
       "PointsAssign": "Assign",
       "PointsDice": "Let the dice decide",
@@ -602,6 +601,7 @@
     },
 
     "Art": {
+      "Roll": "Roll a random portrait",
       "ChooseFor": "Portrait: {name}",
       "Back": "Back",
       "Browse": "Browse files",

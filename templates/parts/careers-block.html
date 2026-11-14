@@ -14,7 +14,7 @@
   </div>
   {{#each careers as |career|}}
   <div class="knavery-career{{#if career.failed}} failed{{/if}}" data-career-id="{{career.id}}">
-    {{#if career.failed}}<div class="career-failed-label">{{localize "KNAVERY.FailedCareer"}}</div>{{/if}}
+    {{#if career.failed}}<div class="career-failed-band"><i class="fas fa-heart-crack"></i> {{localize "KNAVERY.FailedCareer"}}</div>{{/if}}
     <div class="career-head">
       <img src="{{career.img}}" alt="" />
       <a class="career-name" data-action="openCareer">{{career.name}}</a>

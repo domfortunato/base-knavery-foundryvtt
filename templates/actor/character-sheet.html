@@ -42,8 +42,8 @@
 
           <div class="career-line">
             <span class="background-label">{{localize "KNAVERY.Careers"}}</span>
-            {{#each careers}}
-            <span class="career-chip{{#if this.failed}} failed{{/if}}" data-career-id="{{this.id}}"><a data-action="openCareer"{{#if this.failed}} data-tooltip="KNAVERY.FailedCareerTip"{{/if}}>{{this.name}}{{#if this.failed}} {{localize "KNAVERY.FailedSuffix"}}{{/if}}</a></span>
+            {{#each realCareers}}
+            <span class="career-chip" data-career-id="{{this.id}}"><a data-action="openCareer">{{this.name}}</a></span>
             {{else}}
             <span class="career-none">{{localize "KNAVERY.NoCareers"}}</span>
             {{/each}}
@@ -52,6 +52,20 @@
             <a class="background-pick" data-action="pickCareer" data-tooltip="KNAVERY.PickCareer" aria-label="{{localize 'KNAVERY.PickCareer'}}"><i class="fas fa-list-ul"></i></a>
             {{/if}}
           </div>
+          {{#if showFailedLine}}
+          <div class="career-line failed-career-line" data-tooltip="KNAVERY.FailedCareerTip">
+            <span class="background-label">{{localize "KNAVERY.FailedCareer"}}</span>
+            {{#if failedCareer}}
+            <span class="career-chip failed" data-career-id="{{failedCareer.id}}"><a data-action="openCareer">{{failedCareer.name}}</a></span>
+            {{#if failedCareer.petty}}<span class="failed-petty">({{localize "KNAVERY.PettyItem"}} {{failedCareer.petty.name}})</span>{{/if}}
+            {{else}}
+            <span class="career-none">{{localize "KNAVERY.NoCareers"}}</span>
+            {{/if}}
+            {{#if showFailedCareerRoll}}
+            <a class="background-roll failed-career-roll" data-action="rollFailedCareer" data-tooltip="KNAVERY.RollFailedCareer" aria-label="{{localize 'KNAVERY.RollFailedCareer'}}"><i class="fas fa-dice-d20"></i></a>
+            {{/if}}
+          </div>
+          {{/if}}
 
           <div class="level-line">
             <label for="{{idp}}-level">{{localize "KNAVERY.Level"}}</label>
@@ -147,7 +161,7 @@
       <div class="knavery-summary-strip">
         <span class="summary-item {{#if overburdened}}peril{{/if}}" data-tooltip="KNAVERY.SlotsTip"><i class="fas fa-weight-hanging"></i>{{localize "KNAVERY.Slots"}} {{slotsUsed}} / {{slotsMax}}</span>
         <span class="summary-item" data-tooltip="KNAVERY.SpellsLeftTip"><i class="fas fa-book"></i>{{localize "KNAVERY.SpellsLeft" n=spellsLeft max=system.spellsPerDay}}</span>
-        <span class="summary-item" data-tooltip="KNAVERY.CoinsTip"><i class="fas fa-coins"></i>{{localize "KNAVERY.CoinSlots" n=system.coinSlots}}</span>
+        <span class="summary-item summary-coins" data-tooltip="KNAVERY.CoinsTip"><i class="fas fa-coins"></i>{{#if coinsTakeSlots}}{{localize "KNAVERY.CoinsCountSlots" n=system.coins slots=system.coinSlots}}{{else}}{{localize "KNAVERY.CoinsCount" n=system.coins}}{{/if}}</span>
         <span class="summary-item {{#if woundPeril}}peril{{/if}}" data-tooltip="KNAVERY.WoundsTip"><i class="fas fa-droplet"></i>{{localize "KNAVERY.WoundSlots" n=system.wounds}}</span>
       </div>
       {{> "systems/base-knavery/templates/parts/items-list.html"}}

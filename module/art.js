@@ -117,7 +117,7 @@ export const setActorArt = async (actor, img) => {
  * @param {"person"|"monster"|"item"} [o.kind]
  * @param {(src:string)=>Promise} o.onPick
  */
-export async function pickArt({ current, title, kind = "person", onPick }) {
+export async function pickArt({ current, title, kind = "person", onPick, onRoll = null }) {
   const isGM = game.user.isGM;
   const cellFor = (src, label = null) => {
     const sel = src === current ? " selected" : "";
@@ -193,11 +193,14 @@ export async function pickArt({ current, title, kind = "person", onPick }) {
   const url = `<div class="knavery-portrait-url"><input type="text" class="knavery-portrait-url-input" placeholder="${L("KNAVERY.Art.UrlPlaceholder")}" />
     <button type="button" class="knavery-portrait-url-set">${L("KNAVERY.Art.UrlSet")}</button></div>`;
 
+  // Char Gen Mode: a roll for a random portrait, besides choosing one.
+  const roll = onRoll
+    ? `<button type="button" class="knavery-portrait-roll"><i class="fas fa-dice-d20"></i> ${L("KNAVERY.Art.Roll")}</button>` : "";
   const dialog = new foundry.applications.api.DialogV2({
     window: { title, icon: "fas fa-image" },
     classes: ["knavery"],
     position: { width: 540 },
-    content: `<div class="knavery-portrait-gallery">${tabs}${paneHtml}${url}${browse}</div>`,
+    content: `<div class="knavery-portrait-gallery">${roll}${tabs}${paneHtml}${url}${browse}</div>`,
     buttons: [{ action: "close", label: "KNAVERY.Close", default: true }],
   });
   await dialog.render(true);
@@ -211,6 +214,11 @@ export async function pickArt({ current, title, kind = "person", onPick }) {
   const wire = (el) => el.querySelectorAll(".knavery-portrait-choice").forEach((img) =>
     img.addEventListener("click", () => commit(img.dataset.src)));
   wire(root);
+  root.querySelector(".knavery-portrait-roll")?.addEventListener("click", async () => {
+    try { await onRoll(); } catch (err) {
+      console.error("Base Knavery | portrait roll failed", err);
+    } finally { dialog.close(); }
+  });
   root.querySelectorAll(".knavery-portrait-tab").forEach((btn) => btn.addEventListener("click", () => {
     root.querySelectorAll(".knavery-portrait-tab").forEach((b) => b.classList.toggle("active", b === btn));
     root.querySelectorAll(".knavery-portrait-pane").forEach((p) => { p.hidden = p.dataset.pane !== btn.dataset.tab; });
