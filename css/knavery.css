@@ -4709,9 +4709,9 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 }
 .knavery-welcome-byline { margin: 0; color: var(--kn-muted); font-size: calc(13px * var(--kn-text, 1)); }
 .knavery-welcome-byline a { color: inherit; }
-/* The intro: regular weight, smaller and softer, so the bold disclaimer under it is the line that stands out. */
+/* The intro: what Base Knavery is, the window's lead line (larger, user 2026-11-14; the disclaimer is in Licensing). */
 .knavery-welcome-unofficial {
-    margin: 6px 0 0; font-weight: 400; font-size: calc(13px * var(--kn-text, 1)); line-height: 1.45; color: var(--kn-muted);
+    margin: 6px 0 0; font-weight: 400; font-size: calc(16px * var(--kn-text, 1)); line-height: 1.4; color: var(--kn-ink);
 }
 /* Knave 1e's CC BY 4.0 notice: title, author, licence link and changes. */
 .knavery-welcome-license { padding: 4px 10px; border: 1px solid var(--kn-rule); border-radius: 4px; }
