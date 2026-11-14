@@ -91,6 +91,8 @@ const readmeLicensing = [
   "",
   fold(esc(W("ArtLicensing")), ART_CREDITS.map((a) => `- ${credit(a, mdLink)}`).join("\n")),
   "",
+  "For more detail see [LICENSE.txt](LICENSE.txt).",
+  "",
   `<p align="right"><img src="logo/made-for-knave-yellow.png" alt="${esc(L("KNAVERY.MadeForKnave"))}" width="180"></p>`,
   "",
   "<!-- licensing:end -->",

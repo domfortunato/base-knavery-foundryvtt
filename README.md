@@ -76,18 +76,8 @@ Knave: Second Edition is © Ben Milton and Questing Beast LLC. The “Made for K
 
 </details>
 
+For more detail see [LICENSE.txt](LICENSE.txt).
+
 <p align="right"><img src="logo/made-for-knave-yellow.png" alt="Made for Knave" width="180"></p>
 
 <!-- licensing:end -->
-
-### More detail
-
-See [LICENSE.txt](LICENSE.txt).
-- The code is **MIT** and descends from Air Bladder and Cairn-FoundryVTT.
-- The name **Base Knavery** is not part of the MIT licence: fork and change the
-  code freely, but give a modified version you share its own name. Saying it is
-  based on or compatible with Base Knavery is welcome.
-- Lydia Comer's galleries are CC BY-NC-SA 4.0, so the system as a whole may not
-  be sold. The two knaves beside the title are hers too, used with her
-  permission in Base Knavery and to promote it; that permission does not pass
-  to forks.
