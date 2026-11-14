@@ -4930,3 +4930,18 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
     display: block; text-align: right; margin-top: 2px; font-size: calc(11px * var(--kn-text, 1)); color: var(--kn-faint);
 }
 .knavery .knavery-bio .knavery-word-count.over { color: var(--kn-warn); font-weight: bold; }
+
+/* ---- Item badges (2026-11-14): a chit before the name for special items ---------- */
+.knavery .knavery-item-badge {
+    flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
+    width: calc(20px * var(--kn-text, 1)); height: calc(20px * var(--kn-text, 1)); margin-right: 4px;
+    border-radius: 50%; border: 1px solid var(--kn-chip-border); font-size: calc(10px * var(--kn-text, 1));
+    color: var(--kn-muted); background: var(--kn-wash);
+}
+.knavery .knavery-item-badge.empty { border-color: transparent; background: none; }
+/* Weapons and armor: quiet ink. Spellbooks, scrolls, magic items, relics and potions: the accent. */
+.knavery .knavery-item-badge.plain { color: var(--kn-ink); }
+.knavery .knavery-item-badge.special { color: var(--kn-accent); border-color: var(--kn-accent); background: var(--kn-accent-wash); }
+/* Magic gear keeps its own icon, glowing. */
+.knavery .knavery-item-badge.glow i { text-shadow: 0 0 5px var(--kn-accent); }
+.knavery .knavery-item-badge.glow { box-shadow: 0 0 5px var(--kn-accent); }

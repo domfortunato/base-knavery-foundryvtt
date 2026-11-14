@@ -164,6 +164,9 @@ picker, change log and marketplace it ports.
   `show-background`) is on, and then show on the Knave page, never on Description; hidden ones are
   not rolled (`settings.js` `traitShown`). Backstory (`system.biography`) is guided to 35 words by a
   counter, never a limit (user, 2026-11-14).
+- Item badges: `system.kind` (Ordinary, Magic, Relic, Potion; any item type) and the item type give
+  each Inventory row a chit (`actor-sheet.js` `itemBadge`); magic gear keeps its type icon, glowing
+  (user, 2026-11-14).
 - Rations per slot is the GM's setting `rations-per-slot` (default 1: both editions).
 - Rest follows p12: HP back to max only after two watches of sleep and a meal; a safe haven
   also heals one wound; spellbooks reset either way (the sheet's Rest window, `KnaveryActor.rest`).

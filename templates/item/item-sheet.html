@@ -13,6 +13,9 @@
     <div class="form-group"><label>{{localize "KNAVERY.Quantity"}}</label><input type="number" name="system.quantity" value="{{system.quantity}}" min="0" step="1" data-dtype="Number" /></div>
     <div class="form-group"><label>{{localize "KNAVERY.Price"}}</label><input type="number" name="system.cost" value="{{system.cost}}" min="0" data-dtype="Number" /></div>
     <div class="form-group"><label>{{localize "KNAVERY.Broken"}}</label><input type="checkbox" name="system.broken" {{checked system.broken}} /></div>
+    <div class="form-group" data-tooltip="KNAVERY.KindTip"><label>{{localize "KNAVERY.Kind"}}</label>
+      <select name="system.kind">{{#each kinds}}<option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>{{/each}}</select>
+    </div>
     {{#if isType.item}}
     <div class="form-group" data-tooltip="KNAVERY.BundleTip"><label>{{localize "KNAVERY.Bundle"}}</label><input type="number" name="system.bundle" value="{{system.bundle}}" min="1" step="1" data-dtype="Number" /></div>
     <div class="form-group"><label>{{localize "KNAVERY.Weightless"}}</label><input type="checkbox" name="system.weightless" {{checked system.weightless}} /></div>

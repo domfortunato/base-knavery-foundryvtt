@@ -4,7 +4,7 @@
  * the items it grants, and its Active Effects (mechanical modifiers that
  * transfer to whoever holds the career).
  */
-import { ARMOR_TYPES, FEATURE_TYPES, SYS_PATH } from "../config.js";
+import { ARMOR_TYPES, FEATURE_TYPES, ITEM_KINDS, SYS_PATH } from "../config.js";
 import { pickArt } from "../art.js";
 import { enrichForSheet } from "../clean-html.js";
 
@@ -56,6 +56,7 @@ export class KnaveryItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
       isType: Object.fromEntries(["item", "weapon", "armor", "spellbook", "career", "transport"].map((t) => [t, item.type === t])),
       isInventory: item.type !== "career",
       armorTypes: ARMOR_TYPES.map((t) => ({ value: t, label: L(`KNAVERY.ArmorType.${t}`), selected: s.armorType === t })),
+      kinds: ITEM_KINDS.map((k) => ({ value: k, label: L(`KNAVERY.ItemKind.${k}`), selected: (s.kind ?? "ordinary") === k })),
       featureTypes: FEATURE_TYPES.map((t) => ({ value: t, label: L(`KNAVERY.FeatureType.${t}`) })),
       features: (s.features ?? []).map((f, i) => ({ ...f, index: i })),
       startingItems: (s.startingItems ?? []).map((entry, i) => ({

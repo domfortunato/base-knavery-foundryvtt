@@ -26,6 +26,24 @@
     "Pronouns": "Pronouns",
     "Description": "Description",
     "DescriptionPlaceholder": "Click to write a description.",
+    "Kind": "Kind",
+    "KindTip": "Magic items, relics and potions get a badge on the Inventory row.",
+    "ItemKind": {
+      "ordinary": "Ordinary",
+      "magic": "Magic",
+      "relic": "Relic",
+      "potion": "Potion"
+    },
+    "Badge": {
+      "weapon": "Weapon",
+      "armor": "Armor",
+      "spellbook": "Spellbook",
+      "scroll": "Spell scroll",
+      "magic": "Magic item",
+      "relic": "Relic",
+      "potion": "Potion",
+      "Kinded": "{kind}: {what}"
+    },
     "Employer": "Employer",
     "EmployerTip": "The character who hired them and pays their wage.",
     "Wage": "Wage",

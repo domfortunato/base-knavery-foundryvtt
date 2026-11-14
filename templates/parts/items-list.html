@@ -17,6 +17,7 @@
   <div class="knavery-items-list-row-header">
     <div class="knavery-item-name-and-tags">
       <span class="knavery-slot-index" data-tooltip="KNAVERY.SlotIndexTip">{{item.slotLabel}}</span>
+      {{#if item.badge}}<span class="knavery-item-badge {{item.badge.cls}}" data-tooltip-text="{{item.badge.tip}}"><i class="fa-solid {{item.badge.icon}}" inert></i></span>{{else}}<span class="knavery-item-badge empty"></span>{{/if}}
       <a class="knavery-item-title" data-action="itemDescription">
         {{#if item.system.equipped}}<strong>{{item.name}}</strong>{{else}}{{item.name}}{{/if}}
       </a>

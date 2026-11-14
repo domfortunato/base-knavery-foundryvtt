@@ -8,7 +8,7 @@
  * sheet, its Attack window and raised abilities; the welcome window's licence notice; random creation rolling by
  * default; a blank sheet held to its level's ability points, with HP, coin and career dice; the Attack window's
  * Target list; the narrow header; Rest by the book; red splats; compact attack cards; labels that fit; Create NPC;
- * spell items from the rulebook; weapons and armor first; rations per slot; the review #2 fixes; time and hazards; morale and wages; Backstory and the Knave-page traits. GM, Alice and Bob
+ * spell items from the rulebook; weapons and armor first; rations per slot; the review #2 fixes; time and hazards; morale and wages; Backstory and the Knave-page traits; item badges. GM, Alice and Bob
  * in three browsers.
  *
  *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/e2e-chargen.mjs   (npm run dev:chargen)
@@ -32,7 +32,7 @@ const T = (ms) => ms * TIME_SCALE;
 const SYS = "/systems/base-knavery/module";
 
 const browser = await chromium.launch();
-watchdog(1380000, "e2e-chargen", () => browser.close());
+watchdog(1500000, "e2e-chargen", () => browser.close());
 const ctx = () => browser.newContext({ viewport: VIEWPORT });
 const gm = await (await ctx()).newPage();
 const alice = await (await ctx()).newPage();
@@ -1671,6 +1671,61 @@ await withSettings(gm, async () => {
     ok(d.lineWidths.every(Boolean), "the Knave page's trait lines fit the narrow sheet", JSON.stringify(d.lineWidths));
     ok(r.onAlignment && r.onBackground && !r.offAlignment && !r.offBackground && r.offOthers > 0,
       "random traits include Alignment and Background only while their switches are on", JSON.stringify(r));
+  });
+
+  /* ------------------------------------------------------------------ */
+  await section("25. Item badges: weapons, armor, spellbooks, scrolls, magic items, relics and potions are marked on the Inventory row.", async () => {
+    const b = await gm.evaluate(async (pcId) => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const pc = game.actors.get(pcId);
+      for (const i of pc.items.contents) await i.delete();
+      await pc.createEmbeddedDocuments("Item", [
+        { name: "Probe Sword", type: "weapon", system: { damage: "d6", attackType: "melee" } },
+        { name: "Probe Glowing Blade", type: "weapon", system: { damage: "d8", attackType: "melee", kind: "magic" } },
+        { name: "Probe Gambeson", type: "armor", system: { points: 1 } },
+        { name: "Probe Spellbook", type: "spellbook" },
+        { name: "Probe Scroll", type: "spellbook", system: { scroll: true } },
+        { name: "Probe Ring", type: "item", system: { kind: "magic" } },
+        { name: "Probe Idol", type: "item", system: { kind: "relic" } },
+        { name: "Probe Potion", type: "item", system: { kind: "potion" } },
+        { name: "Probe Rope", type: "item" },
+      ]);
+      await pc.sheet.render({ force: true });
+      await wait(900);
+      await pc.sheet.changeTab("inventory", "primary");
+      await wait(400);
+      const rows = {};
+      for (const row of pc.sheet.element.querySelectorAll(".knavery-items-list-row[data-item-id]")) {
+        const name = row.querySelector(".knavery-item-title")?.textContent.trim();
+        const badge = row.querySelector(".knavery-item-badge");
+        rows[name] = { cls: [...badge.classList].filter((c) => c !== "knavery-item-badge").sort().join(" "), icon: badge.querySelector("i")?.className.replace("fa-solid ", "") ?? "", tip: badge.dataset.tooltipText ?? "" };
+      }
+      // The item sheet offers the Kind choice.
+      const ring = pc.items.getName("Probe Ring");
+      await ring.sheet.render({ force: true });
+      await wait(700);
+      const kindSelect = ring.sheet.element.querySelector('select[name="system.kind"]');
+      const out = { rows, kindOptions: kindSelect ? [...kindSelect.options].map((o) => o.value).join() : "", kindValue: kindSelect?.value };
+      await ring.sheet.close();
+      return out;
+    }, ids.a);
+    await gm.screenshot({ path: `${SHOTS}/inventory-badges.png` });
+    await gm.evaluate(async (pcId) => {
+      const pc = game.actors.get(pcId);
+      await pc.sheet.close();
+      for (const i of pc.items.contents) await i.delete();
+    }, ids.a);
+    const r = b.rows;
+    ok(r["Probe Sword"]?.icon === "fa-sword" && r["Probe Sword"].cls === "plain" && r["Probe Gambeson"]?.icon === "fa-shield" && r["Probe Gambeson"].cls === "plain",
+      "a weapon and armor carry a quiet sword and shield badge", JSON.stringify(r));
+    ok(r["Probe Spellbook"]?.icon === "fa-book-sparkles" && r["Probe Scroll"]?.icon === "fa-scroll" && r["Probe Spellbook"].cls === "special" && r["Probe Scroll"].cls === "special",
+      "spellbooks and scrolls carry accented book and scroll badges", JSON.stringify(r));
+    ok(r["Probe Ring"]?.icon === "fa-sparkles" && r["Probe Idol"]?.icon === "fa-ankh" && r["Probe Potion"]?.icon === "fa-flask-round-potion",
+      "magic items, relics and potions carry their own badges", JSON.stringify(r));
+    ok(r["Probe Glowing Blade"]?.icon === "fa-sword" && /glow/.test(r["Probe Glowing Blade"].cls) && r["Probe Glowing Blade"].tip === "Magic: Weapon",
+      "a magic weapon keeps its sword, glowing, and says it is magic", JSON.stringify(r["Probe Glowing Blade"]));
+    ok(r["Probe Rope"]?.cls === "empty" && !r["Probe Rope"].icon, "an ordinary item has an empty chit, so the names line up", JSON.stringify(r["Probe Rope"]));
+    ok(b.kindOptions === "ordinary,magic,relic,potion" && b.kindValue === "magic", "the item sheet offers Ordinary, Magic, Relic and Potion", JSON.stringify(b));
   });
 
   // Cleanup.

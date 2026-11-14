@@ -69,6 +69,8 @@ const DYNAMIC = {
   "KNAVERY.Npc.Hint": ["monster", "person", "hireling"],
   "KNAVERY.RulebookSpells": ["Spellbooks", "Scrolls"],
   "KNAVERY.Roll": ["Advantage", "Disadvantage"],
+  "KNAVERY.ItemKind": config.ITEM_KINDS,
+  "KNAVERY.Badge": ["weapon", "armor", "spellbook", "scroll", "magic", "relic", "potion"],
 };
 for (const [prefix, keys] of Object.entries(DYNAMIC)) {
   for (const k of keys) if (!has(`${prefix}.${k}`)) missing.set(`${prefix}.${k}`, "(dynamic)");

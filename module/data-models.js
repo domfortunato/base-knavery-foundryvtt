@@ -7,7 +7,7 @@
  */
 import {
   ABILITIES, ABILITY_MAX, AC_BASE, ARMOR_TYPES, COINS_PER_SLOT, FEATURE_TYPES, HIRELING_SLOTS,
-  LEVELS, LEVELS_1E, MAX_ARMOR_POINTS, MAX_LEVEL, NPC_ROLES, SLOT_BASE,
+  ITEM_KINDS, LEVELS, LEVELS_1E, MAX_ARMOR_POINTS, MAX_LEVEL, NPC_ROLES, SLOT_BASE,
 } from "./config.js";
 
 const {
@@ -156,6 +156,8 @@ export class NpcData extends KnaveryActorData {
 
 const universal = () => ({
   description: html(),
+  /** Ordinary, magic, a relic or a potion: the Inventory row's badge (config.js ITEM_KINDS). */
+  kind: new StringField({ required: true, initial: "ordinary", choices: ITEM_KINDS }),
   slots: num(1),
   quantity: int(1),
   cost: num(0),

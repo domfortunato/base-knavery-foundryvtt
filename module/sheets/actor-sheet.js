@@ -84,6 +84,34 @@ const careerGate = (fn) => function (event, target) {
   return fn.call(this, event, target);
 };
 
+/**
+ * The Inventory row's badge (user, 2026-11-14): weapons, armor, spellbooks and scrolls by
+ * their type; magic items, relics and potions by their kind. Magic gear keeps its own icon,
+ * drawn glowing. An ordinary item gets an empty chit, so the names line up.
+ */
+const TYPE_BADGES = {
+  weapon: { icon: "fa-sword", tip: "KNAVERY.Badge.weapon" },
+  armor: { icon: "fa-shield", tip: "KNAVERY.Badge.armor" },
+  spellbook: { icon: "fa-book-sparkles", tip: "KNAVERY.Badge.spellbook", special: true },
+  scroll: { icon: "fa-scroll", tip: "KNAVERY.Badge.scroll", special: true },
+};
+const KIND_BADGES = {
+  magic: { icon: "fa-sparkles", tip: "KNAVERY.Badge.magic" },
+  relic: { icon: "fa-ankh", tip: "KNAVERY.Badge.relic" },
+  potion: { icon: "fa-flask-round-potion", tip: "KNAVERY.Badge.potion" },
+};
+const itemBadge = (item) => {
+  const kind = item.system.kind ?? "ordinary";
+  const typed = TYPE_BADGES[item.type === "spellbook" && item.system.scroll ? "scroll" : item.type];
+  if (typed && kind !== "ordinary") {
+    return { icon: typed.icon, cls: `special glow kind-${kind}`, tip: game.i18n.format("KNAVERY.Badge.Kinded", { kind: L(`KNAVERY.ItemKind.${kind}`), what: L(typed.tip) }) };
+  }
+  if (typed) return { icon: typed.icon, cls: typed.special ? "special" : "plain", tip: L(typed.tip) };
+  const kinded = KIND_BADGES[kind];
+  if (kinded) return { icon: kinded.icon, cls: `special kind-${kind}`, tip: L(kinded.tip) };
+  return null;
+};
+
 /** Guard: Char Gen Mode must be allowed for this user. */
 const mayRandomize = (fn) => function (event, target) {
   if (!this._mayRandomize()) {
@@ -370,6 +398,7 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
         canAttack: item.type === "weapon" && item.system.equipped,
         canCast: item.type === "spellbook",
         castToday: item.type === "spellbook" && item.system.castToday,
+        badge: itemBadge(item),
         canLight: isLight(item),
         lit: isLight(item) && item.system.lit,
         canGive: this.isEditable && canOfferItem(item),

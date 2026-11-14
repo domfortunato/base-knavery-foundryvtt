@@ -97,6 +97,8 @@ export const ARMOR_TYPES = ["shield", "helmet", "gambeson", "mail", "breastplate
 
 /** NPC roles (a field on the `npc` type, not separate actor types). */
 export const NPC_ROLES = ["monster", "npc", "hireling", "companion"];
+/** What kind of special an item is (user, 2026-11-14): any item type may be magic, a relic or a potion. */
+export const ITEM_KINDS = ["ordinary", "magic", "relic", "potion"];
 
 /** Career feature field types a custom career can add to the sheet. */
 export const FEATURE_TYPES = ["text", "number", "checkbox", "track", "die"];

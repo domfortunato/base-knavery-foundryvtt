@@ -22,6 +22,10 @@
 - **Alignment and Background** leave the Description page. Each has a Knave 1e switch in the hacks
   settings (off by default) that shows it on the Knave page, under the pronouns; new characters roll
   it only while its switch is on. Values already on a sheet are kept.
+- **Item badges:** a small chit before each Inventory name marks weapons (sword) and armor (shield) in
+  ink, and spellbooks, spell scrolls, magic items, relics and potions in the accent colour. A new Kind
+  choice on the item sheet (Ordinary, Magic, Relic, Potion) marks any item; magic weapons and armor
+  keep their own icon, glowing.
 - **Wages:** a hireling's sheet names its employer. The Time tab lists each hireling's monthly wage and
   when it is due (a month is 30 days of the world clock); Pay takes the wage from the employer's coins.
 
