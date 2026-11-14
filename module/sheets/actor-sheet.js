@@ -724,6 +724,7 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     const item = this.actor.items.get(target.closest("[data-career-id]")?.dataset.careerId);
     if (!item) return;
     const ok = await foundry.applications.api.DialogV2.confirm({
+      classes: ["knavery"],
       window: { title: L("KNAVERY.RemoveCareer") },
       content: `<p>${F("KNAVERY.RemoveCareerConfirm", { name: foundry.utils.escapeHTML(item.name) })}</p>`,
     });
@@ -893,6 +894,7 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     const item = this.#itemFrom(target);
     if (!item) return;
     const ok = await foundry.applications.api.DialogV2.confirm({
+      classes: ["knavery"],
       window: { title: L("KNAVERY.DeleteItem") },
       content: `<p>${F("KNAVERY.DeleteItemConfirm", { name: foundry.utils.escapeHTML(item.name) })}</p>`,
     });

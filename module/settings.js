@@ -53,7 +53,7 @@ export const SETTING_GROUPS = [
     button: "KNAVERY.Settings.GroupInventoryButton",
     hint: "KNAVERY.Settings.GroupInventoryHint",
     icon: "fa-solid fa-weight-hanging",
-    keys: ["allow-player-marketplace", "coins-take-slots"],
+    keys: ["allow-player-marketplace", "coins-take-slots", "rations-per-slot"],
   },
   {
     id: "hacks",
@@ -122,6 +122,11 @@ export const registerSettings = () => {
     label: "AllowPlayerMarketplace", type: Boolean, default: true, onChange: rerenderActorSheets,
   });
   reg("coins-take-slots", { label: "CoinsTakeSlots", type: Boolean, default: true, onChange: rerenderActorSheets });
+  // Both books count a day's rations as one slot; a GM may bundle them (user, 2026-11-14).
+  reg("rations-per-slot", {
+    label: "RationsPerSlot", type: Number, default: 1, choices: { 1: "1", 2: "2", 3: "3", 5: "5" },
+    onChange: () => { for (const a of game.actors) a.prepareData(); rerenderActorSheets(); },
+  });
 
   /* Text size: each player's own (client), in core's Configure Settings. */
   game.settings.register(SETTINGS_NS, "text-size", {

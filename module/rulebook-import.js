@@ -105,14 +105,93 @@ export const readRulebookTables = async ({ path = rulebookPath(), specs = RULEBO
  * image, a weight) and the table's formula and replacement, so any such edit
  * marks the table as the GM's own and a rebuild keeps it.
  */
+const hashText = (key) => {
+  let h = 5381;
+  for (let i = 0; i < key.length; i++) h = ((h << 5) + h + key.charCodeAt(i)) | 0;
+  return (h >>> 0).toString(36);
+};
+
 const digest = (table) => {
   const rows = [...table.results].map((r) => [
     `${r.range[0]}-${r.range[1]}`, r.type, r.name ?? "", r.description ?? "", r.documentUuid ?? "", r.img ?? "", r.weight ?? "",
   ].join("|")).sort();
-  const key = [`formula:${table.formula ?? ""}`, `replacement:${table.replacement}`, ...rows].join("\n");
-  let h = 5381;
-  for (let i = 0; i < key.length; i++) h = ((h << 5) + h + key.charCodeAt(i)) | 0;
-  return (h >>> 0).toString(36);
+  return hashText([`formula:${table.formula ?? ""}`, `replacement:${table.replacement}`, ...rows].join("\n"));
+};
+
+/* -------------------------------------------- */
+/*  Spell items                                  */
+/* -------------------------------------------- */
+
+/** The world compendium the book's spells go in (user, 2026-11-14). */
+export const SPELL_PACK = "rulebook-spells";
+
+/** A digest of a spell item's content, to tell whether the GM has edited it. */
+const itemHash = (i) => hashText([i.name, i.img ?? "", i.system?.description ?? "", !!i.system?.scroll, i.system?.slots ?? 1].join("|"));
+
+const spellFlag = (d) => d.flags?.[FLAG_SCOPE]?.rulebookSpell ?? null;
+
+/** The world compendium, made on the first build. */
+const spellPack = async () => {
+  let pack = game.packs.get(`world.${SPELL_PACK}`);
+  if (!pack) {
+    pack = await foundry.documents.collections.CompendiumCollection.createCompendium({
+      type: "Item", name: SPELL_PACK, label: L("KNAVERY.RulebookSpells.Pack"),
+    });
+  }
+  if (pack.locked) await pack.configure({ locked: false });
+  return pack;
+};
+
+/** A folder inside the compendium, found by its flag. */
+const packFolder = async (pack, key) => pack.folders.find((f) => f.getFlag(FLAG_SCOPE, "rulebookSpells") === key)
+  ?? foundry.documents.Folder.implementation.create({ name: L(`KNAVERY.RulebookSpells.${key}`), type: "Item", flags: { [FLAG_SCOPE]: { rulebookSpells: key } } }, { pack: pack.collection });
+
+/**
+ * A spellbook and a spell scroll for every row of the Spells table, in the
+ * world compendium "Spells (from your rulebook)", each carrying the row's
+ * effect. Then every row links to its spellbook, so random creation hands out
+ * the item. The tables' promise holds: a rebuild updates an item only while it
+ * is as built, keeps one the GM edited, and never touches an item it did not make.
+ * @param {RollTable} table
+ * @returns {Promise<{books:number, scrolls:number, kept:number}>}
+ */
+export const writeSpellItems = async (table) => {
+  const pack = await spellPack();
+  const folders = { book: await packFolder(pack, "Spellbooks"), scroll: await packFolder(pack, "Scrolls") };
+  const have = await pack.getDocuments();
+  const find = (kind, spell) => have.find((d) => spellFlag(d)?.kind === kind && spellFlag(d)?.spell === spell);
+  const report = { books: 0, scrolls: 0, kept: 0 };
+  const creates = [];
+  const updates = [];
+  for (const r of table.results) {
+    const spell = r.name;
+    if (!spell) continue;
+    for (const kind of ["book", "scroll"]) {
+      const data = {
+        name: kind === "book" ? spell : F("KNAVERY.RulebookSpells.ScrollName", { name: spell }),
+        type: "spellbook",
+        img: `${SYS_PATH}/icons/${kind === "book" ? "spellbook" : "spellscroll"}.svg`,
+        folder: folders[kind]?.id ?? null,
+        system: { slots: 1, description: r.description ?? "", scroll: kind === "scroll" },
+      };
+      data.flags = { [FLAG_SCOPE]: { rulebookSpell: { kind, spell, hash: itemHash(data) } } };
+      const old = find(kind, spell);
+      if (old && spellFlag(old).hash !== itemHash(old)) { report.kept++; continue; }
+      if (old) updates.push({ _id: old.id, ...data });
+      else creates.push(data);
+      report[kind === "book" ? "books" : "scrolls"]++;
+    }
+  }
+  if (creates.length) await Item.implementation.createDocuments(creates, { pack: pack.collection });
+  if (updates.length) await Item.implementation.updateDocuments(updates, { pack: pack.collection });
+  const all = await pack.getDocuments();
+  const links = [];
+  for (const r of table.results) {
+    const book = all.find((d) => spellFlag(d)?.kind === "book" && spellFlag(d)?.spell === r.name);
+    if (book && r.documentUuid !== book.uuid) links.push({ _id: r.id, type: CONST.TABLE_RESULT_TYPES.DOCUMENT, documentUuid: book.uuid });
+  }
+  if (links.length) await table.updateEmbeddedDocuments("TableResult", links);
+  return report;
 };
 
 /**
@@ -181,6 +260,8 @@ export const writeRulebookTables = async (tables) => {
       });
       report.created.push(t.name);
     }
+    // The Spells table also makes its spellbooks and scrolls, and links to them.
+    if (t.kind === "spell") report.spells = await writeSpellItems(table);
     // The digest of the rows as Foundry stored them, so a later edit shows.
     await table.setFlag(FLAG_SCOPE, "rulebook.hash", digest(table));
   }
@@ -284,6 +365,7 @@ export class RulebookTablesReview extends HandlebarsApplicationMixin(Application
     ui.notifications.info(F("KNAVERY.RulebookTables.Done", {
       created: report.created.length, replaced: report.replaced.length, kept: report.kept.length,
     }));
+    if (report.spells) ui.notifications.info(F("KNAVERY.RulebookSpells.Done", report.spells));
     if (report.kept.length) {
       ui.notifications.warn(F("KNAVERY.RulebookTables.KeptList", { names: report.kept.join(", ") }));
     }

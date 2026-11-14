@@ -13,9 +13,22 @@
 - The roll window: Roll with Disadvantage, Straight Roll (highlighted) and Roll with Advantage on one row, each
   saying what it does when hovered; the mode line is gone, and the modifier and checkboxes sit by their labels.
 - The free-maneuver and power-attack notes on chat cards are dark teal and bold, readable on the card.
+- **Create NPC** (Game Masters, in the Actors sidebar, replacing Create Monster): a monster from the bestiary
+  with its HP rolled (a d8 per level, or level × 4); a person met on the road; or a hireling, mercenary or
+  expert with the book's stat line and monthly wage. People get a random name, traits and portrait.
+- **Spell items from your rulebook.** Building the tables from your Knave 2e PDF now also makes a spellbook and
+  a spell scroll for each of the 100 spells, with its effect, in a world compendium "Spells (from your
+  rulebook)". The Spells table links to the spellbooks, so random characters get the real item. A rebuild keeps
+  any you edited. Scrolls are used up when cast.
+- **Weapons and armor go to the top.** A new weapon lands under your last weapon, armor under your armor,
+  spellbooks next, and other gear at the bottom. Rows you dragged stay where you put them.
+- **Rations per slot**, a new Inventory setting (1, 2, 3 or 5; default 1, as both editions read).
+- Blank Sheet is for Game Masters only. The name field says "Random if left blank".
+- Labels in every Base Knavery window wrap without gaps.
+- The Inventory's footer: the bottom rows are wounded and marked unusable or damaged first.
 - **Compact attack cards:** each roll is one row (formula left, total right; click it for the dice), Hit and
-  Miss are bold badges, Damage is a small label on its row, and Apply is red.
-- The Attack button is red. A full HP bar is teal, matching Die of Fate's glow.
+  Miss are bold badges, and Damage is a small label on its row.
+- The splats on the Attack button and the card's Apply button are red. A full HP bar is teal, matching Die of Fate's glow.
 - **Rest asks first** (Knave 2e's healing rule): slept two watches and ate a meal brings HP back to full; in a
   safe haven one wound heals too. Spellbooks are ready again either way. A card says what happened. Campfire icon.
 - **A Target list in the Attack window:** the tokens you can see on the scene, nearest first. "Hide other player

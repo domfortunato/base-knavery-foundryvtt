@@ -19,6 +19,7 @@ import { bindRollCard, handleApplyDamage } from "./damage.js";
 import { bindOfferCard, registerOfferSocket } from "./item-offer.js";
 import { rebuildChangeLogCard } from "./change-log.js";
 import { createCharacter, createCharacterInteractive, registerCreationSocket, updateCareerIcons } from "./character-generator.js";
+import { createNpc, createNpcInteractive } from "./npc-generator.js";
 import { GmDashboard, openGmDashboard, registerRequestSocket, setToggle } from "./gm-dashboard.js";
 import { openMarketplace, openMarketplaceManager } from "./marketplace.js";
 import { openTableImporter, importRows, parseRows } from "./table-importer.js";
@@ -86,6 +87,8 @@ Hooks.once("init", () => {
     parseRows,
     createCharacter,
     createCharacterInteractive,
+    createNpc,
+    createNpcInteractive,
     rollCheck,
     rollSave,
     rollAttack,
@@ -147,10 +150,7 @@ Hooks.on("renderActorDirectory", (_app, html) => {
   };
   if (allowGen) btn("fa-dice-d6", "KNAVERY.CreateCharacter", () => createCharacterInteractive());
   if (game.user.isGM) {
-    btn("fa-dragon", "KNAVERY.CreateMonster", async () => {
-      const a = await Actor.create({ name: L("KNAVERY.NewMonster"), type: "npc", system: { role: "monster" } });
-      a?.sheet.render(true);
-    });
+    btn("fa-users", "KNAVERY.CreateNpc", () => createNpcInteractive());
     btn("fa-clipboard-list", "KNAVERY.Dashboard.Title", () => openGmDashboard());
   }
   if (row.children.length) header.append(row);

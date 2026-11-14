@@ -196,6 +196,7 @@ const onAccept = async (message) => {
   }
   if (capacityVerdict(target, offer.item?.slots ?? 1) === "overburden") {
     const yes = await foundry.applications.api.DialogV2.confirm({
+      classes: ["knavery"],
       window: { title: L("KNAVERY.Offer.OverburdenTitle") },
       content: `<p>${esc(game.i18n.format("KNAVERY.Offer.OverburdenBody", names(offer)))}</p>`,
       rejectClose: false,
@@ -391,6 +392,7 @@ export const offerFromDrop = async (targetActor, item) => {
     return null;
   }
   const yes = await foundry.applications.api.DialogV2.confirm({
+    classes: ["knavery"],
     window: { title: game.i18n.format("KNAVERY.Offer.DragTitle", { item: item.name }) },
     content: `<p>${esc(game.i18n.format("KNAVERY.Offer.DragBody", { item: item.name, target: targetActor.name }))}</p>`,
     rejectClose: false,

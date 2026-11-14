@@ -338,6 +338,7 @@ export class MarketplaceManager extends HandlebarsApplicationMixin(ApplicationV2
 
   static async #onNewAisle() {
     const name = await DialogV2.prompt({
+      classes: ["knavery"],
       window: { title: L("KNAVERY.Market.NewAisle") },
       content: `<div class="form-group"><label>${L("KNAVERY.Market.AisleName")}</label><input type="text" name="aisle" autofocus /></div>`,
       ok: { callback: (_e, b) => b.form.elements.aisle.value.trim() },
@@ -373,6 +374,7 @@ export class MarketplaceManager extends HandlebarsApplicationMixin(ApplicationV2
     const table = await fromUuid(target.closest("[data-uuid]").dataset.uuid);
     if (!table || table.pack) return;
     const name = await DialogV2.prompt({
+      classes: ["knavery"],
       window: { title: L("KNAVERY.Market.RenameAisle") },
       content: `<div class="form-group"><label>${L("KNAVERY.Market.AisleName")}</label><input type="text" name="aisle" value="${esc(aisleName(table))}" autofocus /></div>`,
       ok: { callback: (_e2, b) => b.form.elements.aisle.value.trim() },
@@ -386,6 +388,7 @@ export class MarketplaceManager extends HandlebarsApplicationMixin(ApplicationV2
     const table = await fromUuid(target.closest("[data-uuid]").dataset.uuid);
     if (!table || table.pack) return;
     const ok = await DialogV2.confirm({
+      classes: ["knavery"],
       window: { title: L("KNAVERY.Market.DeleteAisle") },
       content: `<p>${esc(F("KNAVERY.Market.DeleteAisleConfirm", { name: aisleName(table) }))}</p>`,
     });
@@ -401,6 +404,7 @@ export class MarketplaceManager extends HandlebarsApplicationMixin(ApplicationV2
     const table = await fromUuid(this.#selected);
     if (!table || table.pack) return ui.notifications.warn("KNAVERY.Market.CustomizeFirst", { localize: true });
     const res = await DialogV2.prompt({
+      classes: ["knavery"],
       window: { title: L("KNAVERY.Market.AddTextRow") },
       content: `<div class="form-group"><label>${L("KNAVERY.Name")}</label><input type="text" name="name" autofocus /></div>
         <div class="form-group"><label>${L("KNAVERY.Price")}</label><input type="number" name="price" min="0" value="5" /></div>`,

@@ -249,8 +249,30 @@
     "CreationModeHintOn": "Char Gen Mode is on: dice and pick-lists appear, abilities can be edited, the marketplace lets you take gear, and Level Up shows when you have the XP.",
     "CreationModeHintOff": "Turn on Char Gen Mode to edit abilities, reroll parts of the sheet and level up.",
     "CreateCharacter": "Create Character",
-    "CreateMonster": "Create Monster",
-    "NewMonster": "New Monster",
+    "CreateNpc": "Create NPC",
+    "Npc": {
+      "Kind": { "monster": "Monster", "person": "Person", "hireling": "Hireling" },
+      "Hint": {
+        "monster": "From the bestiary, with its HP rolled.",
+        "person": "Someone met on the road: a random name, traits and portrait.",
+        "hireling": "A hireling, mercenary or expert, with their wage."
+      },
+      "FromBestiary": "From the bestiary",
+      "Random": "Random",
+      "Hp": "Hit points",
+      "HpRoll": "Roll a d8 per level",
+      "HpAverage": "Level × 4",
+      "Which": "Which",
+      "Hireling": {
+        "hireling": "Hireling", "mercenary": "Mercenary", "expertCommon": "Expert (common)",
+        "expertUncommon": "Expert (uncommon)", "expertRare": "Expert (rare)"
+      },
+      "HirelingWage": "{kind}, {wage}c a month",
+      "Punch": "Punch",
+      "Weapon": "Weapon",
+      "HpCard": "{name}: HP {max} ({formula}).",
+      "NoBestiary": "The bestiary compendium is empty or missing."
+    },
     "DefaultCharacterName": "Nameless Knave",
 
     "Tab": {
@@ -300,7 +322,7 @@
     "CoinSlot": "Coins",
     "WoundSlot": "Wound",
     "SlotIndexTip": "The slot or slots this item sits in. Wounds fill slots from the top.",
-    "ReorderHint": "Drag rows to reorder. The bottom rows are wounded first.",
+    "ReorderHint": "Drag rows to reorder. The bottom rows are wounded and marked unusable or damaged first.",
     "NQuantity": "×{n}",
     "NAp": "{n} AP",
     "NSlots": "{n} slots",
@@ -605,7 +627,7 @@
     },
 
     "Gen": {
-      "NameHint": "optional",
+      "NameHint": "Random if left blank",
       "Random": "Randomly Generated",
       "RandomHint": "Rolled stats, careers, coins, portrait, etc.",
       "Blank": "Blank Sheet",
@@ -783,6 +805,8 @@
       "AllowPlayerMarketplaceHint": "Shows the Marketplace button on character sheets.",
       "CoinsTakeSlots": "Coins take slots",
       "CoinsTakeSlotsHint": "Every 500 coins fill an item slot.",
+      "RationsPerSlot": "Rations per slot",
+      "RationsPerSlotHint": "How many days of rations share one item slot. Both editions count one day's rations as one slot.",
       "HardModeWounds": "Hard-mode wounds",
       "HardModeWoundsHint": "An item in a wounded slot breaks.",
       "ShowHazardDice": "Hazard dice on the dashboard",
@@ -818,6 +842,13 @@
       "ImporterHint": "This table is on p. {page} of your rulebook."
     },
 
+    "RulebookSpells": {
+      "Pack": "Spells (from your rulebook)",
+      "Spellbooks": "Spellbooks",
+      "Scrolls": "Spell Scrolls",
+      "ScrollName": "Scroll of {name}",
+      "Done": "Spell items: {books} spellbooks and {scrolls} scrolls in Spells (from your rulebook); {kept} kept as you left them."
+    },
     "RulebookTables": {
       "Title": "Tables from your rulebook",
       "Folder": "From your rulebook",

@@ -114,7 +114,7 @@
        those tokens flip with the theme, these must not. */
     --kn-save-pass-chat: #1a7a3a;
     --kn-chat-accent: #0b6470;        /* the accent on chat cards' pale paper, in either theme */
-    --kn-chat-red: #a61e1e;           /* the card's Apply button: red, like the sheet's Attack */
+    --kn-chat-red: #a61e1e;           /* the card's Apply splat: red, like the sheet's Attack splat */
     --kn-chat-muted: #5a5650;         /* a roll's formula beside its total */
     --kn-save-fail-chat: #c62828;
 
@@ -123,7 +123,7 @@
        value typed over them stays legible. */
     /* Full HP in the accent teal, matching Die of Fate's glow (user, 2026-11-14). */
     --kn-hp-fill: rgba(18, 163, 180, 0.45);
-    --kn-attack: #b3261e;             /* the Attack button */
+    --kn-attack: #b3261e;             /* the Attack button's splat */
     --kn-hp-fill-low: rgba(184, 134, 11, 0.5);   /* HP below max: --kn-gold, see-through */
     --kn-wound-fill: rgba(198, 40, 40, 0.45);
     --kn-xp-fill: rgba(18, 163, 180, 0.35);
@@ -4236,9 +4236,9 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-roll-card .card-damage-label { flex: 0 0 auto; font-weight: bold; font-variant: small-caps; font-size: calc(14px * var(--kn-text, 1)); }
 .knavery-roll-card .card-damage-row .dice-roll { flex: 1 1 auto; min-width: 0; }
 .knavery-roll-card .card-apply { display: flex; gap: 4px; margin-top: 4px; }
-/* Apply in red, like the sheet's Attack button. */
-.knavery-roll-card .card-apply button[data-kn-apply="normal"] { background: var(--kn-chat-red); border-color: var(--kn-chat-red); color: #fff; font-weight: bold; }
-.knavery-roll-card .card-apply button[data-kn-apply="normal"]:hover { filter: brightness(1.15); box-shadow: 0 0 6px var(--kn-chat-red); }
+/* Apply's splat in red, like the sheet's Attack button. */
+.knavery-roll-card .card-apply button[data-kn-apply="normal"] { font-weight: bold; }
+.knavery-roll-card .card-apply button[data-kn-apply="normal"] i { color: var(--kn-chat-red); }
 .knavery-roll-card button { line-height: 24px; }
 .knavery-damage-card h3 { font-size: calc(15px * var(--kn-text, 1)); margin: 0 0 4px; }
 .knavery-damage-card .dmg-drop { color: var(--kn-save-fail-chat); font-style: italic; }
@@ -4263,6 +4263,11 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .kn-levelup-ability.capped { opacity: 0.5; }
 /* Create Character: two big tiles, each with its icon, its name and one line. */
 .knavery-create .form-footer { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+/* Create NPC: three tiles, and a fieldset each for the monster and hireling choices. */
+.knavery-create-npc .form-footer { grid-template-columns: repeat(3, 1fr); }
+.knavery-create-npc .kn-npc-options { margin: 6px 0; padding: 4px 8px; border: 1px solid var(--kn-rule); border-radius: 4px; }
+.knavery-create-npc .kn-npc-hp { gap: 12px; }
+.knavery-create-npc .kn-npc-hp label { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
 .knavery-create .form-footer button {
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
     min-height: calc(120px * var(--kn-text, 1)); height: auto; padding: 10px 12px; white-space: normal;
@@ -4581,9 +4586,8 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-bar-name { font-size: calc(17px * var(--kn-text, 1)); }
 .knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-vital-buttons button { height: 34px; font-size: calc(16px * var(--kn-text, 1)); }
 .knavery-vital-buttons .attack-button { font-weight: bold; }
-/* The Attack button in red (user, 2026-11-14), like the card's Apply. */
-.knavery .knavery-vital-buttons .attack-button { background: var(--kn-attack); border-color: var(--kn-attack); color: #fff; }
-.knavery .knavery-vital-buttons .attack-button:hover { filter: brightness(1.12); box-shadow: 0 0 8px var(--kn-attack); }
+/* The Attack button's splat in red (user, 2026-11-14: the mark, not the whole button). */
+.knavery .knavery-vital-buttons .attack-button i.fa-burst { color: var(--kn-attack); }
 /* The bars' current values: read-only numbers, changed by the + and − under each bar. */
 .knavery .knavery-bar .bar-readout {
     position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
@@ -4839,6 +4843,18 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .application.knavery-settings-menu { font-size: calc(var(--font-size-14, 14px) * var(--kn-text, 1)); }
 .chat-message,
 .chat-popout { --kn-text: 1; }
+
+/* ---- Every Base Knavery window: labels that fit (2026-11-14) ------------------- */
+/* Core gives a form label one input's height per line (foundry2.css .standard-form
+   .form-group > label: line-height var(--input-height)), so a wrapped label gaped.
+   Every system window and dialog carries the `knavery` class; the roll window's own
+   rules come later and win there. A lone checkbox takes only its own width, its
+   label the rest of the row. */
+.application.knavery .form-group > label { line-height: 1.3; }
+.application.knavery .form-group:has(> .form-fields > input[type="checkbox"]:only-child) > label { flex: 1 1 0; min-width: 0; }
+.application.knavery .form-group:has(> .form-fields > input[type="checkbox"]:only-child) > .form-fields { flex: 0 0 auto; width: auto; }
+/* Placeholders read as hints: muted, italic, gone once typing starts. */
+.application.knavery input::placeholder { color: var(--kn-muted); opacity: 0.75; font-style: italic; }
 
 /* ---- Grouped settings windows: labels that fit ---------------------------------- */
 /* Core gives a form label a third of the row and one input's height per line

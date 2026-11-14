@@ -75,11 +75,16 @@ picker, change log and marketplace it ports.
   - `rulebook.js`: the GM's PDF in Foundry's bundled pdf.js viewer (an iframe
     of `scripts/pdfjs/web/viewer.html`, after Mythic-pwd), the B key, showing
     a page to players; page map in `config.js` `RULEBOOK`
+  - `npc-generator.js`: Create NPC (GM): a bestiary monster with HP rolled (p67), a
+    person, or a hireling/mercenary/expert (p59 lines and wages)
   - `welcome.js`: the welcome window, at every GM login unless setting
     `welcome-on-start` is off (user ruling 2026-11-14)
   - `rulebook-import.js`: build world roll tables from the GM's PDF, with a
     review first; a rebuild replaces only tables it built that are unchanged
-    (`flags.base-knavery.rulebook.hash`), never the GM's own
+    (`flags.base-knavery.rulebook.hash`), never the GM's own. The Spells table also
+    makes a spellbook and a scroll per spell in the world compendium
+    `world.rulebook-spells` and links its rows to the books (`writeSpellItems`; same
+    keep-what-the-GM-edited rule; still only the GM's browser and world)
   - `rulebook-tables.js` (pure: reads numbered tables from pdf.js text by
     position) and `rulebook-catalogue.js` (where each table is). Check the
     catalogue against a local PDF with
@@ -143,6 +148,10 @@ picker, change log and marketplace it ports.
   slot, in the Attack window (`rolls.js` `IMPROVISED_ID`; user ruling
   2026-11-14).
 - No failed-career hack: Knave 2e gives two careers (removed 2026-11-14).
+- Blank Sheet is the GM's: players create random characters only (2026-11-14).
+- Item order: a new inventory item is placed by band (weapons, armor, spellbooks, the rest)
+  under the last row of its band, whatever sort it brings (`KnaveryItem._preCreateOperation`).
+- Rations per slot is the GM's setting `rations-per-slot` (default 1: both editions).
 - Rest follows p12: HP back to max only after two watches of sleep and a meal; a safe haven
   also heals one wound; spellbooks reset either way (the sheet's Rest window, `KnaveryActor.rest`).
 - Char Gen Mode holds every sheet's abilities, the GM's too, to the level's points: 3 + 3 per level

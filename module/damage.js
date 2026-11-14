@@ -109,6 +109,7 @@ export const bindRollCard = (message, html) => {
       event.preventDefault();
       if (message.getFlag(FLAG_SCOPE, "damageApplied") === true) {
         const again = await DialogV2.confirm({
+          classes: ["knavery"],
           window: { title: L("KNAVERY.Roll.AppliedTitle") },
           content: `<p>${foundry.utils.escapeHTML(L("KNAVERY.Roll.AppliedAgain"))}</p>`,
           rejectClose: false,

@@ -431,6 +431,7 @@ export const regenerateCharacter = async (actor) => {
   const points = chosen.place ? await promptAbilityPoints() : "dice";
   if (!points) return;
   const ok = await foundry.applications.api.DialogV2.confirm({
+    classes: ["knavery"],
     window: { title: L("KNAVERY.RollCharacter") },
     content: `<p>${esc(F("KNAVERY.Gen.RerollConfirm", { name: actor.name }))}</p>`,
     rejectClose: false,
@@ -510,6 +511,7 @@ export const promptAbilityPoints = async () => {
 };
 
 const promptLevel = ({ min, max, initial }) => foundry.applications.api.DialogV2.prompt({
+  classes: ["knavery"],
   window: { title: L("KNAVERY.Gen.ChooseLevel") },
   content: `<div class="form-group"><label>${L("KNAVERY.Level")}</label><select name="level">${Array.from(
     { length: max - min + 1 }, (_, i) => min + i).map((l) => `<option value="${l}"${l === initial ? " selected" : ""}>${l} — ${esc(L(`KNAVERY.LevelTitle.${l}`))}</option>`).join("")}</select></div>`
@@ -557,10 +559,11 @@ export const createCharacterInteractive = async () => {
           place: !!b.form.elements.place?.checked,
         }),
       },
-      {
+      // A blank sheet is the Game Master's tool (user ruling 2026-11-14).
+      ...(game.user.isGM ? [{
         action: "blank", label: "KNAVERY.Gen.Blank", icon: "fas fa-file-lines",
         callback: (_e, b) => ({ mode: "blank", level: Number(b.form.elements.level.value) || min, name: b.form.elements.name.value.trim() }),
-      },
+      }] : []),
     ],
     rejectClose: false,
   });
@@ -622,7 +625,8 @@ export const registerCreationSocket = () => {
       const { min, max } = creationLevels();
       const level = Math.min(max, Math.max(min, Number(msg.level) || min));
       const actor = await createCharacter({
-        mode: msg.mode === "blank" ? "blank" : "random", level, name: String(msg.name ?? "").slice(0, 80), owner: senderId,
+        // Players get random characters only: Blank Sheet is the GM's (2026-11-14).
+        mode: "random", level, name: String(msg.name ?? "").slice(0, 80), owner: senderId,
         abilities: validPoints(msg.abilities),
       });
       answer(actor ? { actorId: actor.id } : { failed: true });

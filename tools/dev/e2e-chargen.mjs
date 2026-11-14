@@ -7,7 +7,8 @@
  * the Knave 1e rule hacks (1000-XP levels, d8 HP, random raises, group initiative); the narrow
  * sheet, its Attack window and raised abilities; the welcome window's licence notice; random creation rolling by
  * default; a blank sheet held to its level's ability points, with HP, coin and career dice; the Attack window's
- * Target list; the narrow header; Rest by the book; red Attack and Apply; compact attack cards. GM, Alice and Bob
+ * Target list; the narrow header; Rest by the book; red splats; compact attack cards; labels that fit; Create NPC;
+ * spell items from the rulebook; weapons and armor first; rations per slot. GM, Alice and Bob
  * in three browsers.
  *
  *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/e2e-chargen.mjs   (npm run dev:chargen)
@@ -31,7 +32,7 @@ const T = (ms) => ms * TIME_SCALE;
 const SYS = "/systems/base-knavery/module";
 
 const browser = await chromium.launch();
-watchdog(600000, "e2e-chargen", () => browser.close());
+watchdog(720000, "e2e-chargen", () => browser.close());
 const ctx = () => browser.newContext({ viewport: VIEWPORT });
 const gm = await (await ctx()).newPage();
 const alice = await (await ctx()).newPage();
@@ -936,7 +937,9 @@ await withSettings(gm, async () => {
       out.hpTeal = hb > hr && hg > hr;
       const [ar, ag, ab] = rgb(getComputedStyle(el().querySelector("#attack-button")).backgroundColor);
       out.attackBg = getComputedStyle(el().querySelector("#attack-button")).backgroundColor;
-      out.attackRed = ar > 150 && ag < 80 && ab < 80;
+      // The button keeps core chrome; only its splat is red (user, 2026-11-14).
+      const [sr, sg, sb] = rgb(getComputedStyle(el().querySelector("#attack-button i.fa-burst")).color);
+      out.attackRed = !(ar > 150 && ag < 80 && ab < 80) && sr > 150 && sg < 80 && sb < 80;
       out.restIcon = el().querySelector("#rest-button i")?.className ?? "";
       // Rest without a meal: no HP, no wound, but spellbooks ready.
       await pc.update({ "system.hp.value": 1, "system.wounds": 2 });
@@ -995,7 +998,7 @@ await withSettings(gm, async () => {
       out.damagePx = label ? parseFloat(getComputedStyle(label).fontSize) : null;
       out.hasDamage = !!card?.querySelector(".card-damage");
       const apply = card?.querySelector('[data-kn-apply="normal"]');
-      const [pr, pg, pb] = apply ? rgb(getComputedStyle(apply).backgroundColor) : [0, 0, 0];
+      const [pr, pg, pb] = apply ? rgb(getComputedStyle(apply.querySelector("i")).color) : [0, 0, 0];
       out.applyRed = pr > 130 && pg < 60 && pb < 60;
       card?.scrollIntoView();
       if (tok) await tok.delete();
@@ -1004,13 +1007,148 @@ await withSettings(gm, async () => {
       return out;
     }, ids.a);
     await gm.screenshot({ path: `${SHOTS}/chargen-cards-sheet.png` });
-    ok(r.hpTeal && r.attackRed && r.restIcon.includes("fa-campfire"), "a full HP bar is teal, Attack is red, Rest is a campfire", JSON.stringify(r));
+    ok(r.hpTeal && r.attackRed && r.restIcon.includes("fa-campfire"), "a full HP bar is teal, Attack's splat is red (not the button), Rest is a campfire", JSON.stringify(r));
     ok(r.window && r.noMeal.hp === 1 && r.noMeal.wounds === 2 && r.noMeal.book === false,
       "a rest without a meal restores no HP and heals no wound, but readies the spellbooks", JSON.stringify(r.noMeal));
     ok(r.full.hp === 5 && r.full.wounds === 1 && /One wound heals/.test(r.restCard), "sleep, a meal and a safe haven: full HP, one wound heals, and a card says so", JSON.stringify(r.full));
     ok(r.sameRow, "an attack card shows each roll's formula and total on one row", JSON.stringify(r));
     ok(r.badgePx === null || r.badgePx >= 14, "Hit or Miss is a big badge", String(r.badgePx));
-    ok(r.hasDamage && r.damagePx <= 14 && r.applyRed, "Damage is a small label on its row, and Apply is red", JSON.stringify(r));
+    ok(r.hasDamage && r.damagePx <= 14 && r.applyRed, "Damage is a small label on its row, and Apply's splat is red", JSON.stringify(r));
+  });
+
+  /* ------------------------------------------------------------------ */
+  await section("20. Labels that fit; Blank Sheet for the GM; Create NPC; spell items; item order; rations per slot.", async () => {
+    // The Create Character window, as the GM: the label no longer gapes; the placeholder; Blank Sheet.
+    gm.evaluate(() => { game.knavery.createCharacterInteractive(); });
+    await gm.waitForSelector(".knavery-create .form-footer", { timeout: T(10000) });
+    const win = await gm.evaluate(() => {
+      const el = document.querySelector(".knavery-create");
+      const label = el.querySelector('label[for="kn-create-place"]');
+      const cs = getComputedStyle(label);
+      const fs = parseFloat(cs.fontSize);
+      return {
+        lineRatio: parseFloat(cs.lineHeight) / fs, lines: label.getBoundingClientRect().height / parseFloat(cs.lineHeight),
+        placeholder: el.querySelector('input[name="name"]').placeholder,
+        blank: !!el.querySelector('.form-footer button[data-action="blank"]'),
+      };
+    });
+    await gm.screenshot({ path: `${SHOTS}/chargen-create-window.png` });
+    await closeDialogs();
+    ok(win.lineRatio <= 1.5 && win.lines < 2.2, "the Create Character labels wrap without gaps", JSON.stringify(win));
+    ok(win.placeholder === "Random if left blank" && win.blank, "the name says \"Random if left blank\"; the GM sees Blank Sheet", JSON.stringify(win));
+    alice.evaluate(() => { game.knavery.createCharacterInteractive(); });
+    await alice.waitForSelector(".knavery-create .form-footer", { timeout: T(10000) });
+    const aliceBlank = await alice.evaluate(() => !!document.querySelector('.knavery-create .form-footer button[data-action="blank"]'));
+    await closeDialogs();
+    ok(!aliceBlank, "a player does not see Blank Sheet", String(aliceBlank));
+
+    // Create NPC: the window, then one of each kind.
+    gm.evaluate(() => { game.knavery.createNpcInteractive(); });
+    await gm.waitForSelector(".knavery-create-npc .form-footer", { timeout: T(10000) });
+    const npcWin = await gm.evaluate(() => ({
+      tiles: [...document.querySelectorAll(".knavery-create-npc .form-footer button")].map((b) => b.dataset.action),
+      monsters: document.querySelectorAll('.knavery-create-npc select[name="monster"] option').length,
+    }));
+    await gm.screenshot({ path: `${SHOTS}/chargen-create-npc.png` });
+    await closeDialogs();
+    ok(npcWin.tiles.join() === "monster,person,hireling" && npcWin.monsters > 10, "Create NPC offers Monster, Person and Hireling, with the bestiary listed", JSON.stringify(npcWin));
+    const npc = await gm.evaluate(async () => {
+      const pack = game.packs.get("base-knavery.monsters");
+      const first = [...(await pack.getIndex())][0];
+      const src = await pack.getDocument(first._id);
+      const mon = await game.knavery.createNpc({ kind: "monster", name: "Probe Monster", monster: first._id, hp: "roll" });
+      const person = await game.knavery.createNpc({ kind: "person", name: "Probe Person" });
+      const merc = await game.knavery.createNpc({ kind: "hireling", name: "Probe Merc", hireling: "mercenary" });
+      for (const app of [...foundry.applications.instances.values()]) if (app.document?.name?.startsWith("Probe ") && app.document.type === "npc") await app.close();
+      const out = {
+        level: src.system.level, monHp: mon.system.hp.max, monItems: mon.items.size, srcItems: src.items.size,
+        person: { role: person.system.role, ac: person.system.ac, hp: person.system.hp.max, traits: Object.keys(person.system.traits ?? {}).length },
+        merc: { role: merc.system.role, ac: merc.system.ac, wage: merc.system.wage, dmg: merc.items.find((i) => i.type === "weapon")?.system.damage,
+          friendly: merc.prototypeToken.disposition === CONST.TOKEN_DISPOSITIONS.FRIENDLY },
+      };
+      return out;
+    });
+    ok(npc.monHp >= Math.max(1, npc.level) && npc.monHp <= Math.max(1, 8 * npc.level) && npc.monItems === npc.srcItems,
+      "a bestiary monster arrives with its attacks and HP rolled as level d8s", JSON.stringify(npc));
+    ok(npc.person.role === "npc" && npc.person.ac === 11 && npc.person.hp === 3, "a person met on the road: AC 11, HP 3", JSON.stringify(npc.person));
+    ok(npc.merc.role === "hireling" && npc.merc.ac === 15 && npc.merc.wage === 600 && npc.merc.dmg === "d6" && npc.merc.friendly,
+      "a mercenary: AC 15, 600c a month, a d6 weapon, friendly", JSON.stringify(npc.merc));
+
+    // Spell items: a spellbook and a scroll for each row, linked; an edited item is kept on a rebuild.
+    const spells = await gm.evaluate(async () => {
+      const { writeSpellItems, SPELL_PACK } = await import("/systems/base-knavery/module/rulebook-import.js");
+      const had = !!game.packs.get(`world.${SPELL_PACK}`);
+      const table = await RollTable.create({
+        name: "Probe Spell Table", formula: "1d2",
+        results: [
+          { type: "text", name: "Probe Spark", description: "<p>A spark.</p>", range: [1, 1], weight: 1 },
+          { type: "text", name: "Probe Mist", description: "<p>A mist.</p>", range: [2, 2], weight: 1 },
+        ],
+      });
+      const first = await writeSpellItems(table);
+      const pack = game.packs.get(`world.${SPELL_PACK}`);
+      const mine = async () => (await pack.getDocuments()).filter((d) => ["Probe Spark", "Probe Mist"].includes(d.flags?.["base-knavery"]?.rulebookSpell?.spell));
+      let docs = await mine();
+      const out = {
+        first, books: docs.filter((d) => !d.system.scroll).length, scrolls: docs.filter((d) => d.system.scroll).length,
+        described: docs.every((d) => d.system.description.includes("A ")),
+        linked: table.results.contents.every((r) => r.documentUuid && docs.some((d) => d.uuid === r.documentUuid && !d.system.scroll)),
+      };
+      const spark = docs.find((d) => d.name === "Probe Spark");
+      await spark.update({ "system.description": "<p>My own spark.</p>" });
+      out.second = await writeSpellItems(table);
+      docs = await mine();
+      out.keptEdit = docs.find((d) => d.name === "Probe Spark")?.system.description.includes("My own");
+      for (const d of docs) await d.delete();
+      await table.delete();
+      if (!had) await pack.deleteCompendium();
+      return out;
+    });
+    ok(spells.books === 2 && spells.scrolls === 2 && spells.described && spells.linked,
+      "a spellbook and a scroll for each Spells row, in the world compendium, with the effect, and the rows linked to the books", JSON.stringify(spells));
+    ok(spells.second?.kept === 1 && spells.keptEdit, "a rebuild keeps a spell item the GM edited", JSON.stringify(spells));
+
+    // Item order and rations, on Alice's character.
+    const inv = await gm.evaluate(async (pcId) => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const pc = game.actors.get(pcId);
+      for (const i of pc.items.contents) await i.delete();
+      const add = (data) => pc.createEmbeddedDocuments("Item", [data]);
+      await add({ name: "Probe Torch", type: "item", system: { slots: 1 } });
+      await add({ name: "Probe Sword", type: "weapon", system: { damage: "d6", attackType: "melee" } });
+      await add({ name: "Probe Mail", type: "armor", system: { points: 1 } });
+      await add({ name: "Probe Rope", type: "item", system: { slots: 1 } });
+      const order = () => pc.inventory.map((i) => i.name).join();
+      const out = { first: order() };
+      // An old sheet: every sort 0. A new weapon still lands under the last weapon.
+      await pc.updateEmbeddedDocuments("Item", pc.items.map((i) => ({ _id: i.id, sort: 0 })));
+      const before = pc.inventory.map((i) => i.name);
+      await add({ name: "Probe Axe", type: "weapon", system: { damage: "d6", attackType: "melee" } });
+      const after = pc.inventory.map((i) => i.name);
+      out.axeAfter = after[after.indexOf("Probe Axe") - 1];
+      out.lastWeaponBefore = [...before].reverse().find((n) => ["Probe Sword"].includes(n));
+      // Rations per slot.
+      const { slotsForItem } = await import("/systems/base-knavery/module/documents/actor.js");
+      await game.settings.set("base-knavery", "rations-per-slot", 3);
+      const [r3] = await add({ name: "Rations", type: "item", system: { slots: 1, quantity: 3 } });
+      out.three = slotsForItem(r3);
+      await r3.update({ "system.quantity": 4 });
+      out.four = slotsForItem(r3);
+      await game.settings.set("base-knavery", "rations-per-slot", 1);
+      await r3.update({ "system.quantity": 2 });
+      out.twoAtOne = slotsForItem(r3);
+      // The Inventory footer.
+      await pc.sheet.render({ force: true });
+      await wait(900);
+      out.hint = pc.sheet.element.querySelector(".knavery-reorder-hint")?.textContent.trim() ?? "";
+      await pc.sheet.close();
+      for (const i of pc.items.contents) await i.delete();
+      return out;
+    }, ids.a);
+    ok(inv.first === "Probe Sword,Probe Mail,Probe Torch,Probe Rope", "a new weapon and armor go to the top, other gear to the bottom", inv.first);
+    ok(inv.axeAfter === "Probe Sword", "on a sheet whose items all sort 0, a new weapon still lands under the last weapon", JSON.stringify(inv));
+    ok(inv.three === 1 && inv.four === 2 && inv.twoAtOne === 2, "rations per slot: 3 to a slot fills 1 then 2; at 1 a slot, 2 rations fill 2", JSON.stringify(inv));
+    ok(/wounded and marked unusable or damaged first/.test(inv.hint), "the Inventory footer's new sentence", inv.hint);
   });
 
   // Cleanup.
