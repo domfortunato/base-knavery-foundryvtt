@@ -32,7 +32,7 @@
   monster description was written by AI (Base Knavery's code is written with the help of an AI coding assistant); the
   art's licences fold under it. A **Licensing** section lists each edition's licence as a folded bullet.
   The window is wider, in two columns (one on a narrow screen), and scrolls within the screen. Two knaves by
-  Lydia Comer, used with her permission, stand as book ends either side of the title (her white versions on
+  Lydia Comer, used with her permission, stand as book ends either side of the title, facing it (her white versions on
   the dark theme).
   LICENSE.txt and the README now say the name Base Knavery is not part of the MIT licence: a fork
   that is shared needs its own name, marked Base Knavery™ on the welcome and in the README. The Made for

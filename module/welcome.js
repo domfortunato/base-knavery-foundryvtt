@@ -37,8 +37,8 @@ const ART_CREDITS = [
   { name: "Alegreya fonts", by: "The Alegreya Project Authors", url: "https://github.com/huertatipografica/Alegreya", license: "SIL OFL 1.1", licenseUrl: "https://openfontlicense.org/" },
 ];
 
-/** The book ends either side of the title, each facing away from it: the knight looks left, the woman right. */
-const WELCOME_BOOKENDS = { left: "knight", right: "femme" };
+/** The book ends either side of the title, each facing in toward it: the woman looks right, the knight left. */
+const WELCOME_BOOKENDS = { left: "femme", right: "knight" };
 
 /** Where to buy Knave (first edition): its rules ship here, and the PDF supports its author (user, 2026-11-14). */
 const BUY_LINKS_1E = [

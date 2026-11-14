@@ -4699,7 +4699,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 #knavery-welcome { max-height: calc(100vh - 20px); }
 #knavery-welcome .window-content { padding: 14px 20px; overflow-y: auto; min-height: 0; container-type: inline-size; }
 .knavery-welcome-body { display: flex; flex-direction: column; gap: 8px; color: var(--kn-ink); }
-/* The head: two knaves by Lydia Comer as book ends either side of the title, each facing away from it
+/* The head: two knaves by Lydia Comer as book ends either side of the title, each facing in toward it
    (user, 2026-11-14). Her line art on the light theme, her white-filled versions on the dark. */
 .knavery-welcome-head { display: flex; align-items: center; justify-content: center; gap: 20px; }
 .knavery-welcome-bookend { display: flex; flex: 0 0 auto; }
