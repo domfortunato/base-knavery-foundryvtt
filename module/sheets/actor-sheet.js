@@ -8,12 +8,12 @@
  * and Print.
  */
 import {
-  ABILITIES, LEVEL_UP_ABILITIES, NPC_ROLES, SETTINGS_NS, STARTING_COINS, SYS_PATH, TABLES,
+  ABILITIES, BACKSTORY_WORDS, LEVEL_UP_ABILITIES, NPC_ROLES, SETTINGS_NS, STARTING_COINS, SYS_PATH, TABLES,
 } from "../config.js";
 import { slotsForItem } from "../documents/actor.js";
 import { levelLadder } from "../data-models.js";
 import { mayEditAbilities, mayEditCareers, mayEditLevelXp, mayUseCharGen } from "../edit-gates.js";
-import { scaledPosition } from "../settings.js";
+import { KNAVE_PAGE_TRAITS, scaledPosition, traitShown } from "../settings.js";
 import { attackRow, castSpell, openAttack, rollAttack, rollCheck, rollDamage, rollDieOfFate, rollMorale } from "../rolls.js";
 import { pickArt, randomPortraitPair, setActorArt } from "../art.js";
 import { drawFrom, pickFrom } from "../compendium.js";
@@ -435,7 +435,8 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     const levelRule = !isChar ? "" : s.nextXp === null ? L("KNAVERY.Growth.TopLevel")
       : F("KNAVERY.Growth.EachLevel", { n: LEVEL_UP_ABILITIES, hp: hpRuleHint(s.level + 1, actor._source.system.hp.max) });
 
-    const traitKeys = Object.keys(TABLES.traits);
+    // Alignment and Background live on the Knave page, behind their switches, never here.
+    const traitKeys = Object.keys(TABLES.traits).filter((k) => !KNAVE_PAGE_TRAITS.includes(k));
     // Knave 2e's traits first (filled from the GM's PDF), then Knave 1e's (shipped); each group headed once.
     const KNAVE_2E_TRAITS = ["personality", "mannerism"];
     const traitRows = traitKeys.map((key, i) => {
@@ -500,6 +501,9 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       woundPeril: isChar && s.wounds > 0,
       woundPercent: isChar ? percent(s.wounds, s.slotsMax) : 0,
       traitRows,
+      knavePageTraits: isChar ? KNAVE_PAGE_TRAITS.filter(traitShown).map((key) => ({
+        key, label: L(`KNAVERY.Trait.${key}`), value: actor._source.system.traits?.[key] ?? "",
+      })) : [],
       showTraits: game.settings.get(SETTINGS_NS, "show-traits"),
       traitsCollapsed: this.#traitsCollapsed,
       showShop: isChar && this.isEditable && !playerMarketClosed(),
@@ -582,7 +586,27 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       const n = Number(v);
       await this.actor.update({ "system.acOverride": v === "" || !Number.isFinite(n) || n === this.actor.system.acDerived ? null : Math.floor(n) });
     });
+    this.#countBackstory(root);
     placeRailSoon(this);
+  }
+
+  /** The backstory's word counter: the saved text, then live while the editor is open. */
+  #countBackstory(root) {
+    const out = root.querySelector(".knavery-word-count");
+    const editor = root.querySelector('prose-mirror[name="system.biography"]');
+    if (!out || !editor) return;
+    const count = (text) => String(text ?? "").split(/\s+/).filter(Boolean).length;
+    const show = (n) => {
+      out.textContent = F("KNAVERY.BackstoryWords", { n, max: BACKSTORY_WORDS });
+      out.classList.toggle("over", n > BACKSTORY_WORDS);
+    };
+    const div = document.createElement("div");
+    div.innerHTML = foundry.utils.cleanHTML(String(this.actor.system.biography ?? ""));
+    show(count(div.textContent));
+    editor.addEventListener("input", () => {
+      const live = editor.querySelector(".editor-content, .ProseMirror");
+      if (live) show(count(live.textContent));
+    });
   }
 
   /** Every move, a drag's every frame included, decides the rail's side again (tab-rail.js). */

@@ -27,6 +27,7 @@ import { levelLadder } from "./data-models.js";
 import { randomPortraitPair } from "./art.js";
 import { emit, onSocket } from "./socket.js";
 import { mayEditCareers } from "./edit-gates.js";
+import { traitShown } from "./settings.js";
 
 const L = (k) => game.i18n.localize(k);
 const F = (k, d) => game.i18n.format(k, d);
@@ -291,6 +292,7 @@ export const rollKnave1eGear = async () => {
 export const rollTraits = async () => {
   const traits = {};
   for (const [key, table] of Object.entries(TABLES.traits)) {
+    if (!traitShown(key)) continue; // Alignment and Background only while their switch is on
     const r = await drawFrom(table, { warn: false });
     if (r) traits[key] = r.text;
   }

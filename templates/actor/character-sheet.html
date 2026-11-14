@@ -41,6 +41,17 @@
             <input class="pronouns-input" type="text" name="system.pronouns" value="{{source.pronouns}}" maxlength="24"
               placeholder="{{localize 'KNAVERY.Pronouns'}}" data-tooltip="KNAVERY.Pronouns" aria-label="{{localize 'KNAVERY.Pronouns'}}" />
           </div>
+          {{!-- Alignment and Background, each behind its Knave 1e switch (user, 2026-11-14). --}}
+          {{#each knavePageTraits}}
+          <div class="knave-trait-line">
+            <label class="knave-trait-label" for="{{@root.idp}}-trait-{{this.key}}">{{this.label}}</label>
+            <input class="trait-input" id="{{@root.idp}}-trait-{{this.key}}" type="text" name="system.traits.{{this.key}}" value="{{this.value}}" />
+            {{#if @root.generationEnabled}}
+            <a class="trait-roll" data-action="rollTrait" data-key="{{this.key}}" data-tooltip="KNAVERY.RollTrait"><i class="fas fa-dice-d20"></i></a>
+            <a class="trait-pick" data-action="pickTrait" data-key="{{this.key}}" data-tooltip="KNAVERY.PickTrait"><i class="fas fa-list-ul"></i></a>
+            {{/if}}
+          </div>
+          {{/each}}
 
           <div class="career-line">
             <span class="background-label">{{localize "KNAVERY.Careers"}}</span>
@@ -206,7 +217,7 @@
       {{/if}}
     </div>
 
-    <!-- Description: traits, biography and notes -->
+    <!-- Description: traits, backstory and notes -->
     <div class="tab knavery-page knavery-page-description {{tabs.description.cssClass}}" data-group="primary" data-tab="description">
       <div class="description">
         {{> "systems/base-knavery/templates/parts/traits-block.html"}}
@@ -214,6 +225,7 @@
           <label class="trait-picklist-label">{{localize "KNAVERY.Biography"}}</label>
           <prose-mirror name="system.biography" value="{{system.biography}}" toggled collaborate relative
             data-document-uuid="{{actor.uuid}}">{{#if system.biography}}{{{enrichedBio}}}{{else}}<p class="knavery-editor-placeholder">{{localize "KNAVERY.BiographyPlaceholder"}}</p>{{/if}}</prose-mirror>
+          <span class="knavery-word-count" data-tooltip="KNAVERY.BackstoryTip"></span>
         </div>
         <div class="knavery-notes">
           <label class="trait-picklist-label">{{localize "KNAVERY.Tab.Notes"}}</label>

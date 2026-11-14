@@ -33,6 +33,14 @@ export const reprepareActors = (filter = () => true) => {
   for (const scene of game.scenes) for (const t of scene.tokens) if (!t.actorLink) redo(t.actor);
 };
 
+/** Traits that live on the Knave page, each behind its Knave 1e switch (user, 2026-11-14). */
+export const KNAVE_PAGE_TRAITS = ["alignment", "background"];
+/** Whether a trait shows (and is rolled): the Knave-page ones only while their switch is on. */
+export const traitShown = (key) => {
+  if (!KNAVE_PAGE_TRAITS.includes(key)) return true;
+  try { return game.settings.get(SETTINGS_NS, `show-${key}`) === true; } catch { return true; }
+};
+
 export const rerenderActorSheets = () => {
   for (const app of foundry.applications.instances.values()) {
     if (app.document instanceof Actor) app.render();
@@ -74,7 +82,7 @@ export const SETTING_GROUPS = [
     hint: "KNAVERY.Settings.GroupHacksHint",
     icon: "fa-solid fa-flask",
     keys: [
-      "knave1e-starting-gear", "knave1e-xp", "knave1e-random-raises",
+      "knave1e-starting-gear", "show-alignment", "show-background", "knave1e-xp", "knave1e-random-raises",
       "knave1e-initiative", "hard-mode-wounds", "show-hazard-dice",
     ],
   },
@@ -153,6 +161,8 @@ export const registerSettings = () => {
 
   /* Hacks */
   reg("knave1e-starting-gear", { label: "Knave1eStartingGear", type: Boolean, default: false });
+  reg("show-alignment", { label: "Knave1eAlignment", type: Boolean, default: false, onChange: rerenderActorSheets });
+  reg("show-background", { label: "Knave1eBackground", type: Boolean, default: false, onChange: rerenderActorSheets });
   // Knave 1e rules, one switch each (data-models.js levelLadder, level-up.js, initiative.js).
   reg("knave1e-xp", {
     label: "Knave1eXp", type: Boolean, default: false,

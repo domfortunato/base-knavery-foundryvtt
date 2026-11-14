@@ -8,7 +8,7 @@
  * sheet, its Attack window and raised abilities; the welcome window's licence notice; random creation rolling by
  * default; a blank sheet held to its level's ability points, with HP, coin and career dice; the Attack window's
  * Target list; the narrow header; Rest by the book; red splats; compact attack cards; labels that fit; Create NPC;
- * spell items from the rulebook; weapons and armor first; rations per slot; the review #2 fixes; time and hazards; morale and wages. GM, Alice and Bob
+ * spell items from the rulebook; weapons and armor first; rations per slot; the review #2 fixes; time and hazards; morale and wages; Backstory and the Knave-page traits. GM, Alice and Bob
  * in three browsers.
  *
  *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/e2e-chargen.mjs   (npm run dev:chargen)
@@ -32,7 +32,7 @@ const T = (ms) => ms * TIME_SCALE;
 const SYS = "/systems/base-knavery/module";
 
 const browser = await chromium.launch();
-watchdog(1260000, "e2e-chargen", () => browser.close());
+watchdog(1380000, "e2e-chargen", () => browser.close());
 const ctx = () => browser.newContext({ viewport: VIEWPORT });
 const gm = await (await ctx()).newPage();
 const alice = await (await ctx()).newPage();
@@ -342,15 +342,17 @@ await withSettings(gm, async () => {
       const out = {
         made, rows: el.querySelectorAll(".trait-row").length, groups: el.querySelectorAll(".trait-group-heading").length,
         // The ten Knave 1e traits come from the shipped tables (a world table of the same name would win, so only count, not compare).
-        filled1e: ["physique", "face", "skin", "hair", "clothing", "virtue", "vice", "speech", "background", "misfortune"].filter((k) => t[k]).length,
+        // Background (and Alignment) are rolled only while their Knave 1e switch is on (off by default).
+        filled1e: ["physique", "face", "skin", "hair", "clothing", "virtue", "vice", "speech", "misfortune"].filter((k) => t[k]).length,
+        hiddenBlank: !t.background && !t.alignment,
         own: ["Physique", "Face", "Skin", "Hair", "Clothing", "Virtue", "Vice", "Speech", "Background", "Misfortune"].filter((n) => game.tables.getName(n)).length,
       };
       await blank.sheet.close();
       return out;
     }, SYS);
     made.tables.push(...r.made);
-    ok(r.filled1e === 10, "a Blank character starts with all ten Knave 1e traits rolled from the shipped tables", JSON.stringify(r));
-    ok(r.rows === 13 && r.groups === 2, "the traits section opens expanded: the two 2e traits, then the eleven 1e ones", JSON.stringify(r));
+    ok(r.filled1e === 9 && r.hiddenBlank, "a Blank character starts with the nine shown Knave 1e traits rolled; hidden Background and Alignment stay blank", JSON.stringify(r));
+    ok(r.rows === 11 && r.groups === 2, "the traits section opens expanded: the two 2e traits, then nine 1e ones (Alignment and Background live on the Knave page)", JSON.stringify(r));
     await gm.evaluate((x) => game.actors.get(x).update({ "system.generationEnabled": true }), ids.a);
     await openAs(alice, ids.a);
     await settle();
@@ -1602,6 +1604,73 @@ await withSettings(gm, async () => {
     ok(b.companion === null, "a companion never tests morale", JSON.stringify(b));
     ok(b.rallyButton && b.rallied.includes("foes") && b.secondRefused,
       "a failed test offers the leader's CHA rally, and each side may try it once a battle", JSON.stringify(b));
+  });
+
+  /* ------------------------------------------------------------------ */
+  await section("24. Description: Backstory with a 35-word guide; Alignment and Background on the Knave page by switch.", async () => {
+    const d = await gm.evaluate(async (pcId) => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const pc = game.actors.get(pcId);
+      const words = (n) => Array.from({ length: n }, (_, i) => `word${i}`).join(" ");
+      await pc.update({ "system.biography": `<p>${words(12)}</p>`, "system.traits.alignment": "Probe Lawful", "system.traits.background": "Probe Baker" });
+      await game.settings.set("base-knavery", "show-alignment", false);
+      await game.settings.set("base-knavery", "show-background", false);
+      await pc.sheet.render({ force: true });
+      await wait(900);
+      await pc.sheet.changeTab("description", "primary");
+      await wait(400);
+      const el = pc.sheet.element;
+      const desc = () => [...el.querySelectorAll('[data-tab="description"] .trait-input')].map((i) => i.name);
+      const out = {
+        descTraits: desc(),
+        label: el.querySelector(".knavery-bio .trait-picklist-label")?.textContent.trim(),
+        count: el.querySelector(".knavery-word-count")?.textContent.trim(),
+        knaveOff: el.querySelectorAll(".knave-trait-line").length,
+      };
+      await pc.update({ "system.biography": `<p>${words(40)}</p>` });
+      await wait(900);
+      out.countOver = pc.sheet.element.querySelector(".knavery-word-count")?.textContent.trim();
+      out.overClass = pc.sheet.element.querySelector(".knavery-word-count")?.classList.contains("over");
+      // Both switches on: the Knave page shows both lines, still not on Description.
+      await game.settings.set("base-knavery", "show-alignment", true);
+      await game.settings.set("base-knavery", "show-background", true);
+      await wait(900);
+      await pc.sheet.changeTab("knave", "primary");
+      await wait(400);
+      const lines = [...pc.sheet.element.querySelectorAll(".knave-trait-line input")];
+      out.knaveOn = lines.map((i) => `${i.name}=${i.value}`);
+      out.descOn = [...pc.sheet.element.querySelectorAll('[data-tab="description"] .trait-input')].map((i) => i.name)
+        .filter((n) => /alignment|background/.test(n));
+      out.lineWidths = lines.map((i) => Math.round(i.closest(".knave-trait-line").getBoundingClientRect().right <= pc.sheet.element.getBoundingClientRect().right));
+      return out;
+    }, ids.a);
+    await gm.screenshot({ path: `${SHOTS}/knave-page-1e-traits.png` });
+    await gm.evaluate(async (pcId) => {
+      const pc = game.actors.get(pcId);
+      await pc.sheet.changeTab("description", "primary");
+    }, ids.a);
+    await new Promise((res) => setTimeout(res, 500));
+    await gm.screenshot({ path: `${SHOTS}/description-backstory.png` });
+    const r = await gm.evaluate(async (pcId) => {
+      const { rollTraits } = await import("/systems/base-knavery/module/character-generator.js");
+      const on = await rollTraits();
+      await game.settings.set("base-knavery", "show-alignment", false);
+      await game.settings.set("base-knavery", "show-background", false);
+      const off = await rollTraits();
+      const pc = game.actors.get(pcId);
+      await pc.sheet.close();
+      await pc.update({ "system.biography": "", "system.traits.alignment": "", "system.traits.background": "" });
+      return { onAlignment: !!on.alignment, onBackground: !!on.background, offAlignment: "alignment" in off, offBackground: "background" in off, offOthers: Object.keys(off).length };
+    }, ids.a);
+    ok(!d.descTraits.some((n) => /alignment|background/.test(n)) && d.descTraits.length > 0 && d.label === "Backstory",
+      "the Description page reads Backstory and no longer lists Alignment or Background", JSON.stringify(d));
+    ok(d.count === "12 / 35 words" && d.countOver === "40 / 35 words" && d.overClass,
+      "the backstory counter reads 12 / 35 words, and turns amber at 40", JSON.stringify(d));
+    ok(d.knaveOff === 0 && d.knaveOn.join() === "system.traits.alignment=Probe Lawful,system.traits.background=Probe Baker" && d.descOn.length === 0,
+      "with their Knave 1e switches on, Alignment and Background show on the Knave page (kept values), still not on Description", JSON.stringify(d));
+    ok(d.lineWidths.every(Boolean), "the Knave page's trait lines fit the narrow sheet", JSON.stringify(d.lineWidths));
+    ok(r.onAlignment && r.onBackground && !r.offAlignment && !r.offBackground && r.offOthers > 0,
+      "random traits include Alignment and Background only while their switches are on", JSON.stringify(r));
   });
 
   // Cleanup.

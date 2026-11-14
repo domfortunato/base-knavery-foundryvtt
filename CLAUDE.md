@@ -160,6 +160,10 @@ picker, change log and marketplace it ports.
 - Blank Sheet is the GM's: players create random characters only (2026-11-14).
 - Item order: a new inventory item is placed by band (weapons, armor, spellbooks, the rest)
   under the last row of its band, whatever sort it brings (`KnaveryItem._preCreateOperation`).
+- Alignment and Background (Knave 1e traits) are hidden unless their switch (`show-alignment`,
+  `show-background`) is on, and then show on the Knave page, never on Description; hidden ones are
+  not rolled (`settings.js` `traitShown`). Backstory (`system.biography`) is guided to 35 words by a
+  counter, never a limit (user, 2026-11-14).
 - Rations per slot is the GM's setting `rations-per-slot` (default 1: both editions).
 - Rest follows p12: HP back to max only after two watches of sleep and a meal; a safe haven
   also heals one wound; spellbooks reset either way (the sheet's Rest window, `KnaveryActor.rest`).

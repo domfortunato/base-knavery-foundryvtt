@@ -6,6 +6,7 @@
 import { ABILITIES, SAVE_CATEGORIES, SYS_PATH, TABLES } from "./config.js";
 import { slotsForItem } from "./documents/actor.js";
 import { nextLevelXp } from "./data-models.js";
+import { traitShown } from "./settings.js";
 
 const L = (k) => game.i18n.localize(k);
 const TextEditor = foundry.applications.ux.TextEditor.implementation;
@@ -48,7 +49,7 @@ const fill = async (win, actor) => {
       })),
     });
   }
-  const traits = Object.keys(TABLES.traits).map((k) => ({ label: L(`KNAVERY.Trait.${k}`), value: s.traits?.[k] }))
+  const traits = Object.keys(TABLES.traits).filter(traitShown).map((k) => ({ label: L(`KNAVERY.Trait.${k}`), value: s.traits?.[k] }))
     .filter((t) => t.value);
   const context = {
     lang: game.i18n.lang,

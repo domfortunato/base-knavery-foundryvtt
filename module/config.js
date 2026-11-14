@@ -50,6 +50,8 @@ export const MAX_LEVEL = LEVELS.length;
 export const LEVELS_1E = LEVELS.map((r) => ({ level: r.level, xp: (r.level - 1) * 1000 }));
 /** Abilities raised by one each level-up (three different ones). */
 export const LEVEL_UP_ABILITIES = 3;
+/** The backstory's guide length in words (user, 2026-11-14): a counter, never a limit. */
+export const BACKSTORY_WORDS = 35;
 
 /**
  * Saving throws from other games (OSR modules, DCC adventures) resolve as an

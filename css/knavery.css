@@ -4912,3 +4912,21 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-gm-dashboard .dash-wage.overdue .dash-wage-status { color: var(--kn-warn); font-weight: bold; }
 .knavery-gm-dashboard .dash-wage button { flex: none; width: auto; padding: 0 10px; }
 .knavery .npc-role-line .employer-select { flex: 0 1 140px; width: auto; }
+
+/* ---- Knave-page traits and the backstory counter (2026-11-14) ------------------- */
+/* Alignment and Background, each behind its Knave 1e switch: one line each under the pronouns. */
+.knavery .knave-trait-line { display: flex; align-items: center; gap: 6px; flex: 0 0 auto; min-width: 0; }
+.knavery .knave-trait-line .knave-trait-label {
+    flex: 0 0 auto; font-weight: bold; font-variant: small-caps; font-size: calc(13px * var(--kn-text, 1)); line-height: 1.3;
+}
+.knavery .knave-trait-line .trait-input {
+    flex: 1 1 auto; min-width: 0; height: 24px; background: none; color: var(--kn-ink);
+    border: none; border-bottom: 1px solid var(--kn-rule); border-radius: 0;
+    font-size: calc(14px * var(--kn-text, 1)); padding: 0 2px;
+}
+.knavery .knave-trait-line a { flex: 0 0 auto; }
+/* The backstory's word guide: small and muted, amber past 35. */
+.knavery .knavery-bio .knavery-word-count {
+    display: block; text-align: right; margin-top: 2px; font-size: calc(11px * var(--kn-text, 1)); color: var(--kn-faint);
+}
+.knavery .knavery-bio .knavery-word-count.over { color: var(--kn-warn); font-weight: bold; }
