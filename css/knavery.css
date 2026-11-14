@@ -4975,4 +4975,11 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-welcome-book .knavery-welcome-links { grid-column: 2; }
 .knavery-welcome-book-note { grid-column: 2; margin: 0; color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
 .knavery-welcome-small { display: flex; flex-direction: column; gap: 6px; }
+/* The AI disclosure: no AI art leads, the art's licences folded under it. */
+.knavery-welcome-ai { display: flex; flex-direction: column; gap: 4px; }
+.knavery-welcome-noai { margin: 0; font-size: calc(14px * var(--kn-text, 1)); }
+.knavery-welcome-noai i { color: var(--kn-accent); }
+.knavery-welcome-aicode { margin: 0; color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
+.knavery-welcome-art ul { margin: 4px 0 0; padding-left: 18px; color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
+.knavery-welcome-art a { color: var(--kn-ink); text-decoration: underline; }
 .knavery-welcome-small .knavery-welcome-disclaimer { font-size: calc(12px * var(--kn-text, 1)); }

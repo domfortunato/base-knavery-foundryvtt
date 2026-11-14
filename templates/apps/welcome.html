@@ -52,6 +52,21 @@
     {{/if}}
   </div>
 
+  {{!-- AI disclosure (user, 2026-11-14): no AI art, first; the art's licences folded below. --}}
+  <h2 class="knavery-welcome-heading">{{localize "KNAVERY.Welcome.AiHeading"}}</h2>
+  <section class="knavery-welcome-ai">
+    <p class="knavery-welcome-noai"><i class="fa-solid fa-paintbrush" inert></i> <strong>{{localize "KNAVERY.Welcome.NoAiArt"}}</strong> {{localize "KNAVERY.Welcome.NoAiArtBody"}}</p>
+    <p class="knavery-welcome-aicode">{{localize "KNAVERY.Welcome.AiCode"}}</p>
+    <details class="knavery-welcome-license knavery-welcome-art">
+      <summary>{{localize "KNAVERY.Welcome.ArtLicensing"}}</summary>
+      <ul>
+        {{#each art}}
+        <li><a href="{{this.url}}" target="_blank" rel="noopener">{{this.name}}</a>, {{this.by}}: <a href="{{this.licenseUrl}}" target="_blank" rel="noopener">{{this.license}}</a></li>
+        {{/each}}
+      </ul>
+    </details>
+  </section>
+
   {{!-- Licensing, last: the licence's disclaimer, the logo credit, and Knave 1e's CC BY notice folded (user, 2026-11-14). --}}
   <h2 class="knavery-welcome-heading">{{localize "KNAVERY.Welcome.Licensing"}}</h2>
   <section class="knavery-welcome-small">

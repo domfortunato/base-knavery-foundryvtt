@@ -26,8 +26,11 @@
   - Not yet: 1e's item quality and wear, the natural-20 extra die, the copper price list, 100 coins a
     slot and daily wages. A 1e world keeps 2e's on those for now.
 - **The welcome window** says which rules the world plays, how 1e and 2e fit together, and links the
-  Knave 1e PDF on itch beside the Knave 2e book, though the 1e rules are built in. The licences move to
-  the small print at the bottom.
+  Knave 1e PDF on itch beside the Knave 2e book, though the 1e rules are built in. An **AI disclosure**
+  says first that there is no AI art: Base Knavery ships with more than 400 human-made art assets and
+  will never use AI-generated art (its code is written with the help of an AI coding assistant); the
+  art's licences fold under it. The licences move to a **Licensing** section at the bottom, Knave 1e's
+  notice folded.
 - **The sheet footer** now reads "...for Knave (first and second editions)...".
 - **Time and hazards** (a new Time tab on the Game Master's Dashboard): end a dungeon turn or a travel
   watch, and the world clock moves on 10 minutes or 4 hours and the hazard die rolls. The tab counts the
