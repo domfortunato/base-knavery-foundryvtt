@@ -11,7 +11,7 @@ own authors, on terms MIT neither restates nor overrides.
 The name "Base Knavery"
 -----------------------
 
-"Base Knavery" is the name of this project, used by Dom Bosco. The MIT licence
+"Base Knavery"™ is the name of this project, used by Dom Bosco. The MIT licence
 covers the code; it does not license the name. You may copy, change and share
 the code, but a modified version you distribute must use a different name and
 must not suggest that it is Base Knavery or comes from its author. Saying that

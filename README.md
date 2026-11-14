@@ -1,4 +1,4 @@
-# Base Knavery
+# Base Knavery™
 
 A [Foundry VTT](https://foundryvtt.com) game system for **Knave**, first and
 second editions. Use it to run old TSR modules, OSE and other OSR adventures,

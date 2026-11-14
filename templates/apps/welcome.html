@@ -12,7 +12,8 @@
     <img class="knavery-welcome-knight knavery-knight-light" src="{{knight}}" alt="{{localize 'KNAVERY.Welcome.KnightAlt'}}">
     <img class="knavery-welcome-knight knavery-knight-dark" src="{{knightDark}}" alt="{{localize 'KNAVERY.Welcome.KnightAlt'}}">
     <div class="knavery-welcome-titles">
-      <h1 class="knavery-welcome-title">{{title}}</h1>
+      {{!-- The name is marked as the author's (user, 2026-11-14; LICENSE.txt "The name"). --}}
+      <h1 class="knavery-welcome-title">{{title}}<sup>™</sup></h1>
       <p class="knavery-welcome-byline">
         {{#if authorUrl}}<a href="{{authorUrl}}" target="_blank" rel="noopener">{{byline}}</a>{{else}}{{byline}}{{/if}}
       </p>
