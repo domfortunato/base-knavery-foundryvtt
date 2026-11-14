@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.0
 
 - **Knave 1e out of the box.** A new world plays Knave first edition as written; Knave 2e comes with
   your own book; any rule can be mixed. Settings → **Configure Rules** (the old Hacks window) opens with
