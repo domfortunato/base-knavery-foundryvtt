@@ -296,7 +296,7 @@ await withSettings(gm, async () => {
     ok(before === "1.2", "the default is Large", String(before));
 
     const foot = await gm.evaluate((id) => game.actors.get(id).sheet.element.querySelector(".knavery-compat-caption")?.textContent.trim(), ids.a);
-    ok(foot === "Base Knavery is an unofficial fan-made Foundry system for Knave Second Edition and is not affiliated with Questing Beast LLC.", "the sheet footer is the short line", foot);
+    ok(foot === "Base Knavery is an unofficial fan-made Foundry system for Knave (first and second editions) and is not affiliated with Questing Beast LLC.", "the sheet footer is the short line", foot);
     const welcome = await gm.evaluate(async () => {
       await game.knavery.openWelcome();
       await new Promise((r) => setTimeout(r, 800));
@@ -327,7 +327,7 @@ await withSettings(gm, async () => {
       await menu.close();
       return rows;
     });
-    ok(labels.length >= 4 && labels.every((r) => r.lines <= 1), "every Hacks label sits on one line", JSON.stringify(labels));
+    ok(labels.length >= 4 && labels.every((r) => r.lines <= 1), "every Rules label sits on one line", JSON.stringify(labels));
   });
 
   /* ------------------------------------------------------------------ */
@@ -658,7 +658,7 @@ await withSettings(gm, async () => {
     ok(Math.abs(r.height - 660 * r.k) < 40 || r.height >= r.vh - 80, "and just tall enough for the Knave page (660 × text size)", JSON.stringify(r));
     ok(!r.playColumn && !r.disabled && r.enabled, "no attacks column; the Attack button is always there (an improvised attack needs no weapon)", JSON.stringify(r));
     ok(r.dexRaised === true && r.strRaised === false, "a score above 0 is marked raised, a 0 is not", JSON.stringify(r));
-    ok(r.footer.includes("unofficial fan-made Foundry system for Knave Second Edition"), "the sheet footer reads the new sentence", r.footer);
+    ok(r.footer.includes("unofficial fan-made Foundry system for Knave (first and second editions)"), "the sheet footer reads the new sentence", r.footer);
 
     // The Attack window: both weapons, Power attack for the sword only, the bow rolls.
     const before = await gm.evaluate(() => game.messages.size);
@@ -1830,9 +1830,8 @@ await withSettings(gm, async () => {
     ok(c.rows === 6 && c.swapped, "the six rolls are shown and two scores can be swapped", JSON.stringify(c));
 
     // Death, healing and spells under 1e, and the sheet.
-    const d = await gm.evaluate(async (sys) => {
+    const d = await gm.evaluate(async () => {
       const wait = (ms) => new Promise((res) => setTimeout(res, ms));
-      const { castSpell } = await import(`${sys}/rolls.js`);
       const pc = await Actor.create({ name: "Probe 1e PC", type: "character", system: { hp: { value: 3, max: 5 }, level: 3, abilities: { CON: { value: 2 }, INT: { value: 0 } } } });
       const last = () => game.messages.contents.at(-1)?.content ?? "";
       const out = {};
@@ -1853,7 +1852,15 @@ await withSettings(gm, async () => {
         footer: /first and second editions/.test(el.textContent),
         hasPersonalityTable: !!game.tables.getName("Personalities"), hasMannerismTable: !!game.tables.getName("Mannerisms"),
       };
-      out.sheetId = pc.id;
+      return out;
+    }, SYS);
+    // The 1e sheet at 0 HP: the Unconscious banner over one HP bar.
+    await gm.screenshot({ path: `${SHOTS}/knave1e-sheet.png` });
+    Object.assign(d, await gm.evaluate(async (sys) => {
+      const { castSpell } = await import(`${sys}/rolls.js`);
+      const pc = game.actors.getName("Probe 1e PC");
+      const last = () => game.messages.contents.at(-1)?.content ?? "";
+      const out = {};
       await pc.applyDamage(1, { direct: true });
       out.d2 = { hp: pc.system.hp.value, wounds: pc.system.wounds, dead: pc.system.dead, direct: /direct damage/.test(last()), card: /is dead/.test(last()) };
       await pc.applyDamage(5);
@@ -1876,8 +1883,7 @@ await withSettings(gm, async () => {
       await castSpell(pc, pc.items.getName("Probe Book A"));
       out.again = count() - before;
       return out;
-    }, SYS);
-    await gm.screenshot({ path: `${SHOTS}/knave1e-sheet.png` });
+    }, SYS));
     const s = d.sheet;
     ok(d.d1.hp === 0 && d.d1.wounds === 0 && d.d1.out && !d.d1.dead && d.d1.card,
       "under Knave 1e, damage to 0 HP leaves a character unconscious, with no wounds", JSON.stringify(d.d1));

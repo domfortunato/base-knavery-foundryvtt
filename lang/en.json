@@ -967,7 +967,7 @@
       "Knave1eBackground": "Background on the Knave page",
       "Knave1eBackgroundHint": "Show Background (a Knave 1e trait) on the Knave page, and roll it for new characters.",
       "Knave1eStartingGearHint": "Random creation also rolls Knave 1e's starting gear: armor, helmet and shield, two dungeoneering items and two general items.",
-      "SpellList": "Spell list for random spellbooks",
+      "SpellList": "Spell list",
       "SpellListHint": "Knave 1e's 100 level-less spells ship with the system. Once you build or import a Spells table, it is used instead, unless you choose Knave 1e here. In 1e's spells, L is the caster's level.",
       "SpellListAuto": "Your Spells table once it has rows, otherwise Knave 1e",
       "SpellList1e": "Knave 1e's 100 level-less spells, always",

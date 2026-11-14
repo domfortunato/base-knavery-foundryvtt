@@ -4968,9 +4968,10 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
     margin: 4px 0 0; padding: 4px 10px; border: 1px solid var(--kn-accent); border-radius: 4px; background: var(--kn-accent-wash);
     font-weight: bold;
 }
-.knavery-welcome-book { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
-.knavery-welcome-book-name { flex: 0 0 64px; font-weight: bold; font-variant: small-caps; }
-.knavery-welcome-book .knavery-welcome-links { flex: 1 1 auto; }
-.knavery-welcome-book-note { flex: 1 1 100%; margin: 0 0 0 74px; color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
+/* Each book: its name in a narrow first column; the links, then the note, beside it. */
+.knavery-welcome-book { display: grid; grid-template-columns: max-content 1fr; align-items: center; gap: 4px 10px; }
+.knavery-welcome-book-name { grid-column: 1; min-width: 64px; font-weight: bold; font-variant: small-caps; }
+.knavery-welcome-book .knavery-welcome-links { grid-column: 2; }
+.knavery-welcome-book-note { grid-column: 2; margin: 0; color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
 .knavery-welcome-small { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--kn-rule); }
 .knavery-welcome-small .knavery-welcome-disclaimer { font-size: calc(12px * var(--kn-text, 1)); }

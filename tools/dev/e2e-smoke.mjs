@@ -223,7 +223,8 @@ const welcome = await page.evaluate(() => {
     onStart: !!el.querySelector('input[name="welcome-on-start"]'),
   };
 });
-ok(welcome.links.length === 3 && welcome.links[0].includes("affiliate_id=379088"), "welcome: three places to buy the book", JSON.stringify(welcome.links));
+ok(welcome.links.length === 4 && welcome.links[0] === "https://questingbeast.itch.io/knave" && welcome.links[1].includes("affiliate_id=379088"),
+  "welcome: the Knave 1e PDF, and three places to buy Knave 2e", JSON.stringify(welcome.links));
 ok(welcome.disclaimer?.startsWith("Base Knavery is an independent production of Dom Bosco") && welcome.logo, "welcome: the licence disclaimer and the Made for Knave logo", JSON.stringify(welcome));
 ok(welcome.onStart, "welcome: the GM's show-on-start box");
 await page.locator("#knavery-welcome").screenshot({ path: path.join(OUT, "welcome.png") });
