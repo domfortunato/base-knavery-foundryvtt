@@ -504,6 +504,9 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       traitsCollapsed: this.#traitsCollapsed,
       showShop: isChar && this.isEditable && !playerMarketClosed(),
       roles: NPC_ROLES.map((r) => ({ value: r, label: L(`KNAVERY.Role.${r}`) })),
+      // A hireling's employer: the player characters (hirelings.js pays the wage from them).
+      employers: isChar ? [] : game.actors.filter((a) => a.type === "character" && a.hasPlayerOwner)
+        .map((a) => ({ id: a.id, name: a.name, selected: a.id === actor._source.system.employer })),
       enrichedNotes: await enrichForSheet(s.notes ?? "", { relativeTo: actor, secrets: actor.isOwner }),
       enrichedBio: await enrichForSheet(s.biography ?? s.description ?? "", { relativeTo: actor, secrets: actor.isOwner }),
       spellsLeft: isChar ? Math.max(0, s.spellsPerDay - s.spellsCastToday) : null,

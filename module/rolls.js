@@ -506,16 +506,24 @@ export const rollDieOfFate = async (actor) => {
 };
 
 /** Morale: 2d6 at or under MRL holds. */
-export const rollMorale = async (actor) => {
+export const rollMorale = async (actor, { rallied = false } = {}) => {
+  // Companions fight to the death for their employer (p59).
+  if (actor?.type === "npc" && actor.system.role === "companion") {
+    ui.notifications.info("KNAVERY.MoraleTest.Companion", { format: { name: actor.name } });
+    return null;
+  }
   const roll = await new Roll("2d6").evaluate();
   const mrl = actor.system.morale ?? 7;
   const holds = roll.total <= mrl;
   const content = await renderCard({
     kind: "check",
     title: F("KNAVERY.Roll.MoraleTitle", { n: mrl }),
+    reason: rallied ? L("KNAVERY.MoraleTest.Rerolled") : "",
     rollHtml: await roll.render(),
     success: holds,
     resultLabel: L(holds ? "KNAVERY.Roll.MoraleHolds" : "KNAVERY.Roll.MoraleBreaks"),
+    // A failed test may be rerolled once if the leader passes CHA (p26); not a reroll's reroll.
+    moraleRally: !holds && !rallied ? actor.uuid : null,
   });
   return postRolls(actor, [roll], content, { morale: { total: roll.total, holds } });
 };

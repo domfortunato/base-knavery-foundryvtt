@@ -13,6 +13,12 @@
     against 1 direct damage.
 - **Light it:** torches, candles and lanterns have a flame toggle on the Inventory row, and a lit one
   says so.
+- **Morale at breaking points:** in a running combat, a side's first casualty, half a side fallen, or an
+  NPC left alone at half HP whispers the GM a card with a Roll morale button for the NPCs still standing
+  (each once a battle). A failed morale test offers the leader's CHA check for a reroll, once per side a
+  battle. Companions never test morale.
+- **Wages:** a hireling's sheet names its employer. The Time tab lists each hireling's monthly wage and
+  when it is due (a month is 30 days of the world clock); Pay takes the wage from the employer's coins.
 
 ## 0.1.1
 

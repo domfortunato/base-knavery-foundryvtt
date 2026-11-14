@@ -81,6 +81,11 @@ picker, change log and marketplace it ports.
     clock, the hazard die) and the hazard cards' apply buttons: fatigue, burn,
     depletion, applied only when the GM clicks (user ruling 2026-11-14); the party
     is every player-owned character; light items carry `system.lit`
+  - `hirelings.js`: morale prompts at breaking points in a running combat (the active
+    GM; once a battle each, flagged on the Combat), the leader's CHA rally once per side
+    a battle, companions exempt (p59); hirelings' wages: `system.employer` pays, due
+    every 30 days of world time (`system.wageDue`), Pay on the Time tab (user rulings
+    2026-11-14)
   - `welcome.js`: the welcome window, at every GM login unless setting
     `welcome-on-start` is off (user ruling 2026-11-14)
   - `rulebook-import.js`: build world roll tables from the GM's PDF, with a

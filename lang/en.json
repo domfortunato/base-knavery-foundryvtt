@@ -26,6 +26,8 @@
     "Pronouns": "Pronouns",
     "Description": "Description",
     "DescriptionPlaceholder": "Click to write a description.",
+    "Employer": "Employer",
+    "EmployerTip": "The character who hired them and pays their wage.",
     "Wage": "Wage",
     "WageTip": "Coins a month (Knave 2e p59).",
     "Biography": "Biography",
@@ -494,6 +496,42 @@
       },
       "IgnoredResting": "Ignored: the party is resting.",
       "ForcedMarch": "More than three watches of travel today: each traveller takes 1 direct damage unless they pass a CON check."
+    },
+
+    "MoraleTest": {
+      "BreakingPoint": "Breaking point",
+      "FirstCasualty": "{side}: the first casualty.",
+      "HalfFallen": "{side}: half of them have fallen.",
+      "AloneHalfHp": "{name} stands alone, at half HP or less.",
+      "SidePcs": "The party's side",
+      "SideFoes": "Their foes",
+      "WhoTests": "Morale tests for: {names}.",
+      "RollAll": "Roll morale",
+      "Rally": "Leader rallies them (CHA check)",
+      "RallyTitle": "Rally",
+      "RallyHelp": "If the leader passes a CHA check, {name} rolls morale again. Each side may try once a battle.",
+      "Leader": "Leader",
+      "RallyRoll": "Roll CHA",
+      "RallyReason": "Rallying {name}",
+      "RallyUsed": "This side has already tried to rally this battle.",
+      "Rerolled": "Rerolled: the leader rallied them.",
+      "Companion": "{name} is a companion: companions never test morale."
+    },
+
+    "Wages": {
+      "Title": "Wages",
+      "None": "No hirelings with a wage. Create NPC makes them, and a hireling's sheet names who pays.",
+      "PerMonth": "{wage}c a month",
+      "DueNow": "Due now",
+      "DueTomorrow": "Due tomorrow",
+      "DueIn": "Due in {n} days",
+      "Overdue": "Overdue by {n} days",
+      "NoEmployer": "no employer",
+      "NeedEmployer": "Choose an employer on the hireling's sheet first.",
+      "ChooseEmployer": "Choose who employs {name} on their sheet first.",
+      "CannotPay": "{name} has {coins}c, not the {wage}c the wage needs.",
+      "Pay": "Pay",
+      "Paid": "{employer} paid {name} {wage}c: wages for the next {days} days."
     },
 
     "Time": {

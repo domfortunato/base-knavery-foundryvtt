@@ -7,7 +7,8 @@
  *   Damage    roll or type damage and apply it to chosen characters or to
  *             the selected/targeted tokens, normal or direct, with a source.
  *   Time      dungeon turns or travel watches: end one (the world clock moves on and
- *             the hazard die rolls), the party resting, the die on its own (hazard.js).
+ *             the hazard die rolls), the party resting, the die on its own (hazard.js);
+ *             hirelings' wages: when each is due, and Pay (hirelings.js).
  *   Dice      reaction, encounter distance, morale.
  *   XP        award XP: the same amount to each chosen character, a different
  *             amount to each, or a total split evenly (the book's treasure rule).
@@ -25,6 +26,7 @@ import { openTableImporter } from "./table-importer.js";
 import { openMarketplaceManager } from "./marketplace.js";
 import { hasRulebook, openRulebook, pickLocalRulebook, showRulebookPage, tablePage } from "./rulebook.js";
 import { clock, clockLabel, endTurn, resetClock, setClock, TRAVEL_WATCHES_FREE } from "./hazard.js";
+import { payWage, wageRows } from "./hirelings.js";
 import { scaledPosition } from "./settings.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -61,6 +63,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       timeMode: GmDashboard.#onTimeMode,
       timeResting: GmDashboard.#onTimeResting,
       resetClock: () => resetClock(),
+      payWage: GmDashboard.#onPayWage,
       reaction: GmDashboard.#onReaction,
       encounterDistance: GmDashboard.#onEncounterDistance,
       morale: GmDashboard.#onMorale,
@@ -157,6 +160,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
           travelledLine: travel && c.watch ? F("KNAVERY.Time.Travelled", { n: c.travelled, free: TRAVEL_WATCHES_FREE }) : "",
         };
       })(),
+      wages: wageRows(),
       tables,
       rulebook,
       toggles: TOGGLES.map((t) => ({ ...t, on: game.settings.get(SETTINGS_NS, t.key) })),
@@ -348,6 +352,12 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static async #onTimeResting(_e, target) {
     await setClock({ resting: target.checked });
+  }
+
+  /** Pay a hireling's month from their employer. */
+  static async #onPayWage(_e, target) {
+    const paid = await payWage(game.actors.get(target.dataset.id));
+    if (paid) this.render({ parts: ["time"] });
   }
 
   static async #onReaction() {

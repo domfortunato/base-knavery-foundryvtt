@@ -13,6 +13,11 @@
   <div class="card-result {{#if success}}success{{else}}failure{{/if}}">
     {{resultLabel}}{{#if target}} <span class="card-target">({{localize "KNAVERY.Roll.VsTarget" target=target}})</span>{{/if}}
   </div>
+  {{#if moraleRally}}
+  <div class="card-apply card-morale-rally">
+    <button type="button" data-kn-rally="{{moraleRally}}"><i class="fas fa-flag"></i> {{localize "KNAVERY.MoraleTest.Rally"}}</button>
+  </div>
+  {{/if}}
   {{/if}}
 
   {{#if (eq kind "hazard")}}

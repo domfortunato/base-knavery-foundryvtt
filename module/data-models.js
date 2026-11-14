@@ -121,6 +121,9 @@ export class NpcData extends KnaveryActorData {
       coins: int(0),
       wounds: int(0),
       wage: int(0),
+      /** A hireling's employer (a character's id), who pays the wage; and when it is next due (world time). */
+      employer: str(),
+      wageDue: new NumberField({ required: false, nullable: true, initial: null }),
       pronouns: str(),
       traits: traits(),
       generationEnabled: bool(false),

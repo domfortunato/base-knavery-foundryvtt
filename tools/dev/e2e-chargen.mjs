@@ -8,7 +8,7 @@
  * sheet, its Attack window and raised abilities; the welcome window's licence notice; random creation rolling by
  * default; a blank sheet held to its level's ability points, with HP, coin and career dice; the Attack window's
  * Target list; the narrow header; Rest by the book; red splats; compact attack cards; labels that fit; Create NPC;
- * spell items from the rulebook; weapons and armor first; rations per slot; the review #2 fixes; time and hazards. GM, Alice and Bob
+ * spell items from the rulebook; weapons and armor first; rations per slot; the review #2 fixes; time and hazards; morale and wages. GM, Alice and Bob
  * in three browsers.
  *
  *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/e2e-chargen.mjs   (npm run dev:chargen)
@@ -32,7 +32,7 @@ const T = (ms) => ms * TIME_SCALE;
 const SYS = "/systems/base-knavery/module";
 
 const browser = await chromium.launch();
-watchdog(1080000, "e2e-chargen", () => browser.close());
+watchdog(1260000, "e2e-chargen", () => browser.close());
 const ctx = () => browser.newContext({ viewport: VIEWPORT });
 const gm = await (await ctx()).newPage();
 const alice = await (await ctx()).newPage();
@@ -1489,6 +1489,119 @@ await withSettings(gm, async () => {
     }, ids.a);
     ok(fat.restNote && !fat.restButton, "a fatigue roll while resting is ignored and offers no button", JSON.stringify(fat));
     ok(fat.dealt === 1 && fat.hp === 3, "fatigue deals 1 damage to each ticked party member", JSON.stringify(fat));
+  });
+
+  /* ------------------------------------------------------------------ */
+  await section("23. Morale at breaking points, the leader's rally, companions; wages due and paid by the employer.", async () => {
+    // Wages: a mercenary employed by Alice's character; Pay takes 600c and moves the due date a month.
+    const w = await gm.evaluate(async (pcId) => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const pc = game.actors.get(pcId);
+      await pc.update({ "system.coins": 1000 });
+      const merc = await game.knavery.createNpc({ kind: "hireling", name: "Probe Wage Merc", hireling: "mercenary" });
+      await merc.sheet.close();
+      await merc.update({ "system.employer": pcId });
+      await merc.sheet.render({ force: true });
+      await wait(900);
+      const select = merc.sheet.element.querySelector('select[name="system.employer"]');
+      const out = { employerShown: select?.value === pcId };
+      await merc.sheet.close();
+      game.knavery.openDashboard();
+      await wait(1200);
+      const dash = foundry.applications.instances.get("knavery-gm-dashboard");
+      await dash.changeTab("time", "primary");
+      await wait(400);
+      const row = () => [...dash.element.querySelectorAll(".dash-wage")].find((r) => r.textContent.includes("Probe Wage Merc"));
+      out.before = row()?.querySelector(".dash-wage-status")?.textContent.trim();
+      row()?.querySelector('[data-action="payWage"]')?.click();
+      await wait(1500);
+      out.coins = pc.system.coins;
+      out.dueDays = Math.round((merc.system.wageDue - game.time.worldTime) / 86400);
+      out.after = row()?.querySelector(".dash-wage-status")?.textContent.trim();
+      row()?.querySelector('[data-action="payWage"]')?.click(); // 400c left: not enough
+      await wait(1200);
+      out.coinsAfterRefusal = pc.system.coins;
+      await dash.close();
+      await merc.delete();
+      return out;
+    }, ids.a);
+    ok(w.employerShown && w.before === "Due now" && w.coins === 400 && w.dueDays === 30 && w.after === "Due in 30 days",
+      "a hireling's sheet names its employer; Pay takes the month's wage from them and the next is due in 30 days", JSON.stringify(w));
+    ok(w.coinsAfterRefusal === 400, "an employer who can't cover the wage is not charged", JSON.stringify(w));
+
+    // Breaking points in a running combat: the first casualty, half fallen, the last one alone at half HP.
+    const b = await gm.evaluate(async () => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const foes = [];
+      for (const n of ["Probe Rout A", "Probe Rout B", "Probe Rout C"]) {
+        foes.push(await Actor.create({ name: n, type: "npc", system: { role: "monster", hp: { value: 4, max: 4 }, morale: 7 } }));
+      }
+      const companion = await Actor.create({ name: "Probe Loyal", type: "npc", system: { role: "companion" } });
+      const combat = await Combat.create({ scene: null, active: true });
+      await combat.createEmbeddedDocuments("Combatant", foes.map((f) => ({ actorId: f.id })));
+      await combat.startCombat();
+      await wait(500);
+      const cards = () => game.messages.filter((m) => m.getFlag("base-knavery", "breaking")?.combat === combat.id);
+      await foes[0].update({ "system.hp.value": 0 });
+      await wait(1200);
+      const first = cards().map((m) => m.content);
+      await foes[1].update({ "system.hp.value": 0 });
+      await wait(1200);
+      await foes[2].update({ "system.hp.value": 2 });
+      await wait(1200);
+      await foes[2].update({ "system.hp.value": 1 }); // already prompted: no second card
+      await wait(1000);
+      const all = cards();
+      const out = {
+        firstCard: first.length === 1 && first[0].includes("first casualty") && first[0].includes("Probe Rout B") && !first[0].includes("Probe Rout A,"),
+        reasons: all.map((m) => m.getFlag("base-knavery", "breaking").reason),
+        whispered: all.every((m) => m.whisper.length > 0),
+      };
+      // The card's button rolls morale for the standing NPCs it names.
+      ui.sidebar.changeTab("chat", "primary");
+      await wait(500);
+      const before = game.messages.filter((m) => m.getFlag("base-knavery", "morale")).length;
+      document.querySelector(`#chat [data-message-id="${all[0].id}"] [data-kn-morale-test]`)?.click();
+      await wait(1500);
+      out.moraleRolled = game.messages.filter((m) => m.getFlag("base-knavery", "morale")).length - before;
+      // A companion never tests morale.
+      const { rollMorale } = await import("/systems/base-knavery/module/rolls.js");
+      out.companion = await rollMorale(companion);
+      // The rally: a failed test offers it; the leader's CHA check; once per side a battle.
+      await foes[2].update({ "system.morale": 2 });
+      let failed = null;
+      for (let i = 0; i < 30 && !failed; i++) {
+        const m = await rollMorale(foes[2]);
+        if (m.getFlag("base-knavery", "morale")?.holds === false) failed = m;
+      }
+      out.rallyButton = failed?.content.includes("data-kn-rally") ?? false;
+      const pending = game.knavery.rally(foes[2]);
+      await wait(900);
+      const dlg = [...document.querySelectorAll(".application.dialog")].at(-1);
+      dlg?.querySelector('footer button[data-action="ok"]')?.click();
+      await wait(900);
+      document.querySelector('.knavery-roll-prompt footer button[data-action="normal"]')?.click();
+      await pending;
+      await wait(800);
+      out.rallied = combat.getFlag("base-knavery", "rallied") ?? [];
+      const warned = [];
+      const origWarn = ui.notifications.warn.bind(ui.notifications);
+      ui.notifications.warn = (msg, o) => { warned.push(msg); return origWarn(msg, o); };
+      await game.knavery.rally(foes[2]);
+      ui.notifications.warn = origWarn;
+      out.secondRefused = warned.includes("KNAVERY.MoraleTest.RallyUsed");
+      for (const m of all) await m.delete();
+      await combat.delete();
+      for (const f of [...foes, companion]) await f.delete();
+      return out;
+    });
+    ok(b.firstCard && b.whispered, "the first casualty whispers the GM a breaking-point card naming the NPCs who still stand", JSON.stringify(b));
+    ok(b.reasons.length === 3 && /half of them/.test(b.reasons[1]) && /alone/.test(b.reasons[2]),
+      "half the side fallen, and the last one alone at half HP, each prompt once", JSON.stringify(b.reasons));
+    ok(b.moraleRolled === 1, "the card's Roll morale button rolls for the NPCs it names who still stand (one of two has fallen since)", JSON.stringify(b));
+    ok(b.companion === null, "a companion never tests morale", JSON.stringify(b));
+    ok(b.rallyButton && b.rallied.includes("foes") && b.secondRefused,
+      "a failed test offers the leader's CHA rally, and each side may try it once a battle", JSON.stringify(b));
   });
 
   // Cleanup.

@@ -4902,3 +4902,13 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery .item-toggle-lit.lit i, .knavery .knavery-item-tag.lit-tag i { color: var(--kn-amber); }
 .knavery .item-toggle-lit.lit i { text-shadow: 0 0 6px var(--kn-amber); }
 .knavery-roll-card .card-hazard-report { margin: 4px 0 2px; padding-left: 18px; }
+
+/* ---- Wages and morale (hirelings.js, 2026-11-14) ------------------------------ */
+.knavery-gm-dashboard .dash-wages { display: flex; flex-direction: column; gap: 4px; }
+.knavery-gm-dashboard .dash-wage { display: grid; grid-template-columns: 28px 1fr auto auto auto; align-items: center; gap: 8px; }
+.knavery-gm-dashboard .dash-wage img { width: 26px; height: 26px; border: none; border-radius: 50%; }
+.knavery-gm-dashboard .dash-wage-name em { font-size: calc(11px * var(--kn-text, 1)); color: var(--kn-faint); margin-left: 4px; }
+.knavery-gm-dashboard .dash-wage-status { font-size: calc(12px * var(--kn-text, 1)); color: var(--kn-muted); }
+.knavery-gm-dashboard .dash-wage.overdue .dash-wage-status { color: var(--kn-warn); font-weight: bold; }
+.knavery-gm-dashboard .dash-wage button { flex: none; width: auto; padding: 0 10px; }
+.knavery .npc-role-line .employer-select { flex: 0 1 140px; width: auto; }

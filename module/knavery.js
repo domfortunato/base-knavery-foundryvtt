@@ -30,6 +30,7 @@ import {
 import { maybeOpenWelcome, openWelcome } from "./welcome.js";
 import { openRulebookTablesReview } from "./rulebook-import.js";
 import { bindHazardCard, endTurn, registerClockSetting } from "./hazard.js";
+import { bindMoraleCard, checkBreakingPoints, payWage, rally } from "./hirelings.js";
 
 const L = (k) => game.i18n.localize(k);
 
@@ -82,6 +83,8 @@ Hooks.once("init", () => {
 
   game.knavery = {
     endTurn,
+    payWage,
+    rally,
     config: KNAVERY,
     openDashboard: openGmDashboard,
     openMarketplace,
@@ -126,8 +129,18 @@ Hooks.once("init", () => {
 Hooks.on("renderChatMessageHTML", (message, html) => {
   bindRollCard(message, html);
   bindHazardCard(message, html);
+  bindMoraleCard(message, html);
   bindOfferCard(message, html);
   rebuildChangeLogCard(message, html);
+});
+
+/* Morale: a breaking point reached in a running combat (hirelings.js; the active GM acts). */
+Hooks.on("updateActor", (actor, changed) => {
+  const s = changed.system ?? {};
+  if (s.hp?.value !== undefined || s.wounds !== undefined) checkBreakingPoints(actor);
+});
+Hooks.on("updateCombatant", (combatant, changed) => {
+  if ("defeated" in changed && combatant.actor) checkBreakingPoints(combatant.actor);
 });
 
 Hooks.on("createChatMessage", (message) => {

@@ -48,6 +48,11 @@
             {{#if (eq system.role "hireling")}}
             <label data-tooltip="KNAVERY.WageTip">{{localize "KNAVERY.Wage"}}</label>
             <input type="number" min="0" step="1" name="system.wage" value="{{source.wage}}" class="short-input" data-dtype="Number" />
+            <label data-tooltip="KNAVERY.EmployerTip">{{localize "KNAVERY.Employer"}}</label>
+            <select name="system.employer" class="employer-select">
+              <option value="">—</option>
+              {{#each employers}}<option value="{{this.id}}" {{#if this.selected}}selected{{/if}}>{{this.name}}</option>{{/each}}
+            </select>
             {{/if}}
           </div>
           <div class="level-line">
