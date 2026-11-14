@@ -4704,9 +4704,12 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-welcome-titles { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
 /* The knight and the logo stand at one height either side of the title. */
 .knavery-welcome-head img { display: block; flex: 0 0 auto; width: auto; height: 116px; border: none; }
-/* Lydia Comer's knight is black line art on transparency: the dark theme shows it white. */
-.theme-dark .knavery-welcome:not(.theme-light) .knavery-welcome-knight,
-.knavery-welcome.theme-dark .knavery-welcome-knight { filter: invert(1); }
+/* Lydia Comer's knight: her line art on the light theme, her white-filled version on the dark one. */
+.knavery-welcome .knavery-knight-dark { display: none; }
+.theme-dark .knavery-welcome:not(.theme-light) .knavery-knight-light,
+.knavery-welcome.theme-dark .knavery-knight-light { display: none; }
+.theme-dark .knavery-welcome:not(.theme-light) .knavery-knight-dark,
+.knavery-welcome.theme-dark .knavery-knight-dark { display: block; }
 .knavery-welcome .knavery-logo-dark { display: none; }
 .theme-dark .knavery-welcome:not(.theme-light) .knavery-logo-light,
 .knavery-welcome.theme-dark .knavery-logo-light { display: none; }

@@ -83,8 +83,10 @@ export class WelcomeWindow extends HandlebarsApplicationMixin(ApplicationV2) {
       title: game.system.title,
       byline: F("KNAVERY.Welcome.By", { author: author.name, version: game.system.version }),
       authorUrl: author.url ?? "",
-      // Lydia Comer's knight, used with her permission (art/welcome/CREDITS.md); the dark theme inverts it.
+      // Lydia Comer's knight, used with her permission (art/welcome/CREDITS.md): her line art for the
+      // light theme, her white-filled version for the dark one.
       knight: `${SYS_PATH}/art/welcome/knight-lydia-comer.png`,
+      knightDark: `${SYS_PATH}/art/welcome/knight-lydia-comer-white.png`,
       logo: `${SYS_PATH}/logo/made-for-knave-black.png`,
       logoDark: `${SYS_PATH}/logo/made-for-knave-white.png`,
       disclaimer: L("KNAVERY.Disclaimer"),
