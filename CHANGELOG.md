@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+- **Time and hazards** (a new Time tab on the Game Master's Dashboard): end a dungeon turn or a travel
+  watch, and the world clock moves on 10 minutes or 4 hours and the hazard die rolls. The tab counts the
+  turns, or the day and its six watches, and the watches of travel today; a box marks the party resting.
+  - A fatigue, burn or depletion card carries one button, and nothing changes until you click it:
+    fatigue deals 1 damage to the characters you leave ticked; burn uses up one torch from each lit
+    stack and puts it out; depletion rolls a d6 for each ration and each 1 spoils. The party is every
+    character a player owns.
+  - While the party rests, fatigue is ignored. A fourth watch of travel in a day notes the CON check
+    against 1 direct damage.
+- **Light it:** torches, candles and lanterns have a flame toggle on the Inventory row, and a lit one
+  says so.
+
 ## 0.1.1
 
 - **Foundry review #2 fixes:**

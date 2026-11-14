@@ -24,6 +24,7 @@
       {{#if item.broken}}<span class="knavery-item-tag broken-tag">{{localize "KNAVERY.Broken"}}</span>{{/if}}
       {{#if item.wounded}}<span class="knavery-item-tag wounded-tag" data-tooltip="KNAVERY.UnusableTip">{{localize "KNAVERY.Unusable"}}</span>{{/if}}
       {{#if item.castToday}}<span class="knavery-item-tag">{{localize "KNAVERY.CastToday"}}</span>{{/if}}
+      {{#if item.lit}}<span class="knavery-item-tag lit-tag"><i class="fas fa-fire"></i> {{localize "KNAVERY.Lit"}}</span>{{/if}}
     </div>
     <div class="knavery-item-controls">
       {{#if (and @root.editable item.system.hasPlusMinus)}}
@@ -35,6 +36,10 @@
       {{/if}}
       {{#if item.canCast}}
       <a class="item-control" data-action="castSpell" data-tooltip="KNAVERY.CastHint"><i class="fas fa-hand-sparkles"></i></a>
+      {{/if}}
+      {{#if (and @root.editable item.canLight)}}
+      <a class="item-control item-toggle-lit {{#if item.lit}}lit{{/if}}" data-action="itemToggleLit"
+        data-tooltip="{{#if item.lit}}KNAVERY.PutOut{{else}}KNAVERY.Light{{/if}}"><i class="fas fa-fire"></i></a>
       {{/if}}
       {{#if (and @root.editable item.system.isEquipable)}}
       <a class="item-control item-toggle-equipped {{#if item.system.equipped}}equipped{{/if}}" data-action="itemToggleEquipped"

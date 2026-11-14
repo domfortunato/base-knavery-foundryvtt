@@ -4889,3 +4889,16 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 /* The Attack window's Target list takes the row; its checkbox hugs its label like the others. */
 .knavery-roll-prompt .kn-attack-target .form-fields { flex: 1 1 auto; width: auto; }
 .knavery-roll-prompt .kn-attack-target select { width: 100%; }
+
+/* ---- Time and light (hazard.js, 2026-11-14) ---------------------------------- */
+.knavery-gm-dashboard .dash-time-mode { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 4px 0 8px; }
+.knavery-gm-dashboard .dash-time-mode label,
+.knavery-gm-dashboard .dash-time-options label { display: flex; align-items: center; gap: 6px; line-height: 1.3; }
+.knavery-gm-dashboard .dash-time-options { display: flex; flex-direction: column; gap: 4px; margin: 6px 0; }
+.knavery-gm-dashboard .dash-time-now { font-size: calc(16px * var(--kn-text, 1)); font-weight: bold; margin: 4px 0; }
+.knavery-gm-dashboard .dash-time-now .hint { font-weight: normal; font-size: calc(12px * var(--kn-text, 1)); }
+.knavery-gm-dashboard .dash-end-turn i { color: var(--kn-accent); }
+/* A lit light: the flame glows amber on the row and in its tag. */
+.knavery .item-toggle-lit.lit i, .knavery .knavery-item-tag.lit-tag i { color: var(--kn-amber); }
+.knavery .item-toggle-lit.lit i { text-shadow: 0 0 6px var(--kn-amber); }
+.knavery-roll-card .card-hazard-report { margin: 4px 0 2px; padding-left: 18px; }

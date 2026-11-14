@@ -8,7 +8,7 @@
  * sheet, its Attack window and raised abilities; the welcome window's licence notice; random creation rolling by
  * default; a blank sheet held to its level's ability points, with HP, coin and career dice; the Attack window's
  * Target list; the narrow header; Rest by the book; red splats; compact attack cards; labels that fit; Create NPC;
- * spell items from the rulebook; weapons and armor first; rations per slot; the review #2 fixes. GM, Alice and Bob
+ * spell items from the rulebook; weapons and armor first; rations per slot; the review #2 fixes; time and hazards. GM, Alice and Bob
  * in three browsers.
  *
  *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/e2e-chargen.mjs   (npm run dev:chargen)
@@ -32,7 +32,7 @@ const T = (ms) => ms * TIME_SCALE;
 const SYS = "/systems/base-knavery/module";
 
 const browser = await chromium.launch();
-watchdog(900000, "e2e-chargen", () => browser.close());
+watchdog(1080000, "e2e-chargen", () => browser.close());
 const ctx = () => browser.newContext({ viewport: VIEWPORT });
 const gm = await (await ctx()).newPage();
 const alice = await (await ctx()).newPage();
@@ -1324,6 +1324,151 @@ await withSettings(gm, async () => {
       "group initiative: at each Next Round the holder's turn is the first to end", JSON.stringify(ini.gmRounds));
     ok(ini.playerRounds.every((r) => r.ok) && ini.playerRounds.some((r) => r.pcFirst),
       "a round a player advanced goes to the first combatant not defeated, and the turn is stored", JSON.stringify(ini.playerRounds));
+  });
+
+  /* ------------------------------------------------------------------ */
+  await section("22. Time: dungeon turns and travel watches; hazard cards apply fatigue, burn and depletion on a click; lit lights.", async () => {
+    // The Time tab ends a turn: the clock counts it, the world clock moves 10 minutes, the die rolls.
+    const t = await gm.evaluate(async () => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const H = await import("/systems/base-knavery/module/hazard.js");
+      const saved = game.settings.get("base-knavery", "time-clock");
+      const start = game.time.worldTime;
+      await game.settings.set("base-knavery", "time-clock", { mode: "dungeon" });
+      game.knavery.openDashboard();
+      await wait(1200);
+      const dash = foundry.applications.instances.get("knavery-gm-dashboard");
+      await dash.changeTab("time", "primary");
+      await wait(400);
+      const el = dash.element;
+      const out = { tab: !!el.querySelector('[data-tab="time"].active .dash-end-turn') };
+      const before = game.messages.size;
+      el.querySelector('[data-action="endTurn"]').click();
+      await wait(2000);
+      const card = game.messages.contents.at(-1);
+      out.turn = H.clock().turn;
+      out.dungeonSeconds = game.time.worldTime - start;
+      out.card = game.messages.size > before && !!card?.getFlag("base-knavery", "hazard") && card.whisper.length > 0;
+      out.cardWhen = card?.content.includes("Turn 1") ?? false;
+      // Travel: four watches on the move; the fourth card carries the forced-march note.
+      await H.setClock({ mode: "travel" });
+      await wait(300);
+      for (let i = 0; i < 4; i++) { await H.endTurn({ travelling: true }); await wait(300); }
+      const fourth = game.messages.contents.at(-1);
+      out.travel = H.clock();
+      out.forced = fourth?.content.includes("More than three watches") ?? false;
+      out.travelSeconds = game.time.worldTime - start - out.dungeonSeconds;
+      await dash.close();
+      // Put the world back as it was.
+      await game.time.advance(start - game.time.worldTime);
+      await game.settings.set("base-knavery", "time-clock", saved);
+      return out;
+    });
+    ok(t.tab && t.turn === 1 && t.dungeonSeconds === 600 && t.card && t.cardWhen,
+      "ending a dungeon turn counts it, moves the world clock 10 minutes and whispers the hazard die", JSON.stringify(t));
+    ok(t.travel.watch === 4 && t.travel.travelled === 4 && t.travelSeconds === 4 * 14400 && t.forced,
+      "four watches of travel: the clock moves 16 hours and the fourth card notes forced marching", JSON.stringify(t));
+
+    // A light toggles on the sheet; burn and depletion change sheets only when the GM clicks.
+    await gm.evaluate(async (pcId) => {
+      const pc = game.actors.get(pcId);
+      for (const i of pc.items.contents) await i.delete();
+      await pc.createEmbeddedDocuments("Item", [
+        { name: "Torch", type: "item", system: { quantity: 3, lit: true } },
+        { name: "Torch", type: "item", system: { quantity: 2 } },
+        { name: "Candles", type: "item", system: { quantity: 10, bundle: 10 } },
+        { name: "Rations", type: "item", system: { quantity: 6 } },
+      ]);
+    }, ids.a);
+    const lit = await alice.evaluate(async (pcId) => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const pc = game.actors.get(pcId);
+      await pc.sheet.render({ force: true });
+      await wait(900);
+      await pc.sheet.changeTab("inventory", "primary");
+      await wait(300);
+      const candleRow = [...pc.sheet.element.querySelectorAll(".knavery-items-list-row")].find((r) => r.textContent.includes("Candles"));
+      candleRow?.querySelector('[data-action="itemToggleLit"]')?.click();
+      await wait(900);
+      const candle = pc.items.find((i) => i.name === "Candles");
+      const row = [...pc.sheet.element.querySelectorAll(".knavery-items-list-row")].find((r) => r.textContent.includes("Candles"));
+      const out = { candleLit: candle?.system.lit, tag: !!row?.querySelector(".lit-tag"), ropeToggle: false };
+      await pc.sheet.close();
+      return out;
+    }, ids.a);
+    ok(lit.candleLit === true && lit.tag, "a player lights a candle from the Inventory row; the row says Lit", JSON.stringify(lit));
+
+    const apply = await gm.evaluate(async (pcId) => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const { rollHazard } = await import("/systems/base-knavery/module/rolls.js");
+      const pc = game.actors.get(pcId);
+      const torches = () => pc.items.filter((i) => i.name === "Torch").map((i) => `${i.system.quantity}${i.system.lit ? "L" : ""}`).sort().join();
+      const out = { before: torches() };
+      // Roll until a burn card lands; the sheet is untouched until its button is clicked.
+      let card = null;
+      const made = [];
+      for (let i = 0; i < 80 && !card; i++) {
+        const m = await rollHazard("dungeon");
+        made.push(m.id);
+        if (m.getFlag("base-knavery", "hazard")?.face === "burn") card = m;
+      }
+      await wait(800);
+      out.untouched = torches() === out.before;
+      ui.sidebar.changeTab("chat", "primary");
+      await wait(500);
+      const btn = document.querySelector(`#chat [data-message-id="${card.id}"] [data-kn-hazard="burn"]`);
+      out.button = !!btn;
+      btn?.click();
+      await wait(1500);
+      out.after = torches();
+      out.applied = card.getFlag("base-knavery", "hazardApplied") === true;
+      // Depletion: a d6 for each ration, each 1 spoils.
+      const H = await import("/systems/base-knavery/module/hazard.js");
+      await H.applyDepletion();
+      await wait(800);
+      const report = game.messages.contents.at(-1);
+      const ones = report.rolls[0]?.dice[0]?.results.filter((r) => r.result === 1).length ?? -1;
+      const food = pc.items.find((i) => i.name === "Rations");
+      out.rations = food ? food.system.quantity : 0;
+      out.expected = 6 - ones;
+      for (const id of made) await game.messages.get(id)?.delete();
+      await report.delete();
+      return out;
+    }, ids.a);
+    ok(apply.untouched && apply.button && apply.after === "1,2" && apply.applied,
+      "a burn card changes nothing until the GM clicks; then the lit stack of 3 torches loses one and goes dark", JSON.stringify(apply));
+    ok(apply.rations === apply.expected, "depletion rolls a d6 per ration and each 1 spoils", JSON.stringify(apply));
+
+    // Fatigue: resting sets it aside; otherwise the GM's ticks take 1 damage.
+    const fat = await gm.evaluate(async (pcId) => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const { rollHazard } = await import("/systems/base-knavery/module/rolls.js");
+      const H = await import("/systems/base-knavery/module/hazard.js");
+      const pc = game.actors.get(pcId);
+      await pc.update({ "system.hp.value": 4, "system.hp.max": 4, "system.wounds": 0 });
+      const made = [];
+      let rested = null;
+      for (let i = 0; i < 80 && !rested; i++) {
+        const m = await rollHazard("dungeon", { resting: true });
+        made.push(m.id);
+        if (m.getFlag("base-knavery", "hazard")?.face === "fatigue") rested = m;
+      }
+      const out = { restNote: rested?.content.includes("Ignored: the party is resting") ?? false, restButton: rested?.content.includes("data-kn-hazard") ?? true };
+      // Untick everyone but this character, then deal it.
+      const pending = H.applyFatigue();
+      await wait(1000);
+      const dlg = [...document.querySelectorAll(".application.dialog")].at(-1);
+      for (const box of dlg?.querySelectorAll('input[name="hit"]') ?? []) box.checked = box.value === pcId;
+      dlg?.querySelector('footer button[data-action="ok"]')?.click();
+      out.dealt = await pending;
+      await wait(800);
+      out.hp = pc.system.hp.value;
+      for (const id of made) await game.messages.get(id)?.delete();
+      for (const i of pc.items.contents) await i.delete();
+      return out;
+    }, ids.a);
+    ok(fat.restNote && !fat.restButton, "a fatigue roll while resting is ignored and offers no button", JSON.stringify(fat));
+    ok(fat.dealt === 1 && fat.hp === 3, "fatigue deals 1 damage to each ticked party member", JSON.stringify(fat));
   });
 
   // Cleanup.

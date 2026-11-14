@@ -29,6 +29,7 @@ import {
 } from "./rulebook.js";
 import { maybeOpenWelcome, openWelcome } from "./welcome.js";
 import { openRulebookTablesReview } from "./rulebook-import.js";
+import { bindHazardCard, endTurn, registerClockSetting } from "./hazard.js";
 
 const L = (k) => game.i18n.localize(k);
 
@@ -54,6 +55,7 @@ Hooks.once("init", () => {
   DocumentSheetConfig.registerSheet(Item, SETTINGS_NS, KnaveryItemSheet, { makeDefault: true, label: "KNAVERY.SheetLabel" });
 
   registerSettings();
+  registerClockSetting();
   applyTextScale();
   initSocket();
   onSocket("applyDamage", handleApplyDamage);
@@ -79,6 +81,7 @@ Hooks.once("init", () => {
   ]);
 
   game.knavery = {
+    endTurn,
     config: KNAVERY,
     openDashboard: openGmDashboard,
     openMarketplace,
@@ -122,6 +125,7 @@ Hooks.once("init", () => {
 
 Hooks.on("renderChatMessageHTML", (message, html) => {
   bindRollCard(message, html);
+  bindHazardCard(message, html);
   bindOfferCard(message, html);
   rebuildChangeLogCard(message, html);
 });

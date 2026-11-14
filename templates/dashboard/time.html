@@ -1,0 +1,25 @@
+<section class="tab {{tab.cssClass}}" data-tab="time" data-group="primary">
+  {{#if showHazard}}
+  <div class="dash-time-mode">
+    <label><input type="radio" name="timeMode" value="dungeon" data-action="timeMode" {{checked (eq time.mode "dungeon")}} />
+      <i class="fas fa-dungeon"></i> {{localize "KNAVERY.Time.Dungeon"}}</label>
+    <label><input type="radio" name="timeMode" value="travel" data-action="timeMode" {{checked time.travel}} />
+      <i class="fas fa-route"></i> {{localize "KNAVERY.Time.Travel"}}</label>
+  </div>
+  <p class="dash-time-now"><i class="fas fa-hourglass-half"></i> {{time.now}}{{#if time.travelledLine}} <span class="hint">{{time.travelledLine}}</span>{{/if}}</p>
+  <div class="dash-time-options">
+    <label><input type="checkbox" name="timeResting" data-action="timeResting" {{checked time.resting}} /> {{localize "KNAVERY.Time.Resting"}}</label>
+    {{#if time.travel}}
+    <label><input type="checkbox" name="timeTravelling" checked /> {{localize "KNAVERY.Time.Travelling"}}</label>
+    {{/if}}
+  </div>
+  <div class="dash-buttons">
+    <button type="button" class="dash-end-turn" data-action="endTurn"><i class="fas fa-hourglass-end"></i> {{time.endLabel}}</button>
+    <button type="button" data-action="hazard" data-kind="{{time.mode}}"><i class="fas fa-dice-d6"></i> {{localize "KNAVERY.Time.RollOnly"}}</button>
+    <button type="button" data-action="resetClock"><i class="fas fa-rotate-left"></i> {{localize "KNAVERY.Time.Reset"}}</button>
+  </div>
+  <p class="hint">{{#if time.travel}}{{localize "KNAVERY.Time.TravelHint"}}{{else}}{{localize "KNAVERY.Time.DungeonHint"}}{{/if}}</p>
+  {{else}}
+  <p class="hint">{{localize "KNAVERY.Time.Off"}}</p>
+  {{/if}}
+</section>

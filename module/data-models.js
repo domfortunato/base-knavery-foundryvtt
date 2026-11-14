@@ -169,6 +169,8 @@ export class ItemData extends foundry.abstract.TypeDataModel {
       weightless: bool(false),
       /** Small items that share one slot, e.g. 10 candles or 20 arrows. */
       bundle: int(1, { min: 1 }),
+      /** A torch, candle or lantern burning (hazard.js: a 3 on the dungeon die burns torches out). */
+      lit: bool(false),
     };
   }
 }

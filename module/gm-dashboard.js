@@ -6,7 +6,9 @@
  *             the results come back here as they land in chat.
  *   Damage    roll or type damage and apply it to chosen characters or to
  *             the selected/targeted tokens, normal or direct, with a source.
- *   Dice      hazard dice, reaction, encounter distance, morale.
+ *   Time      dungeon turns or travel watches: end one (the world clock moves on and
+ *             the hazard die rolls), the party resting, the die on its own (hazard.js).
+ *   Dice      reaction, encounter distance, morale.
  *   XP        award XP: the same amount to each chosen character, a different
  *             amount to each, or a total split evenly (the book's treasure rule).
  *   Tables    roll any table, import rows, open the Marketplace Manager, and
@@ -22,6 +24,7 @@ import { findTable } from "./compendium.js";
 import { openTableImporter } from "./table-importer.js";
 import { openMarketplaceManager } from "./marketplace.js";
 import { hasRulebook, openRulebook, pickLocalRulebook, showRulebookPage, tablePage } from "./rulebook.js";
+import { clock, clockLabel, endTurn, resetClock, setClock, TRAVEL_WATCHES_FREE } from "./hazard.js";
 import { scaledPosition } from "./settings.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -54,6 +57,10 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       applyDamage: GmDashboard.#onApplyDamage,
       awardXp: GmDashboard.#onAwardXp,
       hazard: GmDashboard.#onHazard,
+      endTurn: GmDashboard.#onEndTurn,
+      timeMode: GmDashboard.#onTimeMode,
+      timeResting: GmDashboard.#onTimeResting,
+      resetClock: () => resetClock(),
       reaction: GmDashboard.#onReaction,
       encounterDistance: GmDashboard.#onEncounterDistance,
       morale: GmDashboard.#onMorale,
@@ -80,6 +87,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     tabs: { template: "templates/generic/tab-navigation.hbs" },
     requests: { template: `${SYS_PATH}/templates/dashboard/requests.html`, scrollable: [".request-log"] },
     damage: { template: `${SYS_PATH}/templates/dashboard/damage.html` },
+    time: { template: `${SYS_PATH}/templates/dashboard/time.html` },
     dice: { template: `${SYS_PATH}/templates/dashboard/dice.html` },
     xp: { template: `${SYS_PATH}/templates/dashboard/xp.html`, scrollable: [".dash-xp-rows"] },
     tables: { template: `${SYS_PATH}/templates/dashboard/tables.html`, scrollable: [".table-list"] },
@@ -90,6 +98,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       tabs: [
         { id: "requests", icon: "fas fa-bullhorn", label: "KNAVERY.Dashboard.TabRequests" },
         { id: "damage", icon: "fas fa-skull-crossbones", label: "KNAVERY.Dashboard.TabDamage" },
+        { id: "time", icon: "fas fa-hourglass-half", label: "KNAVERY.Dashboard.TabTime" },
         { id: "dice", icon: "fas fa-dice", label: "KNAVERY.Dashboard.TabDice" },
         { id: "xp", icon: "fas fa-star", label: "KNAVERY.Dashboard.TabXp" },
         { id: "tables", icon: "fas fa-table-list", label: "KNAVERY.Dashboard.TabTables" },
@@ -139,6 +148,15 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       target: CHECK_BASE + DEFAULT_DIFFICULTY,
       log: requestLog.slice(0, 20),
       showHazard: game.settings.get(SETTINGS_NS, "show-hazard-dice"),
+      time: (() => {
+        const c = clock();
+        const travel = c.mode === "travel";
+        return {
+          ...c, travel, now: clockLabel(c),
+          endLabel: L(travel ? "KNAVERY.Time.EndWatch" : "KNAVERY.Time.EndTurn"),
+          travelledLine: travel && c.watch ? F("KNAVERY.Time.Travelled", { n: c.travelled, free: TRAVEL_WATCHES_FREE }) : "",
+        };
+      })(),
       tables,
       rulebook,
       toggles: TOGGLES.map((t) => ({ ...t, on: game.settings.get(SETTINGS_NS, t.key) })),
@@ -311,7 +329,25 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
   /* -------------------------------------------- */
 
   static async #onHazard(_e, target) {
-    await rollHazard(target.dataset.kind);
+    await rollHazard(target.dataset.kind, { resting: clock().resting });
+  }
+
+  /* -------------------------------------------- */
+  /*  Time                                         */
+  /* -------------------------------------------- */
+
+  /** End the turn or watch: the clock moves on and the hazard die rolls. */
+  static async #onEndTurn() {
+    const travelling = this.element.querySelector('[name="timeTravelling"]')?.checked ?? true;
+    await endTurn({ travelling });
+  }
+
+  static async #onTimeMode(_e, target) {
+    if (target.value && target.value !== clock().mode) await setClock({ mode: target.value });
+  }
+
+  static async #onTimeResting(_e, target) {
+    await setClock({ resting: target.checked });
   }
 
   static async #onReaction() {

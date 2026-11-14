@@ -27,6 +27,7 @@ import { openMarketplace, playerMarketClosed } from "../marketplace.js";
 import { printActorSheet } from "../print.js";
 import { placeRail, placeRailSoon } from "./tab-rail.js";
 import { enrichForSheet } from "../clean-html.js";
+import { isLight } from "../hazard.js";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -138,6 +139,7 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       itemEdit: KnaveryActorSheet.#onItemEdit,
       itemDelete: owned(KnaveryActorSheet.#onItemDelete),
       itemToggleEquipped: owned(KnaveryActorSheet.#onItemToggleEquipped),
+      itemToggleLit: owned(KnaveryActorSheet.#onItemToggleLit),
       itemAddQty: owned(KnaveryActorSheet.#onItemAddQty),
       itemRemoveQty: owned(KnaveryActorSheet.#onItemRemoveQty),
       itemDescription: KnaveryActorSheet.#onItemDescription,
@@ -368,6 +370,8 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
         canAttack: item.type === "weapon" && item.system.equipped,
         canCast: item.type === "spellbook",
         castToday: item.type === "spellbook" && item.system.castToday,
+        canLight: isLight(item),
+        lit: isLight(item) && item.system.lit,
         canGive: this.isEditable && canOfferItem(item),
         expanded: this.#expandedRows.has(item.id),
       };
@@ -912,6 +916,12 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
   static async #onItemToggleEquipped(_event, target) {
     const item = this.#itemFrom(target);
     if (item) await item.update({ "system.equipped": !item.system.equipped });
+  }
+
+  /** A torch, candle or lantern lit or put out. */
+  static async #onItemToggleLit(_event, target) {
+    const item = this.#itemFrom(target);
+    if (item && isLight(item)) await item.update({ "system.lit": !item.system.lit });
   }
 
   static async #onItemAddQty(_event, target) {

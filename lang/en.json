@@ -303,6 +303,9 @@
     "Unusable": "Unusable",
     "UnusableTip": "A wound fills this slot: the item can't be used until the wound heals. Whether it was dropped or broken is the table's call.",
     "CastToday": "Cast today",
+    "Lit": "Lit",
+    "Light": "Light it",
+    "PutOut": "Put it out",
     "CastHint": "Cast this spell",
     "Scroll": "Scroll",
     "Spellbook": "Spellbook",
@@ -470,11 +473,54 @@
         "encounter": "Encounter",
         "fatigue": "Fatigue",
         "depletion": "Depletion",
-        "burn": "Burn: light sources run down",
+        "burn": "Burn: lit torches burn out",
         "shift": "Shift: the surroundings change",
         "sign": "Sign of an encounter",
         "free": "Nothing happens"
-      }
+      },
+      "Hint": {
+        "encounter": "Roll the area's encounter table, then its reaction and distance.",
+        "fatigue": "Everyone takes 1 damage, except those who rest through the next turn or watch.",
+        "depletion": "Each ration, or other food that spoils, is rolled on a d6 and spoils on a 1.",
+        "burn": "Each lit torch is used up.",
+        "shift": "The weather turns, or something in the area changes.",
+        "sign": "A clue: tracks, a sound or a smell that hints at something close by or hidden.",
+        "free": "The time passes quietly."
+      },
+      "Apply": {
+        "fatigue": "Deal the fatigue",
+        "burn": "Burn out the lit torches",
+        "depletion": "Roll for spoiled rations"
+      },
+      "IgnoredResting": "Ignored: the party is resting.",
+      "ForcedMarch": "More than three watches of travel today: each traveller takes 1 direct damage unless they pass a CON check."
+    },
+
+    "Time": {
+      "Dungeon": "Dungeon: 10-minute turns",
+      "Travel": "Travel: 4-hour watches",
+      "Turn": "Turn {turn}",
+      "DayWatch": "Day {day}, watch {watch} of 6",
+      "NotStarted": "Not started yet",
+      "Travelled": "({n} of {free} watches of travel today)",
+      "Resting": "The party is resting (fatigue is ignored)",
+      "Travelling": "Travelling this watch (counts toward the day's three)",
+      "EndTurn": "End the turn",
+      "EndWatch": "End the watch",
+      "RollOnly": "Roll the hazard die only",
+      "Reset": "Start again",
+      "DungeonHint": "Ending a turn moves the world clock on 10 minutes and rolls the dungeon hazard die. Fatigue, burn and depletion cards carry a button: nothing changes until you click it.",
+      "TravelHint": "Ending a watch moves the world clock on 4 hours and rolls the travel hazard die. A day has six watches. Fatigue and depletion cards carry a button: nothing changes until you click it.",
+      "Off": "The hazard dice are switched off in the settings.",
+      "NothingToDo": "Nothing to do.",
+      "NoParty": "There are no player characters.",
+      "FatigueTitle": "Fatigue",
+      "FatigueHelp": "Untick anyone who will rest through the next turn or watch. The others take 1 damage.",
+      "FatigueApply": "Deal 1 damage",
+      "BurnTitle": "Burn: torches out",
+      "BurntOut": "{name}: a {item} burnt out ({left} left).",
+      "DepletionTitle": "Depletion: rations checked",
+      "Spoiled": "{name}: {bad} of {of} {item} went bad."
     },
 
     "Offer": {
@@ -548,6 +594,7 @@
       "Title": "Game Master's Dashboard",
       "TabRequests": "Requests",
       "TabDamage": "Damage",
+      "TabTime": "Time",
       "TabDice": "Dice",
       "TabTables": "Tables",
       "TabXp": "XP",

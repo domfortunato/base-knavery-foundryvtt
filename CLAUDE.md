@@ -77,6 +77,10 @@ picker, change log and marketplace it ports.
     a page to players; page map in `config.js` `RULEBOOK`
   - `npc-generator.js`: Create NPC (GM): a bestiary monster with HP rolled (p67), a
     person, or a hireling/mercenary/expert (p59 lines and wages)
+  - `hazard.js`: the dashboard's Time tab (dungeon turns, travel watches, the world
+    clock, the hazard die) and the hazard cards' apply buttons: fatigue, burn,
+    depletion, applied only when the GM clicks (user ruling 2026-11-14); the party
+    is every player-owned character; light items carry `system.lit`
   - `welcome.js`: the welcome window, at every GM login unless setting
     `welcome-on-start` is off (user ruling 2026-11-14)
   - `rulebook-import.js`: build world roll tables from the GM's PDF, with a

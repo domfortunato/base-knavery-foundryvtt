@@ -16,7 +16,16 @@
   {{/if}}
 
   {{#if (eq kind "hazard")}}
+  {{#if hazardWhen}}<p class="roll-reason"><i class="fas fa-hourglass-half"></i> {{hazardWhen}}</p>{{/if}}
   <div class="card-result hazard">{{resultLabel}}</div>
+  {{#if hazardHint}}<p class="card-note">{{hazardHint}}</p>{{/if}}
+  {{#if hazardIgnored}}<p class="card-note"><i class="fas fa-bed"></i> {{localize "KNAVERY.Hazard.IgnoredResting"}}</p>{{/if}}
+  {{#if forcedMarch}}<p class="card-note"><i class="fas fa-shoe-prints"></i> {{localize "KNAVERY.Hazard.ForcedMarch"}}</p>{{/if}}
+  {{#if hazardAction}}
+  <div class="card-apply card-hazard-apply">
+    <button type="button" data-kn-hazard="{{hazardAction}}"><i class="fas fa-hand-pointer"></i> {{hazardButton}}</button>
+  </div>
+  {{/if}}
   {{/if}}
 
   {{#if (eq kind "attack")}}

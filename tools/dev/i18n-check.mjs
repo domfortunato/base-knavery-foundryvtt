@@ -59,6 +59,8 @@ const DYNAMIC = {
   "KNAVERY.Offer.State": ["open", "accepted", "declined", "cancelled", "lapsed"],
   "KNAVERY.Hazard.Face": [...new Set(Object.values(HAZARD_DICE).flat())],
   "KNAVERY.Hazard": Object.keys(HAZARD_DICE),
+  "KNAVERY.Hazard.Hint": [...new Set(Object.values(HAZARD_DICE).flat())],
+  "KNAVERY.Hazard.Apply": ["fatigue", "burn", "depletion"],
   "KNAVERY.FeatureType": FEATURE_TYPES,
   "KNAVERY.ArmorType": ARMOR_TYPES,
   "KNAVERY.RulebookTables.Status": ["new", "replace", "keep"],

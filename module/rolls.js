@@ -521,19 +521,33 @@ export const rollMorale = async (actor) => {
 };
 
 /** A hazard die (travel or dungeon), rolled by the GM. */
-export const rollHazard = async (kind = "dungeon") => {
+/**
+ * Roll a hazard die and whisper the card to the GM. Fatigue, burn and depletion carry the
+ * button that applies them (hazard.js); `resting` sets fatigue aside, `forcedMarch` adds the
+ * p86 note, `when` names the turn or watch the Time tab just ended.
+ */
+export const rollHazard = async (kind = "dungeon", { resting = false, forcedMarch = false, when = "" } = {}) => {
   const roll = await new Roll("1d6").evaluate();
   const face = HAZARD_DICE[kind]?.[roll.total - 1] ?? "free";
+  const ignored = face === "fatigue" && resting;
+  const action = ignored ? null : { fatigue: "fatigue", burn: "burn", depletion: "depletion" }[face] ?? null;
   const content = await renderCard({
     kind: "hazard",
     title: L(`KNAVERY.Hazard.${kind}`),
+    hazardWhen: when,
     rollHtml: await roll.render(),
     resultLabel: L(`KNAVERY.Hazard.Face.${face}`),
+    hazardHint: L(`KNAVERY.Hazard.Hint.${face}`),
+    hazardIgnored: ignored,
+    hazardAction: action,
+    hazardButton: action ? L(`KNAVERY.Hazard.Apply.${action}`) : "",
+    forcedMarch,
   });
   return ChatMessage.create({
     speaker: { alias: L("KNAVERY.GameMaster") },
     rolls: [roll],
     content,
+    flags: { [FLAG_SCOPE]: { hazard: { kind, face } } },
     whisper: game.users.filter((u) => u.isGM).map((u) => u.id),
     sound: CONFIG.sounds.dice,
   });
