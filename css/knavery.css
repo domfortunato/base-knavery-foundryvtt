@@ -119,6 +119,7 @@
        (2026-11-13). Translucent fills so the parchment shows through and the
        value typed over them stays legible. */
     --kn-hp-fill: rgba(42, 170, 102, 0.5);
+    --kn-hp-fill-low: rgba(184, 134, 11, 0.5);   /* HP below max: --kn-gold, see-through */
     --kn-wound-fill: rgba(198, 40, 40, 0.45);
     --kn-xp-fill: rgba(18, 163, 180, 0.35);
     --kn-shadow: rgba(0, 0, 0, 0.3);
@@ -172,6 +173,7 @@
     --kn-accent-wash: rgba(53, 200, 218, 0.18);
     --kn-ok-wash: rgba(79, 208, 138, 0.22);
     --kn-hp-fill: rgba(79, 208, 138, 0.45);
+    --kn-hp-fill-low: rgba(217, 169, 58, 0.5);
     --kn-wound-fill: rgba(255, 107, 107, 0.4);
     --kn-xp-fill: rgba(53, 200, 218, 0.4);
     --kn-shadow: rgba(0, 0, 0, 0.6);
@@ -4530,7 +4532,9 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 }
 .knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-bar .bar-readout { font-size: calc(26px * var(--kn-text, 1)); }
 .knavery .hp-bar.peril .bar-readout, .knavery .wounds-bar.peril .bar-readout { color: var(--kn-peril); }
-.knavery .hp-bar.low:not(.peril) .bar-readout { color: var(--kn-amber); }
+.knavery .hp-bar.low:not(.peril) .bar-readout { color: var(--kn-gold); }
+/* Below full HP the bar itself turns gold (user, 2026-11-14); at 0 it is empty and peril-red. */
+.knavery .hp-bar.low:not(.peril) .knavery-bar-fill { background: var(--kn-hp-fill-low); }
 .knavery .bar-steps { display: flex; gap: 4px; justify-content: center; margin-top: 2px; }
 .knavery .bar-steps button {
     --button-size: 26px; width: 28px; height: 26px; min-height: 26px; padding: 0; margin: 0;
