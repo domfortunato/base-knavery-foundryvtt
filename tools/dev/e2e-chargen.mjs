@@ -1278,20 +1278,25 @@ await withSettings(gm, async () => {
       await combat.createEmbeddedDocuments("Combatant", [{ actorId: pcId }, ...foes.map((f) => ({ actorId: f.id }))]);
       await combat.startCombat();
       const rounds = [];
-      for (let r = 0; r < 12; r++) {
-        // End the round on its last combatant, as Next Turn would.
-        await combat.update({ turn: combat.turns.length - 1 });
-        const holder = combat.combatant?.id;
-        // Core fires combatTurnChange after its own turn events, once the update has returned.
+      // Core fires combatTurnChange after its own turn events, once an update has returned:
+      // listen before each change and wait for its own call, so none is read by the next.
+      const change = () => {
         let hook;
-        const heard = new Promise((res) => {
+        return new Promise((res) => {
           hook = Hooks.on("combatTurnChange", (c, prev) => { if (c === combat) res(prev.combatantId); });
           setTimeout(() => res("(none)"), 5000);
-        });
+        }).finally(() => Hooks.off("combatTurnChange", hook));
+      };
+      for (let r = 0; r < 12; r++) {
+        // End the round on its last combatant, as Next Turn would.
+        const moved = change();
+        await combat.update({ turn: combat.turns.length - 1 });
+        await moved;
+        const holder = combat.combatant?.id;
+        const heard = change();
         const order = combat.turns.map((c) => c.id).join();
         await combat.nextRound();
         const prior = await heard;
-        Hooks.off("combatTurnChange", hook);
         rounds.push({ ok: prior === holder, flipped: order !== combat.turns.map((c) => c.id).join(), stored: combat._source.turn, local: combat.turn,
           ...(prior === holder ? {} : { prior, holder }) });
       }
