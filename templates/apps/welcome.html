@@ -52,14 +52,15 @@
     {{/if}}
   </div>
 
-  {{!-- The small print: the licence's disclaimer, the logo credit and Knave 1e's CC BY notice. --}}
+  {{!-- Licensing, last: the licence's disclaimer, the logo credit, and Knave 1e's CC BY notice folded (user, 2026-11-14). --}}
+  <h2 class="knavery-welcome-heading">{{localize "KNAVERY.Welcome.Licensing"}}</h2>
   <section class="knavery-welcome-small">
     <p class="knavery-welcome-disclaimer">{{disclaimer}}</p>
     <p class="knavery-welcome-credit">{{credit}}</p>
-    <div class="knavery-welcome-license">
-      <h3>{{knave1eHeading}}</h3>
+    <details class="knavery-welcome-license">
+      <summary>{{knave1eHeading}}</summary>
       <p>{{{knave1eBody}}}</p>
-    </div>
+    </details>
   </section>
 
   <footer class="knavery-welcome-foot">

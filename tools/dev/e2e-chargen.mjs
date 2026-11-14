@@ -1911,7 +1911,8 @@ await withSettings(gm, async () => {
         world: el?.querySelector(".knavery-welcome-world")?.textContent.trim(),
         itch1e: [...el.querySelectorAll('.knavery-welcome-book[data-edition="1e"] a')].map((x) => x.href).join(),
         links2e: el.querySelectorAll('.knavery-welcome-book[data-edition="2e"] a').length,
-        smallLast: el.querySelector(".knavery-welcome-small .knavery-welcome-license") !== null,
+        smallLast: el.querySelector(".knavery-welcome-small details.knavery-welcome-license")?.open === false,
+        licensing: [...el.querySelectorAll(".knavery-welcome-heading")].at(-1)?.textContent.trim(),
       };
     }, SYS);
     await gm.screenshot({ path: `${SHOTS}/welcome-1e.png` });
@@ -1929,7 +1930,7 @@ await withSettings(gm, async () => {
       const now2e = await p;
       return { lines, now2e, rules: R.currentRules(), hpSame: pc.system.hp.value === hpBefore, again: await R.offerRulesSwitch() };
     }, SYS);
-    ok(w.world === "This world plays: Knave 1e." && w.itch1e === "https://questingbeast.itch.io/knave" && w.links2e === 3 && w.smallLast,
+    ok(w.world === "This world plays: Knave 1e." && w.itch1e === "https://questingbeast.itch.io/knave" && w.links2e === 3 && w.smallLast && w.licensing === "Licensing",
       "the welcome says which rules the world plays and links the Knave 1e PDF on itch beside the 2e book", JSON.stringify(w));
     ok(h.lines === 5 && h.now2e && h.rules === "2e" && h.hpSame && h.again === true,
       "after the 2e book, the GM is asked to switch; yes plays Knave 2e and changes no character", JSON.stringify(h));

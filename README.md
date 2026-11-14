@@ -13,7 +13,7 @@ throughout, for Foundry v14.
   rules, tables and 100 level-less spells ship with the system (CC BY 4.0).
   The [Knave 1e PDF is on itch](https://questingbeast.itch.io/knave), if you
   want to support its author.
-- **Knave 2e uses your book.** Choose your Knave 2e PDF and build its tables;
+- **Knave 2e uses your book.** Upload your Knave 2e PDF and build its tables;
   the system then offers to switch the world to 2e rules (careers, wounds,
   2e healing, INT spellbooks a day). Characters you already have don't change.
 - **Mix them.** Every rule has its own switch under **Configure Rules**, and

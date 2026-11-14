@@ -4714,12 +4714,13 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
     margin: 6px 0 0; font-weight: 400; font-size: calc(13px * var(--kn-text, 1)); line-height: 1.45; color: var(--kn-muted);
 }
 /* Knave 1e's CC BY 4.0 notice: title, author, licence link and changes. */
-.knavery-welcome-license { padding: 6px 10px; border: 1px solid var(--kn-rule); border-radius: 4px; }
-.knavery-welcome-license h3 {
-    margin: 0 0 2px; border: none; font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
-    font-variant: small-caps; font-size: calc(14px * var(--kn-text, 1)); color: var(--kn-ink);
+.knavery-welcome-license { padding: 4px 10px; border: 1px solid var(--kn-rule); border-radius: 4px; }
+/* Folded until opened (user, 2026-11-14): the summary is its title. */
+.knavery-welcome-license summary {
+    cursor: pointer; font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
+    font-variant: small-caps; font-weight: bold; font-size: calc(13px * var(--kn-text, 1)); color: var(--kn-ink);
 }
-.knavery-welcome-license p { margin: 0; color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
+.knavery-welcome-license p { margin: 4px 0 0; color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
 .knavery-welcome-license a { color: var(--kn-ink); text-decoration: underline; }
 .knavery-welcome-rulebook {
     display: flex; flex-direction: column; align-items: stretch; gap: 6px; margin-top: 6px; padding: 8px 10px;
@@ -4735,7 +4736,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 }
 .knavery-welcome-links, .knavery-welcome-actions { display: flex; flex-wrap: wrap; gap: 6px; }
 .knavery-welcome-link {
-    display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;
+    display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; font-size: calc(13px * var(--kn-text, 1));
     border: 1px solid var(--kn-rule-strong); border-radius: 4px; color: var(--kn-ink); text-decoration: none;
 }
 .knavery-welcome-link:hover, .knavery-welcome-link:focus-visible { background: var(--kn-wash-strong); text-shadow: none; }
@@ -4970,8 +4971,8 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 }
 /* Each book: its name in a narrow first column; the links, then the note, beside it. */
 .knavery-welcome-book { display: grid; grid-template-columns: max-content 1fr; align-items: center; gap: 4px 10px; }
-.knavery-welcome-book-name { grid-column: 1; min-width: 64px; font-weight: bold; font-variant: small-caps; }
+.knavery-welcome-book-name { grid-column: 1; min-width: 60px; font-weight: bold; font-variant: small-caps; font-size: calc(13px * var(--kn-text, 1)); }
 .knavery-welcome-book .knavery-welcome-links { grid-column: 2; }
 .knavery-welcome-book-note { grid-column: 2; margin: 0; color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
-.knavery-welcome-small { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--kn-rule); }
+.knavery-welcome-small { display: flex; flex-direction: column; gap: 6px; }
 .knavery-welcome-small .knavery-welcome-disclaimer { font-size: calc(12px * var(--kn-text, 1)); }
