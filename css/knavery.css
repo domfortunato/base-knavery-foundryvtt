@@ -4445,7 +4445,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-pages { flex: 1 0 auto; display: flex; flex-direction: column; container-type: inline-size; }
 /* A narrow sheet (a character's default): the pages' two-column grids become one; drag wider and they return. */
 @container (max-width: 600px) {
-    .knavery-level-ladder,
+    /* The level ladder keeps its two columns: its short rows fit. */
     .character-traits .trait-grid,
     .character-traits .bio-top { grid-template-columns: 1fr; }
     .knavery-items-list-row-header { align-items: flex-start; }
