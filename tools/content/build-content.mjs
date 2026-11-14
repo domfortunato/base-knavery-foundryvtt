@@ -526,19 +526,32 @@ const journal = (name, pages) => {
 };
 journal("Base Knavery Guide", [
   ["Getting Started (GM)", `
-<p>Base Knavery runs Knave 2e's rules. Its Knave 2e tables are empty shells: you fill them from your own copy of the book. The traits, reaction, alignment, starting gear and a list of spells from Knave's first edition (CC BY 4.0) come filled.</p>
+<p>A new world plays Knave first edition as written: its rules, traits, reaction, alignment, starting gear and 100 level-less spells (CC BY 4.0) come with the system. To play Knave 2e, bring your own copy of the book: its tables ship as empty shells you fill from it.</p>
 <ol>
-<li><b>Fill the tables.</b> Open the <b>Game Master's Dashboard</b>, either from the clipboard button in the token controls or from the Actors sidebar. On <b>Tables</b>, click <i>Import</i> beside Careers, Spells, Names and the traits, and paste your rows.</li>
-<li><b>Set the rules.</b> In <i>Configure Settings → Base Knavery</i>:
+<li><b>Choose the rules.</b> In <i>Configure Settings → Base Knavery → Configure Rules</i>, the <b>Rules</b> choice sets every rule to Knave 1e or Knave 2e; change any one afterwards to mix them (see <i>Rules: Knave 1e or 2e</i>).</li>
+<li><b>Playing 2e? Fill the tables.</b> Open the <b>Game Master's Dashboard</b>, either from the clipboard button in the token controls or from the Actors sidebar. On <b>Tables</b>, build them from your PDF, or click <i>Import</i> beside Careers, Spells, Names and the traits and paste your rows.</li>
+<li><b>Set the table's options.</b> In <i>Configure Settings → Base Knavery</i>:
 <ul>
 <li>choose how advantage works (Knave 2e's ±5, or 2d20 keep-high/low);</li>
-<li>set the lowest and highest starting levels;</li>
-<li>switch hacks on or off.</li>
+<li>set the lowest and highest starting levels.</li>
 </ul></li>
 <li><b>Let players in.</b> Players click <b>Create Character</b> in the Actors sidebar for a random knave; a blank sheet is the GM's to make. Players who may not create actors have the GM's client create one for them.</li>
 <li><b>Stock the market.</b> In the <b>Marketplace Manager</b>, <i>Customize</i> an aisle to change its prices, drop items in, or add new aisles.</li>
 </ol>
 <p>The <b>GM Macros</b> compendium turns the player marketplace, character creation, Char Gen Mode, players' level and XP, and the change log on and off. Drag the macros to your hotbar.</p>`],
+  ["Rules: Knave 1e or 2e", `
+<p>Each rule is its own setting under <b>Configure Rules</b>. The <b>Rules</b> choice at the top sets them all to one edition and shows <i>Custom</i> once they are mixed. The welcome window says which rules the world plays.</p>
+<ul>
+<li><b>Ability scores.</b> Knave 1e: each is the lowest of 3d6, rolled in order, and the player may swap two. Knave 2e: 3 points, by 3d6 or placed.</li>
+<li><b>Starting kit.</b> Knave 1e: rolled armor and gear, two rations and a weapon of the player's choice; no coins, no spellbook. Knave 2e: two careers, their items and coins.</li>
+<li><b>Death.</b> Knave 1e: unconscious at 0 HP, dead below 0, no wounds. Knave 2e: damage past 0 HP fills slots with wounds.</li>
+<li><b>Healing.</b> Knave 1e: a night's rest after a meal heals d8 + CON; a safe haven restores all HP. Knave 2e: full HP after two watches of sleep and a meal; a safe haven heals one wound.</li>
+<li><b>Spells.</b> Knave 1e: any number of spellbooks a day, each once, cast at the caster's level. Knave 2e: as many as INT.</li>
+<li><b>Advancement and initiative.</b> Knave 1e: a level every 1,000 XP, a d8 per level for HP, and one d6 a round for the sides. Knave 2e: its own XP table, HP rerolls and individual initiative.</li>
+</ul>
+<p>When you build tables from your Knave 2e book, the system asks whether to switch the world to Knave 2e rules. Switching never changes a character you already have. A world made before version 0.2.0 kept the Knave 2e rules it played.</p>
+<p>Not yet automated for Knave 1e: item quality and wear, the natural-20 extra die, the copper price list, 100 coins a slot and daily wages.</p>
+<p>Knave 1e's rules are from <i>Knave</i> (first edition) by Ben Milton, CC BY 4.0, adapted here as automation and settings.</p>`],
   ["Filling the Tables", `
 <p>A world table always wins over the shipped shell with the same name. The importer creates or replaces that world table from pasted rows, one per line:</p>
 <ul>
@@ -581,7 +594,7 @@ journal("Base Knavery Guide", [
 <li>A natural 1 breaks the weapon.</li>
 <li>A power attack doubles the damage dice and breaks the weapon.</li>
 </ul></li>
-<li><b>Damage</b> comes off HP first. Each point past 0 fills an item slot with a wound, from the bottom of the inventory up: empty slots first, then coins, then the lowest item, which becomes <i>Unusable</i> until the wound heals (whether it was dropped or broken is the table's call). When every slot is wounded, the character dies. <b>Direct</b> damage skips HP. Monsters take direct damage tripled and die at 0 HP.</li>
+<li><b>Damage</b> comes off HP first. Each point past 0 fills an item slot with a wound, from the bottom of the inventory up: empty slots first, then coins, then the lowest item, which becomes <i>Unusable</i> until the wound heals (whether it was dropped or broken is the table's call). When every slot is wounded, the character dies. <b>Direct</b> damage skips HP. Monsters take direct damage tripled and die at 0 HP. Under Knave 1e's death rule there are no wounds and no direct damage: a character is unconscious at 0 HP and dead below 0.</li>
 <li>The <b>Die of Fate</b> is a d6 for when fate, not skill, decides.</li>
 </ul>`],
   ["Levels", `

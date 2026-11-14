@@ -28,6 +28,7 @@ import {
   canReadRulebook, hasRulebook, openRulebook, registerRulebook, showRulebookPage, toggleRulebook,
 } from "./rulebook.js";
 import { maybeOpenWelcome, openWelcome } from "./welcome.js";
+import { applyRules, currentRules, offerRulesSwitch, stampRules } from "./rules.js";
 import { openRulebookTablesReview } from "./rulebook-import.js";
 import { bindHazardCard, endTurn, registerClockSetting } from "./hazard.js";
 import { bindMoraleCard, checkBreakingPoints, payWage, rally } from "./hirelings.js";
@@ -105,6 +106,10 @@ Hooks.once("init", () => {
     showRulebookPage,
     openWelcome,
     buildRulebookTables: openRulebookTablesReview,
+    /** The edition this world plays ("1e", "2e" or "custom"), and setting every rule to one. */
+    currentRules,
+    applyRules,
+    offerRulesSwitch,
     /** Flip one of the player-tool switches (used by the shipped macros). */
     toggle: async (key) => {
       if (!game.user.isGM) return ui.notifications.warn("KNAVERY.Notify.GmOnly", { localize: true });
@@ -239,8 +244,10 @@ Hooks.on("renderSettings", (_app, html) => {
   info.after(section);
 });
 
-Hooks.once("ready", () => {
+Hooks.once("ready", async () => {
   console.log("Base Knavery | ready");
+  // An older world keeps Knave 2e, a new one plays 1e (rules.js), before the welcome says which.
+  await stampRules().catch((err) => console.error("Base Knavery | stamping the rules failed", err));
   maybeOpenWelcome();
   updateCareerIcons().catch((err) => console.error("Base Knavery | updating career art failed", err));
 });

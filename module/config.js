@@ -182,5 +182,24 @@ export const RULEBOOK = {
   },
 };
 
-/** Starting coins at creation. */
+/** Starting coins at creation (Knave 2e; a Knave 1e kit has none). */
 export const STARTING_COINS = "3d6 * 10";
+
+/**
+ * Each edition's value for every rule (rules.js; user rulings 2026-11-14). A new world plays
+ * Knave 1e: these are also the registered defaults. A world matching neither is "custom".
+ */
+export const RULES_PRESETS = {
+  "1e": {
+    "creation-abilities": "lowest", "starting-kit": "knave1e", "show-alignment": true, "show-background": true,
+    "first-level-hp": "1d8", "level-hp-rule": "knave1e", "death-rule": "knave1e", "healing-rule": "knave1e",
+    "spell-rule": "book-per-day", "spell-list": "1e", "knave1e-xp": true, "knave1e-initiative": true,
+  },
+  "2e": {
+    "creation-abilities": "points", "starting-kit": "careers", "show-alignment": false, "show-background": false,
+    "first-level-hp": "1d6", "level-hp-rule": "reroll", "death-rule": "wounds", "healing-rule": "knave2e",
+    "spell-rule": "int-per-day", "spell-list": "auto", "knave1e-xp": false, "knave1e-initiative": false,
+  },
+};
+/** A Knave 1e score is the lowest of 3d6 (p1): 1 to 6 at level 1. */
+export const LOWEST_DIE_MAX = 6;

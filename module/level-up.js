@@ -16,8 +16,9 @@
  * while Char Gen Mode is on AND the character's XP has reached the next level.
  */
 import {
-  ABILITIES, ABILITY_MAX, CREATION_POINTS, FLAG_SCOPE, LEVEL_UP_ABILITIES, MAX_LEVEL, SETTINGS_NS, SYS_PATH,
+  ABILITIES, ABILITY_MAX, CREATION_POINTS, FLAG_SCOPE, LEVEL_UP_ABILITIES, LOWEST_DIE_MAX, MAX_LEVEL, SETTINGS_NS, SYS_PATH,
 } from "./config.js";
+import { creationAbilities } from "./rules.js";
 
 const L = (k) => game.i18n.localize(k);
 const F = (k, d) => game.i18n.format(k, d);
@@ -55,10 +56,12 @@ const knave1eRaisesOn = () => game.settings.get(SETTINGS_NS, "knave1e-random-rai
  * Gen Mode holds every sheet to it, GM's too; user ruling 2026-11-14): 3
  * points at level 1 and +1 to three different abilities a level, so no score
  * above level + 2. Under Knave 1e's random raises a level's raises vary, so
- * only the per-score cap holds (`total` null).
+ * only the per-score cap holds (`total` null). Knave 1e's creation rolls each score as the
+ * lowest of 3d6 (p1), so no total holds either, and a score is at most 6 + a point a level.
  */
 export const abilityBudget = (level) => {
   const l = Math.max(1, Math.min(MAX_LEVEL, Number(level) || 1));
+  if (creationAbilities() === "lowest") return { level: l, total: null, cap: Math.min(ABILITY_MAX, LOWEST_DIE_MAX + l - 1) };
   return {
     level: l,
     total: knave1eRaisesOn() ? null : CREATION_POINTS + LEVEL_UP_ABILITIES * (l - 1),

@@ -28,9 +28,18 @@ This system contains no text from Dungeon Crawl Classics.
 Knave (first edition) — CC BY 4.0
 ---------------------------------
 
-These tables in the tables compendium are from Knave (first edition, version
-1.0) by Ben Milton, licensed under the Creative Commons Attribution 4.0
-International License (https://creativecommons.org/licenses/by/4.0/):
+Knave (first edition, version 1.0) by Ben Milton is licensed under the
+Creative Commons Attribution 4.0 International License
+(https://creativecommons.org/licenses/by/4.0/).
+
+Its rules are set out in this system as Foundry automation and settings (the
+Knave 1e choices under Configure Rules): ability scores as the lowest of 3d6,
+the starting kit, death at below 0 HP, healing, spellbooks once a day,
+advancement and group initiative. Changes: they are adapted as automation and
+settings, 1e armor is expressed as armor points, and each can be mixed with the
+Knave 2e rules.
+
+These tables in the tables compendium are from the same work:
   - the ten character traits (Physique, Face, Skin, Hair, Clothing, Virtue,
     Vice, Speech, Background, Misfortune) and Alignment;
   - Reaction;

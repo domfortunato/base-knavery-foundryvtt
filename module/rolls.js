@@ -13,6 +13,7 @@ import {
   SAVE_CATEGORIES, SETTINGS_NS, SYS_PATH,
 } from "./config.js";
 import { scaledPosition } from "./settings.js";
+import { spellRule, usesWounds } from "./rules.js";
 
 const { DialogV2 } = foundry.applications.api;
 const L = (k) => game.i18n.localize(k);
@@ -159,8 +160,9 @@ const naturalOf = (roll) => roll.dice[0]?.total ?? null;
 
 const edgeLabel = (edge) => (edge === "normal" ? "" : L(`KNAVERY.Roll.${edge === "advantage" ? "Advantage" : "Disadvantage"}`));
 
+// Direct damage is Knave 2e's; under Knave 1e's death rule there is none (rules.js).
 const renderCard = (data) =>
-  foundry.applications.handlebars.renderTemplate(`${SYS_PATH}/templates/chat/roll-card.html`, data);
+  foundry.applications.handlebars.renderTemplate(`${SYS_PATH}/templates/chat/roll-card.html`, { directDamage: usesWounds(), ...data });
 
 const speakerFor = (actor) => (actor?.token
   ? ChatMessage.getSpeaker({ token: actor.token })
@@ -456,7 +458,8 @@ export const rollDamage = async (actor, { formula, label = "", power = false, ta
 /**
  * Cast from a spellbook. A PC may use INT spellbooks per day; each book once
  * per day. A scroll ignores the limit and is used up. The spell's level is up
- * to the caster's INT.
+ * to the caster's INT. Under Knave 1e's spell rule (p6) there is no daily total,
+ * and a level-less spell's L is the caster's level.
  */
 export const castSpell = async (actor, book) => {
   const s = book.system;
@@ -464,7 +467,7 @@ export const castSpell = async (actor, book) => {
   const int = actor.abilityBonus("INT");
   if (!s.scroll && actor.type === "character") {
     if (s.castToday) return ui.notifications.warn("KNAVERY.Spell.AlreadyCast", { format: { name: book.name } });
-    if (actor.system.spellsCastToday >= int) {
+    if (actor.system.spellCap && actor.system.spellsCastToday >= int) {
       return ui.notifications.warn(int === 1 ? "KNAVERY.Spell.DailyLimitOne" : "KNAVERY.Spell.DailyLimit", { format: { n: int } });
     }
   }
@@ -474,7 +477,7 @@ export const castSpell = async (actor, book) => {
   const content = await renderCard({
     kind: "spell",
     title: F("KNAVERY.Spell.CastTitle", { name: book.name }),
-    level: int,
+    level: spellRule() === "book-per-day" && actor.type === "character" ? actor.system.level : int,
     description,
     chaos: s.chaos,
     scroll: s.scroll,

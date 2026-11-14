@@ -53,6 +53,8 @@
           </div>
           {{/each}}
 
+          {{!-- Knave 1e has no careers: the line shows only while the rules give them, or a career is held. --}}
+          {{#if showCareers}}
           <div class="career-line">
             <span class="background-label">{{localize "KNAVERY.Careers"}}</span>
             {{#each careers}}
@@ -68,6 +70,7 @@
             </span>
             {{/if}}
           </div>
+          {{/if}}
 
         </div>
       </div>
@@ -124,7 +127,7 @@
           </div>
           <div class="knavery-ap" data-tooltip="KNAVERY.ArmorPoints">{{localize "KNAVERY.NAp" n=system.ap}}</div>
 
-          <div class="knavery-bars">
+          <div class="knavery-bars{{#unless usesWounds}} single{{/unless}}">
             <div class="knavery-bar-block hp-bar {{#if hpLow}}low{{/if}} {{#if hpPeril}}peril{{/if}}">
               {{!-- The die sits in the label's line, so the block keeps its rows. --}}
               <label for="{{idp}}-hp-max" data-tooltip="KNAVERY.HPTip">{{localize "KNAVERY.MaxHP"}}{{#if generationEnabled}} <a class="hp-roll" data-action="rollHp" data-tooltip="KNAVERY.RollHp" aria-label="{{localize 'KNAVERY.RollHp'}}"><i class="fas fa-dice-d20" inert></i></a>{{/if}}</label>
@@ -134,11 +137,12 @@
                 <span class="bar-value bar-readout" aria-label="{{localize 'KNAVERY.HP'}}">{{system.hp.value}}</span>
               </div>
               <div class="bar-steps">
-                <button type="button" data-action="hpDown" data-tooltip="KNAVERY.HpDown" aria-label="{{localize 'KNAVERY.HpDown'}}"{{#unless system.hp.value}} disabled{{/unless}}><i class="fas fa-minus" inert></i></button>
+                <button type="button" data-action="hpDown" data-tooltip="KNAVERY.HpDown" aria-label="{{localize 'KNAVERY.HpDown'}}"{{#if hpAtFloor}} disabled{{/if}}><i class="fas fa-minus" inert></i></button>
                 <button type="button" data-action="hpUp" data-tooltip="KNAVERY.HpUp" aria-label="{{localize 'KNAVERY.HpUp'}}"{{#if hpFull}} disabled{{/if}}><i class="fas fa-plus" inert></i></button>
               </div>
               <span class="knavery-bar-name">{{localize "KNAVERY.HP"}}</span>
             </div>
+            {{#if usesWounds}}
             <div class="knavery-bar-block wounds-bar {{#if woundPeril}}peril{{/if}}">
               <label data-tooltip="KNAVERY.WoundsTip">{{localize "KNAVERY.MaxWounds"}}</label>
               <span class="bar-max readout">{{slotsMax}}</span>
@@ -152,6 +156,7 @@
               </div>
               <span class="knavery-bar-name">{{localize "KNAVERY.Wounds"}}</span>
             </div>
+            {{/if}}
           </div>
           {{!-- Slots under the bars: max wounds is the slot count (user, 2026-11-14). --}}
           <div class="knavery-slots-line{{#if overburdened}} peril{{/if}}" data-tooltip="KNAVERY.SlotsTip">
@@ -175,9 +180,9 @@
     <div class="tab knavery-page knavery-page-inventory {{tabs.inventory.cssClass}}" data-group="primary" data-tab="inventory">
       <div class="knavery-summary-strip">
         <span class="summary-item {{#if overburdened}}peril{{/if}}" data-tooltip="KNAVERY.SlotsTip"><i class="fas fa-weight-hanging"></i>{{localize "KNAVERY.Slots"}} {{slotsUsed}} / {{slotsMax}}</span>
-        <span class="summary-item" data-tooltip="KNAVERY.SpellsLeftTip"><i class="fas fa-book"></i>{{localize "KNAVERY.SpellsLeft" n=spellsLeft max=system.spellsPerDay}}</span>
+        {{#if system.spellCap}}<span class="summary-item" data-tooltip="KNAVERY.SpellsLeftTip"><i class="fas fa-book"></i>{{localize "KNAVERY.SpellsLeft" n=spellsLeft max=system.spellsPerDay}}</span>{{/if}}
         <span class="summary-item summary-coins" data-tooltip="KNAVERY.CoinsTip"><i class="fas fa-coins"></i>{{#if coinsTakeSlots}}{{localize "KNAVERY.CoinsCountSlots" n=system.coins slots=system.coinSlots}}{{else}}{{localize "KNAVERY.CoinsCount" n=system.coins}}{{/if}}</span>
-        <span class="summary-item {{#if woundPeril}}peril{{/if}}" data-tooltip="KNAVERY.WoundsTip"><i class="fas fa-droplet"></i>{{localize "KNAVERY.WoundSlots" n=system.wounds}}</span>
+        {{#if usesWounds}}<span class="summary-item {{#if woundPeril}}peril{{/if}}" data-tooltip="KNAVERY.WoundsTip"><i class="fas fa-droplet"></i>{{localize "KNAVERY.WoundSlots" n=system.wounds}}</span>{{/if}}
       </div>
       {{> "systems/base-knavery/templates/parts/items-list.html"}}
     </div>
@@ -201,7 +206,7 @@
           {{/each}}
         </ol>
       </div>
-      {{> "systems/base-knavery/templates/parts/careers-block.html"}}
+      {{#if showCareers}}{{> "systems/base-knavery/templates/parts/careers-block.html"}}{{/if}}
       {{#if gmNotes}}
       {{#if (or gmNotes.editable gmNotes.value)}}
       <div class="knavery-gm-notes">

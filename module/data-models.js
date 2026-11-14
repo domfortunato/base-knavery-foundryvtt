@@ -9,6 +9,7 @@ import {
   ABILITIES, ABILITY_MAX, AC_BASE, ARMOR_TYPES, COINS_PER_SLOT, FEATURE_TYPES, HIRELING_SLOTS,
   ITEM_KINDS, LEVELS, LEVELS_1E, MAX_ARMOR_POINTS, MAX_LEVEL, NPC_ROLES, SLOT_BASE,
 } from "./config.js";
+import { spellRule, usesWounds } from "./rules.js";
 
 const {
   SchemaField, StringField, HTMLField, BooleanField, NumberField, ArrayField, ObjectField,
@@ -64,7 +65,8 @@ export class CharacterData extends KnaveryActorData {
   static defineSchema() {
     return {
       abilities: abilities(),
-      hp: pool(1),
+      // Knave 1e (p5): 0 HP is unconscious, -1 or less dead, so a character's HP reaches -1.
+      hp: new SchemaField({ value: int(1, { min: -1 }), max: int(1) }),
       level: int(1, { min: 1, max: MAX_LEVEL }),
       xp: int(0),
       wounds: int(0),
@@ -97,8 +99,13 @@ export class CharacterData extends KnaveryActorData {
     this.levelFromXp = levelForXp(this.xp);
     this.nextXp = nextLevelXp(this.level);
     this.canLevelUp = this.nextXp !== null && this.xp >= this.nextXp;
+    // Knave 2e: INT spellbooks a day. Knave 1e: no daily total, each book once a day (p6).
+    this.spellCap = spellRule() === "int-per-day";
     this.spellsPerDay = a.INT?.value ?? 0;
-    this.dead = this.wounds >= this.slotsMax;
+    // Knave 2e: dead when every slot is wounded. Knave 1e (p5): out at 0 HP, dead below it.
+    const wounds = usesWounds();
+    this.dead = wounds ? this.wounds >= this.slotsMax : this.hp.value < 0;
+    this.unconscious = !wounds && this.hp.value === 0;
     for (const k of ABILITIES) a[k].defense = 11 + a[k].value;
   }
 }

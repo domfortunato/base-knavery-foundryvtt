@@ -19,7 +19,7 @@
  * skipped and listed on the summary card, never faked.
  */
 import {
-  ABILITIES, ABILITY_MAX, CREATION_POINTS, FLAG_SCOPE, LEVELS, SETTINGS_NS, STARTING_COINS, SYS_PATH, TABLES,
+  ABILITIES, ABILITY_MAX, CREATION_POINTS, FLAG_SCOPE, LEVELS, LOWEST_DIE_MAX, SETTINGS_NS, STARTING_COINS, SYS_PATH, TABLES,
 } from "./config.js";
 import { drawFrom, pickFromList, plainText, realResults, findTable, resultText, spellTableName } from "./compendium.js";
 import { firstLevelHpFormula, randomAbilityPicks, rollLevelHp } from "./level-up.js";
@@ -28,6 +28,7 @@ import { randomPortraitPair } from "./art.js";
 import { emit, onSocket } from "./socket.js";
 import { mayEditCareers } from "./edit-gates.js";
 import { traitShown } from "./settings.js";
+import { creationAbilities, startingKit, usesCareers } from "./rules.js";
 
 const L = (k) => game.i18n.localize(k);
 const F = (k, d) => game.i18n.format(k, d);
@@ -66,6 +67,19 @@ const STANDARD_KIT = [
   { name: "Rope (50')", quantity: 1 },
   { name: "Torch", quantity: 2 },
 ];
+
+/** Knave 1e's kit (p1): the weapon is the player's choice, the rest is rolled. */
+const KNAVE_1E_KIT = [{ name: "Rations", quantity: 2 }];
+
+/** Every weapon a new character may choose (Knave 1e kit): world items and the Item compendia, by name. */
+export const weaponChoices = async () => {
+  const seen = new Map();
+  for (const i of game.items.filter((it) => it.type === "weapon")) seen.set(i.name, { name: i.name, img: i.img });
+  for (const pack of game.packs.filter((p) => p.documentName === "Item")) {
+    for (const e of pack.index.filter((x) => x.type === "weapon")) if (!seen.has(e.name)) seen.set(e.name, { name: e.name, img: e.img });
+  }
+  return [...seen.values()].sort((a, b) => a.name.localeCompare(b.name));
+};
 
 const creationLevels = () => {
   const min = Number(game.settings.get(SETTINGS_NS, "min-creation-level")) || 1;
@@ -299,7 +313,42 @@ export const rollTraits = async () => {
   return traits;
 };
 
-/** 3d6, each face raising its ability. Returns {values, faces}. */
+/**
+ * Knave 1e (p1): 3d6 for each ability in order, the lowest die its score. Returns
+ * {values, rolls}: rolls holds each ability's three dice.
+ */
+export const rollLowestAbilities = async () => {
+  const values = {};
+  const rolls = {};
+  for (const k of ABILITIES) {
+    const roll = await new Roll("3d6").evaluate();
+    rolls[k] = roll.dice[0].results.map((r) => r.result);
+    values[k] = Math.min(...rolls[k]);
+  }
+  return { values, rolls, swap: null };
+};
+
+/**
+ * A Knave 1e roll sent from a player's window: six rolls of three dice, and at most one swap
+ * of two scores (p1). Returns it when the values follow from the dice, otherwise null.
+ */
+export const validRolled = (rolled) => {
+  if (!rolled || typeof rolled !== "object") return null;
+  const die = (d) => Number.isInteger(d) && d >= 1 && d <= LOWEST_DIE_MAX;
+  const mins = {};
+  for (const k of ABILITIES) {
+    const r = rolled.rolls?.[k];
+    if (!Array.isArray(r) || r.length !== 3 || !r.every(die)) return null;
+    mins[k] = Math.min(...r);
+  }
+  const swap = Array.isArray(rolled.swap) && rolled.swap.length === 2 && rolled.swap[0] !== rolled.swap[1]
+    && rolled.swap.every((k) => ABILITIES.includes(k)) ? [...rolled.swap] : null;
+  if (swap) [mins[swap[0]], mins[swap[1]]] = [mins[swap[1]], mins[swap[0]]];
+  if (!ABILITIES.every((k) => rolled.values?.[k] === mins[k])) return null;
+  return { values: mins, rolls: Object.fromEntries(ABILITIES.map((k) => [k, [...rolled.rolls[k]]])), swap };
+};
+
+/** 3d6, each face raising its ability (Knave 2e). Returns {values, faces}. */
 const rollAbilities = async () => {
   const roll = await new Roll("3d6").evaluate();
   const faces = roll.dice[0].results.map((r) => r.result);
@@ -312,11 +361,21 @@ const rollAbilities = async () => {
  * Build a character's data at `level`. Pure data; nothing is written.
  * @returns {Promise<{system:object, careers:object[], items:object[], name:string, img:string, token:string, notes:string[]}>}
  */
-export const buildCharacter = async ({ level = 1, abilities = null } = {}) => {
+export const buildCharacter = async ({ level = 1, abilities = null, rolled = null, weapon = null } = {}) => {
   const notes = [];
-  const placed = validPoints(abilities);
+  const lowest = creationAbilities() === "lowest";
+  const placed = lowest ? null : validPoints(abilities);
   let values;
-  if (placed) {
+  if (lowest) {
+    const r = validRolled(rolled) ?? await rollLowestAbilities();
+    values = { ...r.values };
+    notes.push(F("KNAVERY.Gen.AbilityLowest", {
+      list: ABILITIES.map((k) => `${L(`KNAVERY.AbilityShort.${k}`)} ${Math.min(...r.rolls[k])} (${r.rolls[k].join("·")})`).join(", "),
+    }));
+    if (r.swap) {
+      notes.push(F("KNAVERY.Gen.AbilitySwapped", { a: L(`KNAVERY.AbilityShort.${r.swap[0]}`), b: L(`KNAVERY.AbilityShort.${r.swap[1]}`) }));
+    }
+  } else if (placed) {
     values = { ...placed };
     notes.push(F("KNAVERY.Gen.AbilityPoints", {
       list: ABILITIES.filter((k) => placed[k]).map((k) => `${L(`KNAVERY.AbilityShort.${k}`)} ${placed[k]}`).join(", "),
@@ -327,8 +386,9 @@ export const buildCharacter = async ({ level = 1, abilities = null } = {}) => {
     notes.push(F("KNAVERY.Gen.AbilityRoll", { faces: rolled.faces.join(", ") }));
   }
   // One spellbook per point of INT the character STARTS with: a point of INT
-  // gained at a later level brings no book.
-  const startingInt = values.INT;
+  // gained at a later level brings no book. Knave 1e starts without one (p1).
+  const kit = startingKit();
+  const startingInt = kit === "knave1e" ? 0 : values.INT;
 
   const hpRoll = await new Roll(firstLevelHpFormula()).evaluate();
   let hpMax = hpRoll.total;
@@ -344,14 +404,15 @@ export const buildCharacter = async ({ level = 1, abilities = null } = {}) => {
   }
 
   const careers = [];
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < (usesCareers() ? 2 : 0); i++) {
     const r = await drawFrom(TABLES.careers, { warn: false });
     if (!r) { notes.push(L("KNAVERY.Gen.NoCareerTable")); break; }
     careers.push(await careerFromResult(r.result, r.text));
   }
 
   const items = [];
-  for (const k of STANDARD_KIT) {
+  // Knave 1e (p1): two days of rations and a weapon of the player's choice, then the gear tables.
+  for (const k of kit === "knave1e" ? KNAVE_1E_KIT : STANDARD_KIT) {
     const doc = await findItemByName(k.name);
     if (doc) items.push(itemData(doc, { system: { quantity: k.quantity } }));
   }
@@ -368,13 +429,24 @@ export const buildCharacter = async ({ level = 1, abilities = null } = {}) => {
       });
   }
 
-  if (game.settings.get(SETTINGS_NS, "knave1e-starting-gear")) {
+  if (kit === "knave1e") {
+    const choices = await weaponChoices();
+    const chosen = choices.find((w) => w.name === weapon);
+    const pick = chosen ?? choices[Math.floor(Math.random() * choices.length)];
+    const doc = pick ? await findItemByName(pick.name, "weapon") : null;
+    if (doc) {
+      items.push(itemData(doc));
+      notes.push(F(chosen ? "KNAVERY.Gen.WeaponChosen" : "KNAVERY.Gen.WeaponRandom", { name: doc.name }));
+    }
+  }
+  if (kit === "knave1e" || kit === "careers-1e-gear") {
     const gear = await rollKnave1eGear();
     items.push(...gear.items);
     if (gear.names.length) notes.push(F("KNAVERY.Gen.Knave1eGear", { list: gear.names.join(", ") }));
   }
 
-  const coins = (await new Roll(STARTING_COINS).evaluate()).total;
+  // A Knave 1e kit is rolled, not bought: no coins.
+  const coins = kit === "knave1e" ? 0 : (await new Roll(STARTING_COINS).evaluate()).total;
   const name = (await rollFullName()) ?? L("KNAVERY.DefaultCharacterName");
   if (name === L("KNAVERY.DefaultCharacterName")) notes.push(L("KNAVERY.Gen.NoNameTable"));
 
@@ -430,8 +502,10 @@ export const regenerateCharacter = async (actor) => {
   if (!chosen) return;
   const { level } = chosen;
   // The dice decide unless the player asked to place the points.
-  const points = chosen.place ? await promptAbilityPoints() : "dice";
+  const points = chosen.place && creationAbilities() !== "lowest" ? await promptAbilityPoints() : "dice";
   if (!points) return;
+  const extras = await promptKnave1eChoices();
+  if (!extras) return;
   const ok = await foundry.applications.api.DialogV2.confirm({
     classes: ["knavery"],
     window: { title: L("KNAVERY.RollCharacter") },
@@ -439,7 +513,7 @@ export const regenerateCharacter = async (actor) => {
     rejectClose: false,
   });
   if (!ok) return;
-  await applyBuilt(actor, await buildCharacter({ level, abilities: points === "dice" ? null : points }));
+  await applyBuilt(actor, await buildCharacter({ level, abilities: points === "dice" ? null : points, ...extras }));
 };
 
 /** Placed points, if they are whole numbers from 0 to 3 totalling exactly 3; otherwise null. */
@@ -512,6 +586,69 @@ export const promptAbilityPoints = async () => {
   return result || null;
 };
 
+/**
+ * Knave 1e's choices at creation, asked in the player's window: the six rolls with an optional
+ * swap of two scores (p1), and the weapon of their choice. Resolves to {rolled, weapon} (either
+ * null when its rule is off), or null when a window is closed.
+ */
+export const promptKnave1eChoices = async () => {
+  const out = { rolled: null, weapon: null };
+  if (creationAbilities() === "lowest") {
+    out.rolled = await promptSwap(await rollLowestAbilities());
+    if (!out.rolled) return null;
+  }
+  if (startingKit() === "knave1e") {
+    const weapons = await weaponChoices();
+    if (weapons.length) {
+      out.weapon = await promptWeapon(weapons);
+      if (!out.weapon) return null;
+    }
+  }
+  return out;
+};
+
+/** Show the six rolls; the player may swap two scores (p1). Resolves to the roll, swapped or not. */
+export const promptSwap = async (rolled) => {
+  const idp = foundry.utils.randomID();
+  const opts = `<option value="">—</option>${ABILITIES.map((k) => `<option value="${k}">${esc(L(`KNAVERY.Ability.${k}`))}</option>`).join("")}`;
+  const rows = ABILITIES.map((k) => `<li class="kn-lowest-row" data-ability="${k}"><strong>${esc(L(`KNAVERY.Ability.${k}`))}</strong>`
+    + ` <span class="kn-lowest-score">${rolled.values[k]}</span> <span class="kn-lowest-dice">(${rolled.rolls[k].join(", ")})</span></li>`).join("");
+  const content = `<p>${esc(L("KNAVERY.Gen.LowestBody"))}</p><ul class="kn-lowest">${rows}</ul>`
+    + `<div class="form-group"><label for="kn-swap-a-${idp}">${esc(L("KNAVERY.Gen.SwapLabel"))}</label><div class="form-fields">`
+    + `<select id="kn-swap-a-${idp}" name="a">${opts}</select><span>⇄</span><select name="b" aria-label="${esc(L("KNAVERY.Gen.SwapWith"))}">${opts}</select></div></div>`;
+  return foundry.applications.api.DialogV2.prompt({
+    classes: ["knavery", "knavery-lowest"],
+    window: { title: L("KNAVERY.Gen.LowestTitle"), icon: "fas fa-dice" },
+    position: { width: 420 },
+    content,
+    ok: {
+      label: "KNAVERY.Gen.LowestKeep", icon: "fas fa-check",
+      callback: (_e, b) => {
+        const a = b.form.elements.a.value;
+        const c = b.form.elements.b.value;
+        if (!a || !c || a === c) return rolled;
+        const values = { ...rolled.values, [a]: rolled.values[c], [c]: rolled.values[a] };
+        return { ...rolled, values, swap: [a, c] };
+      },
+    },
+    rejectClose: false,
+  });
+};
+
+/** The weapon a Knave 1e character starts with: the player's choice (p1). */
+export const promptWeapon = async (weapons) => {
+  const idp = foundry.utils.randomID();
+  const content = `<div class="form-group"><label for="kn-weapon-${idp}">${esc(L("KNAVERY.Gen.WeaponLabel"))}</label>`
+    + `<div class="form-fields"><select id="kn-weapon-${idp}" name="weapon">${weapons.map((w) => `<option value="${esc(w.name)}">${esc(w.name)}</option>`).join("")}</select></div></div>`;
+  return foundry.applications.api.DialogV2.prompt({
+    classes: ["knavery", "knavery-weapon"],
+    window: { title: L("KNAVERY.Gen.WeaponTitle"), icon: "fas fa-sword" },
+    content,
+    ok: { label: "KNAVERY.Gen.WeaponTake", icon: "fas fa-check", callback: (_e, b) => b.form.elements.weapon.value },
+    rejectClose: false,
+  });
+};
+
 const promptLevel = ({ min, max, initial }) => {
   const idp = foundry.utils.randomID(); // ids unique to this window
   return foundry.applications.api.DialogV2.prompt({
@@ -519,8 +656,8 @@ const promptLevel = ({ min, max, initial }) => {
   window: { title: L("KNAVERY.Gen.ChooseLevel") },
   content: `<div class="form-group"><label>${L("KNAVERY.Level")}</label><select name="level">${Array.from(
     { length: max - min + 1 }, (_, i) => min + i).map((l) => `<option value="${l}"${l === initial ? " selected" : ""}>${l} — ${esc(L(`KNAVERY.LevelTitle.${l}`))}</option>`).join("")}</select></div>`
-    + `<div class="form-group"><label for="kn-level-place-${idp}">${esc(L("KNAVERY.Gen.PlacePoints"))}</label>`
-    + `<div class="form-fields"><input type="checkbox" id="kn-level-place-${idp}" name="place" /></div></div>`,
+    + (creationAbilities() === "lowest" ? "" : `<div class="form-group"><label for="kn-level-place-${idp}">${esc(L("KNAVERY.Gen.PlacePoints"))}</label>`
+    + `<div class="form-fields"><input type="checkbox" id="kn-level-place-${idp}" name="place" /></div></div>`),
   ok: { callback: (_e, b) => ({ level: Number(b.form.elements.level.value), place: !!b.form.elements.place?.checked }) },
   rejectClose: false,
   });
@@ -540,6 +677,8 @@ export const createCharacterInteractive = async () => {
     idp: foundry.utils.randomID(), // ids unique to this window
     levels: Array.from({ length: max - min + 1 }, (_, i) => ({ level: min + i, title: L(`KNAVERY.LevelTitle.${min + i}`) })),
     min,
+    // Knave 1e rolls every score: there are no points to place.
+    placeAllowed: creationAbilities() !== "lowest",
   });
   const choice = await foundry.applications.api.DialogV2.wait({
     window: { title: L("KNAVERY.CreateCharacter"), icon: "fas fa-user-plus" },
@@ -576,21 +715,29 @@ export const createCharacterInteractive = async () => {
   if (!choice) return null;
   choice.level = Math.min(max, Math.max(min, choice.level));
   // Random rolls the abilities (3d6) unless the player asked to place the 3 points.
-  if (choice.mode === "random" && choice.place) {
+  if (choice.mode === "random" && choice.place && creationAbilities() !== "lowest") {
     const points = await promptAbilityPoints();
     if (!points) return null;
     choice.abilities = points === "dice" ? null : points;
   }
+  if (choice.mode === "random") {
+    const extras = await promptKnave1eChoices();
+    if (!extras) return null;
+    Object.assign(choice, extras);
+  }
   if (!game.user.can("ACTOR_CREATE")) {
     if (!game.users.activeGM) return ui.notifications.warn("KNAVERY.Notify.NoGmForCreation", { localize: true });
-    emit("generatePC", { mode: choice.mode, level: choice.level, name: choice.name.slice(0, 80), abilities: choice.abilities ?? null });
+    emit("generatePC", {
+      mode: choice.mode, level: choice.level, name: choice.name.slice(0, 80), abilities: choice.abilities ?? null,
+      rolled: choice.rolled ?? null, weapon: choice.weapon ?? null,
+    });
     return ui.notifications.info("KNAVERY.Notify.CreationRequested", { localize: true });
   }
   return createCharacter({ ...choice, owner: game.user.id });
 };
 
 /** Create (and, if random, generate) a character owned by `owner`. */
-export const createCharacter = async ({ mode = "random", level = 1, name = "", owner = null, abilities = null } = {}) => {
+export const createCharacter = async ({ mode = "random", level = 1, name = "", owner = null, abilities = null, rolled = null, weapon = null } = {}) => {
   const ownership = { default: 0 };
   if (owner && !game.users.get(owner)?.isGM) ownership[owner] = CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER;
   const actor = await Actor.create({
@@ -601,7 +748,7 @@ export const createCharacter = async ({ mode = "random", level = 1, name = "", o
   });
   if (!actor) return null;
   if (mode === "random") {
-    const built = await buildCharacter({ level, abilities });
+    const built = await buildCharacter({ level, abilities, rolled, weapon });
     if (name) built.name = name;
     await applyBuilt(actor, built);
   } else {
@@ -633,7 +780,8 @@ export const registerCreationSocket = () => {
       const actor = await createCharacter({
         // Players get random characters only: Blank Sheet is the GM's (2026-11-14).
         mode: "random", level, name: String(msg.name ?? "").slice(0, 80), owner: senderId,
-        abilities: validPoints(msg.abilities),
+        abilities: validPoints(msg.abilities), rolled: validRolled(msg.rolled),
+        weapon: typeof msg.weapon === "string" ? msg.weapon.slice(0, 120) : null,
       });
       answer(actor ? { actorId: actor.id } : { failed: true });
     } catch (err) {

@@ -14,6 +14,7 @@ import { slotsForItem } from "../documents/actor.js";
 import { levelLadder } from "../data-models.js";
 import { mayEditAbilities, mayEditCareers, mayEditLevelXp, mayUseCharGen } from "../edit-gates.js";
 import { KNAVE_PAGE_TRAITS, scaledPosition, traitShown } from "../settings.js";
+import { healingRule, usesCareers, usesWounds } from "../rules.js";
 import { attackRow, castSpell, openAttack, rollAttack, rollCheck, rollDamage, rollDieOfFate, rollMorale } from "../rolls.js";
 import { pickArt, randomPortraitPair, setActorArt } from "../art.js";
 import { drawFrom, pickFrom } from "../compendium.js";
@@ -427,7 +428,9 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     }));
 
     const banners = [];
-    if (s.dead) banners.push({ key: "dead", icon: "fa-skull", label: L("KNAVERY.Status.Dead"), text: L("KNAVERY.Status.DeadText") });
+    const wounds = usesWounds();
+    if (s.dead) banners.push({ key: "dead", icon: "fa-skull", label: L("KNAVERY.Status.Dead"), text: L(isChar && !wounds ? "KNAVERY.Status.DeadText1e" : "KNAVERY.Status.DeadText") });
+    else if (isChar && s.unconscious) banners.push({ key: "critical", icon: "fa-bed", label: L("KNAVERY.Status.Unconscious"), text: L("KNAVERY.Status.UnconsciousText") });
     else if (isChar && s.hp.value <= 0) banners.push({ key: "critical", icon: "fa-heart-crack", label: L("KNAVERY.Status.NoHp"), text: L("KNAVERY.Status.NoHpText") });
     if (isChar && items.some((i) => i.wounded)) banners.push({ key: "wounded", icon: "fa-droplet", label: L("KNAVERY.Status.Wounded"), text: L("KNAVERY.Status.WoundedText") });
     if (actor.overburdened) banners.push({ key: "overburdened", icon: "fa-weight-hanging", label: L("KNAVERY.Status.Overburdened"), text: L("KNAVERY.Status.OverburdenedText") });
@@ -465,7 +468,7 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       : F("KNAVERY.Growth.EachLevel", { n: LEVEL_UP_ABILITIES, hp: hpRuleHint(s.level + 1, actor._source.system.hp.max) });
 
     // Alignment and Background live on the Knave page, behind their switches, never here.
-    const traitKeys = Object.keys(TABLES.traits).filter((k) => !KNAVE_PAGE_TRAITS.includes(k));
+    const traitKeys = Object.keys(TABLES.traits).filter((k) => !KNAVE_PAGE_TRAITS.includes(k) && traitShown(k));
     // Knave 2e's traits first (filled from the GM's PDF), then Knave 1e's (shipped); each group headed once.
     const KNAVE_2E_TRAITS = ["personality", "mannerism"];
     const traitRows = traitKeys.map((key, i) => {
@@ -518,6 +521,7 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       overburdened: actor.overburdened,
       banners,
       careers,
+      showCareers: isChar && (usesCareers() || careers.length > 0),
       levelTitle: levelRow ? L(`KNAVERY.LevelTitle.${levelRow.level}`) : "",
       levelLadder: levelLadderRows,
       hpFull: isChar && s.hp.value >= s.hp.max,
@@ -526,6 +530,9 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       showLevelUp,
       hpLow: s.hp.value < s.hp.max,
       hpPeril: s.hp.value <= 0,
+      // Knave 2e's wounds, or Knave 1e's HP to -1 (rules.js death-rule).
+      usesWounds: wounds,
+      hpAtFloor: s.hp.value <= (isChar && !wounds ? -1 : 0),
       hpPercent: percent(s.hp.value, s.hp.max),
       woundPeril: isChar && s.wounds > 0,
       woundPercent: isChar ? percent(s.wounds, s.slotsMax) : 0,
@@ -888,7 +895,7 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       window: { title: L("KNAVERY.RestTitle"), icon: "fas fa-campfire" },
       classes: ["knavery", "knavery-rest"],
       position: scaledPosition({ width: 380 }),
-      content: `<p class="hint">${L("KNAVERY.RestHelp")}</p>`
+      content: `<p class="hint">${L(healingRule() === "knave1e" ? "KNAVERY.RestHelp1e" : "KNAVERY.RestHelp")}</p>`
         + box("slept", "KNAVERY.RestSlept", true) + box("ate", "KNAVERY.RestAte", true) + box("haven", "KNAVERY.RestHaven", false),
       // The safe haven heals a wound only on top of the night's healing.
       render: (_e, dialog) => {
@@ -919,10 +926,11 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     await this.actor.healWound();
   }
 
-  /** The HP bar's + and −: one point, between 0 and max. A manual step never spills into wounds. */
+  /** The HP bar's + and −: one point, between 0 (Knave 1e: -1, dead) and max. A manual step never spills into wounds. */
   static async #onHpStep(_event, target) {
     const { value, max } = this.actor.system.hp;
-    const next = Math.max(0, Math.min(max, value + (target.dataset.action === "hpUp" ? 1 : -1)));
+    const floor = this.actor.type === "character" && !usesWounds() ? -1 : 0;
+    const next = Math.max(floor, Math.min(max, value + (target.dataset.action === "hpUp" ? 1 : -1)));
     if (next !== value) await this.actor.update({ "system.hp.value": next });
   }
 

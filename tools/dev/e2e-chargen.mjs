@@ -510,10 +510,11 @@ await withSettings(gm, async () => {
       out.booksFrom1e = books.filter((b) => names1e.has(b.name)).length;
       out.withEffect = books.filter((b) => (b.system?.description ?? "").length > 10).length;
       await set("spell-list", "auto");
-      await set("knave1e-starting-gear", true);
+      // The old starting-gear hack is the starting kit "careers plus the 1e gear tables" since 0.2.0.
+      await set("starting-kit", "careers-1e-gear");
       const geared = await buildCharacter({ level: 1, abilities: { STR: 3 } });
       out.gearNote = geared.notes.find((n) => n.startsWith("Knave 1e starting gear")) ?? "";
-      await set("knave1e-starting-gear", false);
+      await set("starting-kit", "careers");
       const reaction = await findTable("Reaction");
       out.reactionRows = realResults(reaction).length;
       out.reactionWorld = !!game.tables.getName("Reaction");
@@ -523,7 +524,7 @@ await withSettings(gm, async () => {
     ok(r.auto === (r.hasWorldSpells ? "Spells" : "Spells (Knave 1e)") && r.forced === "Spells (Knave 1e)",
       "the world's own Spells table wins, and the GM can switch back to 1e", JSON.stringify(r));
     ok(r.books === 3 && r.booksFrom1e === 3 && r.withEffect === 3, "on 1e, three INT draw three 1e spellbooks, each with its effect", JSON.stringify(r));
-    ok(r.gearNote.split(",").length >= 4, "the starting-gear hack rolls Knave 1e gear at creation", r.gearNote);
+    ok(r.gearNote.split(",").length >= 4, "careers plus the 1e gear tables roll Knave 1e gear at creation", r.gearNote);
     ok(r.reactionWorld || r.reactionRows === 5, "Reaction ships filled from Knave 1e", JSON.stringify(r));
   });
 
@@ -1726,6 +1727,206 @@ await withSettings(gm, async () => {
       "a magic weapon keeps its sword, glowing, and says it is magic", JSON.stringify(r["Probe Glowing Blade"]));
     ok(r["Probe Rope"]?.cls === "empty" && !r["Probe Rope"].icon, "an ordinary item has an empty chit, so the names line up", JSON.stringify(r["Probe Rope"]));
     ok(b.kindOptions === "ordinary,magic,relic,potion" && b.kindValue === "magic", "the item sheet offers Ordinary, Magic, Relic and Potion", JSON.stringify(b));
+  });
+
+  /* ------------------------------------------------------------------ */
+  await section("26. Knave 1e rules: the Rules choice, the stamp, 1e creation, death, healing, spells, the sheet, the 2e hand-off, the welcome.", async () => {
+    // The Rules choice and the stamp.
+    const a = await gm.evaluate(async (sys) => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const ns = "base-knavery";
+      const R = await import(`${sys}/rules.js`);
+      const { RULES_PRESETS } = await import(`${sys}/config.js`);
+      const out = { stamp: game.settings.get(ns, "rules-stamp") };
+      out.newWorld = R.isExistingWorld({ storedKeys: [], documents: 0 });
+      out.autoOnly = R.isExistingWorld({ storedKeys: ["welcome-shown-version", "rules-stamp"], documents: 0 });
+      out.withActors = R.isExistingWorld({ storedKeys: [], documents: 3 });
+      out.withSetting = R.isExistingWorld({ storedKeys: ["advantage-mode"], documents: 0 });
+      await R.applyRules("2e");
+      out.as2e = R.currentRules();
+      await R.applyRules("1e");
+      out.as1e = R.currentRules();
+      out.all1e = Object.entries(RULES_PRESETS["1e"]).every(([k, v]) => game.settings.get(ns, k) === v);
+      await game.settings.set(ns, "spell-rule", "int-per-day");
+      out.mixed = R.currentRules();
+      await game.settings.set(ns, "spell-rule", "book-per-day");
+      out.back = R.currentRules();
+      // The Rules window: the choice sets the rows, a row changed reads Custom. Closed unsaved.
+      const menu = game.settings.menus.get(`${ns}.hacks`);
+      const app = new menu.type();
+      await app.render({ force: true });
+      await wait(700);
+      const el = app.element;
+      const select = el.querySelector('select[name="knavery-rules"]');
+      out.windowValue = select?.value;
+      out.windowFirst = el.querySelector(".knavery-settings-rows")?.firstElementChild?.classList.contains("knavery-rules-choice");
+      select.value = "2e";
+      select.dispatchEvent(new Event("change", { bubbles: true }));
+      out.deathAfter2e = el.querySelector(`[name="${ns}.death-rule"]`)?.value;
+      out.xpAfter2e = el.querySelector(`[name="${ns}.knave1e-xp"]`)?.checked;
+      const death = el.querySelector(`[name="${ns}.death-rule"]`);
+      death.value = "knave1e";
+      death.dispatchEvent(new Event("change", { bubbles: true }));
+      out.afterRow = select.value;
+      await app.close();
+      out.stillSaved = R.currentRules();
+      return out;
+    }, SYS);
+    ok(a.stamp === "2e", "the probe world, made before 0.2.0, was stamped with Knave 2e's rules", JSON.stringify(a));
+    ok(!a.newWorld && !a.autoOnly && a.withActors && a.withSetting,
+      "a world with no documents and no settings of its own is new; actors or a stored setting make it an older world", JSON.stringify(a));
+    ok(a.as2e === "2e" && a.as1e === "1e" && a.all1e && a.mixed === "custom" && a.back === "1e",
+      "the Rules choice writes every rule; one rule changed reads Custom, and back again reads Knave 1e", JSON.stringify(a));
+    ok(a.windowFirst && a.windowValue === "1e" && a.deathAfter2e === "wounds" && a.xpAfter2e === false && a.afterRow === "custom" && a.stillSaved === "1e",
+      "Configure Rules opens with the Rules choice: picking 2e sets the rows, changing a row shows Custom, nothing saves unasked", JSON.stringify(a));
+
+    // Knave 1e creation (the world now plays 1e).
+    const c = await gm.evaluate(async (sys) => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const G = await import(`${sys}/character-generator.js`);
+      const { abilityBudget } = await import(`${sys}/level-up.js`);
+      const built = await G.buildCharacter({ level: 1 });
+      const v = built.system.abilities;
+      const out = {
+        scores: Object.values(v).map((x) => x.value),
+        careers: built.careers.length, coins: built.system.coins,
+        books: built.items.filter((i) => i.type === "spellbook").length,
+        rations: built.items.find((i) => i.name === "Rations")?.system?.quantity ?? 0,
+        weapons: built.items.filter((i) => i.type === "weapon").length,
+        hp: built.system.hp.max,
+        alignment: built.system.traits.alignment ?? "", background: built.system.traits.background ?? "",
+        lowestNote: built.notes.find((n) => n.startsWith("Abilities, lowest of 3d6")) ?? "",
+        weaponNote: built.notes.find((n) => n.startsWith("Weapon:")) ?? "",
+        budget: abilityBudget(1),
+      };
+      const r = await G.rollLowestAbilities();
+      out.valid = !!G.validRolled(r);
+      out.validSwap = !!G.validRolled({ ...r, values: { ...r.values, STR: r.values.CHA, CHA: r.values.STR }, swap: ["STR", "CHA"] });
+      out.cheat = G.validRolled({ ...r, values: { ...r.values, STR: 7 } });
+      const choices = await G.weaponChoices();
+      const chosen = await G.buildCharacter({ level: 1, weapon: choices[0]?.name });
+      out.chosenNote = chosen.notes.find((n) => n.startsWith("Weapon:")) ?? "";
+      out.firstWeapon = choices[0]?.name;
+      // The swap window: pick STR and CHA, then Done.
+      const p = G.promptSwap(r);
+      await wait(700);
+      const dlg = [...foundry.applications.instances.values()].find((x) => x.element?.classList.contains("knavery-lowest"));
+      out.rows = dlg?.element.querySelectorAll(".kn-lowest-row").length;
+      dlg.element.querySelector('select[name="a"]').value = "STR";
+      dlg.element.querySelector('select[name="b"]').value = "CHA";
+      dlg.element.querySelector('button[data-action="ok"]').click();
+      const res = await p;
+      out.swapped = res?.swap?.join() === "STR,CHA" && res.values.STR === r.values.CHA && res.values.CHA === r.values.STR;
+      return out;
+    }, SYS);
+    ok(c.scores.every((s) => s >= 1 && s <= 6) && /lowest of 3d6/.test(c.lowestNote) && c.budget.total === null && c.budget.cap === 6,
+      "a 1e character's abilities are each the lowest of 3d6 (1 to 6), and Char Gen Mode caps them at 6 with no points total", JSON.stringify(c));
+    ok(c.careers === 0 && c.coins === 0 && c.books === 0 && c.rations === 2 && c.weapons === 1 && c.hp >= 1 && c.hp <= 8,
+      "a 1e kit: no careers, coins or spellbook; two rations, one weapon; HP a d8", JSON.stringify(c));
+    ok(!!c.alignment && !!c.background, "a 1e character rolls Alignment and Background", JSON.stringify(c));
+    ok(c.valid && c.validSwap && c.cheat === null, "a roll from a player's window is checked: dice and one swap pass, a raised score fails", JSON.stringify(c));
+    ok(c.chosenNote === `Weapon: ${c.firstWeapon} (chosen).` && /picked at random/.test(c.weaponNote),
+      "the weapon is the player's choice, or picked at random when nobody chose", JSON.stringify(c));
+    ok(c.rows === 6 && c.swapped, "the six rolls are shown and two scores can be swapped", JSON.stringify(c));
+
+    // Death, healing and spells under 1e, and the sheet.
+    const d = await gm.evaluate(async (sys) => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const { castSpell } = await import(`${sys}/rolls.js`);
+      const pc = await Actor.create({ name: "Probe 1e PC", type: "character", system: { hp: { value: 3, max: 5 }, level: 3, abilities: { CON: { value: 2 }, INT: { value: 0 } } } });
+      const last = () => game.messages.contents.at(-1)?.content ?? "";
+      const out = {};
+      await pc.applyDamage(3);
+      out.d1 = { hp: pc.system.hp.value, wounds: pc.system.wounds, out: pc.system.unconscious, dead: pc.system.dead, card: /is unconscious/.test(last()) };
+      // The sheet at 0 HP: one bar, no wounds, no careers, no spells-left; Alignment and Background on the Knave page.
+      await pc.sheet.render({ force: true });
+      await wait(900);
+      const el = pc.sheet.element;
+      out.sheet = {
+        single: !!el.querySelector(".knavery-bars.single"), woundsBar: el.querySelectorAll(".wounds-bar").length,
+        careerLine: el.querySelectorAll(".career-line").length, careersBlock: el.querySelectorAll(".knavery-careers, .careers-block").length,
+        knaveTraits: [...el.querySelectorAll(".knave-trait-line input")].map((i) => i.name.split(".").pop()).join(),
+        descTraits: [...el.querySelectorAll('[data-tab="description"] .trait-input')].map((i) => i.name.split(".").pop()),
+        spellsLeft: [...el.querySelectorAll(".knavery-summary-strip .summary-item")].some((s) => /Spells left/i.test(s.textContent)),
+        woundItem: [...el.querySelectorAll(".knavery-summary-strip .summary-item")].some((s) => /Wound/i.test(s.textContent)),
+        banner: el.querySelector(".status-banner, .knavery-banner")?.textContent.replace(/\s+/g, " ").trim() ?? "",
+        footer: /first and second editions/.test(el.textContent),
+        hasPersonalityTable: !!game.tables.getName("Personalities"), hasMannerismTable: !!game.tables.getName("Mannerisms"),
+      };
+      out.sheetId = pc.id;
+      await pc.applyDamage(1, { direct: true });
+      out.d2 = { hp: pc.system.hp.value, wounds: pc.system.wounds, dead: pc.system.dead, direct: /direct damage/.test(last()), card: /is dead/.test(last()) };
+      await pc.applyDamage(5);
+      out.floor = pc.system.hp.value;
+      // Healing: d8 + CON after a meal; a safe haven, all; the dead do not heal.
+      await pc.rest();
+      out.deadRest = { hp: pc.system.hp.value, card: /no healing/.test(last()) };
+      await pc.update({ "system.hp.value": 0, "system.hp.max": 12 });
+      await pc.rest({ slept: true, ate: true });
+      out.night = { hp: pc.system.hp.value, card: /Healed \d+ HP \(d8 \d \+ CON 2\)/.test(last()) };
+      await pc.rest({ slept: true, ate: true, haven: true });
+      out.haven = pc.system.hp.value;
+      // Spells: INT 0, three books, each once; cast at the caster's level (3).
+      await pc.createEmbeddedDocuments("Item", ["Probe Book A", "Probe Book B", "Probe Book C"].map((name) => ({ name, type: "spellbook" })));
+      const count = () => game.messages.filter((m) => m.getFlag("base-knavery", "spell")).length;
+      const before = count();
+      for (const b of pc.items.filter((i) => i.type === "spellbook")) await castSpell(pc, b);
+      out.cast = count() - before;
+      out.level = /Cast at level 3\./.test(last());
+      await castSpell(pc, pc.items.getName("Probe Book A"));
+      out.again = count() - before;
+      return out;
+    }, SYS);
+    await gm.screenshot({ path: `${SHOTS}/knave1e-sheet.png` });
+    const s = d.sheet;
+    ok(d.d1.hp === 0 && d.d1.wounds === 0 && d.d1.out && !d.d1.dead && d.d1.card,
+      "under Knave 1e, damage to 0 HP leaves a character unconscious, with no wounds", JSON.stringify(d.d1));
+    ok(d.d2.hp === -1 && d.d2.wounds === 0 && d.d2.dead && !d.d2.direct && d.d2.card && d.floor === -1,
+      "one more point kills (HP -1, no further); direct damage is ordinary damage", JSON.stringify({ d2: d.d2, floor: d.floor }));
+    ok(d.deadRest.hp === -1 && d.deadRest.card && d.night.hp >= 3 && d.night.hp <= 10 && d.night.card && d.haven === 12,
+      "a night heals d8 + CON, a safe haven all HP, and the dead do not heal", JSON.stringify({ deadRest: d.deadRest, night: d.night, haven: d.haven }));
+    ok(d.cast === 3 && d.again === 3 && d.level, "with INT 0 three spellbooks cast, each once a day, at the caster's level", JSON.stringify(d));
+    ok(s.single && s.woundsBar === 0 && s.careerLine === 0 && s.careersBlock === 0 && !s.spellsLeft && !s.woundItem,
+      "the 1e sheet has one HP bar, no wounds, no careers and no daily spell count", JSON.stringify(s));
+    ok(s.knaveTraits === "alignment,background" && /Unconscious/.test(s.banner) && s.footer,
+      "Alignment and Background sit on the Knave page, the banner says Unconscious, the footer names both editions", JSON.stringify(s));
+    ok(s.descTraits.includes("personality") === s.hasPersonalityTable && s.descTraits.includes("mannerism") === s.hasMannerismTable,
+      "Personality and Mannerism show in a 1e world only once their tables exist", JSON.stringify(s));
+
+    // The welcome under 1e, then the 2e hand-off.
+    const w = await gm.evaluate(async (sys) => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      await game.actors.getName("Probe 1e PC")?.sheet.close();
+      const { openWelcome } = await import(`${sys}/welcome.js`);
+      await openWelcome();
+      await wait(900);
+      const el = document.getElementById("knavery-welcome");
+      return {
+        world: el?.querySelector(".knavery-welcome-world")?.textContent.trim(),
+        itch1e: [...el.querySelectorAll('.knavery-welcome-book[data-edition="1e"] a')].map((x) => x.href).join(),
+        links2e: el.querySelectorAll('.knavery-welcome-book[data-edition="2e"] a').length,
+        smallLast: el.querySelector(".knavery-welcome-small .knavery-welcome-license") !== null,
+      };
+    }, SYS);
+    await gm.screenshot({ path: `${SHOTS}/welcome-1e.png` });
+    const h = await gm.evaluate(async (sys) => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      await foundry.applications.instances.get("knavery-welcome")?.close();
+      const R = await import(`${sys}/rules.js`);
+      const pc = game.actors.getName("Probe 1e PC");
+      const hpBefore = pc.system.hp.value;
+      const p = R.offerRulesSwitch();
+      await wait(700);
+      const dlg = [...foundry.applications.instances.values()].find((x) => x.element?.classList.contains("knavery-rules-switch"));
+      const lines = dlg?.element.querySelectorAll("li").length;
+      dlg?.element.querySelector('button[data-action="yes"]')?.click();
+      const now2e = await p;
+      return { lines, now2e, rules: R.currentRules(), hpSame: pc.system.hp.value === hpBefore, again: await R.offerRulesSwitch() };
+    }, SYS);
+    ok(w.world === "This world plays: Knave 1e." && w.itch1e === "https://questingbeast.itch.io/knave" && w.links2e === 3 && w.smallLast,
+      "the welcome says which rules the world plays and links the Knave 1e PDF on itch beside the 2e book", JSON.stringify(w));
+    ok(h.lines === 5 && h.now2e && h.rules === "2e" && h.hpSame && h.again === true,
+      "after the 2e book, the GM is asked to switch; yes plays Knave 2e and changes no character", JSON.stringify(h));
   });
 
   // Cleanup.

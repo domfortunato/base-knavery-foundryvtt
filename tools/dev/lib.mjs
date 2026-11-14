@@ -84,6 +84,11 @@ export async function withSettings(page, fn) {
  * prompt, and tour overlays, which cover the screen and swallow pointer events.
  */
 export async function dismissChrome(page) {
+  // The first GM login on 0.2.0+ stamps an older world with Knave 2e's rules (rules.js
+  // stampRules) before the welcome opens: wait for it, so no check reads the 1e defaults.
+  await page.waitForFunction(() => {
+    try { return !!game.settings.get("base-knavery", "rules-stamp"); } catch { return true; }
+  }, null, { timeout: 15000 * TIME_SCALE }).catch(() => {});
   // The welcome window opens at every GM login unless the GM turned it off
   // (welcome.js welcomeDue). game.ready is set before
   // the ready hook runs, so when it is due, wait for it, then close it.

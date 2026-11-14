@@ -59,8 +59,10 @@
     <div class="card-apply">
       <button type="button" data-kn-apply="normal" data-amount="{{damage.total}}" data-targets='{{applyTargets}}'
         data-tooltip="KNAVERY.Roll.ApplyHint"><i class="fas fa-burst"></i> {{localize "KNAVERY.Roll.Apply"}}</button>
+      {{#if directDamage}}
       <button type="button" data-kn-apply="direct" data-amount="{{damage.total}}" data-targets='{{applyTargets}}'
         data-tooltip="KNAVERY.Roll.ApplyDirectHint"><i class="fas fa-skull-crossbones"></i> {{localize "KNAVERY.Roll.ApplyDirect"}}</button>
+      {{/if}}
     </div>
   </div>
   {{/if}}

@@ -2,6 +2,33 @@
 
 ## Unreleased
 
+- **Knave 1e out of the box.** A new world plays Knave first edition as written; Knave 2e comes with
+  your own book; any rule can be mixed. Settings → **Configure Rules** (the old Hacks window) opens with
+  a Rules choice, Knave 1e, Knave 2e or Custom, that sets every rule below it:
+  - Ability scores: 1e's lowest of 3d6 for each, then swap two if you like (a window shows the six
+    rolls), or 2e's 3 points.
+  - Starting kit: 1e's rolled armor and gear, two rations and a weapon of your choice (a window asks),
+    no coins and no spellbook; 2e's two careers and coins; or the careers plus the 1e gear tables (what
+    the old starting-gear hack did).
+  - Death: 1e's unconscious at 0 HP and dead below it, with no wounds (the Wounds bar and the Direct
+    damage button go), or 2e's wounds.
+  - Healing: 1e's d8 + CON after a night's rest and a meal, all HP in a safe haven; or 2e's.
+  - Spells a day: 1e's any number, each book once (a spell card's level is the caster's level); or 2e's
+    as many as INT.
+  - First-level and level-up HP, the XP ladder, group initiative, Alignment and Background, and the
+    spell list follow the choice too.
+  - A world made before this version keeps the Knave 2e rules it played: at the first Game Master
+    login, every rule it never set is written with its 2e value. (A player who logs in before any GM
+    sees the 1e defaults until then.)
+  - Building tables from your Knave 2e book now asks: "Switch this world to Knave 2e rules?" Characters
+    you already have keep their numbers and items either way.
+  - In a 1e world, Personality and Mannerism (2e tables) stay hidden until their tables are built.
+  - Not yet: 1e's item quality and wear, the natural-20 extra die, the copper price list, 100 coins a
+    slot and daily wages. A 1e world keeps 2e's on those for now.
+- **The welcome window** says which rules the world plays, how 1e and 2e fit together, and links the
+  Knave 1e PDF on itch beside the Knave 2e book, though the 1e rules are built in. The licences move to
+  the small print at the bottom.
+- **The sheet footer** now reads "...for Knave (first and second editions)...".
 - **Time and hazards** (a new Time tab on the Game Master's Dashboard): end a dungeon turn or a travel
   watch, and the world clock moves on 10 minutes or 4 hours and the hazard die rolls. The tab counts the
   turns, or the day and its six watches, and the watches of travel today; a box marks the party resting.

@@ -1,7 +1,8 @@
 # Base Knavery — working notes
 
-A Foundry VTT **v14** game system (id `base-knavery`) compatible with Knave 2e,
-ApplicationV2 and TypeDataModel only. Keep the code free of deprecated APIs so
+A Foundry VTT **v14** game system (id `base-knavery`) for Knave, first and second
+editions: Knave 1e plays out of the box, Knave 2e with the GM's own book (user
+rulings 2026-11-14). ApplicationV2 and TypeDataModel only. Keep the code free of deprecated APIs so
 it moves to v16 unchanged. Sibling of Air Bladder
 (`c:\Users\domin\code\air-bladder`), whose sheet layout, CSS, item offers, art
 picker, change log and marketplace it ports.
@@ -15,7 +16,9 @@ picker, change log and marketplace it ports.
   pack (generator `KNAVE_1E_*`); a 2e table the GM builds wins by name, and
   `spell-list` can force the 1e spells (`compendium.js` `spellTableName`),
   credited in each table, LICENSE.txt, README.md and the welcome window (user
-  ruling 2026-11-14). Anything else from 1e needs the same credit.
+  ruling 2026-11-14). Its RULES ship too, as automation and the Knave 1e choices
+  under Configure Rules (0.2.0), with the same credit and its list of changes.
+  Anything else from 1e needs the same credit.
 - Shipped tables are **shells**: the right name and dice, plus one placeholder
   row flagged `base-knavery.placeholder`. GMs fill them with the table importer.
   Lookups prefer a world table of the same name (`module/compendium.js`).
@@ -31,8 +34,9 @@ picker, change log and marketplace it ports.
   LICENSE.txt and README.md. The welcome window shows it verbatim, with the
   logo credit. The sheet footer carries only `KNAVERY.DisclaimerShort`, in the
   user's words: "Base Knavery is an unofficial fan-made Foundry system for Knave
-  Second Edition and is not affiliated with Questing Beast LLC." (rulings
-  2026-11-13 and 2026-11-14).
+  (first and second editions) and is not affiliated with Questing Beast LLC."
+  (rulings 2026-11-13 and 2026-11-14). The welcome window links the Knave 1e PDF
+  on itch as well as the 2e book, though the 1e rules ship (user, 2026-11-14).
 - The rulebook reader shows the GM's own PDF. The system stores only its path
   (setting `rulebook-pdf`) and page numbers (`config.js` `RULEBOOK`, read from
   the PDF's outline and headings).
@@ -45,7 +49,13 @@ picker, change log and marketplace it ports.
 
 ## Layout
 - `module/knavery.js`: entry point; hooks, the `game.knavery` API.
-- `module/config.js`: every mechanics number (levels, AC, slots…).
+- `module/config.js`: every mechanics number (levels, AC, slots…), and
+  `RULES_PRESETS`, each edition's value for every rule setting.
+- `module/rules.js`: which edition the world plays (`currentRules`: 1e, 2e or
+  custom, computed from the rule settings), `applyRules`, the stamp
+  (`stampRules`: at the first GM login on 0.2.0+, an existing world gets the 2e
+  value of every rule it never stored; a new world plays the 1e defaults), and
+  `offerRulesSwitch` (asked after a table build from the 2e book).
 - `module/data-models.js`: TypeDataModels. HTML fields must also be listed
   in `system.json` `htmlFields`; `npm run check:fields` enforces this.
 - `module/documents/`: the Actor (slots, wound layout, damage, rest,
@@ -149,6 +159,20 @@ picker, change log and marketplace it ports.
 - **Never tag or release on GitHub directly.**
 
 ## House rulings on the rules (the user's, recorded so they are not "fixed")
+- Editions (2026-11-14): a new world plays Knave 1e as written; an existing world keeps
+  2e (the stamp); building tables from the 2e book asks before switching; a switch never
+  changes an existing character. Rule settings: `creation-abilities`, `starting-kit`,
+  `death-rule`, `healing-rule`, `spell-rule`, plus `first-level-hp`, `level-hp-rule`,
+  `knave1e-xp`, `knave1e-initiative`, `show-alignment`, `show-background`, `spell-list`.
+  The 1e quality/wear, natural-20 die, copper prices, 100 coins a slot and daily wages
+  are NOT built yet (the next release); a 1e world keeps 2e's on those.
+- Knave 1e death: 0 HP unconscious, -1 dead (character `hp.value` min -1); no direct
+  damage, so the Direct button is hidden. 1e healing: d8 + CON after a meal; a safe
+  haven, all HP. 1e spells: no daily total; a card's level is the caster's level (L).
+- Knave 1e creation: lowest of 3d6 per ability, swap two in the player's window
+  (`validRolled` checks what the GM's client is sent), no careers, no coins, no
+  spellbook, two rations, a weapon of choice, the 1e gear tables. Personality and
+  Mannerism (2e tables) show under careers or once their world table exists.
 - Wounds fill slots from the bottom up: empty slots first, then coin slots,
   then the lowest item. An item in a wounded slot is **Unusable**, not
   "dropped" as the book has it: the table decides later whether it was

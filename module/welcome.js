@@ -1,6 +1,7 @@
 /**
  * The welcome window: what this system is, who made it, that it is
- * unofficial, whose game it serves, and where to buy that game.
+ * unofficial, which rules this world plays (Knave 1e built in, Knave 2e with
+ * the GM's book; user rulings 2026-11-14), and where to buy both books.
  *
  * It opens by itself at every GM login (user ruling 2026-11-14), unless they
  * untick "Show each time a Game Master loads the world" (`welcome-on-start`).
@@ -10,6 +11,7 @@
  * the Made for Knave logo, nothing that implies approval.
  */
 import { SETTINGS_NS, SYS_PATH, SYSTEM_ID } from "./config.js";
+import { currentRules } from "./rules.js";
 import { canReadRulebook, hasRulebook, isClosing, openRulebook, pickLocalRulebook, renderWhenGone } from "./rulebook.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -19,6 +21,11 @@ const F = (k, d) => game.i18n.format(k, d);
 const WELCOME_ID = "knavery-welcome";
 /** The licence Knave's first edition is under (Knave 1.0, p1): its tables ship with this system. */
 const CC_BY_URL = "https://creativecommons.org/licenses/by/4.0/";
+
+/** Where to buy Knave (first edition): its rules ship here, and the PDF supports its author (user, 2026-11-14). */
+const BUY_LINKS_1E = [
+  { label: "KNAVERY.Welcome.BuyItch", icon: "fa-solid fa-gamepad", href: "https://questingbeast.itch.io/knave" },
+];
 
 /** Where to buy Knave: Second Edition. The DriveThruRPG link carries the author's affiliate id. */
 const BUY_LINKS = [
@@ -62,7 +69,14 @@ export class WelcomeWindow extends HandlebarsApplicationMixin(ApplicationV2) {
       knave1eBody: F("KNAVERY.Welcome.Knave1eBody", {
         license: `<a href="${CC_BY_URL}" target="_blank" rel="noopener">${L("KNAVERY.Welcome.Knave1eLicense")}</a>`,
       }),
-      links: BUY_LINKS,
+      books: [
+        { edition: "1e", label: "KNAVERY.Welcome.Book1e", links: BUY_LINKS_1E, note: "KNAVERY.Welcome.Book1eNote" },
+        { edition: "2e", label: "KNAVERY.Welcome.Book2e", links: BUY_LINKS, note: null },
+      ],
+      rules: currentRules(),
+      thisWorld: F("KNAVERY.Welcome.ThisWorld", {
+        rules: L({ "1e": "KNAVERY.Settings.Rules1e", "2e": "KNAVERY.Settings.Rules2e" }[currentRules()] ?? "KNAVERY.Settings.RulesCustom"),
+      }),
       // The "show after each update" box writes a world setting.
       isGM: game.user.isGM && game.user.can("SETTINGS_MODIFY"),
       hasRulebook: hasRulebook(),

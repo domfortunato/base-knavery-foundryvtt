@@ -11,9 +11,11 @@
       </select>
     </div>
   </div>
-  {{!-- Random rolls the abilities unless this is ticked (user, 2026-11-14). --}}
+  {{!-- Random rolls the abilities unless this is ticked (user, 2026-11-14); Knave 1e always rolls. --}}
+  {{#if placeAllowed}}
   <div class="form-group">
     <label for="kn-create-place-{{idp}}">{{localize "KNAVERY.Gen.PlacePoints"}}</label>
     <div class="form-fields"><input type="checkbox" id="kn-create-place-{{idp}}" name="place" /></div>
   </div>
+  {{/if}}
 </div>

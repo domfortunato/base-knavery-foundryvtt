@@ -7,6 +7,7 @@ import {
   postActorChanges, postItemChanges, postItemUpdates, stashAudit, stashItemAudit,
 } from "../change-log.js";
 import { stripLockedChanges } from "../edit-gates.js";
+import { healingRule, usesWounds } from "../rules.js";
 
 /** Food: an item named Ration(s). */
 export const RATIONS_RE = /\brations?\b/i;
@@ -158,6 +159,8 @@ export class KnaveryActor extends Actor {
    * Apply damage the Knave way.
    *   character: HP first, then each point beyond fills a slot with a wound.
    *              Direct damage skips HP and wounds straight away.
+   *              Under Knave 1e's death rule (p5): HP only, to -1 at most; 0 is
+   *              unconscious, below 0 dead; direct damage is ordinary damage.
    *   npc:       HP only; direct damage is tripled. Dead at 0 HP.
    * @returns {Promise<{hpLost:number, wounds:number, dead:boolean}>}
    */
@@ -172,6 +175,13 @@ export class KnaveryActor extends Actor {
       const hp = Math.max(0, s.hp.value - dmg);
       out.hpLost = s.hp.value - hp;
       out.dead = hp <= 0;
+      await this.update({ "system.hp.value": hp }, { knNoLog: true });
+    } else if (!usesWounds()) {
+      const hp = Math.max(-1, s.hp.value - amount);
+      out.hpLost = s.hp.value - hp;
+      out.dead = hp < 0;
+      out.unconscious = hp === 0;
+      out.direct = false;
       await this.update({ "system.hp.value": hp }, { knNoLog: true });
     } else {
       let remaining = amount;
@@ -211,7 +221,9 @@ export class KnaveryActor extends Actor {
     const src = source ? `<p class="dmg-source">${foundry.utils.escapeHTML(source)}</p>` : "";
     const dead = out.dead
       ? `<div class="status-banner status-dead"><i class="fas fa-skull"></i> ${game.i18n.format("KNAVERY.Damage.Dead", { name })}</div>`
-      : "";
+      : out.unconscious
+        ? `<div class="status-banner status-unconscious"><i class="fas fa-bed"></i> ${game.i18n.format("KNAVERY.Damage.Unconscious", { name })}</div>`
+        : "";
     const drop = out.wounds && this.type === "character"
       ? `<p class="dmg-drop">${game.i18n.localize("KNAVERY.Damage.DropWounded")}</p>` : "";
     // A token hidden from the players keeps its name and fate between the GMs.
@@ -228,22 +240,36 @@ export class KnaveryActor extends Actor {
    * A night's rest (Knave 2e p12). Spellbooks are ready again (a new day). HP
    * returns to max only if the character slept two watches and ate a meal; in a
    * safe haven that night also heals one wound. With no arguments: a full night.
+   * Under Knave 1e's healing rule (p5) the night heals d8 + CON bonus, and a safe
+   * haven all HP; the dead do not heal.
    * Posts a short card saying what happened.
    */
   async rest({ slept = true, ate = true, haven = false } = {}) {
     const s = this.system;
+    const F = (k, d) => game.i18n.format(k, d);
     const healed = slept && ate;
-    const healWound = healed && haven && s.wounds > 0;
+    const k1e = healingRule() === "knave1e" && this.type === "character";
+    const healWound = !k1e && healed && haven && s.wounds > 0;
     const update = { "system.spellsCastToday": 0 };
-    if (healed) update["system.hp.value"] = s.hp.max;
+    let hpLine;
+    if (k1e && healed && s.hp.value < 0) hpLine = game.i18n.localize("KNAVERY.RestCard.Dead");
+    else if (k1e && healed && !haven) {
+      const con = s.abilities.CON?.value ?? 0;
+      const roll = await new Roll(`1d8 + ${con}`).evaluate();
+      const hp = Math.min(s.hp.max, s.hp.value + Math.max(0, roll.total));
+      update["system.hp.value"] = hp;
+      hpLine = F("KNAVERY.RestCard.Healed1e", { n: hp - s.hp.value, die: roll.dice[0].total, con, hp, max: s.hp.max });
+    } else if (healed) {
+      update["system.hp.value"] = s.hp.max;
+      hpLine = F(k1e ? "KNAVERY.RestCard.Haven1e" : "KNAVERY.RestCard.Hp", { max: s.hp.max });
+    } else hpLine = F(k1e ? "KNAVERY.RestCard.NoHp1e" : "KNAVERY.RestCard.NoHp", { hp: s.hp.value });
     if (healWound) update["system.wounds"] = s.wounds - 1;
     await this.update(update, { knLogAction: "KNAVERY.Rest" });
     const books = this.items.filter((i) => i.type === "spellbook" && i.system.castToday)
       .map((i) => ({ _id: i.id, "system.castToday": false }));
     if (books.length) await this.updateEmbeddedDocuments("Item", books, { knNoLog: true });
-    const F = (k, d) => game.i18n.format(k, d);
     const lines = [
-      healed ? F("KNAVERY.RestCard.Hp", { max: s.hp.max }) : F("KNAVERY.RestCard.NoHp", { hp: s.hp.value }),
+      hpLine,
       ...(healWound ? [game.i18n.localize("KNAVERY.RestCard.Wound")] : []),
       game.i18n.localize("KNAVERY.RestCard.Spells"),
     ];

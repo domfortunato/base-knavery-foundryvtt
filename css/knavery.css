@@ -4945,3 +4945,32 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 /* Magic gear keeps its own icon, glowing. */
 .knavery .knavery-item-badge.glow i { text-shadow: 0 0 5px var(--kn-accent); }
 .knavery .knavery-item-badge.glow { box-shadow: 0 0 5px var(--kn-accent); }
+
+/* ---- Knave 1e first (0.2.0): the rules choice, one HP bar, the welcome's rules -- */
+/* Knave 1e has no wounds: the HP bar stands alone, centred under the armor. */
+.knavery-bars.single { justify-content: center; }
+.status-unconscious { background: #4e342e; }
+/* The Rules window: the edition choice heads the rows, set apart. */
+.knavery-settings-menu .knavery-rules-choice {
+    margin-bottom: 8px; padding: 6px 8px; border: 1px solid var(--kn-accent); border-radius: 4px; background: var(--kn-accent-wash);
+}
+/* Knave 1e creation: the six rolls, then the swap. */
+.knavery-lowest .kn-lowest { list-style: none; margin: 4px 0 8px; padding: 0; }
+.knavery-lowest .kn-lowest-row { display: flex; align-items: baseline; gap: 8px; padding: 2px 0; border-bottom: 1px dotted var(--kn-line); }
+.knavery-lowest .kn-lowest-row strong { flex: 1 1 auto; }
+.knavery-lowest .kn-lowest-score { font-weight: bold; font-size: calc(15px * var(--kn-text, 1)); }
+.knavery-lowest .kn-lowest-dice { color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
+.knavery-lowest .form-fields { align-items: center; gap: 6px; }
+/* The welcome: which rules, which world, which books; the licences in small print last. */
+.knavery-welcome-rules { margin: 2px 0 0; padding-left: 18px; font-size: calc(13px * var(--kn-text, 1)); line-height: 1.45; }
+.knavery-welcome-rules li { margin: 2px 0; }
+.knavery-welcome-world {
+    margin: 4px 0 0; padding: 4px 10px; border: 1px solid var(--kn-accent); border-radius: 4px; background: var(--kn-accent-wash);
+    font-weight: bold;
+}
+.knavery-welcome-book { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+.knavery-welcome-book-name { flex: 0 0 64px; font-weight: bold; font-variant: small-caps; }
+.knavery-welcome-book .knavery-welcome-links { flex: 1 1 auto; }
+.knavery-welcome-book-note { flex: 1 1 100%; margin: 0 0 0 74px; color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
+.knavery-welcome-small { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--kn-rule); }
+.knavery-welcome-small .knavery-welcome-disclaimer { font-size: calc(12px * var(--kn-text, 1)); }

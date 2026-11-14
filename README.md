@@ -1,9 +1,24 @@
 # Base Knavery
 
-A [Foundry VTT](https://foundryvtt.com) game system compatible with **Knave 2e**.
-Use it to run old TSR modules, OSE and other OSR adventures, Dungeon Crawl
-Classics adventures, and Knave hacks. Built on ApplicationV2 throughout, for
-Foundry v14.
+A [Foundry VTT](https://foundryvtt.com) game system for **Knave**, first and
+second editions. Use it to run old TSR modules, OSE and other OSR adventures,
+Dungeon Crawl Classics adventures, and Knave hacks. Built on ApplicationV2
+throughout, for Foundry v14.
+
+## Which rules
+
+- **Knave 1e is built in.** A new world plays Knave first edition as written:
+  abilities as the lowest of 3d6, rolled starting gear, unconscious at 0 HP
+  and dead below it, d8 + CON healing, any number of spellbooks a day. Its
+  rules, tables and 100 level-less spells ship with the system (CC BY 4.0).
+  The [Knave 1e PDF is on itch](https://questingbeast.itch.io/knave), if you
+  want to support its author.
+- **Knave 2e uses your book.** Choose your Knave 2e PDF and build its tables;
+  the system then offers to switch the world to 2e rules (careers, wounds,
+  2e healing, INT spellbooks a day). Characters you already have don't change.
+- **Mix them.** Every rule has its own switch under **Configure Rules**, and
+  the Rules choice at its top sets them all to one edition.
+- A world made before 0.2.0 keeps the Knave 2e rules it played.
 
 *Base Knavery is an independent production of Dom Bosco and is not affiliated
 with Questing Beast LLC.*
@@ -46,15 +61,23 @@ https://github.com/domfortunato/base-knavery-foundryvtt/releases/latest/download
 - Saves from other games (paralysis, breath and blast, poison and death,
   magic device, spells) resolve as the matching ability check.
 
-**Knave 1e rules, one switch each** (Settings → Hacks, all off at first)
+**Rules, one switch each** (Settings → Configure Rules; the Rules choice at the
+top sets them all to Knave 1e or Knave 2e)
+- Ability scores: 1e's lowest of 3d6 with an optional swap, or 2e's 3 points.
+- Starting kit: 1e's rolled gear, two rations and a weapon of choice; 2e's two
+  careers and coins; or the careers plus the 1e gear tables.
+- Death: 1e's unconscious at 0 HP and dead below it, or 2e's wounds.
+- Healing: 1e's d8 + CON a night (a safe haven, all HP), or 2e's full HP.
+- Spells: 1e's any number of books a day, or 2e's as many as INT.
 - A level every 1,000 XP, in place of 2e's XP table.
-- Random ability raises by 1e's method: a d20 against each ability's
-  defense until three have risen, so strong abilities rise faster.
 - Group initiative: one d6 a round, 1–3 the enemies act first, 4–6 the PCs.
-- And under "Max HP at each new level": 1e's one d8 per level (below the
-  old maximum, +1), with 1d8 as a first-level choice.
+- Max HP at each new level: 1e's one d8 per level (below the old maximum,
+  +1), with 1d8 at first level.
+- Outside the presets: random ability raises by 1e's method (a d20 against
+  each ability's defense until three have risen), hard-mode wounds and the
+  hazard dice.
 
-**Damage and wounds**
+**Damage and wounds** (Knave 2e's death rule)
 - Damage comes off HP first. Each point past 0 fills an item slot with a
   wound, from the bottom up: empty slots, then coins, then the lowest item,
   which is marked *Unusable* until the wound heals.
@@ -116,7 +139,8 @@ https://github.com/domfortunato/base-knavery-foundryvtt/releases/latest/download
 
 **Welcome window**
 - Opens for the GM at every login (a setting turns it off): what Base Knavery is, that it is
-  unofficial, the credits, and where to buy Knave 2e. Anyone can open it from
+  unofficial, which rules this world plays, the credits, and where to buy
+  Knave 1e and Knave 2e. Anyone can open it from
   the Settings sidebar.
 
 **GM macros**

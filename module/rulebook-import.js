@@ -22,6 +22,7 @@ import { COMBINED_TABLES, RULEBOOK_TABLES } from "./rulebook-catalogue.js";
 import { capitalise, pageItems, parseTable, splitNamed } from "./rulebook-tables.js";
 import { rulebookPath, hasRulebook } from "./rulebook.js";
 import { parseRows } from "./table-importer.js";
+import { offerRulesSwitch } from "./rules.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 const L = (k) => game.i18n.localize(k);
@@ -373,6 +374,11 @@ export class RulebookTablesReview extends HandlebarsApplicationMixin(Application
     }
     foundry.applications.instances.get("knavery-gm-dashboard")?.render();
     await this.close();
+    // The book's tables are in: offer the book's rules too (user ruling 2026-11-14). Not awaited,
+    // so the build resolves while the question waits; nothing changes on a character either way.
+    if (report.created.length || report.replaced.length) {
+      offerRulesSwitch().catch((err) => console.error("Base Knavery | offering the 2e rules failed", err));
+    }
     return report;
   }
 }

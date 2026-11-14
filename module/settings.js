@@ -3,7 +3,8 @@
  * (ported from Air Bladder's SettingsGroupMenu). Every setting is `config:
  * false`; the order a GM sees is each group's `keys`.
  */
-import { ADVANTAGE_MODES, FIRST_LEVEL_HP, LEVEL_HP_RULES, MAX_LEVEL, RULEBOOK, SETTINGS_NS, SYS_PATH } from "./config.js";
+import { ADVANTAGE_MODES, FIRST_LEVEL_HP, LEVEL_HP_RULES, MAX_LEVEL, RULEBOOK, RULES_PRESETS, SETTINGS_NS, SYS_PATH, TABLES } from "./config.js";
+import { rulesFor, usesCareers } from "./rules.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -35,8 +36,16 @@ export const reprepareActors = (filter = () => true) => {
 
 /** Traits that live on the Knave page, each behind its Knave 1e switch (user, 2026-11-14). */
 export const KNAVE_PAGE_TRAITS = ["alignment", "background"];
-/** Whether a trait shows (and is rolled): the Knave-page ones only while their switch is on. */
+/** Knave 2e's own traits: their tables come only from the GM's book. */
+const BOOK_TRAITS = ["personality", "mannerism"];
+/**
+ * Whether a trait shows (and is rolled): the Knave-page ones only while their switch is on;
+ * Knave 2e's own traits under careers (2e), or once the world has their table (built or imported).
+ */
 export const traitShown = (key) => {
+  if (BOOK_TRAITS.includes(key)) {
+    try { return usesCareers() || !!game.tables?.getName(TABLES.traits[key]); } catch { return true; }
+  }
   if (!KNAVE_PAGE_TRAITS.includes(key)) return true;
   try { return game.settings.get(SETTINGS_NS, `show-${key}`) === true; } catch { return true; }
 };
@@ -64,7 +73,7 @@ export const SETTING_GROUPS = [
     icon: "fa-solid fa-user-plus",
     keys: [
       "allow-player-generate", "allow-player-randomization", "allow-player-level-xp", "min-creation-level",
-      "max-creation-level", "first-level-hp", "level-hp-rule", "spell-list", "custom-portrait-folder",
+      "max-creation-level", "custom-portrait-folder",
     ],
   },
   {
@@ -81,9 +90,12 @@ export const SETTING_GROUPS = [
     button: "KNAVERY.Settings.GroupHacksButton",
     hint: "KNAVERY.Settings.GroupHacksHint",
     icon: "fa-solid fa-flask",
+    // The Rules choice heads this window: it sets every rule below to one edition (rules.js).
+    preset: true,
     keys: [
-      "knave1e-starting-gear", "show-alignment", "show-background", "knave1e-xp", "knave1e-random-raises",
-      "knave1e-initiative", "hard-mode-wounds", "show-hazard-dice",
+      "creation-abilities", "starting-kit", "show-alignment", "show-background", "first-level-hp", "level-hp-rule",
+      "death-rule", "hard-mode-wounds", "healing-rule", "spell-rule", "spell-list", "knave1e-xp",
+      "knave1e-random-raises", "knave1e-initiative", "show-hazard-dice",
     ],
   },
   {
@@ -124,12 +136,14 @@ export const registerSettings = () => {
   reg("allow-player-level-xp", {
     label: "AllowPlayerLevelXp", type: Boolean, default: true, onChange: rerenderActorSheets,
   });
-  reg("first-level-hp", { label: "FirstLevelHp", type: String, choices: FIRST_LEVEL_HP, default: "1d6", onChange: rerenderActorSheets });
+  // The rules' defaults are Knave 1e's (RULES_PRESETS); an older world was stamped 2e (rules.js).
+  const D = RULES_PRESETS["1e"];
+  reg("first-level-hp", { label: "FirstLevelHp", type: String, choices: FIRST_LEVEL_HP, default: D["first-level-hp"], onChange: rerenderActorSheets });
   reg("spell-list", {
-    label: "SpellList", type: String, default: "auto",
+    label: "SpellList", type: String, default: D["spell-list"],
     choices: { auto: "KNAVERY.Settings.SpellListAuto", "1e": "KNAVERY.Settings.SpellList1e" },
   });
-  reg("level-hp-rule", { label: "LevelHpRule", type: String, choices: LEVEL_HP_RULES, default: "reroll", onChange: rerenderActorSheets });
+  reg("level-hp-rule", { label: "LevelHpRule", type: String, choices: LEVEL_HP_RULES, default: D["level-hp-rule"], onChange: rerenderActorSheets });
   const levels = Object.fromEntries(Array.from({ length: MAX_LEVEL }, (_, i) => [i + 1, String(i + 1)]));
   reg("min-creation-level", { label: "MinCreationLevel", type: Number, choices: levels, default: 1 });
   reg("max-creation-level", { label: "MaxCreationLevel", type: Number, choices: levels, default: MAX_LEVEL });
@@ -159,18 +173,40 @@ export const registerSettings = () => {
     onChange: () => applyTextScale(),
   });
 
-  /* Hacks */
+  /* Rules */
+  const choices = (prefix, keys) => Object.fromEntries(keys.map((k) => [k, `KNAVERY.Settings.${prefix}.${k}`]));
+  const characters = () => { reprepareActors((a) => a.type === "character"); rerenderActorSheets(); };
+  reg("creation-abilities", {
+    label: "CreationAbilities", type: String, choices: choices("CreationAbilitiesChoice", ["lowest", "points"]),
+    default: D["creation-abilities"],
+  });
+  reg("starting-kit", {
+    label: "StartingKit", type: String, choices: choices("StartingKitChoice", ["knave1e", "careers", "careers-1e-gear"]),
+    default: D["starting-kit"], onChange: rerenderActorSheets,
+  });
+  reg("death-rule", {
+    label: "DeathRule", type: String, choices: choices("DeathRuleChoice", ["knave1e", "wounds"]),
+    default: D["death-rule"], onChange: characters,
+  });
+  reg("healing-rule", {
+    label: "HealingRule", type: String, choices: choices("HealingRuleChoice", ["knave1e", "knave2e"]), default: D["healing-rule"],
+  });
+  reg("spell-rule", {
+    label: "SpellRule", type: String, choices: choices("SpellRuleChoice", ["book-per-day", "int-per-day"]),
+    default: D["spell-rule"], onChange: rerenderActorSheets,
+  });
+  // Retired in 0.2.0 (now starting-kit "careers-1e-gear"); kept registered so the stamp can read it.
   reg("knave1e-starting-gear", { label: "Knave1eStartingGear", type: Boolean, default: false });
-  reg("show-alignment", { label: "Knave1eAlignment", type: Boolean, default: false, onChange: rerenderActorSheets });
-  reg("show-background", { label: "Knave1eBackground", type: Boolean, default: false, onChange: rerenderActorSheets });
+  reg("show-alignment", { label: "Knave1eAlignment", type: Boolean, default: D["show-alignment"], onChange: rerenderActorSheets });
+  reg("show-background", { label: "Knave1eBackground", type: Boolean, default: D["show-background"], onChange: rerenderActorSheets });
   // Knave 1e rules, one switch each (data-models.js levelLadder, level-up.js, initiative.js).
   reg("knave1e-xp", {
-    label: "Knave1eXp", type: Boolean, default: false,
+    label: "Knave1eXp", type: Boolean, default: D["knave1e-xp"],
     // The XP ladder is derived data: recompute every character before redrawing.
     onChange: () => { reprepareActors((a) => a.type === "character"); rerenderActorSheets(); },
   });
   reg("knave1e-random-raises", { label: "Knave1eRandomRaises", type: Boolean, default: false });
-  reg("knave1e-initiative", { label: "Knave1eInitiative", type: Boolean, default: false, onChange: () => ui.combat?.render() });
+  reg("knave1e-initiative", { label: "Knave1eInitiative", type: Boolean, default: D["knave1e-initiative"], onChange: () => ui.combat?.render() });
   reg("hard-mode-wounds", { label: "HardModeWounds", type: Boolean, default: false });
   reg("show-hazard-dice", { label: "ShowHazardDice", type: Boolean, default: true });
 
@@ -187,6 +223,10 @@ export const registerSettings = () => {
   });
   game.settings.register(SETTINGS_NS, "custom-portrait-list", {
     scope: "world", config: false, type: Array, default: [],
+  });
+  // Which edition this world was stamped with at its first GM login on 0.2.0 or later (rules.js stampRules).
+  game.settings.register(SETTINGS_NS, "rules-stamp", {
+    scope: "world", config: false, type: String, default: "",
   });
   // The system version the welcome window last opened for (module/welcome.js).
   game.settings.register(SETTINGS_NS, "welcome-shown-version", {
@@ -246,14 +286,49 @@ export class SettingsGroupMenu extends HandlebarsApplicationMixin(ApplicationV2)
       field.hint ||= game.i18n.localize(setting.hint ?? "");
       entries.push({ key, field, input, value: game.settings.get(ns, key) });
     }
+    const group = this.constructor.GROUP;
+    const preset = group.preset ? {
+      field: Object.assign(new fields.StringField({
+        required: true,
+        choices: { "1e": "KNAVERY.Settings.Rules1e", "2e": "KNAVERY.Settings.Rules2e", custom: "KNAVERY.Settings.RulesCustom" },
+      }), { name: "knavery-rules", label: game.i18n.localize("KNAVERY.Settings.Rules"), hint: game.i18n.localize("KNAVERY.Settings.RulesHint") }),
+      value: rulesFor(Object.fromEntries(Object.keys(RULES_PRESETS["1e"]).map((k) => [k, game.settings.get(ns, k)]))),
+    } : null;
     return {
       entries,
+      preset,
       rootId: this.id,
       buttons: [
         { type: "button", action: "resetDefaults", icon: "fa-solid fa-arrow-rotate-left", label: "SETTINGS.Reset" },
         { type: "submit", icon: "fa-solid fa-floppy-disk", label: "SETTINGS.Save" },
       ],
     };
+  }
+
+  /** The Rules window: the edition choice sets the rows; changing a row shows which edition they match. */
+  _onRender(context, options) {
+    super._onRender?.(context, options);
+    const select = this.element.querySelector('select[name="knavery-rules"]');
+    if (!select) return;
+    const ns = this.constructor.NAMESPACE;
+    const keys = Object.keys(RULES_PRESETS["1e"]);
+    const input = (k) => this.element.querySelector(`[name="${ns}.${k}"]`);
+    const read = (el) => (el.type === "checkbox" ? el.checked : el.value);
+    select.addEventListener("change", () => {
+      const preset = RULES_PRESETS[select.value];
+      if (!preset) return;
+      for (const k of keys) {
+        const el = input(k);
+        if (!el) continue;
+        if (el.type === "checkbox") el.checked = preset[k];
+        else el.value = preset[k];
+      }
+    });
+    for (const k of keys) {
+      input(k)?.addEventListener("change", () => {
+        select.value = rulesFor(Object.fromEntries(keys.map((key) => [key, input(key) ? read(input(key)) : game.settings.get(ns, key)])));
+      });
+    }
   }
 
   static async #onResetDefaults() {
