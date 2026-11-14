@@ -1269,56 +1269,61 @@ await withSettings(gm, async () => {
     });
     ok(dig.linked && dig.same, "editing a spellbook the Spells table links to does not mark the table as edited", JSON.stringify(dig));
 
-    // Knave 1e group initiative: at every rollover the round's end goes to the combatant who held the turn.
+    // Knave 1e group initiative. The GM's Next Round rolls before the round changes: core keeps the turn
+    // with its holder, so the holder's turn is the first to end. A round a player advanced is rolled after:
+    // its turn goes to the first combatant who is not defeated (core's Skip Defeated on), and is stored.
     const ini = await gm.evaluate(async (pcId) => {
+      const settle = () => new Promise((res) => setTimeout(res, 600));
       await game.settings.set("base-knavery", "knave1e-initiative", true);
+      const trackerBefore = foundry.utils.deepClone(game.settings.get("core", "combatTrackerConfig"));
       const foes = [];
       for (const n of ["Probe Foe A", "Probe Foe B", "Probe Foe C"]) foes.push(await Actor.create({ name: n, type: "npc", system: { role: "monster" } }));
       const combat = await Combat.create({ scene: null });
       await combat.createEmbeddedDocuments("Combatant", [{ actorId: pcId }, ...foes.map((f) => ({ actorId: f.id }))]);
-      const rounds = [];
-      // Core fires combatTurnChange after its own turn events, once an update has returned:
-      // listen before each change and wait for its own call, so none is read by the next.
+      // Core fires combatTurnChange once an update's turn events are done: wait for it, then settle.
       const change = () => {
         let hook;
         return new Promise((res) => {
-          hook = Hooks.on("combatTurnChange", (c, prev) => { if (c === combat) res(prev.combatantId); });
-          setTimeout(() => res("(none)"), 5000);
+          hook = Hooks.on("combatTurnChange", (c) => { if (c === combat) res(); });
+          setTimeout(res, 5000);
         }).finally(() => Hooks.off("combatTurnChange", hook));
       };
-      // Each step waits for its own turn events to finish before the next begins.
-      const settle = () => new Promise((res) => setTimeout(res, 600));
-      const started = change();
-      await combat.startCombat();
-      await started;
-      await settle();
-      for (let r = 0; r < 12; r++) {
-        // End the round on its last combatant, as Next Turn would.
-        const moved = change();
-        await combat.update({ turn: combat.turns.length - 1 });
-        await moved;
-        await settle();
+      const step = async (fn) => { const done = change(); await fn(); await done; await settle(); };
+      await step(() => combat.startCombat());
+      const gmRounds = [];
+      for (let r = 0; r < 10; r++) {
+        await step(() => combat.update({ turn: combat.turns.length - 1 })); // end of the round
         const holder = combat.combatant?.id;
-        // Whose turn core ends at the rollover (the hook's `previous` is a live object, so count the
-        // end-of-turn calls themselves; the active GM runs them).
         const ended = [];
         combat._onEndTurn = async function (c, ctx) { ended.push(c.id); return Object.getPrototypeOf(this)._onEndTurn.call(this, c, ctx); };
-        const heard = change();
         const order = combat.turns.map((c) => c.id).join();
-        await combat.nextRound();
-        await heard;
-        await settle();
+        await step(() => combat.nextRound());
         delete combat._onEndTurn;
-        const prior = ended.join();
-        rounds.push({ ok: prior === holder, flipped: order !== combat.turns.map((c) => c.id).join(), stored: combat._source.turn, local: combat.turn,
-          ...(prior === holder ? {} : { prior, holder }) });
+        gmRounds.push({ ok: ended[0] === holder, flipped: order !== combat.turns.map((c) => c.id).join() });
+      }
+      // A round a player advanced: core's nextRound with no roll first; the active GM's client rolls it.
+      await game.settings.set("core", "combatTrackerConfig", { ...trackerBefore, skipDefeated: true });
+      const pc = combat.combatants.find((c) => c.actorId === pcId);
+      await pc.update({ defeated: true });
+      const playerRounds = [];
+      for (let r = 0; r < 10; r++) {
+        await step(() => combat.update({ turn: combat.turns.length - 1 }));
+        await step(() => foundry.documents.Combat.prototype.nextRound.call(combat));
+        await settle();
+        const want = combat.turns.findIndex((c) => !c.isDefeated);
+        playerRounds.push({ ok: combat.turn === want && combat._source.turn === want, turn: combat.turn, stored: combat._source.turn, want,
+          pcFirst: combat.turns[0]?.id === pc.id });
       }
       await combat.delete();
       for (const f of foes) await f.delete();
+      await game.settings.set("core", "combatTrackerConfig", trackerBefore);
       await game.settings.set("base-knavery", "knave1e-initiative", false);
-      return rounds;
+      return { gmRounds, playerRounds };
     }, ids.a);
-    ok(ini.every((r) => r.ok && r.stored === r.local) && ini.some((r) => r.flipped), "every rollover ends the turn of the combatant who held it; the stored turn matches", JSON.stringify(ini));
+    ok(ini.gmRounds.every((r) => r.ok) && ini.gmRounds.some((r) => r.flipped),
+      "group initiative: at each Next Round the holder's turn is the first to end", JSON.stringify(ini.gmRounds));
+    ok(ini.playerRounds.every((r) => r.ok) && ini.playerRounds.some((r) => r.pcFirst),
+      "a round a player advanced goes to the first combatant not defeated, and the turn is stored", JSON.stringify(ini.playerRounds));
   });
 
   // Cleanup.

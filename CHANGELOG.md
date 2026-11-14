@@ -10,7 +10,8 @@
     "Unknown creature".
   - A hireling's sheet shows its monthly wage, and an NPC's Description page shows its traits.
   - Names with `<` or `&` show as typed in notifications.
-  - Under the Knave 1e initiative hack, a new round ends the turn of the combatant who held it.
+  - Under the Knave 1e initiative hack, a round a player ends goes to the first combatant who isn't
+    defeated (with Skip Defeated on), and a player who reloads sees the same turn.
   - Editing one spell item from the rulebook no longer stops the Spells table from being rebuilt.
   - The portrait picker's Refresh button works more than once; the Import a Table macro has its icon.
   - Two windows open at once no longer share their labels' targets.
