@@ -1058,7 +1058,8 @@
     "Welcome": {
       "Title": "Welcome to Base Knavery",
       "By": "by {author} · version {version}",
-      "Unofficial": "Base Knavery is an unofficial, fan-made Foundry VTT system for Knave, first and second editions. Questing Beast LLC did not make it and has not endorsed it.",
+      "Unofficial": "Base Knavery is an unofficial, fan-made Foundry VTT system for Knave, first and second editions.",
+      "NotEndorsed": "Questing Beast LLC did not make it and has not endorsed it.",
       "RulesHeading": "System Rules",
       "Rules1eTitle": "Knave is built in.",
       "Rules1eBody": "A new world plays Ben Milton's original Knave as written. Its rules, tables and spells come with the system.",

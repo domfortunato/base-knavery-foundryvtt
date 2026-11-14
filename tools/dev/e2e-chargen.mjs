@@ -694,12 +694,14 @@ await withSettings(gm, async () => {
         link: el?.querySelector(".knavery-welcome-small .knavery-welcome-license a")?.href ?? "",
         weight: el ? getComputedStyle(el.querySelector(".knavery-welcome-unofficial")).fontWeight : "",
         align: el ? getComputedStyle(el.querySelector(".knavery-welcome-unofficial")).textAlign : "",
+        // Two sentences, two lines: the second starts below the first.
+        twoLines: (() => { const s = el?.querySelectorAll(".knavery-welcome-unofficial > span") ?? []; return s.length === 2 && s[1].getBoundingClientRect().top >= s[0].getBoundingClientRect().bottom - 1; })(),
         box: el?.querySelector(".knavery-welcome-onstart")?.textContent.trim() ?? "",
       };
       await foundry.applications.instances.get("knavery-welcome")?.close();
       return out;
     });
-    ok(w.link.includes("creativecommons.org/licenses/by/4.0") && w.weight === "300" && w.align === "center" && !/rulebook/i.test(w.box),
+    ok(w.link.includes("creativecommons.org/licenses/by/4.0") && w.weight === "300" && w.align === "center" && w.twoLines && !/rulebook/i.test(w.box),
       "the welcome window carries the Knave 1e licence, a centred light-weight intro and the new checkbox text", JSON.stringify(w));
   });
 
