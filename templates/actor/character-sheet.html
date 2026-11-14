@@ -55,18 +55,44 @@
             {{/if}}
           </div>
 
-          {{!-- Level, XP and Coins are the bottom band (below); the head keeps Slots. --}}
-          <div class="knavery-counter-row knavery-head-counters slots-only">
-            <div class="resource-counter slots-counter {{#if overburdened}}peril{{/if}}">
-              <label data-tooltip="KNAVERY.SlotsTip">{{localize "KNAVERY.Slots"}}</label>
-              <div class="resource-input-wrapper"><span>{{slotsUsed}} / {{slotsMax}}</span></div>
-            </div>
-          </div>
         </div>
       </div>
 
       <div class="knavery-body">
-        {{> "systems/base-knavery/templates/parts/ability-list.html"}}
+        <div class="knavery-left">
+          {{> "systems/base-knavery/templates/parts/ability-list.html"}}
+
+          {{!-- Level, XP and Coins under the abilities (user, 2026-11-14). Level and XP are
+                fields only in Char Gen Mode (and the GM's switch still gates players). --}}
+          <div class="knavery-band">
+            <div class="band-row band-level">
+              <label class="band-label" for="{{idp}}-level">{{localize "KNAVERY.Level"}}</label>
+              {{#if generationEnabled}}
+              <input type="number" id="{{idp}}-level" class="level-input" name="system.level" value="{{source.level}}"{{{effAttrs.level}}} min="1" max="10" step="1" data-dtype="Number"{{#unless mayEditLevelXp}} disabled{{/unless}} />
+              {{else}}
+              <span class="band-value level-value">{{system.level}}</span>
+              {{/if}}
+              <span class="level-title">{{levelTitle}}</span>
+              {{#if showLevelUp}}
+              <button type="button" class="level-up-button" data-action="levelUp"><i class="fas fa-angles-up"></i> {{localize "KNAVERY.LevelUp"}}</button>
+              {{/if}}
+            </div>
+            <div class="band-row band-xp">
+              <label class="band-label" for="{{idp}}-xp">{{localize "KNAVERY.XP"}}</label>
+              {{#if generationEnabled}}
+              <input type="number" id="{{idp}}-xp" class="xp-input" name="system.xp" value="{{source.xp}}"{{{effAttrs.xp}}} min="0" step="1" data-dtype="Number"{{#unless mayEditLevelXp}} disabled{{/unless}} />
+              {{/if}}
+              <div class="knavery-xp-bar" data-tooltip="KNAVERY.NextLevelTip">
+                <div class="knavery-xp-fill" style="width: {{xpPercent}}%"></div>
+                <span>{{#if system.nextXp}}{{localize "KNAVERY.XpShort" xp=system.xp next=system.nextXp}}{{else}}{{localize "KNAVERY.XpTop" xp=system.xp}}{{/if}}</span>
+              </div>
+            </div>
+            <div class="band-row band-coins">
+              <label class="band-label" for="{{idp}}-coins" data-tooltip="KNAVERY.CoinsTip">{{localize "KNAVERY.Coins"}}</label>
+              <input type="number" min="0" step="1" id="{{idp}}-coins" class="coins-input" name="system.coins" value="{{source.coins}}"{{{effAttrs.coins}}} data-dtype="Number" />
+            </div>
+          </div>
+        </div>
 
         <!-- Armor, hit points and wounds, and what a knave does between fights -->
         <div class="knavery-vitals">
@@ -106,11 +132,15 @@
               <span class="knavery-bar-name">{{localize "KNAVERY.Wounds"}}</span>
             </div>
           </div>
+          {{!-- Slots under the bars: max wounds is the slot count (user, 2026-11-14). --}}
+          <div class="knavery-slots-line{{#if overburdened}} peril{{/if}}" data-tooltip="KNAVERY.SlotsTip">
+            <span class="slots-label">{{localize "KNAVERY.Slots"}}</span> <span class="slots-value">{{slotsUsed}} / {{slotsMax}}</span>
+          </div>
 
           <div class="knavery-vital-buttons">
-            {{!-- Kept live on a sheet this user cannot edit only while there is a weapon: the sheet re-enables every data-always-live control. --}}
-            <button id="attack-button" type="button" data-action="attack"{{#if attacks.length}} data-always-live{{/if}} class="strict-size-button attack-button"
-              data-tooltip="{{#if attacks.length}}KNAVERY.AttackTip{{else}}KNAVERY.NoAttacks{{/if}}"{{#unless attacks.length}} disabled{{/unless}}><i class="fas fa-burst"></i> {{localize "KNAVERY.Attack"}}</button>
+            {{!-- Always there: an improvised attack needs no weapon. --}}
+            <button id="attack-button" type="button" data-action="attack" data-always-live class="strict-size-button attack-button"
+              data-tooltip="KNAVERY.AttackTip"><i class="fas fa-burst"></i> {{localize "KNAVERY.Attack"}}</button>
             <button id="rest-button" type="button" data-action="rest" class="strict-size-button" data-tooltip="KNAVERY.RestTip"><i class="fas fa-campground"></i> {{localize "KNAVERY.Rest"}}</button>
             <button id="die-of-fate-button" type="button" data-action="dieOfFate" data-always-live class="strict-size-button" data-tooltip="KNAVERY.DieOfFateTip"><i class="fas fa-dice-d6"></i> {{localize "KNAVERY.DieOfFate"}}</button>
           </div>
@@ -118,36 +148,6 @@
 
       </div>
 
-      {{!-- The bottom band: Level, XP and Coins (user, 2026-11-14). Level and XP are
-            fields only in Char Gen Mode (and the GM's switch still gates players). --}}
-      <div class="knavery-band">
-        <div class="band-row band-level">
-          <label class="band-label" for="{{idp}}-level">{{localize "KNAVERY.Level"}}</label>
-          {{#if generationEnabled}}
-          <input type="number" id="{{idp}}-level" class="level-input" name="system.level" value="{{source.level}}"{{{effAttrs.level}}} min="1" max="10" step="1" data-dtype="Number"{{#unless mayEditLevelXp}} disabled{{/unless}} />
-          {{else}}
-          <span class="band-value level-value">{{system.level}}</span>
-          {{/if}}
-          <span class="level-title">{{levelTitle}}</span>
-          {{#if showLevelUp}}
-          <button type="button" class="level-up-button" data-action="levelUp"><i class="fas fa-angles-up"></i> {{localize "KNAVERY.LevelUp"}}</button>
-          {{/if}}
-        </div>
-        <div class="band-row band-xp">
-          <label class="band-label" for="{{idp}}-xp">{{localize "KNAVERY.XP"}}</label>
-          {{#if generationEnabled}}
-          <input type="number" id="{{idp}}-xp" class="xp-input" name="system.xp" value="{{source.xp}}"{{{effAttrs.xp}}} min="0" step="1" data-dtype="Number"{{#unless mayEditLevelXp}} disabled{{/unless}} />
-          {{/if}}
-          <div class="knavery-xp-bar" data-tooltip="KNAVERY.NextLevelTip">
-            <div class="knavery-xp-fill" style="width: {{xpPercent}}%"></div>
-            <span>{{#if system.nextXp}}{{localize "KNAVERY.XpProgress" xp=system.xp next=system.nextXp}}{{else}}{{localize "KNAVERY.XpTop" xp=system.xp}}{{/if}}</span>
-          </div>
-        </div>
-        <div class="band-row band-coins">
-          <label class="band-label" for="{{idp}}-coins" data-tooltip="KNAVERY.CoinsTip">{{localize "KNAVERY.Coins"}}</label>
-          <input type="number" min="0" step="1" id="{{idp}}-coins" class="coins-input" name="system.coins" value="{{source.coins}}"{{{effAttrs.coins}}} data-dtype="Number" />
-        </div>
-      </div>
     </div>
 
     <!-- Inventory: what the slots hold -->

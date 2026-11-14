@@ -132,15 +132,17 @@ export const bindRollCard = (message, html) => {
   const rollBtn = card.querySelector("[data-kn-roll-damage]");
   rollBtn?.addEventListener("click", async (event) => {
     event.preventDefault();
-    const weapon = await fromUuid(rollBtn.dataset.weapon);
+    // An improvised attack has no weapon item: the card carries its formula and label.
+    const weapon = rollBtn.dataset.weapon ? await fromUuid(rollBtn.dataset.weapon) : null;
     const actor = weapon?.actor ?? (await fromUuid(rollBtn.dataset.actor));
-    if (!weapon || !actor) return;
+    const formula = weapon?.system.damage ?? rollBtn.dataset.formula;
+    if (!actor || !formula) return;
     if (!actor.isOwner) return ui.notifications.warn("KNAVERY.Notify.NotYourAttack", { localize: true });
     let targets = [];
     try { targets = JSON.parse(rollBtn.dataset.targets || "[]"); } catch { targets = []; }
     await rollDamage(actor, {
-      formula: weapon.system.damage,
-      label: weapon.name,
+      formula,
+      label: weapon?.name ?? rollBtn.dataset.label ?? "",
       power: rollBtn.dataset.power === "1",
       targets,
     });

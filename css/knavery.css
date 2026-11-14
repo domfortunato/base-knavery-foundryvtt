@@ -4101,7 +4101,13 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery .item-control.equipped { color: var(--kn-accent); opacity: 1; }
 
 /* ---- Careers and their features ------------------------------------------ */
-.knavery-careers { margin-bottom: 12px; }
+/* Careers as cards side by side, not each the page's whole width (user, 2026-11-14). */
+.knavery-careers {
+    margin-bottom: 12px; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 6px; align-items: start;
+}
+.knavery-careers > :not(.knavery-career) { grid-column: 1 / -1; }
+.knavery-careers > .knavery-career { margin: 0; min-width: 0; }
 .knavery-career { border: 1px solid var(--kn-rule-strong); border-radius: 4px; padding: 6px 8px; margin: 6px 0; }
 .knavery-career .career-head { display: flex; align-items: center; gap: 6px; }
 .knavery-career .career-head img { width: 28px; height: 28px; border: none; }
@@ -4144,6 +4150,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-roll-prompt .kn-attack-weapon input { margin: 0; }
 .knavery-roll-prompt .kn-attack-weapon.broken strong { text-decoration: line-through; }
 .knavery-roll-prompt .power-group[hidden] { display: none; }
+.knavery-roll-prompt .kn-attack-weapon.improvised strong { font-style: italic; }
 
 .knavery-roll-card .card-title { display: flex; align-items: baseline; gap: 6px; }
 .knavery-roll-card .card-title h3 { margin: 0; border: none; font-size: calc(16px * var(--kn-text, 1)); }
@@ -4438,11 +4445,11 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery .knavery-ability-name { display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; }
 .knavery .knavery-ability-name .roll-icon { font-size: calc(18px * var(--kn-text, 1)); margin: 0; opacity: 0.85; transition: text-shadow 0.15s, opacity 0.15s; }
 .knavery .knavery-ability-name:hover,
-.knavery .knavery-ability-name:focus-visible { text-shadow: 0 0 6px var(--kn-accent); }
+.knavery .knavery-ability-name:focus-visible { text-shadow: 0 0 6px var(--kn-accent), 0 0 14px var(--kn-accent); }
 .knavery .knavery-ability-name:hover .roll-icon,
-.knavery .knavery-ability-name:focus-visible .roll-icon { opacity: 1; text-shadow: 0 0 8px var(--kn-accent); }
+.knavery .knavery-ability-name:focus-visible .roll-icon { opacity: 1; text-shadow: 0 0 6px var(--kn-accent), 0 0 16px var(--kn-accent); }
 .knavery-ability-hint { font-size: calc(13px * var(--kn-text, 1)); font-style: italic; color: var(--kn-muted); }
-.knavery .knavery-ability .ability-defense { flex: 0 0 auto; font-size: calc(12px * var(--kn-text, 1)); color: var(--kn-faint); padding-right: 2px; }
+.knavery .knavery-ability .ability-defense { flex: 0 0 auto; font-size: calc(15px * var(--kn-text, 1)); color: var(--kn-faint); padding-right: 2px; }
 /* A score above 0 stands out: a gold ring and number, its defense in ink. A 0 sits back. */
 .knavery-ability:not(.raised) .knavery-ability-circle { border: 1px solid var(--kn-rule); }
 .knavery .knavery-ability:not(.raised) .knavery-ability-circle input { color: var(--kn-muted); font-weight: normal; }
@@ -4527,22 +4534,32 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery .bar-steps button i { margin: 0; }
 .knavery .bar-steps button:disabled { opacity: 0.35; }
 /* Slots alone in the head, at the right. */
-.knavery-head-counters.slots-only > .slots-counter { grid-column: 2; }
+/* Slots under the vitals' bars (max wounds is the slot count). */
+.knavery-slots-line {
+    display: flex; justify-content: center; align-items: baseline; gap: 6px; width: 100%; margin-top: 2px;
+    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif; font-size: calc(16px * var(--kn-text, 1));
+}
+.knavery-slots-line .slots-label { font-weight: bold; font-variant: small-caps; }
+.knavery-slots-line .slots-value { font-weight: bold; }
+.knavery-slots-line.peril { color: var(--kn-peril); }
+/* The abilities column: the six abilities, then Level, XP and Coins. */
+.knavery-left { min-width: 0; display: flex; flex-direction: column; }
 /* The bottom band: Level, XP and Coins, pushed to the foot of the Knave page. */
 .knavery-band {
-    margin-top: auto; padding-top: 8px; border-top: 2px solid var(--kn-line);
+    margin-top: 10px; padding-top: 8px; border-top: 2px solid var(--kn-line);
     display: flex; flex-direction: column; gap: 6px;
     font-family: "Alegreya", Times, "Times New Roman", Georgia, serif; font-size: calc(16px * var(--kn-text, 1));
 }
 .knavery-page-knave .knavery-body { margin-bottom: 12px; }
 .knavery-band .band-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.knavery-band .band-label { flex: 0 0 64px; font-weight: bold; font-variant: small-caps; }
+.knavery-band .band-label { flex: 0 0 56px; font-weight: bold; font-variant: small-caps; }
 .knavery-band .band-value { font-weight: bold; font-size: calc(18px * var(--kn-text, 1)); }
 .knavery-band .level-title { font-style: italic; color: var(--kn-muted); }
 .knavery-band .level-up-button { margin-left: auto; width: auto; }
 .knavery-band .level-input { width: 48px; text-align: center; }
 .knavery-band .xp-input { width: 84px; text-align: right; }
-.knavery-band .knavery-xp-bar { flex: 1 1 160px; margin: 0; }
+/* Half the column: the bar needn't span it (user, 2026-11-14). */
+.knavery-band .knavery-xp-bar { flex: 0 1 50%; max-width: 50%; margin: 0; }
 .knavery-band .coins-input { width: 110px; text-align: right; font-size: calc(16px * var(--kn-text, 1)); }
 .knavery .level-line input:disabled, .knavery-band input:disabled { background: none !important; border-color: transparent !important; opacity: 1; color: var(--kn-ink); }
 /* The rail's Attack button: not a page, so set apart by a rule and the splat in the peril colour. */

@@ -114,6 +114,7 @@
     "WoundSlots": "Wound slots: {n}",
     "Advancement": "Advancement",
     "XpProgress": "{xp} / {next} XP to the next level",
+    "XpShort": "{xp} / {next}",
     "XpTop": "{xp} XP — the top level",
 
     "Rest": "Rest",
@@ -246,6 +247,8 @@
     "Attacks": "Attacks",
     "Attack": "Attack",
     "AttackChoose": "Weapon",
+    "Improvised": "Improvised",
+    "ImprovisedHint": "A fist, a rock, a chair leg: d4, STR, no slot.",
     "NoAttacks": "No equipped weapon. Equip one in the Inventory.",
     "AttackTip": "Attack: d20 + STR (melee) or WIS (ranged) against the target's AC.",
     "RollDamage": "Roll damage",
@@ -253,7 +256,8 @@
     "Ranged": "Ranged",
     "TwoHanded": "Two-handed",
     "Broken": "Broken",
-    "MustDrop": "Wounded slot: drop it",
+    "Unusable": "Unusable",
+    "UnusableTip": "A wound fills this slot: the item can't be used until the wound heals. Whether it was dropped or broken is the table's call.",
     "CastToday": "Cast today",
     "CastHint": "Cast this spell",
     "Scroll": "Scroll",
@@ -317,7 +321,7 @@
       "NoHp": "No HP.",
       "NoHpText": "Further damage fills slots with wounds.",
       "Wounded": "Wounded.",
-      "WoundedText": "Items in wounded slots must be dropped.",
+      "WoundedText": "Items in wounded slots are unusable until the wounds heal.",
       "Overburdened": "Overburdened.",
       "OverburdenedText": "More items than slots."
     },
@@ -391,7 +395,7 @@
       "WoundsTakenOne": "{n} wound",
       "NoEffect": "No effect.",
       "Dead": "{name} is dead.",
-      "DropWounded": "Drop whatever sits in the wounded slots."
+      "DropWounded": "Items in wounded slots are unusable until the wounds heal."
     },
 
     "Spell": {

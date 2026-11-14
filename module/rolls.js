@@ -235,6 +235,16 @@ export const attackRow = (actor, w) => {
   };
 };
 
+/**
+ * The improvised attack every character has (user ruling 2026-11-14): a fist,
+ * a rock, a chair leg. d4 with STR, no item and no slot, so nothing breaks.
+ */
+export const IMPROVISED_ID = "improvised";
+const improvisedWeapon = () => ({
+  id: IMPROVISED_ID, name: L("KNAVERY.Improvised"), uuid: null, isOwner: false, attackAbility: "STR",
+  system: { damage: "d4", attackType: "melee", broken: false, range: "" },
+});
+
 /** The weapon each actor last attacked with from the Attack window, for this browser session. */
 const lastWeapon = new Map();
 
@@ -244,16 +254,21 @@ const lastWeapon = new Map();
  */
 export const openAttack = async (actor, { reason = "" } = {}) => {
   const weapons = actor.items.filter((i) => i.type === "weapon" && i.system.equipped).sort((a, b) => a.sort - b.sort);
-  if (!weapons.length) return ui.notifications.warn("KNAVERY.NoAttacks", { localize: true });
+  const improvised = improvisedWeapon();
+  const all = [...weapons, improvised];
   const last = lastWeapon.get(actor.id);
-  const selected = weapons.some((w) => w.id === last) ? last : weapons[0].id;
-  const rows = weapons.map((w) => ({ ...attackRow(actor, w), checked: w.id === selected }));
+  const selected = all.some((w) => w.id === last) ? last : all[0].id;
+  const rows = all.map((w) => ({
+    ...attackRow(actor, w), checked: w.id === selected,
+    improvised: w.id === IMPROVISED_ID, hint: w.id === IMPROVISED_ID ? L("KNAVERY.ImprovisedHint") : "",
+  }));
   const canPower = actor.type === "character";
   const choice = await promptEdge({
     title: L("KNAVERY.Roll.AttackTitleAny"), reason, attack: true, melee: canPower && rows.some((r) => r.melee), weapons: rows,
   });
   if (!choice) return null;
-  const weapon = actor.items.get(choice.weaponId) ?? actor.items.get(selected);
+  const pick = (id) => (id === IMPROVISED_ID ? improvised : actor.items.get(id));
+  const weapon = pick(choice.weaponId) ?? pick(selected);
   if (!weapon) return null;
   lastWeapon.set(actor.id, weapon.id);
   const power = choice.power && canPower && weapon.system.attackType === "melee";
@@ -287,7 +302,8 @@ const attackWith = async (actor, weapon, choice, { reason = "" } = {}) => {
     damage = { total: dmgRoll.total, html: await dmgRoll.render() };
   }
 
-  const breaks = (fumble && game.settings.get(SETTINGS_NS, "weapon-breaks-on-1")) || power;
+  // An improvised attack has no item to break.
+  const breaks = !!weapon.uuid && ((fumble && game.settings.get(SETTINGS_NS, "weapon-breaks-on-1")) || power);
   if (breaks && weapon.isOwner && !weapon.system.broken) {
     await weapon.update({ "system.broken": true }, { knNoLog: true });
   }
@@ -311,7 +327,9 @@ const attackWith = async (actor, weapon, choice, { reason = "" } = {}) => {
     damage,
     applyTargets: JSON.stringify(hitTargets.map((t) => t.uuid)),
     canRollDamage: !damage && anyHit && rollableDamage,
-    weaponUuid: weapon.uuid,
+    weaponUuid: weapon.uuid ?? "",
+    weaponDamage: weapon.system.damage,
+    weaponName: weapon.name,
     actorUuid: actor.uuid,
     powerFlag: power ? 1 : 0,
   });

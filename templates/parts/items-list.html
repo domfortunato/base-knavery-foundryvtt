@@ -1,5 +1,5 @@
 {{!-- The inventory, slot by slot. Wounds fill slots from the top down, so a
-      row in a wounded slot is marked and must be dropped. --}}
+      row in a wounded slot is marked unusable (user ruling 2026-11-14). --}}
 <div class="knavery-items-list-header">
   <div>{{localize "KNAVERY.Name"}} <i>{{localize "KNAVERY.BoldMeansEquipped"}}</i></div>
   <span class="items-header-controls">
@@ -22,7 +22,7 @@
       </a>
       {{#each item.tags}}<span class="knavery-item-tag">{{this}}</span>{{/each}}
       {{#if item.broken}}<span class="knavery-item-tag broken-tag">{{localize "KNAVERY.Broken"}}</span>{{/if}}
-      {{#if item.wounded}}<span class="knavery-item-tag wounded-tag">{{localize "KNAVERY.MustDrop"}}</span>{{/if}}
+      {{#if item.wounded}}<span class="knavery-item-tag wounded-tag" data-tooltip="KNAVERY.UnusableTip">{{localize "KNAVERY.Unusable"}}</span>{{/if}}
       {{#if item.castToday}}<span class="knavery-item-tag">{{localize "KNAVERY.CastToday"}}</span>{{/if}}
     </div>
     <div class="knavery-item-controls">
@@ -56,11 +56,12 @@
 {{/each}}
 </div>
 {{#each coinRows}}
-<div class="knavery-items-list-row gold-slot-row">
+<div class="knavery-items-list-row gold-slot-row{{#if this.wounded}} wounded-row{{/if}}">
   <div class="knavery-items-list-row-header">
     <div class="knavery-item-name-and-tags">
       <i class="fas fa-coins gold-slot-icon"></i>
       <span class="knavery-item-title">{{localize "KNAVERY.CoinSlot"}}</span>
+      {{#if this.wounded}}<span class="knavery-item-tag wounded-tag" data-tooltip="KNAVERY.UnusableTip">{{localize "KNAVERY.Unusable"}}</span>{{/if}}
     </div>
   </div>
 </div>

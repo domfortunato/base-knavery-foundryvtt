@@ -34,7 +34,7 @@
   {{#if fumble}}<p class="card-note fumble"><i class="fas fa-heart-crack"></i> {{localize "KNAVERY.Roll.Natural1"}}</p>{{/if}}
   {{#if broke}}<p class="card-note broke"><i class="fas fa-link-slash"></i> {{localize "KNAVERY.Roll.WeaponBroken"}}</p>{{/if}}
   {{#if canRollDamage}}
-  <button type="button" class="kn-roll-damage" data-kn-roll-damage data-weapon="{{weaponUuid}}" data-actor="{{actorUuid}}"
+  <button type="button" class="kn-roll-damage" data-kn-roll-damage data-weapon="{{weaponUuid}}" data-actor="{{actorUuid}}" data-formula="{{weaponDamage}}" data-label="{{weaponName}}"
     data-power="{{powerFlag}}" data-targets='{{applyTargets}}'><i class="fas fa-dice-d6"></i> {{localize "KNAVERY.Roll.RollDamage"}}</button>
   {{/if}}
   {{/if}}

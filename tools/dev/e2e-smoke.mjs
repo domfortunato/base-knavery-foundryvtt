@@ -81,7 +81,7 @@ const gear = await page.evaluate(async (id) => {
 }, actorId);
 ok(gear.ac === 13 && gear.ap === 2, "two armor pieces: AP 2, AC 13", JSON.stringify(gear));
 await page.waitForTimeout(500);
-ok(await page.locator(".knavery.sheet.actor #attack-button:not([disabled])").count() === 1, "an equipped weapon enables the Attack button");
+ok(await page.locator(".knavery.sheet.actor #attack-button:not([disabled])").count() === 1, "the Attack button is on the sheet");
 
 // 5. Advantage formulas in both modes.
 const formulas = await page.evaluate(async () => {

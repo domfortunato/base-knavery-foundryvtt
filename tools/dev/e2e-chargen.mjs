@@ -646,7 +646,7 @@ await withSettings(gm, async () => {
     }, ids.a);
     const exp = 440 * r.k;
     ok(Math.abs(r.width - exp) < 30 && Math.abs(r.npcWidth - 640 * r.k) < 40, "a character sheet opens narrow (440 × text size); an NPC's stays at 640", JSON.stringify(r));
-    ok(!r.playColumn && r.disabled && r.enabled, "no attacks column; the Attack button waits for an equipped weapon", JSON.stringify(r));
+    ok(!r.playColumn && !r.disabled && r.enabled, "no attacks column; the Attack button is always there (an improvised attack needs no weapon)", JSON.stringify(r));
     ok(r.dexRaised === true && r.strRaised === false, "a score above 0 is marked raised, a 0 is not", JSON.stringify(r));
     ok(r.footer.includes("unofficial fan-made Foundry system for Knave Second Edition"), "the sheet footer reads the new sentence", r.footer);
 
@@ -661,14 +661,18 @@ await withSettings(gm, async () => {
       const pick = (n) => { const l = [...d.querySelectorAll(".kn-attack-weapon")].find((e) => e.textContent.includes(n)); const i = l.querySelector("input"); i.checked = true; i.dispatchEvent(new Event("change")); };
       pick("Probe Sword"); const swordPower = power();
       pick("Probe Bow"); const bowPower = power();
-      return { names, swordPower, bowPower };
+      pick("Improvised"); const improvisedPower = power();
+      return { names, swordPower, bowPower, improvisedPower };
     });
     await gm.locator('.knavery-roll-prompt button[data-action="normal"]').click();
     await gm.waitForFunction((n) => game.messages.size > n, before, { timeout: T(10000) });
-    const card = await gm.evaluate(() => game.messages.contents.at(-1).getFlag("base-knavery", "attack")?.weapon ?? null);
-    ok(win.names.includes("Probe Sword") && win.names.includes("Probe Bow") && win.swordPower && !win.bowPower,
-      "the Attack window lists both weapons; Power attack only for the sword", JSON.stringify(win));
-    ok(card === "Probe Bow", "choosing the bow rolls the bow's attack", String(card));
+    const card = await gm.evaluate(() => {
+      const m = game.messages.contents.at(-1);
+      return { weapon: m.getFlag("base-knavery", "attack")?.weapon ?? null, damage: m.rolls[1]?.formula ?? "" };
+    });
+    ok(win.names.join() === "Probe Sword,Probe Bow,Improvised" && win.swordPower && !win.bowPower && win.improvisedPower,
+      "the Attack window lists both weapons and Improvised; Power attack for the melee ones", JSON.stringify(win));
+    ok(card.weapon === "Improvised" && /^1d4$/.test(card.damage), "the improvised attack rolls a d4 for damage", JSON.stringify(card));
 
     // The welcome window's licence notice, lighter intro and checkbox.
     const w = await gm.evaluate(async () => {
@@ -727,6 +731,34 @@ await withSettings(gm, async () => {
       await wait(900);
       out.windowOpen = !!document.querySelector(".knavery-roll-prompt .kn-attack-weapons");
       for (const app of [...foundry.applications.instances.values()]) if (app instanceof foundry.applications.api.DialogV2) await app.close();
+      // The layout: Slots in the vitals, Level/XP/Coins in the abilities column, a half-width XP bar.
+      el().querySelector('nav.knavery-tab-rail button[data-tab="knave"]').click();
+      await wait(400);
+      const left = el().querySelector(".knavery-page-knave .knavery-left");
+      const bar = left?.querySelector(".knavery-band .knavery-xp-bar");
+      out.slotsInVitals = !!el().querySelector(".knavery-vitals .knavery-slots-line");
+      out.bandInLeft = !!left?.querySelector(".knavery-band");
+      out.barShare = bar && left ? Math.round(100 * bar.getBoundingClientRect().width / left.getBoundingClientRect().width) : null;
+      // Wounds: empty slots first, then the coin slot, then the lowest item, marked Unusable.
+      await pc.deleteEmbeddedDocuments("Item", pc.items.filter((i) => i.type !== "career").map((i) => i.id));
+      await pc.update({ "system.abilities.CON.value": 1, "system.coins": 500, "system.wounds": 0 }, { knCreation: true });
+      await pc.createEmbeddedDocuments("Item", Array.from({ length: 9 }, (_, i) => ({ name: `Probe Rock ${i + 1}`, type: "item", sort: (i + 1) * 1000, system: { slots: 1, quantity: 1 } })));
+      const marks = async (wounds) => {
+        await pc.update({ "system.wounds": wounds });
+        await wait(600);
+        const inv = el().querySelector(".knavery-page-inventory");
+        return {
+          items: [...inv.querySelectorAll(".knavery-items-list-row.wounded-row:not(.gold-slot-row) .knavery-item-title")].map((e) => e.textContent.trim()),
+          coin: inv.querySelectorAll(".gold-slot-row.wounded-row").length,
+          tag: inv.querySelector(".wounded-tag")?.textContent.trim() ?? "",
+        };
+      };
+      out.slotsMax = pc.system.slotsMax;
+      out.oneWound = await marks(1);
+      out.twoWounds = await marks(2);
+      out.threeWounds = await marks(3);
+      await pc.deleteEmbeddedDocuments("Item", pc.items.filter((i) => i.name.startsWith("Probe Rock")).map((i) => i.id));
+      await pc.update({ "system.coins": 0, "system.abilities.CON.value": 0 }, { knCreation: true });
       await pc.update({ "system.wounds": 0, "system.hp.value": 3 });
       return out;
     }, ids.a);
@@ -737,6 +769,11 @@ await withSettings(gm, async () => {
     ok(r.upAtMax && r.hpAfterTwoDown === 1 && r.hpAfterUp === 2 && r.hpZero === 0 && r.downAtZero && r.woundsTwo === 2 && r.woundsOne === 1,
       "HP and Wounds step by + and −, stopping at max and at 0", JSON.stringify(r));
     ok(r.railAttack && r.windowOpen, "the rail's Attack opens the Attack window from the Inventory page", JSON.stringify(r));
+    ok(r.slotsInVitals && r.bandInLeft && r.barShare !== null && r.barShare <= 55, "Slots sit in the vitals; Level, XP and Coins under the abilities, the XP bar half the column", JSON.stringify(r));
+    // 11 slots: nine rocks (1-9), the coin slot (10), one empty (11).
+    ok(r.slotsMax === 11 && r.oneWound.items.length === 0 && r.oneWound.coin === 0, "a wound goes into an empty slot first", JSON.stringify(r.oneWound));
+    ok(r.twoWounds.items.length === 0 && r.twoWounds.coin === 1, "the next wound reaches the coin slot before any item", JSON.stringify(r.twoWounds));
+    ok(r.threeWounds.items.join() === "Probe Rock 9" && r.threeWounds.tag === "Unusable", "then the lowest item, marked Unusable", JSON.stringify(r.threeWounds));
   });
 
   // Cleanup.

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **An improvised attack for everyone:** d4 with STR, no item and no slot, always in the Attack window. The
+  Attack button is never greyed out now.
+- **Wounds make items unusable.** A wound with no empty slot lands on the lowest coin slot or item and marks it
+  Unusable (it was "drop it"): the table decides whether it was dropped or broken.
+- Level, XP and Coins sit under the abilities, with a half-width XP bar; Slots sits under the HP and Wounds bars.
+- Brighter glow on the ability rolls, larger defense numbers, and careers side by side on the Growth page.
 - **The Knave page, rearranged.** Level, XP (with its progress bar) and Coins sit in a band at the bottom; the head
   keeps the name, Careers and Slots. Level and XP are plain text unless Char Gen Mode is on.
 - HP and Wounds change with + and − under each bar; their current values are no longer typed. Wounds − replaces

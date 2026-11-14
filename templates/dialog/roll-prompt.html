@@ -9,7 +9,7 @@
   <fieldset class="kn-attack-weapons">
     <legend>{{localize "KNAVERY.AttackChoose"}}</legend>
     {{#each weapons}}
-    <label class="kn-attack-weapon{{#if this.broken}} broken{{/if}}" data-melee="{{#if this.melee}}1{{else}}0{{/if}}">
+    <label class="kn-attack-weapon{{#if this.broken}} broken{{/if}}{{#if this.improvised}} improvised{{/if}}" data-melee="{{#if this.melee}}1{{else}}0{{/if}}"{{#if this.hint}} data-tooltip-text="{{this.hint}}"{{/if}}>
       <input type="radio" name="weapon" value="{{this.id}}" {{checked this.checked}} />
       <strong>{{this.name}}</strong>
       <span class="knavery-item-tag">{{this.kind}} {{this.ability}} {{this.bonus}}</span>

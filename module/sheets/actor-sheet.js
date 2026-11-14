@@ -287,6 +287,7 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     const isChar = actor.type === "character";
     const gen = s.generationEnabled === true && this._mayRandomize() && this.isEditable;
     const layout = actor.slotLayout();
+    const coinSlotStart = 1 + Math.max(0, ...[...layout.values()].map((l) => l.last ?? 0));
     const inventory = actor.inventory;
 
     const items = inventory.map((item) => {
@@ -406,7 +407,10 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       abilities,
       attacks,
       items,
-      coinRows: Array.from({ length: s.coinSlots ?? 0 }, (_, i) => i),
+      // Coin slots follow the items, so a wound with no empty slot reaches them before any item.
+      coinRows: Array.from({ length: s.coinSlots ?? 0 }, (_, i) => ({
+        wounded: isChar && (s.wounds ?? 0) > 0 && coinSlotStart + i >= (s.slotsMax ?? 0) - (s.wounds ?? 0) + 1,
+      })),
       woundRows: isChar ? Array.from({ length: s.wounds ?? 0 }, (_, i) => i) : [],
       slotsUsed,
       slotsMax: s.slotsMax,

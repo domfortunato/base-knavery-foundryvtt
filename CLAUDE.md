@@ -132,6 +132,16 @@ picker, change log and marketplace it ports.
   4. Merge `master` back into `dev`.
 - **Never tag or release on GitHub directly.**
 
+## House rulings on the rules (the user's, recorded so they are not "fixed")
+- Wounds fill slots from the bottom up: empty slots first, then coin slots,
+  then the lowest item. An item in a wounded slot is **Unusable**, not
+  "dropped" as the book has it: the table decides later whether it was
+  dropped or broken (user ruling 2026-11-14).
+- Every character has an **improvised attack**: d4 with STR, no item, no
+  slot, in the Attack window (`rolls.js` `IMPROVISED_ID`; user ruling
+  2026-11-14).
+- No failed-career hack: Knave 2e gives two careers (removed 2026-11-14).
+
 ## Foundry v14 gotchas met so far
 - `FilePathField({categories: []})` throws in init; use `type: String` with
   `filePicker: "folder"`.
