@@ -4722,9 +4722,9 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 }
 .knavery-welcome-byline { margin: 0; color: var(--kn-muted); font-size: calc(13px * var(--kn-text, 1)); }
 .knavery-welcome-byline a { color: inherit; }
-/* The intro: what Base Knavery is, the window's lead line (larger, user 2026-11-14). */
+/* The intro: what Base Knavery is, the window's lead line: larger, centred, in the light weight (user 2026-11-14). */
 .knavery-welcome-unofficial {
-    margin: 0; font-weight: 400; font-size: calc(16px * var(--kn-text, 1)); line-height: 1.4; color: var(--kn-ink);
+    margin: 0; text-align: center; font-weight: 300; font-size: calc(16px * var(--kn-text, 1)); line-height: 1.4; color: var(--kn-ink);
 }
 
 /* The two columns: the rules and what to do; the books, the AI disclosure and the licences. */
