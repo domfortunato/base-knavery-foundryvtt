@@ -360,7 +360,7 @@ await withSettings(gm, async () => {
       const el = game.actors.get(x).sheet.element;
       return { picks: el.querySelectorAll(".trait-pick").length, all: !!el.querySelector(".trait-roll-all") };
     }, ids.a);
-    ok(ctl.picks === 13 && ctl.all, "in Char Gen Mode Alice gets a pick-list per trait and Roll every trait", JSON.stringify(ctl));
+    ok(ctl.picks === 11 && ctl.all, "in Char Gen Mode Alice gets a pick-list per Description trait (Alignment and Background live on the Knave page) and Roll every trait", JSON.stringify(ctl));
   });
 
   /* ------------------------------------------------------------------ */
