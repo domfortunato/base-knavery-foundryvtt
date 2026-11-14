@@ -4157,7 +4157,8 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 /* A checkbox row: the label shares its line with the box at the right; a hint takes the next line. */
 .knavery-roll-prompt .form-group:has(> .form-fields > input[type="checkbox"]) { flex-wrap: wrap; column-gap: 8px; }
 .knavery-roll-prompt .form-group:has(> .form-fields > input[type="checkbox"]) > label { flex: 1 1 0; min-width: 0; }
-.knavery-roll-prompt .form-group:has(> .form-fields > input[type="checkbox"]) > .form-fields { flex: 0 0 auto; margin-left: auto; }
+/* Core makes .form-fields width: 100% (foundry2.css .standard-form .form-fields), which pushed the box to a line of its own. */
+.knavery-roll-prompt .form-group:has(> .form-fields > input[type="checkbox"]) > .form-fields { flex: 0 0 auto; width: auto; margin-left: auto; }
 .knavery-roll-prompt .form-group:has(> .form-fields > input[type="checkbox"]) > p.hint { flex: 0 0 100%; margin: 0; }
 /* The Attack window's weapon list: one radio row per equipped weapon. */
 .knavery-roll-prompt .kn-attack-weapons {
