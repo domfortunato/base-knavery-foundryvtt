@@ -1371,6 +1371,23 @@ await withSettings(gm, async () => {
       "ending a dungeon turn counts it, moves the world clock 10 minutes and whispers the hazard die", JSON.stringify(t));
     ok(t.travel.watch === 4 && t.travel.travelled === 4 && t.travelSeconds === 4 * 14400 && t.forced,
       "four watches of travel: the clock moves 16 hours and the fourth card notes forced marching", JSON.stringify(t));
+    // Pictures: the Time tab in travel, and the chat with its hazard cards.
+    await gm.evaluate(async () => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const H = await import("/systems/base-knavery/module/hazard.js");
+      await game.settings.set("base-knavery", "time-clock", { mode: "travel", day: 2, watch: 3, travelled: 2 });
+      game.knavery.openDashboard();
+      await wait(1200);
+      await foundry.applications.instances.get("knavery-gm-dashboard").changeTab("time", "primary");
+      ui.sidebar.changeTab("chat", "primary");
+      await wait(600);
+      return H.clock();
+    });
+    await gm.screenshot({ path: `${SHOTS}/time-tab.png` });
+    await gm.evaluate(async () => {
+      await foundry.applications.instances.get("knavery-gm-dashboard")?.close();
+      await game.settings.set("base-knavery", "time-clock", {});
+    });
 
     // A light toggles on the sheet; burn and depletion change sheets only when the GM clicks.
     await gm.evaluate(async (pcId) => {
