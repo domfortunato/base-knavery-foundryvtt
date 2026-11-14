@@ -47,7 +47,7 @@ items:
     _stats:
       coreVersion: '14.370'
       systemId: base-knavery
-      systemVersion: 0.1.1
+      systemVersion: 0.2.0
   - _id: wD29rVUqaB2VzNxv
     _key: '!actors.items!fIGNYLOM2FrQJyBD.wD29rVUqaB2VzNxv'
     name: Claw
@@ -66,10 +66,10 @@ items:
     _stats:
       coreVersion: '14.370'
       systemId: base-knavery
-      systemVersion: 0.1.1
+      systemVersion: 0.2.0
 effects: []
 flags: {}
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery
-  systemVersion: 0.1.1
+  systemVersion: 0.2.0
