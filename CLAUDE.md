@@ -143,6 +143,8 @@ picker, change log and marketplace it ports.
   slot, in the Attack window (`rolls.js` `IMPROVISED_ID`; user ruling
   2026-11-14).
 - No failed-career hack: Knave 2e gives two careers (removed 2026-11-14).
+- Rest follows p12: HP back to max only after two watches of sleep and a meal; a safe haven
+  also heals one wound; spellbooks reset either way (the sheet's Rest window, `KnaveryActor.rest`).
 - Char Gen Mode holds every sheet's abilities, the GM's too, to the level's points: 3 + 3 per level
   above 1, no score above level + 2 (`level-up.js` `abilityBudget`, enforced in the sheet's
   `_prepareSubmitData`; user ruling 2026-11-14). With Char Gen Mode off the GM sets any score.

@@ -215,13 +215,36 @@ export class KnaveryActor extends Actor {
     });
   }
 
-  /** A night's rest: full HP, spellbooks ready again. */
-  async rest() {
+  /**
+   * A night's rest (Knave 2e p12). Spellbooks are ready again (a new day). HP
+   * returns to max only if the character slept two watches and ate a meal; in a
+   * safe haven that night also heals one wound. With no arguments: a full night.
+   * Posts a short card saying what happened.
+   */
+  async rest({ slept = true, ate = true, haven = false } = {}) {
     const s = this.system;
-    await this.update({ "system.hp.value": s.hp.max, "system.spellsCastToday": 0 }, { knLogAction: "KNAVERY.Rest" });
+    const healed = slept && ate;
+    const healWound = healed && haven && s.wounds > 0;
+    const update = { "system.spellsCastToday": 0 };
+    if (healed) update["system.hp.value"] = s.hp.max;
+    if (healWound) update["system.wounds"] = s.wounds - 1;
+    await this.update(update, { knLogAction: "KNAVERY.Rest" });
     const books = this.items.filter((i) => i.type === "spellbook" && i.system.castToday)
       .map((i) => ({ _id: i.id, "system.castToday": false }));
     if (books.length) await this.updateEmbeddedDocuments("Item", books, { knNoLog: true });
+    const F = (k, d) => game.i18n.format(k, d);
+    const lines = [
+      healed ? F("KNAVERY.RestCard.Hp", { max: s.hp.max }) : F("KNAVERY.RestCard.NoHp", { hp: s.hp.value }),
+      ...(healWound ? [game.i18n.localize("KNAVERY.RestCard.Wound")] : []),
+      game.i18n.localize("KNAVERY.RestCard.Spells"),
+    ];
+    const esc = foundry.utils.escapeHTML;
+    await ChatMessage.create({
+      speaker: ChatMessage.getSpeaker({ actor: this }),
+      content: `<div class="knavery-roll-card kind-rest"><header class="card-title"><h3><i class="fas fa-campfire"></i> `
+        + `${esc(F("KNAVERY.RestCard.Title", { name: this.name }))}</h3></header>`
+        + `<ul>${lines.map((l) => `<li>${esc(l)}</li>`).join("")}</ul></div>`,
+    });
   }
 
   async healWound() {

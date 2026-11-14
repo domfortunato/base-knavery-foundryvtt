@@ -114,12 +114,16 @@
        those tokens flip with the theme, these must not. */
     --kn-save-pass-chat: #1a7a3a;
     --kn-chat-accent: #0b6470;        /* the accent on chat cards' pale paper, in either theme */
+    --kn-chat-red: #a61e1e;           /* the card's Apply button: red, like the sheet's Attack */
+    --kn-chat-muted: #5a5650;         /* a roll's formula beside its total */
     --kn-save-fail-chat: #c62828;
 
     /* The sheet's bars (HP, wounds, XP) and the thumb-tab rail's shadow
        (2026-11-13). Translucent fills so the parchment shows through and the
        value typed over them stays legible. */
-    --kn-hp-fill: rgba(42, 170, 102, 0.5);
+    /* Full HP in the accent teal, matching Die of Fate's glow (user, 2026-11-14). */
+    --kn-hp-fill: rgba(18, 163, 180, 0.45);
+    --kn-attack: #b3261e;             /* the Attack button */
     --kn-hp-fill-low: rgba(184, 134, 11, 0.5);   /* HP below max: --kn-gold, see-through */
     --kn-wound-fill: rgba(198, 40, 40, 0.45);
     --kn-xp-fill: rgba(18, 163, 180, 0.35);
@@ -173,7 +177,8 @@
        invisible against a near-black backdrop. */
     --kn-accent-wash: rgba(53, 200, 218, 0.18);
     --kn-ok-wash: rgba(79, 208, 138, 0.22);
-    --kn-hp-fill: rgba(79, 208, 138, 0.45);
+    --kn-hp-fill: rgba(53, 200, 218, 0.4);
+    --kn-attack: #c0392b;
     --kn-hp-fill-low: rgba(217, 169, 58, 0.5);
     --kn-wound-fill: rgba(255, 107, 107, 0.4);
     --kn-xp-fill: rgba(53, 200, 218, 0.4);
@@ -4196,19 +4201,44 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-roll-card .card-result.failure { color: var(--kn-save-fail-chat); border-color: var(--kn-save-fail-chat); }
 .knavery-roll-card .card-target { font-weight: normal; font-size: calc(12px * var(--kn-text, 1)); }
 .knavery-roll-card .card-targets { list-style: none; margin: 4px 0; padding: 0; }
-.knavery-roll-card .card-targets li { display: flex; gap: 6px; align-items: center; padding: 1px 0; }
+.knavery-roll-card .card-targets li { display: flex; gap: 6px; align-items: center; padding: 2px 0; }
 .knavery-roll-card .card-targets li .target-name { flex: 1; }
+/* Hit and Miss as a badge (user, 2026-11-14: "need to be bigger"). */
+.knavery-roll-card .card-targets li strong {
+    font-size: calc(15px * var(--kn-text, 1)); text-transform: uppercase; letter-spacing: 0.04em;
+    border: 2px solid currentColor; border-radius: 4px; padding: 0 6px; line-height: 1.4;
+}
 .knavery-roll-card .card-targets li.success strong { color: var(--kn-save-pass-chat); }
 .knavery-roll-card .card-targets li.failure strong { color: var(--kn-save-fail-chat); }
 .knavery-roll-card .target-ac { font-size: calc(11px * var(--kn-text, 1)); color: var(--kn-muted); }
-.knavery-roll-card .card-note { margin: 3px 0; font-size: calc(13px * var(--kn-text, 1)); }
+.knavery-roll-card .card-note { margin: 2px 0; font-size: calc(13px * var(--kn-text, 1)); }
 /* The free maneuver and power-attack notes: dark teal and bold, readable on the card's pale paper. */
 .knavery-roll-card .card-note.maneuver, .knavery-roll-card .card-note.power {
     color: var(--kn-chat-accent); font-weight: bold; font-size: calc(14px * var(--kn-text, 1));
 }
 .knavery-roll-card .card-note.fumble, .knavery-roll-card .card-note.broke { color: var(--kn-save-fail-chat); }
-.knavery-roll-card .card-damage h4 { margin: 6px 0 2px; border-bottom: 1px solid var(--kn-rule); }
+/* Compact cards (user, 2026-11-14): each roll is one row, formula left and total right;
+   clicking it still opens the dice (core's expandRoll). */
+.knavery-roll-card .dice-roll .dice-result {
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 8px;
+    padding: 0 8px; margin: 3px 0; background: rgba(0, 0, 0, 0.06); border: 1px solid var(--kn-chat-muted); border-radius: 3px;
+}
+.knavery-roll-card .dice-roll .dice-formula,
+.knavery-roll-card .dice-roll .dice-total { background: none; border: none; box-shadow: none; margin: 0; }
+.knavery-roll-card .dice-roll .dice-formula {
+    grid-column: 1; grid-row: 1; text-align: left; color: var(--kn-chat-muted); font-size: calc(13px * var(--kn-text, 1));
+}
+.knavery-roll-card .dice-roll .dice-total { grid-column: 2; grid-row: 1; font-size: calc(18px * var(--kn-text, 1)); line-height: 28px; }
+.knavery-roll-card .dice-roll .dice-tooltip { grid-column: 1 / -1; grid-row: 2; }
+/* Damage is a small label on its roll's row, not a heading. */
+.knavery-roll-card .card-damage { margin-top: 4px; }
+.knavery-roll-card .card-damage-row { display: flex; align-items: center; gap: 8px; }
+.knavery-roll-card .card-damage-label { flex: 0 0 auto; font-weight: bold; font-variant: small-caps; font-size: calc(14px * var(--kn-text, 1)); }
+.knavery-roll-card .card-damage-row .dice-roll { flex: 1 1 auto; min-width: 0; }
 .knavery-roll-card .card-apply { display: flex; gap: 4px; margin-top: 4px; }
+/* Apply in red, like the sheet's Attack button. */
+.knavery-roll-card .card-apply button[data-kn-apply="normal"] { background: var(--kn-chat-red); border-color: var(--kn-chat-red); color: #fff; font-weight: bold; }
+.knavery-roll-card .card-apply button[data-kn-apply="normal"]:hover { filter: brightness(1.15); box-shadow: 0 0 6px var(--kn-chat-red); }
 .knavery-roll-card button { line-height: 24px; }
 .knavery-damage-card h3 { font-size: calc(15px * var(--kn-text, 1)); margin: 0 0 4px; }
 .knavery-damage-card .dmg-drop { color: var(--kn-save-fail-chat); font-style: italic; }
@@ -4551,6 +4581,9 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-bar-name { font-size: calc(17px * var(--kn-text, 1)); }
 .knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-vital-buttons button { height: 34px; font-size: calc(16px * var(--kn-text, 1)); }
 .knavery-vital-buttons .attack-button { font-weight: bold; }
+/* The Attack button in red (user, 2026-11-14), like the card's Apply. */
+.knavery .knavery-vital-buttons .attack-button { background: var(--kn-attack); border-color: var(--kn-attack); color: #fff; }
+.knavery .knavery-vital-buttons .attack-button:hover { filter: brightness(1.12); box-shadow: 0 0 8px var(--kn-attack); }
 /* The bars' current values: read-only numbers, changed by the + and − under each bar. */
 .knavery .knavery-bar .bar-readout {
     position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;

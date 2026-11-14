@@ -7,7 +7,8 @@
  * the Knave 1e rule hacks (1000-XP levels, d8 HP, random raises, group initiative); the narrow
  * sheet, its Attack window and raised abilities; the welcome window's licence notice; random creation rolling by
  * default; a blank sheet held to its level's ability points, with HP, coin and career dice; the Attack window's
- * Target list; the narrow header. GM, Alice and Bob in three browsers.
+ * Target list; the narrow header; Rest by the book; red Attack and Apply; compact attack cards. GM, Alice and Bob
+ * in three browsers.
  *
  *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/e2e-chargen.mjs   (npm run dev:chargen)
  *
@@ -30,7 +31,7 @@ const T = (ms) => ms * TIME_SCALE;
 const SYS = "/systems/base-knavery/module";
 
 const browser = await chromium.launch();
-watchdog(540000, "e2e-chargen", () => browser.close());
+watchdog(600000, "e2e-chargen", () => browser.close());
 const ctx = () => browser.newContext({ viewport: VIEWPORT });
 const gm = await (await ctx()).newPage();
 const alice = await (await ctx()).newPage();
@@ -911,6 +912,105 @@ await withSettings(gm, async () => {
       "the Attack window lists the tokens on the scene, never the attacker's own", JSON.stringify(t));
     ok(t.hideBox === true && bobOpt?.pc && bobOpt.hidden, "\"Hide other player characters\" is ticked by default and hides them", JSON.stringify(t.options));
     ok(t.cardTarget && t.cardHitMiss && t.targeted.join() === "Probe Goblin", "the chosen target is targeted and the card says hit or miss", JSON.stringify(t));
+  });
+
+  /* ------------------------------------------------------------------ */
+  await section("19. Rest by the book; a red Attack and Apply; a teal HP bar; compact attack cards.", async () => {
+    const r = await gm.evaluate(async (pcId) => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const pc = game.actors.get(pcId);
+      for (const i of pc.items.contents) await i.delete();
+      await pc.update({ "system.generationEnabled": false, "system.hp.max": 5, "system.hp.value": 5, "system.wounds": 0, "system.coins": 0 }, { knCreation: true });
+      await pc.createEmbeddedDocuments("Item", [
+        { name: "Probe Sword", type: "weapon", system: { damage: "d6", attackType: "melee", equipped: true } },
+        { name: "Probe Tome", type: "spellbook", system: { castToday: true } },
+      ]);
+      await pc.sheet.render({ force: true });
+      await wait(900);
+      const el = () => pc.sheet.element;
+      const out = {};
+      // Colours: the full HP bar is teal; Attack is red.
+      const rgb = (s) => (s.match(/[\d.]+/g) ?? []).map(Number);
+      const [hr, hg, hb] = rgb(getComputedStyle(el().querySelector(".hp-bar .knavery-bar-fill")).backgroundColor);
+      out.hpFill = getComputedStyle(el().querySelector(".hp-bar .knavery-bar-fill")).backgroundColor;
+      out.hpTeal = hb > hr && hg > hr;
+      const [ar, ag, ab] = rgb(getComputedStyle(el().querySelector("#attack-button")).backgroundColor);
+      out.attackBg = getComputedStyle(el().querySelector("#attack-button")).backgroundColor;
+      out.attackRed = ar > 150 && ag < 80 && ab < 80;
+      out.restIcon = el().querySelector("#rest-button i")?.className ?? "";
+      // Rest without a meal: no HP, no wound, but spellbooks ready.
+      await pc.update({ "system.hp.value": 1, "system.wounds": 2 });
+      await wait(400);
+      const rest = async (boxes) => {
+        el().querySelector("#rest-button").click();
+        await wait(900);
+        const dlg = document.querySelector(".knavery-rest");
+        const f = dlg?.querySelector("form")?.elements;
+        if (!f) return false;
+        for (const [k, v] of Object.entries(boxes)) {
+          if (f[k].checked !== v) { f[k].checked = v; f[k].dispatchEvent(new Event("change", { bubbles: true })); }
+        }
+        dlg.querySelector('footer button[data-action="rest"]').click();
+        await wait(1200);
+        return true;
+      };
+      out.window = await rest({ ate: false });
+      out.noMeal = { hp: pc.system.hp.value, wounds: pc.system.wounds, book: pc.items.getName("Probe Tome").system.castToday };
+      await rest({ slept: true, ate: true, haven: true });
+      out.full = { hp: pc.system.hp.value, wounds: pc.system.wounds };
+      out.restCard = game.messages.contents.at(-1)?.content ?? "";
+      // An attack with damage: compact rows, a big Hit/Miss, a small Damage label, a red Apply.
+      const target = await Actor.create({ name: "Probe Dummy", type: "npc", system: { role: "monster" } });
+      const scene = canvas.ready ? canvas.scene : null;
+      const { rollAttack } = await import("/systems/base-knavery/module/rolls.js");
+      let tok = null;
+      if (scene) {
+        [tok] = await scene.createEmbeddedDocuments("Token", [(await target.getTokenDocument({ x: 0, y: 0 })).toObject()]);
+        await wait(800);
+        canvas.tokens.setTargets([tok.id], { mode: "replace" });
+      }
+      const attack = async () => {
+        const p = rollAttack(pc, pc.items.getName("Probe Sword"));
+        await wait(900);
+        const dlg = document.querySelector(".knavery-roll-prompt");
+        const dmg = dlg?.querySelector('input[name="rollDamage"]');
+        if (dmg) dmg.checked = true;
+        dlg?.querySelector('footer button[data-action="normal"]')?.click();
+        await p;
+        await wait(1200);
+        return [...document.querySelectorAll("#chat .chat-message .knavery-roll-card.kind-attack")].at(-1);
+      };
+      // With a target: the Hit/Miss badge.
+      let card = tok ? await attack() : null;
+      const badge = card?.querySelector(".card-targets li strong");
+      out.badgePx = badge ? parseFloat(getComputedStyle(badge).fontSize) : null;
+      // No target: every attack "hits", so damage is always rolled.
+      canvas.tokens?.setTargets([], { mode: "replace" });
+      card = await attack();
+      const row = card?.querySelector(".dice-result");
+      const fTop = row?.querySelector(".dice-formula")?.getBoundingClientRect().top;
+      const tTop = row?.querySelector(".dice-total")?.getBoundingClientRect().top;
+      out.sameRow = fTop !== undefined && tTop !== undefined && Math.abs(fTop - tTop) < 8;
+      const label = card?.querySelector(".card-damage-label");
+      out.damagePx = label ? parseFloat(getComputedStyle(label).fontSize) : null;
+      out.hasDamage = !!card?.querySelector(".card-damage");
+      const apply = card?.querySelector('[data-kn-apply="normal"]');
+      const [pr, pg, pb] = apply ? rgb(getComputedStyle(apply).backgroundColor) : [0, 0, 0];
+      out.applyRed = pr > 130 && pg < 60 && pb < 60;
+      card?.scrollIntoView();
+      if (tok) await tok.delete();
+      canvas.tokens?.setTargets([], { mode: "replace" });
+      await target.delete();
+      return out;
+    }, ids.a);
+    await gm.screenshot({ path: `${SHOTS}/chargen-cards-sheet.png` });
+    ok(r.hpTeal && r.attackRed && r.restIcon.includes("fa-campfire"), "a full HP bar is teal, Attack is red, Rest is a campfire", JSON.stringify(r));
+    ok(r.window && r.noMeal.hp === 1 && r.noMeal.wounds === 2 && r.noMeal.book === false,
+      "a rest without a meal restores no HP and heals no wound, but readies the spellbooks", JSON.stringify(r.noMeal));
+    ok(r.full.hp === 5 && r.full.wounds === 1 && /One wound heals/.test(r.restCard), "sleep, a meal and a safe haven: full HP, one wound heals, and a card says so", JSON.stringify(r.full));
+    ok(r.sameRow, "an attack card shows each roll's formula and total on one row", JSON.stringify(r));
+    ok(r.badgePx === null || r.badgePx >= 14, "Hit or Miss is a big badge", String(r.badgePx));
+    ok(r.hasDamage && r.damagePx <= 14 && r.applyRed, "Damage is a small label on its row, and Apply is red", JSON.stringify(r));
   });
 
   // Cleanup.

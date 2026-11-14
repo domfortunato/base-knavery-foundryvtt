@@ -41,8 +41,7 @@
 
   {{#if damage}}
   <div class="card-damage">
-    <h4>{{localize "KNAVERY.Roll.Damage"}}</h4>
-    {{{damage.html}}}
+    <div class="card-damage-row"><span class="card-damage-label">{{localize "KNAVERY.Roll.Damage"}}</span>{{{damage.html}}}</div>
     <div class="card-apply">
       <button type="button" data-kn-apply="normal" data-amount="{{damage.total}}" data-targets='{{applyTargets}}'
         data-tooltip="KNAVERY.Roll.ApplyHint"><i class="fas fa-burst"></i> {{localize "KNAVERY.Roll.Apply"}}</button>

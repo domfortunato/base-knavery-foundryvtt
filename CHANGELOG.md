@@ -13,6 +13,11 @@
 - The roll window: Roll with Disadvantage, Straight Roll (highlighted) and Roll with Advantage on one row, each
   saying what it does when hovered; the mode line is gone, and the modifier and checkboxes sit by their labels.
 - The free-maneuver and power-attack notes on chat cards are dark teal and bold, readable on the card.
+- **Compact attack cards:** each roll is one row (formula left, total right; click it for the dice), Hit and
+  Miss are bold badges, Damage is a small label on its row, and Apply is red.
+- The Attack button is red. A full HP bar is teal, matching Die of Fate's glow.
+- **Rest asks first** (Knave 2e's healing rule): slept two watches and ate a meal brings HP back to full; in a
+  safe haven one wound heals too. Spellbooks are ready again either way. A card says what happened. Campfire icon.
 - **A Target list in the Attack window:** the tokens you can see on the scene, nearest first. "Hide other player
   characters" is ticked by default. The chosen token is targeted, and the card says hit or miss against its AC.
 - **Random creation rolls the abilities** (3d6). Tick "Place the 3 ability points myself" to place them instead.

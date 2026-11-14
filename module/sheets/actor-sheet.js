@@ -807,8 +807,43 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     await rollDieOfFate(this.actor);
   }
 
+  /**
+   * Rest for the night, by Knave 2e p12: HP back to max only after two watches
+   * of sleep and a meal; a safe haven also heals one wound. Spellbooks are
+   * ready again either way (a new day).
+   */
   static async #onRest() {
-    await this.actor.rest();
+    const box = (name, key, checked) => `<div class="form-group"><label for="kn-rest-${name}">${L(key)}</label>`
+      + `<div class="form-fields"><input type="checkbox" id="kn-rest-${name}" name="${name}"${checked ? " checked" : ""} /></div></div>`;
+    const choice = await foundry.applications.api.DialogV2.wait({
+      window: { title: L("KNAVERY.RestTitle"), icon: "fas fa-campfire" },
+      classes: ["knavery", "knavery-rest"],
+      position: scaledPosition({ width: 380 }),
+      content: `<p class="hint">${L("KNAVERY.RestHelp")}</p>`
+        + box("slept", "KNAVERY.RestSlept", true) + box("ate", "KNAVERY.RestAte", true) + box("haven", "KNAVERY.RestHaven", false),
+      // The safe haven heals a wound only on top of the night's healing.
+      render: (_e, dialog) => {
+        const f = dialog.element.querySelector("form")?.elements;
+        if (!f) return;
+        const sync = () => {
+          const healed = f.slept.checked && f.ate.checked;
+          f.haven.disabled = !healed;
+          if (!healed) f.haven.checked = false;
+        };
+        f.slept.addEventListener("change", sync);
+        f.ate.addEventListener("change", sync);
+        sync();
+      },
+      buttons: [
+        {
+          action: "rest", label: "KNAVERY.Rest", icon: "fas fa-campfire", default: true,
+          callback: (_e, b) => ({ slept: b.form.elements.slept.checked, ate: b.form.elements.ate.checked, haven: b.form.elements.haven.checked }),
+        },
+        { action: "cancel", label: "Cancel", icon: "fas fa-xmark" },
+      ],
+      rejectClose: false,
+    });
+    if (choice && typeof choice === "object") await this.actor.rest(choice);
   }
 
   static async #onHealWound() {

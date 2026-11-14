@@ -118,7 +118,19 @@
     "XpTop": "{xp} XP — the top level",
 
     "Rest": "Rest",
-    "RestTip": "A night's sleep after a meal: HP back to full, spellbooks ready again.",
+    "RestTip": "Rest for the night: HP back to full after two watches of sleep and a meal; a safe haven heals a wound too.",
+    "RestTitle": "Rest for the night",
+    "RestHelp": "HP returns to full in the morning only after two watches of sleep and a meal the night before. In a safe haven, one wound heals as well. Spellbooks are ready again either way.",
+    "RestSlept": "Slept two watches",
+    "RestAte": "Ate a meal the night before",
+    "RestHaven": "In a safe haven",
+    "RestCard": {
+      "Title": "{name} rests for the night",
+      "Hp": "HP back to {max}.",
+      "NoHp": "No full night's sleep and meal: HP stays at {hp}.",
+      "Wound": "One wound heals.",
+      "Spells": "Spellbooks are ready again."
+    },
     "HealWound": "Heal Wound",
     "HealWoundTip": "Rest in a safe haven to heal one wound.",
     "HpUp": "Gain 1 HP",
