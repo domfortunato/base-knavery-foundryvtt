@@ -219,8 +219,6 @@ export class CareerData extends foundry.abstract.TypeDataModel {
       key: str(),
       source: str(),
       attribution: str(),
-      /** "Give Knaves a failed career" hack: a career the Knave failed at. */
-      failed: bool(false),
       /** Items granted at creation: compendium/world UUIDs or plain names. */
       startingItems: new ArrayField(str()),
       /** Extra fields this career adds to the character sheet. */

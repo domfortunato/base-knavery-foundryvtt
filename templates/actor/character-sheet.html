@@ -44,7 +44,7 @@
 
           <div class="career-line">
             <span class="background-label">{{localize "KNAVERY.Careers"}}</span>
-            {{#each realCareers}}
+            {{#each careers}}
             <span class="career-chip" data-career-id="{{this.id}}"><a data-action="openCareer">{{this.name}}</a></span>
             {{else}}
             <span class="career-none">{{localize "KNAVERY.NoCareers"}}</span>
@@ -54,20 +54,6 @@
             <a class="background-pick" data-action="pickCareer" data-tooltip="KNAVERY.PickCareer" aria-label="{{localize 'KNAVERY.PickCareer'}}"><i class="fas fa-list-ul"></i></a>
             {{/if}}
           </div>
-          {{#if showFailedLine}}
-          <div class="career-line failed-career-line" data-tooltip="KNAVERY.FailedCareerTip">
-            <span class="background-label">{{localize "KNAVERY.FailedCareer"}}</span>
-            {{#if failedCareer}}
-            <span class="career-chip failed" data-career-id="{{failedCareer.id}}"><a data-action="openCareer">{{failedCareer.name}}</a></span>
-            {{#if failedCareer.petty}}<span class="failed-petty">({{localize "KNAVERY.PettyItem"}} {{failedCareer.petty.name}})</span>{{/if}}
-            {{else}}
-            <span class="career-none">{{localize "KNAVERY.NoCareers"}}</span>
-            {{/if}}
-            {{#if showFailedCareerRoll}}
-            <a class="background-roll failed-career-roll" data-action="rollFailedCareer" data-tooltip="KNAVERY.RollFailedCareer" aria-label="{{localize 'KNAVERY.RollFailedCareer'}}"><i class="fas fa-dice-d20"></i></a>
-            {{/if}}
-          </div>
-          {{/if}}
 
           {{!-- Level, XP and Coins are the bottom band (below); the head keeps Slots. --}}
           <div class="knavery-counter-row knavery-head-counters slots-only">

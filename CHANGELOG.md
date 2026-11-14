@@ -3,10 +3,11 @@
 ## Unreleased
 
 - **The Knave page, rearranged.** Level, XP (with its progress bar) and Coins sit in a band at the bottom; the head
-  keeps the name, Careers, the Failed Career line and Slots. Level and XP are plain text unless Char Gen Mode is on.
+  keeps the name, Careers and Slots. Level and XP are plain text unless Char Gen Mode is on.
 - HP and Wounds change with + and − under each bar; their current values are no longer typed. Wounds − replaces
   the Heal Wound button.
-- Failed careers are on by default, each on its own line labelled Failed Career.
+- The failed-career hack is gone (Knave gives each character two careers, and that is all). Worlds that used it
+  keep those careers as ordinary ones, and their petty items take a slot like any other.
 - The thumb rail has an Attack button too, under the pages: the Attack window from any page.
 - The d20 beside each ability is a little smaller.
 - **A narrower character sheet:** as wide as the abilities and vitals. Inventory, Growth and Description fit one
@@ -35,18 +36,15 @@
 - The name d20 on the sheet joins a surname's two halves ("Adder-" + "bald") instead of leaving a trailing hyphen.
 - The portrait picker rolls a random portrait in Char Gen Mode.
 - The Inventory tab says how many coins the character has.
-- The failed career stands on its own "Failed Career" line on the Knave page, and its Growth card carries a
-  "Failed Career" band.
 - **Bigger text, and your own text size.** Base Knavery's windows default to Large, and each player picks
   Normal, Large, Larger or Largest under Configure Settings → Base Knavery. Sheets and the dashboard open
   larger to match. Chat cards keep their size.
 - The sheet footer is one short line; the welcome window keeps the full disclaimer and credits.
 - The equip toggle is a fist.
 - Traits open expanded, a Blank character starts with its traits rolled, and Char Gen Mode adds Roll every trait.
-- Careers and the failed career change only at level 1, in Char Gen Mode (the GM can always): each career card
+- Careers change only at level 1, in Char Gen Mode (the GM can always): each career card
   rerolls or picks a replacement, which takes back the old career's items and gives the new one's. Removing a
   career takes back its items too. A career's items now sit on their own rows.
-- The failed career's petty item is its own option in the Hacks settings, on by default.
 - The settings windows' labels no longer wrap with gaps.
 - **Char Gen Mode** (was Character Creation Mode). Players edit ability scores only with it on, and level and XP
   only when the GM's new switch "Players may change level & XP" is on too (dashboard, settings and a macro).
@@ -58,9 +56,6 @@
 - New settings for max HP at each level (Knave 2e's reroll, add 1d6, or reroll keeping the better) and for
   first-level HP (1d6 or 1d4 + 2). The Growth page says what the next level brings.
 - The Game Master's notes on the Growth page: the GM writes them, the player reads them.
-- New hack, "Give Knaves a failed career": a third career the Knave failed at, granting one random item of its
-  list, petty (no slot) while that Knave carries it. The Knave and Growth pages mark it; the die rolls one in
-  Char Gen Mode.
 - The ability roll link has a large d20 beside the name; both light up and show the tooltip. The AC tooltip
   states the rule: AC = 11 plus 1 per piece of equipped armor.
 - The taglines under the abilities now list what each is used for, e.g. Strength: melee attacks,

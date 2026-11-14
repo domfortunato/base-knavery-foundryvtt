@@ -562,71 +562,6 @@
     margin-bottom: 0;
 }
 
-/* Barebones "Failed career:" line. Sits in the same row-3 slot the 2e background
-   description occupies -- the two never coexist -- so it renders directly under
-   the Background line. All three header lines (Background / Failed Career /
-   Failed Career Item) render at ONE size, 17px, matching .background-name:
-   the earlier 15px/13px "quieting" was overruled 2026-08-08 by the user with
-   all three on screen -- they read as one block, so they size as one. The
-   greyed labels keep the label/value distinction. */
-.failed-career-block {
-    grid-column: 1 / 3;
-    grid-row: 3;
-    align-self: start;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0;
-}
-
-.failed-career-line,
-.failed-career-item-line {
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-    min-width: 0;
-}
-
-.failed-career-label {
-    flex: 0 0 auto;
-    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
-    font-size: calc(17px * var(--kn-text, 1));
-    font-variant: small-caps;
-    color: var(--kn-muted);
-}
-
-.failed-career-name {
-    flex: 0 1 auto;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
-    font-size: calc(17px * var(--kn-text, 1));
-    font-variant: small-caps;
-}
-
-/* Keepsake-item line: same size as the lines above it, per the one-size ruling
-   in the block comment at the top of this section. */
-.failed-career-item-label {
-    flex: 0 0 auto;
-    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
-    font-size: calc(17px * var(--kn-text, 1));
-    font-variant: small-caps;
-    color: var(--kn-muted);
-}
-
-.failed-career-item-name {
-    flex: 0 1 auto;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
-    font-size: calc(17px * var(--kn-text, 1));
-    font-variant: small-caps;
-}
-
 /* Roll Character is always rendered so the Randomization toggle can show/hide it
    in place; Foundry has renamed the header-button element across versions, so
    match both. */
@@ -2262,24 +2197,6 @@ textarea.omen-input {
     font-size: calc(12px * var(--kn-text, 1));
     color: var(--color-text-subtle);
     margin: 6px 0 0;
-}
-
-/* Re-roll / pick controls on the failed-career line. Dimmed to match the label
-   they follow -- this is flavour, and should not compete with the background
-   controls above it. */
-.failed-career-roll,
-.failed-career-pick,
-.failed-career-item-roll {
-    flex: 0 0 auto;
-    cursor: pointer;
-    opacity: 0.55;
-    font-size: calc(12px * var(--kn-text, 1));
-}
-
-.failed-career-roll:hover,
-.failed-career-pick:hover,
-.failed-career-item-roll:hover {
-    opacity: 1;
 }
 
 /* Attribute-loss status banners: one coloured bar per active condition. The
@@ -4787,7 +4704,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-roll-card .card-applied { display: block; margin-bottom: 2px; color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
 .knavery.sheet.actor > .window-content > nav.knavery-tab-rail[hidden] { display: none; }
 
-/* ---- Char Gen Mode, Level Up, Growth, failed careers ------------------------ */
+/* ---- Char Gen Mode, Level Up, Growth ----------------------------------------- */
 /* A score, level or XP this user may not change (Char Gen Mode off, or the GM's
    level & XP switch): readable, plainly not a field. */
 .knavery .knavery-ability-circle input:disabled,
@@ -4805,24 +4722,11 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery .knavery-gm-notes prose-mirror { min-height: 140px; height: auto; }
 .knavery .knavery-gm-notes-text { padding: 4px 2px; }
 
-/* Failed careers: a chip and a card marked failed, and the petty item. */
-.knavery .failed-career-line .background-label { color: var(--kn-peril); }
 /* The traits' two groups: Knave 2e's (from the GM's PDF), then Knave 1e's (shipped). */
 .character-traits .trait-group-heading {
     grid-column: 1 / -1; margin-top: 6px; font-size: calc(12px * var(--kn-text, 1));
     font-variant: small-caps; letter-spacing: 0.05em; color: var(--kn-muted); border-bottom: 1px solid var(--kn-line);
 }
-.knavery .failed-career-line .failed-petty { font-size: calc(12px * var(--kn-text, 1)); color: var(--kn-muted); }
-.knavery .knavery-career.failed { border-style: dashed; border-color: var(--kn-peril); }
-.knavery .career-failed-band {
-    margin: -6px -8px 6px; padding: 3px 8px; background: var(--kn-peril-wash);
-    border-bottom: 1px dashed var(--kn-peril); color: var(--kn-peril);
-    font-weight: bold; font-variant: small-caps; letter-spacing: 0.06em; font-size: calc(15px * var(--kn-text, 1));
-}
-.knavery .career-failed-label { font-size: calc(11px * var(--kn-text, 1)); font-variant: small-caps; letter-spacing: 0.05em; color: var(--kn-muted); }
-.knavery .career-petty { font-size: calc(13px * var(--kn-text, 1)); margin: 2px 0 4px; }
-.knavery .career-petty a { cursor: pointer; font-weight: bold; }
-.knavery .career-petty .petty-gone { text-decoration: line-through; color: var(--kn-faint); }
 
 /* The ability-points window of random creation. */
 .knavery-points .kn-points-row { display: flex; align-items: center; gap: 6px; padding: 3px 0; border-bottom: 1px dotted var(--kn-line); }

@@ -8,9 +8,9 @@
  * and Print.
  */
 import {
-  ABILITIES, FLAG_SCOPE, LEVEL_UP_ABILITIES, NPC_ROLES, SETTINGS_NS, SYS_PATH, TABLES,
+  ABILITIES, LEVEL_UP_ABILITIES, NPC_ROLES, SETTINGS_NS, SYS_PATH, TABLES,
 } from "../config.js";
-import { isPetty, slotsForItem } from "../documents/actor.js";
+import { slotsForItem } from "../documents/actor.js";
 import { levelLadder } from "../data-models.js";
 import { mayEditAbilities, mayEditCareers, mayEditLevelXp, mayUseCharGen } from "../edit-gates.js";
 import { scaledPosition } from "../settings.js";
@@ -18,8 +18,8 @@ import { attackRow, castSpell, openAttack, rollAttack, rollCheck, rollDamage, ro
 import { pickArt, randomPortraitPair, setActorArt } from "../art.js";
 import { drawFrom, pickFrom } from "../compendium.js";
 import {
-  addCareer, careerFromText, chooseCareer, drawCareerExcept, failedCareersOn, pickCareerItem, regenerateCharacter,
-  removeCareer, replaceCareer, rollFailedCareer, rollFullName, rollTraits,
+  addCareer, careerFromText, chooseCareer, drawCareerExcept, pickCareerItem, regenerateCharacter,
+  removeCareer, replaceCareer, rollFullName, rollTraits,
 } from "../character-generator.js";
 import { hpRuleHint, openLevelUp } from "../level-up.js";
 import { canOfferItem, offerFromDrop, promptOfferTarget } from "../item-offer.js";
@@ -113,7 +113,6 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       pickTrait: owned(mayRandomize(KnaveryActorSheet.#onPickTrait)),
       rollCareer: owned(mayRandomize(careerGate(KnaveryActorSheet.#onRollCareer))),
       pickCareer: owned(mayRandomize(careerGate(KnaveryActorSheet.#onPickCareer))),
-      rollFailedCareer: owned(mayRandomize(careerGate(KnaveryActorSheet.#onRollFailedCareer))),
       changeCareer: owned(careerGate(KnaveryActorSheet.#onChangeCareer)),
       removeCareer: owned(careerGate(KnaveryActorSheet.#onRemoveCareer)),
       rollAllTraits: owned(mayRandomize(KnaveryActorSheet.#onRollAllTraits)),
@@ -302,7 +301,6 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       if (item.type === "armor") tags.push(F("KNAVERY.NAp", { n: item.system.points }));
       if (item.type === "spellbook") tags.push(L(item.system.scroll ? "KNAVERY.Scroll" : "KNAVERY.Spellbook"));
       if (item.system.quantity > 1) tags.push(F("KNAVERY.NQuantity", { n: item.system.quantity }));
-      if (isPetty(item)) tags.push(L("KNAVERY.Petty"));
       return {
         id: item.id,
         uuid: item.uuid,
@@ -404,11 +402,6 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
         enriched: await enrichForSheet(s.gmNotes ?? "", { relativeTo: actor, secrets: game.user.isGM }),
       } : null,
       careerEdit,
-      // The failed career sits on a line of its own, labelled, never mixed with the careers.
-      realCareers: careers.filter((c) => !c.failed),
-      failedCareer: careers.find((c) => c.failed) ?? null,
-      showFailedLine: isChar && (failedCareersOn() || careers.some((c) => c.failed)),
-      showFailedCareerRoll: careerEdit && failedCareersOn() && !careers.some((c) => c.failed),
       coinsTakeSlots: game.settings.get(SETTINGS_NS, "coins-take-slots"),
       abilities,
       attacks,
@@ -455,14 +448,6 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     return context;
   }
 
-  /** A failed career's petty item: its name, and its id while this Knave still carries it petty. */
-  #pettyContext(career) {
-    const mark = career.getFlag(FLAG_SCOPE, "pettyItem");
-    if (!mark?.name) return null;
-    const item = this.actor.items.get(mark.id);
-    return { name: item?.name ?? mark.name, id: item && isPetty(item) ? item.id : null };
-  }
-
   /** Careers on the actor, with the feature fields they add to the sheet. */
   async #careerContext(careerEdit) {
     const s = this.actor.system;
@@ -493,8 +478,6 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
         effects: career.effects.filter((e) => !e.disabled).map((e) => e.name),
         canRemove: careerEdit,
         canChange: careerEdit,
-        failed: career.system.failed === true,
-        petty: career.system.failed ? this.#pettyContext(career) : null,
       });
     }
     return out;
@@ -637,10 +620,6 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
 
   static async #onPickCareer() {
     await pickCareerItem(this.actor);
-  }
-
-  static async #onRollFailedCareer() {
-    await rollFailedCareer(this.actor);
   }
 
   static async #onRemoveCareer(_event, target) {

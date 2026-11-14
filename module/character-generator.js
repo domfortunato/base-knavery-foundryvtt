@@ -13,9 +13,6 @@
  *   4. Two careers from the Careers table, with their starting items.
  *   5. 3d6 × 10 coins and the standard kit; one random spellbook per point of
  *      INT the character starts with (levels above the first add none).
- *   6b. With the "failed career" hack on, a third career the Knave failed at:
- *      a full career, but it grants one random item of its list, petty
- *      (no slot) while this Knave carries it.
  *   6. Name, traits and portrait from the tables and galleries.
  *
  * Every table is a shell until the GM fills it. A step whose table is empty is
@@ -98,10 +95,9 @@ const slug = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(
  * Add a career Item to an actor. In Char Gen Mode its starting items come too,
  * and each feature field is seeded with its initial value.
  */
-export const addCareer = async (actor, career, { grantItems = null, knNoLog = false, failed = false } = {}) => {
+export const addCareer = async (actor, career, { grantItems = null, knNoLog = false } = {}) => {
   const data = career instanceof Item ? itemData(career) : foundry.utils.deepClone(career);
   data.system ??= {};
-  if (failed) data.system.failed = true;
   data.system.key ||= slug(data.name);
   // `knNoLog` from generation, whose summary card already lists what it gave.
   const [created] = await actor.createEmbeddedDocuments("Item", [data], { knNoLog });
@@ -113,10 +109,6 @@ export const addCareer = async (actor, career, { grantItems = null, knNoLog = fa
     seed[`system.features.${created.system.key}.${f.key}`] = v;
   }
   if (Object.keys(seed).length) await actor.update(seed, { knNoLog: true });
-  if (failed) {
-    if (game.settings.get(SETTINGS_NS, "failed-career-item")) await grantPettyItem(actor, created, { knNoLog });
-    return created;
-  }
   const grant = grantItems ?? actor.system.generationEnabled === true;
   if (grant && created.system.startingItems?.length) {
     const items = (await Promise.all(created.system.startingItems.map(resolveStartingItem))).filter(Boolean);
@@ -152,25 +144,6 @@ export const careerFromResult = async (result, text) => {
 
 export const careerFromText = async (actor, result, text) => addCareer(actor, await careerFromResult(result, text));
 
-/**
- * A failed career's one item: drawn at random from its starting items and
- * marked petty for this Knave (no slot while they carry it). Created on its
- * own, never stacked, since the mark belongs to this one item. The career
- * remembers it, so the Growth page can name it even after it is gone.
- */
-const grantPettyItem = async (actor, career, { knNoLog = false } = {}) => {
-  const entries = (career.system.startingItems ?? []).filter((e) => String(e ?? "").trim());
-  if (!entries.length) return null;
-  const data = await resolveStartingItem(entries[Math.floor(Math.random() * entries.length)]);
-  if (!data) return null;
-  foundry.utils.setProperty(data, `flags.${FLAG_SCOPE}.pettyFor`, actor.id);
-  foundry.utils.setProperty(data, `flags.${FLAG_SCOPE}.fromCareer`, career.id);
-  foundry.utils.setProperty(data, "system.equipped", false);
-  const [item] = await actor.createEmbeddedDocuments("Item", [data], { knNoLog });
-  if (item) await career.update({ [`flags.${FLAG_SCOPE}.pettyItem`]: { id: item.id, name: item.name } }, { knNoLog: true });
-  return item;
-};
-
 /** A career from the Careers table whose name is not in `avoid`, or null. */
 export const drawCareerExcept = async (avoid = []) => {
   for (let i = 0; i < 12; i++) {
@@ -180,18 +153,6 @@ export const drawCareerExcept = async (avoid = []) => {
     if (!avoid.includes(c.name)) return c;
   }
   return null;
-};
-
-export const failedCareersOn = () => game.settings.get(SETTINGS_NS, "failed-career") === true;
-
-/** The Careers block's failed-career die: one failed career per Knave. */
-export const rollFailedCareer = async (actor) => {
-  if (!mayEditCareers(actor)) return ui.notifications.warn("KNAVERY.Notify.CareersLocked", { localize: true });
-  const careers = actor.items.filter((i) => i.type === "career");
-  if (careers.some((c) => c.system.failed)) return null;
-  const career = await drawCareerExcept(careers.map((c) => c.name));
-  if (!career) return ui.notifications.warn("KNAVERY.Notify.NoCareers", { localize: true });
-  return addCareer(actor, career, { failed: true });
 };
 
 /** Remove a career, its feature values and the items it gave that the Knave still carries. */
@@ -205,16 +166,14 @@ export const removeCareer = async (actor, career) => {
 };
 
 /**
- * Swap a career for another of the same kind: a career for a career (with its
- * items), a failed career for a failed career (with its one petty item). Players
- * may only while the character is level 1, in Char Gen Mode.
+ * Swap a career for another, taking back the old one's items and giving the
+ * new one's. Players may only while the character is level 1, in Char Gen Mode.
  */
 export const replaceCareer = async (actor, old, replacement) => {
   if (!mayEditCareers(actor)) return ui.notifications.warn("KNAVERY.Notify.CareersLocked", { localize: true });
   if (!old || !replacement) return null;
-  const failed = old.system.failed === true;
   await removeCareer(actor, old);
-  return addCareer(actor, replacement, { failed, grantItems: true });
+  return addCareer(actor, replacement, { grantItems: true });
 };
 
 /** The pick-list for careers: career Items everywhere, plus Careers table rows. */
@@ -361,8 +320,6 @@ export const buildCharacter = async ({ level = 1, abilities = null } = {}) => {
     if (!r) { notes.push(L("KNAVERY.Gen.NoCareerTable")); break; }
     careers.push(await careerFromResult(r.result, r.text));
   }
-  const failedCareer = failedCareersOn() && careers.length ? await drawCareerExcept(careers.map((c) => c.name)) : null;
-  if (failedCareer) notes.push(F("KNAVERY.Gen.FailedCareer", { name: failedCareer.name }));
 
   const items = [];
   for (const k of STANDARD_KIT) {
@@ -409,7 +366,6 @@ export const buildCharacter = async ({ level = 1, abilities = null } = {}) => {
       generationEnabled: true,
     },
     careers,
-    failedCareer,
     items,
     notes,
   };
@@ -433,7 +389,6 @@ const applyBuilt = async (actor, built) => {
     },
   }, { knNoLog: true, knCreation: true });
   for (const c of built.careers) await addCareer(actor, c, { grantItems: true, knNoLog: true });
-  if (built.failedCareer) await addCareer(actor, built.failedCareer, { failed: true, knNoLog: true });
   if (built.items.length) await actor.addItems(built.items, { knNoLog: true });
   await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor }),

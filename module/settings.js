@@ -62,7 +62,7 @@ export const SETTING_GROUPS = [
     hint: "KNAVERY.Settings.GroupHacksHint",
     icon: "fa-solid fa-flask",
     keys: [
-      "failed-career", "failed-career-item", "knave1e-starting-gear", "knave1e-xp", "knave1e-random-raises",
+      "knave1e-starting-gear", "knave1e-xp", "knave1e-random-raises",
       "knave1e-initiative", "hard-mode-wounds", "show-hazard-dice",
     ],
   },
@@ -135,9 +135,6 @@ export const registerSettings = () => {
   });
 
   /* Hacks */
-  // On by default (user ruling 2026-11-14): every Knave has a failed career, labelled as one.
-  reg("failed-career", { label: "FailedCareer", type: Boolean, default: true, onChange: rerenderActorSheets });
-  reg("failed-career-item", { label: "FailedCareerItem", type: Boolean, default: true });
   reg("knave1e-starting-gear", { label: "Knave1eStartingGear", type: Boolean, default: false });
   // Knave 1e rules, one switch each (data-models.js levelLadder, level-up.js, initiative.js).
   reg("knave1e-xp", {

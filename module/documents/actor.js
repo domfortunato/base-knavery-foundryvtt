@@ -8,15 +8,11 @@ import {
 } from "../change-log.js";
 import { stripLockedChanges } from "../edit-gates.js";
 
-/** A failed career's item is petty, filling no slot, while the Knave it was made for carries it. */
-export const isPetty = (item) => !!item.actor && item.getFlag?.(FLAG_SCOPE, "pettyFor") === item.actor.id;
-
 /** How many inventory slots one owned item fills. */
 export const slotsForItem = (item) => {
   const s = item.system;
   if (item.type === "career") return 0;
   if (s.weightless) return 0;
-  if (isPetty(item)) return 0;
   const qty = Math.max(0, s.quantity ?? 1);
   const bundle = Math.max(1, s.bundle ?? 1);
   return Math.ceil(qty / bundle) * (s.slots ?? 1);
@@ -110,10 +106,10 @@ export class KnaveryActor extends Actor {
     const bump = new Map();
     for (const data of dataList) {
       const qty = Number(data.system?.quantity ?? 1) || 1;
-      // Never onto a career's own item or a petty one: those marks belong to that one row.
+      // Never onto a career's own item: that mark belongs to that one row.
       const same = data.type === "item" && this.items.find((i) => i.type === "item" && i.name === data.name
         && i.img === data.img && !i.system.equipped && (i.system.bundle ?? 1) === (data.system?.bundle ?? 1)
-        && !i.getFlag(FLAG_SCOPE, "fromCareer") && !i.getFlag(FLAG_SCOPE, "pettyFor"));
+        && !i.getFlag(FLAG_SCOPE, "fromCareer"));
       if (same) bump.set(same.id, (bump.get(same.id) ?? same.system.quantity ?? 1) + qty);
       else {
         const pending = create.find((c) => c.type === "item" && data.type === "item" && c.name === data.name && c.img === data.img);
