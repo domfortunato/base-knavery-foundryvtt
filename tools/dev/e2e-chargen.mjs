@@ -1276,7 +1276,6 @@ await withSettings(gm, async () => {
       for (const n of ["Probe Foe A", "Probe Foe B", "Probe Foe C"]) foes.push(await Actor.create({ name: n, type: "npc", system: { role: "monster" } }));
       const combat = await Combat.create({ scene: null });
       await combat.createEmbeddedDocuments("Combatant", [{ actorId: pcId }, ...foes.map((f) => ({ actorId: f.id }))]);
-      await combat.startCombat();
       const rounds = [];
       // Core fires combatTurnChange after its own turn events, once an update has returned:
       // listen before each change and wait for its own call, so none is read by the next.
@@ -1287,11 +1286,18 @@ await withSettings(gm, async () => {
           setTimeout(() => res("(none)"), 5000);
         }).finally(() => Hooks.off("combatTurnChange", hook));
       };
+      // Each step waits for its own turn events to finish before the next begins.
+      const settle = () => new Promise((res) => setTimeout(res, 600));
+      const started = change();
+      await combat.startCombat();
+      await started;
+      await settle();
       for (let r = 0; r < 12; r++) {
         // End the round on its last combatant, as Next Turn would.
         const moved = change();
         await combat.update({ turn: combat.turns.length - 1 });
         await moved;
+        await settle();
         const holder = combat.combatant?.id;
         // Whose turn core ends at the rollover (the hook's `previous` is a live object, so count the
         // end-of-turn calls themselves; the active GM runs them).
@@ -1301,6 +1307,7 @@ await withSettings(gm, async () => {
         const order = combat.turns.map((c) => c.id).join();
         await combat.nextRound();
         await heard;
+        await settle();
         delete combat._onEndTurn;
         const prior = ended.join();
         rounds.push({ ok: prior === holder, flipped: order !== combat.turns.map((c) => c.id).join(), stored: combat._source.turn, local: combat.turn,
