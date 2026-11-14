@@ -424,12 +424,14 @@ await withSettings(gm, async () => {
         subs: [...el.querySelectorAll(".form-footer .kn-create-sub")].map((s) => s.textContent.trim()),
         list: !!el.querySelector(".knavery-create-branches, ul"),
         titles: [...el.querySelectorAll(".form-footer button")].map((b) => b.textContent.trim()),
+        wide: (() => { const f = el.querySelector(".form-footer"); const b = f?.querySelector("button"); return !!b && b.getBoundingClientRect().width > 0.8 * f.getBoundingClientRect().width; })(),
       };
     });
     await alice.locator('.knavery-create button[data-action="close"]').click().catch(() => {});
     await closeDialogs();
-    ok(win.subs.length === 2 && win.subs[0].startsWith("Rolled stats") && win.subs[1].startsWith("An empty sheet") && !win.list,
-      "Create Character: two big buttons with a line each, no list", JSON.stringify(win));
+    // Alice is a player: Blank Sheet is the GM's (2026-11-14), so one big tile spanning the row.
+    ok(win.subs.length === 1 && win.subs[0].startsWith("Rolled stats") && !win.list && win.wide,
+      "Create Character for a player: one big Randomly Generated tile with its line, no list", JSON.stringify(win));
 
     const names = await gm.evaluate(async ([sys, x]) => {
       const made = [];

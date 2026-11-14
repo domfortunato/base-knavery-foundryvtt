@@ -4263,6 +4263,8 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .kn-levelup-ability.capped { opacity: 0.5; }
 /* Create Character: two big tiles, each with its icon, its name and one line. */
 .knavery-create .form-footer { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+/* A player sees only Randomly Generated: the one tile takes the row. */
+.knavery-create .form-footer button:only-child { grid-column: 1 / -1; }
 /* Create NPC: three tiles, and a fieldset each for the monster and hireling choices. */
 .knavery-create-npc .form-footer { grid-template-columns: repeat(3, 1fr); }
 .knavery-create-npc .kn-npc-options { margin: 6px 0; padding: 4px 8px; border: 1px solid var(--kn-rule); border-radius: 4px; }
