@@ -26,6 +26,7 @@
       {{#if item.wounded}}<span class="knavery-item-tag wounded-tag" data-tooltip="KNAVERY.UnusableTip">{{localize "KNAVERY.Unusable"}}</span>{{/if}}
       {{#if item.castToday}}<span class="knavery-item-tag">{{localize "KNAVERY.CastToday"}}</span>{{/if}}
       {{#if item.lit}}<span class="knavery-item-tag lit-tag"><i class="fas fa-fire"></i> {{localize "KNAVERY.Lit"}}</span>{{/if}}
+      {{#if item.treasure}}<span class="knavery-item-tag treasure-tag" data-tooltip="KNAVERY.TreasureTip"><i class="fas fa-gem"></i> {{localize "KNAVERY.Treasure"}}</span>{{/if}}
     </div>
     <div class="knavery-item-controls">
       {{#if (and @root.editable item.system.hasPlusMinus)}}
@@ -45,6 +46,12 @@
       {{#if (and @root.editable item.system.isEquipable)}}
       <a class="item-control item-toggle-equipped {{#if item.system.equipped}}equipped{{/if}}" data-action="itemToggleEquipped"
         data-tooltip="{{#if item.system.equipped}}KNAVERY.ItemUnequip{{else}}KNAVERY.ItemEquip{{/if}}"><i class="fas fa-hand-fist"></i></a>
+      {{/if}}
+      {{#if item.canRepair}}
+      <a class="item-control item-repair" data-action="itemRepair" data-tooltip-text="{{item.repairTip}}"><i class="fas fa-hammer"></i></a>
+      {{/if}}
+      {{#if item.canSell}}
+      <a class="item-control item-sell" data-action="itemSell" data-tooltip="KNAVERY.Sell.Hint"><i class="fas fa-coins"></i></a>
       {{/if}}
       {{#if item.canGive}}
       <a class="item-control item-give" data-action="itemGive" data-tooltip="KNAVERY.GiveHint"><i class="fas fa-hand-holding"></i></a>

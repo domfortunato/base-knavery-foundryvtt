@@ -20,7 +20,7 @@ import { bindOfferCard, registerOfferSocket } from "./item-offer.js";
 import { rebuildChangeLogCard } from "./change-log.js";
 import { createCharacter, createCharacterInteractive, registerCreationSocket, updateCareerIcons } from "./character-generator.js";
 import { createNpc, createNpcInteractive } from "./npc-generator.js";
-import { GmDashboard, openGmDashboard, registerRequestSocket, setToggle } from "./gm-dashboard.js";
+import { GmDashboard, openGmDashboard, registerPartyRefresh, registerRequestSocket, setToggle } from "./gm-dashboard.js";
 import { openMarketplace, openMarketplaceManager } from "./marketplace.js";
 import { openTableImporter, importRows, parseRows } from "./table-importer.js";
 import { rollAttack, rollCheck, rollDieOfFate, rollSave } from "./rolls.js";
@@ -64,6 +64,7 @@ Hooks.once("init", () => {
   registerOfferSocket();
   registerCreationSocket();
   registerRequestSocket();
+  registerPartyRefresh();
   registerRulebook();
 
   game.keybindings.register(SETTINGS_NS, "openRulebook", {

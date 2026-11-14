@@ -197,15 +197,26 @@ export const RULES_PRESETS = {
     "creation-abilities": "lowest", "starting-kit": "knave1e", "show-alignment": true, "show-background": true,
     "first-level-hp": "1d8", "level-hp-rule": "knave1e", "death-rule": "knave1e", "healing-rule": "knave1e",
     "spell-rule": "book-per-day", "spell-list": "1e", "knave1e-xp": true, "knave1e-initiative": true,
-    "attack-rule": "knave1e", "price-list": "knave1e", "coins-per-slot": "100",
+    "attack-rule": "knave1e", "price-list": "knave1e", "coins-per-slot": "100", "treasure-xp": "off",
   },
   "2e": {
     "creation-abilities": "points", "starting-kit": "careers", "show-alignment": false, "show-background": false,
     "first-level-hp": "1d6", "level-hp-rule": "reroll", "death-rule": "wounds", "healing-rule": "knave2e",
     "spell-rule": "int-per-day", "spell-list": "auto", "knave1e-xp": false, "knave1e-initiative": false,
-    "attack-rule": "knave2e", "price-list": "knave2e", "coins-per-slot": "500",
+    "attack-rule": "knave2e", "price-list": "knave2e", "coins-per-slot": "500", "treasure-xp": "coin",
   },
 };
+/**
+ * Other values that still play an edition as written: Knave 1e's designer's note allows XP for
+ * gold (Knave 1.0 p5), so a 1e world that turns treasure XP on still plays Knave 1e.
+ */
+export const RULES_ALSO = { "1e": { "treasure-xp": ["gold"] } };
+/** Coins of treasure per XP: Knave 2e p12 (1 a coin); Knave 1e's XP for gold (100 copper). */
+export const TREASURE_COINS_PER_XP = { coin: 1, gold: 100 };
+/** A companion's share of treasure and XP (Knave 2e p59). */
+export const COMPANION_SHARE = 0.5;
+/** What a shop pays for an item: half its price; treasure sells at full value (user, 2026-11-14). */
+export const SELL_RATE = 0.5;
 /** The rules of 0.2.0's first build; a world stamped then learns the later ones from its own edition (rules.js). */
 export const CORE_RULE_KEYS = [
   "creation-abilities", "starting-kit", "show-alignment", "show-background", "first-level-hp", "level-hp-rule",

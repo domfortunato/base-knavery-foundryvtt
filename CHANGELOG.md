@@ -36,7 +36,9 @@
     come from the 1e list. Create NPC offers 1e's ten henchmen at their daily wages, and the Time tab's
     **Pay** settles every day owed. A hireling's sheet says whether the wage is by the month or the day.
   - Coins per slot: 100 (1e) or 500 (2e).
-  - A world already on this version's rules gets the three new ones in the edition its others play.
+  - XP for treasure: off in 1e (XP for deeds), or 1e's designer's-note XP for gold at 1 XP per 100 copper
+    (still Knave 1e); 1 XP per coin in 2e.
+  - A world already on this version's rules gets the new ones in the edition its others play.
 - **The welcome window** says which rules the world plays, how 1e and 2e fit together, and links the
   Knave 1e PDF on itch beside the Knave 2e book, though the 1e rules are built in. An **AI disclosure**
   says first that there is no AI art: Base Knavery ships with more than 2,900 human-made art assets
@@ -54,6 +56,17 @@
   Knave logo is a faint watermark behind the welcome's Licensing section. The first
   edition is called by its title, Knave.
 - **The sheet footer** now reads "...for Knave (first and second editions)...".
+- **A Party tab** on the Game Master's Dashboard: each player character's HP (unconscious or dead), wounds,
+  slots used of the maximum, coins, lights (lit ones first) and spellbooks still ready today, with the
+  spells left under Knave 2e. A name opens the sheet; the tab keeps up as the characters change.
+- **Treasure:** a Treasure tick on every item. The XP tab's new *Treasure brought back* mode lists the
+  treasure the chosen characters carry, adds any coins you type, and splits the XP evenly (Knave 2e:
+  1 XP per coin); a companion takes a half share, noted on the card. Each item counts once.
+- **Selling:** a coin icon on each Inventory row sells the item, or some of a stack, for half its price;
+  treasure sells for its full value. It follows the player marketplace switch.
+- **Repair** on every broken item: a hammer on the Inventory row and a button beside Broken on the item
+  sheet. Free under Knave 2e attacks (the book has no repair rule); 10% of the price a point for a worn
+  weapon or armor under Knave 1e.
 - **Time and hazards** (a new Time tab on the Game Master's Dashboard): end a dungeon turn or a travel
   watch, and the world clock moves on 10 minutes or 4 hours and the hazard die rolls. The tab counts the
   turns, or the day and its six watches, and the watches of travel today; a box marks the party resting.

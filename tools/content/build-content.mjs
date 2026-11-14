@@ -675,6 +675,7 @@ journal("Base Knavery Guide", [
 <li><b>Attacks.</b> Knave 1e: weapons have 3 quality, armor 1 to 7. A natural 20 adds one damage die, and the card's <i>Wear armor</i> button lets the target's owner pick the piece that loses a point; a natural 1 costs the weapon a point. At 0 the item is destroyed (marked Broken); the item sheet's <i>Repair</i> costs 10% of its price a point. Knave 2e: a natural 1 breaks the weapon, a power attack doubles the damage dice and breaks it, and 21+ earns a free maneuver.</li>
 <li><b>Prices and wages.</b> Knave 1e: the copper price list (the <i>Gear &amp; Prices (Knave 1e)</i> compendium and its shop aisles), henchmen paid by the day. Knave 2e: its prices and monthly wages.</li>
 <li><b>Coins per slot.</b> Knave 1e: 100. Knave 2e: 500.</li>
+<li><b>XP for treasure.</b> Knave 1e: off, XP comes from deeds; its designer's note allows XP for gold, 1 XP per 100 copper, and choosing that still plays Knave 1e. Knave 2e: 1 XP per coin of treasure brought back.</li>
 </ul>
 <p>When you build tables from your Knave 2e book, the system asks whether to switch the world to Knave 2e rules. Switching never changes a character you already have. A world made before version 0.2.0 kept the Knave 2e rules it played.</p>
 <p>Knave 1e's rules are from <i>Knave</i> (first edition) by Ben Milton, CC BY 4.0, adapted here as automation and settings.</p>`],
@@ -721,9 +722,14 @@ journal("Base Knavery Guide", [
 </ul></li>
 <li><b>Damage</b> comes off HP first. Each point past 0 fills an item slot with a wound, from the bottom of the inventory up: empty slots first, then coins, then the lowest item, which becomes <i>Unusable</i> until the wound heals (whether it was dropped or broken is the table's call). When every slot is wounded, the character dies. <b>Direct</b> damage skips HP. Monsters take direct damage tripled and die at 0 HP. Under Knave 1e's death rule there are no wounds and no direct damage: a character is unconscious at 0 HP and dead below 0.</li>
 <li>The <b>Die of Fate</b> is a d6 for when fate, not skill, decides.</li>
+<li><b>Repair</b>: a hammer on the Inventory row, or beside <i>Broken</i> on the item sheet. Under Knave 1e attacks a worn weapon or armor costs 10% of its price a point; otherwise a broken item is mended for nothing (Knave 2e has no repair rule).</li>
 </ul>`],
+  ["Treasure and the Party", `
+<p>The dashboard's <b>Party</b> tab shows every player character at a glance: HP (and whether they are unconscious or dead), wounds, slots used, coins, their lights and which are lit, and the spellbooks still ready today. Click a name to open the sheet.</p>
+<p>Tick <b>Treasure</b> on an item's sheet for loot found in a dungeon. When the party is back in civilization, open the dashboard's <b>XP</b> tab and choose <i>Treasure brought back</i>: tick who helped, and their treasure is listed and added up with any coins you type in. The XP is split evenly; a companion of one of them takes a half share, noted on the card. Each treasure item counts once.</p>
+<p>The coin icon on an Inventory row sells the item: half its price, or its full value for treasure. Selling follows the player marketplace switch.</p>`],
   ["Levels", `
-<p>XP is earned the Knave way; the GM awards it from the dashboard's <b>XP</b> tab. Once a character's XP reaches the next threshold and <b>Char Gen Mode</b> is on, an up arrow appears in the sheet's title bar (and <b>Level Up</b> on the Growth page). Levelling up:</p>
+<p>XP is earned the Knave way; the GM awards it from the dashboard's <b>XP</b> tab (treasure too, see <i>Treasure and the Party</i>). Once a character's XP reaches the next threshold and <b>Char Gen Mode</b> is on, an up arrow appears in the sheet's title bar (and <b>Level Up</b> on the Growth page). Levelling up:</p>
 <ul>
 <li>raises three different abilities by one (you choose them, or the dice do);</li>
 <li>grows max HP by the GM's rule (Settings → Character Creation). As written: reroll one d6 per level; if the roll isn't higher, max HP goes up by one.</li>

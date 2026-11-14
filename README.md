@@ -46,6 +46,7 @@ A world made before 0.2.0 keeps the Knave 2e rules it played; a new world plays 
   the weapon one, and repairs cost 10% of the price a point.
 - The 1e price list in copper as shop aisles, 100 coins to a slot, and
   henchmen paid by the day.
+- XP for deeds, or the designer's note's XP for gold (1 XP per 100 copper).
 - The Rules choice at the top of **Configure Rules** sets every rule to one
   edition; each rule also has its own switch.
 

@@ -6,12 +6,28 @@
       <option value="each">{{localize "KNAVERY.Dashboard.XpEach"}}</option>
       <option value="individual">{{localize "KNAVERY.Dashboard.XpIndividual"}}</option>
       <option value="split">{{localize "KNAVERY.Dashboard.XpSplit"}}</option>
+      {{#if treasure.on}}<option value="treasure">{{localize "KNAVERY.Dashboard.XpTreasure"}}</option>{{/if}}
     </select>
   </div>
   <div class="form-group dash-xp-amount">
     <label>{{localize "KNAVERY.Dashboard.XpAmount"}}</label>
     <input type="number" name="xpAmount" min="0" step="1" placeholder="0" />
   </div>
+  {{#if treasure.on}}
+  <div class="dash-xp-treasure" hidden>
+    <p class="hint">{{treasure.hint}}</p>
+    <div class="form-group">
+      <label>{{localize "KNAVERY.Dashboard.TreasureCoins"}}</label>
+      <input type="number" name="xpCoins" min="0" step="1" placeholder="0" />
+    </div>
+    <div class="dash-xp-treasure-items">
+      {{#each treasure.items}}
+      <label class="dash-xp-treasure-item" data-actor-id="{{this.actorId}}"><input type="checkbox" name="xpTreasure" value="{{this.uuid}}" data-value="{{this.value}}" checked /> <img src="{{this.img}}" alt="" /> <span>{{this.name}}</span> <em>{{this.owner}}</em> <span class="dash-xp-treasure-value">{{this.value}}c</span></label>
+      {{/each}}
+    </div>
+    <p class="dash-xp-treasure-total"></p>
+  </div>
+  {{/if}}
   <fieldset>
     <legend>{{localize "KNAVERY.Dashboard.ChosenPcs"}} <a class="dash-xp-all" data-action="selectAll" data-field="xpPc" data-tooltip="KNAVERY.Dashboard.SelectAll"><i class="fas fa-check-double"></i></a></legend>
     <div class="dash-xp-rows">

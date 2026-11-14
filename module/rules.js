@@ -8,7 +8,7 @@
  * rule it never stored is written with its 2e value (`stampRules`). A brand-new world
  * stores nothing and plays the 1e defaults.
  */
-import { COINS_PER_SLOT, CORE_RULE_KEYS, RULES_PRESETS, SETTINGS_NS } from "./config.js";
+import { COINS_PER_SLOT, CORE_RULE_KEYS, RULES_ALSO, RULES_PRESETS, SETTINGS_NS } from "./config.js";
 
 const RULE_KEYS = Object.keys(RULES_PRESETS["1e"]);
 /** Settings a fresh world writes by itself, which do not make it an old world. */
@@ -34,10 +34,13 @@ export const usesPrices1e = () => rule("price-list") === "knave1e";
 /** Coins to an item slot: 100 (1e, p2) or 500 (2e). */
 export const coinsPerSlot = () => Number(rule("coins-per-slot")) || COINS_PER_SLOT;
 
+/** Whether a rule's value plays an edition: its preset value, or another it allows (RULES_ALSO). */
+const plays = (edition, key, value) => value === RULES_PRESETS[edition][key] || (RULES_ALSO[edition]?.[key] ?? []).includes(value);
+
 /** Which edition a set of rule values matches: "1e", "2e" or "custom". */
 export const rulesFor = (values) => {
   for (const edition of ["1e", "2e"]) {
-    if (RULE_KEYS.every((k) => values[k] === RULES_PRESETS[edition][k])) return edition;
+    if (RULE_KEYS.every((k) => plays(edition, k, values[k]))) return edition;
   }
   return "custom";
 };
@@ -70,7 +73,7 @@ const storedKeys = () => {
  */
 export const editionForNewRules = (values, known, stamp) => {
   for (const edition of ["1e", "2e"]) {
-    if (known.length && known.every((k) => values[k] === RULES_PRESETS[edition][k])) return edition;
+    if (known.length && known.every((k) => plays(edition, k, values[k]))) return edition;
   }
   return stamp === "2e" ? "2e" : "1e";
 };

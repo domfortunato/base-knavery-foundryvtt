@@ -15,7 +15,8 @@ import { levelLadder } from "../data-models.js";
 import { mayEditAbilities, mayEditCareers, mayEditLevelXp, mayUseCharGen } from "../edit-gates.js";
 import { KNAVE_PAGE_TRAITS, scaledPosition, traitShown } from "../settings.js";
 import { healingRule, usesCareers, usesQuality, usesWounds } from "../rules.js";
-import { qualityOf } from "../quality.js";
+import { canRepair, qualityOf, repairAny, repairCost, repairsByQuality } from "../quality.js";
+import { canSell, sellItem } from "../treasure.js";
 import { attackRow, castSpell, openAttack, rollAttack, rollCheck, rollDamage, rollDieOfFate, rollMorale } from "../rolls.js";
 import { pickArt, randomPortraitPair, setActorArt } from "../art.js";
 import { drawFrom, pickFrom } from "../compendium.js";
@@ -175,6 +176,8 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       itemDescription: KnaveryActorSheet.#onItemDescription,
       itemGive: owned(KnaveryActorSheet.#onItemGive),
       itemShop: owned(KnaveryActorSheet.#onItemShop),
+      itemSell: owned(KnaveryActorSheet.#onItemSell),
+      itemRepair: owned(KnaveryActorSheet.#onItemRepair),
       toggleTraits: KnaveryActorSheet.#onToggleTraits,
       featureTrack: owned(KnaveryActorSheet.#onFeatureTrack),
       rollFeatureDie: KnaveryActorSheet.#onRollFeatureDie,
@@ -407,6 +410,11 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
         canLight: isLight(item),
         lit: isLight(item) && item.system.lit,
         canGive: this.isEditable && canOfferItem(item),
+        // Selling follows the player shop's switch (user, 2026-11-14): half price, treasure in full.
+        canSell: isChar && this.isEditable && !playerMarketClosed() && canSell(item),
+        treasure: item.system.treasure,
+        canRepair: this.isEditable && canRepair(item),
+        repairTip: repairsByQuality(item) ? F("KNAVERY.Quality.Repair", { cost: repairCost(item) }) : L("KNAVERY.Quality.RepairFree"),
         expanded: this.#expandedRows.has(item.id),
       };
     });
@@ -1020,5 +1028,15 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
 
   static async #onItemShop() {
     await openMarketplace(this.actor);
+  }
+
+  static async #onItemSell(_event, target) {
+    const item = this.#itemFrom(target);
+    if (item) await sellItem(item);
+  }
+
+  static async #onItemRepair(_event, target) {
+    const item = this.#itemFrom(target);
+    if (item) await repairAny(item);
   }
 }

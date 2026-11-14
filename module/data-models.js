@@ -185,6 +185,10 @@ const universal = () => ({
   cost: num(0),
   equipped: bool(false),
   broken: bool(false),
+  /** Loot brought back from a dungeon: worth XP once (treasure.js), and sells at full value. */
+  treasure: bool(false),
+  /** Its XP has been awarded (the dashboard's XP tab). */
+  treasureCounted: bool(false),
 });
 
 export class ItemData extends foundry.abstract.TypeDataModel {

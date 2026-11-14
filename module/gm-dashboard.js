@@ -10,8 +10,11 @@
  *             the hazard die rolls), the party resting, the die on its own (hazard.js);
  *             hirelings' wages: when each is due, and Pay (hirelings.js).
  *   Dice      reaction, encounter distance, morale.
+ *   Party     every player character at a glance: HP, wounds, slots, coins, lights
+ *             and spellbooks, each opening its sheet (user, 2026-11-14).
  *   XP        award XP: the same amount to each chosen character, a different
- *             amount to each, or a total split evenly (the book's treasure rule).
+ *             amount to each, a total split evenly, or treasure brought back
+ *             (treasure.js: Knave 2e p12, companions a half share p59).
  *   Tables    roll any table, import rows, open the Marketplace Manager, and
  *             the live switches for the players' tools.
  */
@@ -28,6 +31,9 @@ import { hasRulebook, openRulebook, pickLocalRulebook, showRulebookPage, tablePa
 import { clock, clockLabel, endTurn, resetClock, setClock, TRAVEL_WATCHES_FREE } from "./hazard.js";
 import { payWage, wageRows } from "./hirelings.js";
 import { scaledPosition } from "./settings.js";
+import { isLight, party } from "./hazard.js";
+import { spellRule, usesWounds } from "./rules.js";
+import { companionsOf, treasureCarried, treasureSplit, treasureXpOn, treasureXpRule, xpForTreasure } from "./treasure.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 const L = (k) => game.i18n.localize(k);
@@ -72,6 +78,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       marketManager: () => openMarketplaceManager(),
       toggleSetting: GmDashboard.#onToggleSetting,
       selectAll: GmDashboard.#onSelectAll,
+      openSheet: (_e, target) => game.actors.get(target.dataset.id)?.sheet.render(true),
       openRulebook: GmDashboard.#onOpenRulebook,
       showRulebook: GmDashboard.#onShowRulebook,
       chooseRulebook: () => pickLocalRulebook(),
@@ -91,6 +98,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     requests: { template: `${SYS_PATH}/templates/dashboard/requests.html`, scrollable: [".request-log"] },
     damage: { template: `${SYS_PATH}/templates/dashboard/damage.html` },
     time: { template: `${SYS_PATH}/templates/dashboard/time.html` },
+    party: { template: `${SYS_PATH}/templates/dashboard/party.html`, scrollable: [".dash-party"] },
     dice: { template: `${SYS_PATH}/templates/dashboard/dice.html` },
     xp: { template: `${SYS_PATH}/templates/dashboard/xp.html`, scrollable: [".dash-xp-rows"] },
     tables: { template: `${SYS_PATH}/templates/dashboard/tables.html`, scrollable: [".table-list"] },
@@ -102,6 +110,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
         { id: "requests", icon: "fas fa-bullhorn", label: "KNAVERY.Dashboard.TabRequests" },
         { id: "damage", icon: "fas fa-skull-crossbones", label: "KNAVERY.Dashboard.TabDamage" },
         { id: "time", icon: "fas fa-hourglass-half", label: "KNAVERY.Dashboard.TabTime" },
+        { id: "party", icon: "fas fa-users", label: "KNAVERY.Dashboard.TabParty" },
         { id: "dice", icon: "fas fa-dice", label: "KNAVERY.Dashboard.TabDice" },
         { id: "xp", icon: "fas fa-star", label: "KNAVERY.Dashboard.TabXp" },
         { id: "tables", icon: "fas fa-table-list", label: "KNAVERY.Dashboard.TabTables" },
@@ -161,6 +170,9 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
         };
       })(),
       wages: wageRows(),
+      party: partyRows(),
+      usesWounds: usesWounds(),
+      treasure: treasureContext(),
       tables,
       rulebook,
       toggles: TOGGLES.map((t) => ({ ...t, on: game.settings.get(SETTINGS_NS, t.key) })),
@@ -197,12 +209,47 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     const mode = this.element.querySelector('[name="xpMode"]');
     const showMode = () => {
       const individual = mode?.value === "individual";
-      this.element.querySelector(".dash-xp-amount")?.toggleAttribute("hidden", individual);
+      this.element.querySelector(".dash-xp-amount")?.toggleAttribute("hidden", individual || mode?.value === "treasure");
       this.element.querySelectorAll(".dash-xp-each").forEach((el) => el.toggleAttribute("hidden", !individual));
       this.element.querySelectorAll('.dash-xp-row input[name="xpPc"], .dash-xp-all').forEach((el) => el.toggleAttribute("hidden", individual));
     };
-    showMode();
-    mode?.addEventListener("change", showMode);
+    // Treasure: the chosen PCs' uncounted treasure, plus coins typed in, as XP.
+    const showTreasure = () => {
+      const box = this.element.querySelector(".dash-xp-treasure");
+      if (!box) return;
+      const on = mode?.value === "treasure";
+      box.toggleAttribute("hidden", !on);
+      if (!on) return;
+      const chosen = new Set([...this.element.querySelectorAll('input[name="xpPc"]:checked')].map((b) => b.value));
+      for (const row of box.querySelectorAll(".dash-xp-treasure-item")) row.toggleAttribute("hidden", !chosen.has(row.dataset.actorId));
+      const { coins, xp } = this.#treasureTotal();
+      const pcs = [...chosen].map((id) => game.actors.get(id)).filter(Boolean);
+      const companions = companionsOf(pcs).length;
+      box.querySelector(".dash-xp-treasure-total").textContent = pcs.length
+        ? F(companions ? "KNAVERY.Dashboard.TreasureTotalCompanions" : "KNAVERY.Dashboard.TreasureTotal", { coins, xp, n: pcs.length, companions })
+        : L("KNAVERY.Dashboard.TreasureChoose");
+    };
+    const showAll = () => { showMode(); showTreasure(); };
+    showAll();
+    // Once per drawing of the XP part: a render of another part keeps this section and its listeners.
+    const xpTab = this.element.querySelector('[data-tab="xp"]');
+    if (xpTab && !xpTab.dataset.knBound) {
+      xpTab.dataset.knBound = "1";
+      mode?.addEventListener("change", showAll);
+      xpTab.addEventListener("change", showTreasure);
+      xpTab.addEventListener("input", showTreasure);
+    }
+  }
+
+  /** The treasure the XP tab counts now: typed coins plus the ticked items of chosen PCs. */
+  #treasureTotal() {
+    const root = this.element;
+    const chosen = new Set([...root.querySelectorAll('input[name="xpPc"]:checked')].map((b) => b.value));
+    const items = [...root.querySelectorAll('.dash-xp-treasure-item input[name="xpTreasure"]:checked')]
+      .filter((b) => chosen.has(b.closest("[data-actor-id]")?.dataset.actorId));
+    const coins = Math.max(0, Math.floor(Number(root.querySelector('[name="xpCoins"]')?.value) || 0))
+      + items.reduce((sum, b) => sum + (Number(b.dataset.value) || 0), 0);
+    return { coins, xp: xpForTreasure(coins), uuids: items.map((b) => b.value) };
   }
 
   #form() { return this.element; }
@@ -218,6 +265,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     const all = [...root.querySelectorAll(".dash-xp-row input[name=\"xpPc\"]")].map((b) => game.actors.get(b.value)).filter(Boolean);
     const chosen = all.filter((a) => root.querySelector(`input[name="xpPc"][value="${CSS.escape(a.id)}"]`)?.checked);
     const valueFor = (a) => Number(root.querySelector(`[name="xpFor.${CSS.escape(a.id)}"]`)?.value) || 0;
+    if (mode === "treasure") return this.#awardTreasure(chosen);
     const awards = xpAwards(mode, amount, mode === "individual" ? all : chosen, valueFor);
     if (!awards.length) return ui.notifications.warn("KNAVERY.Dashboard.XpNothing", { localize: true });
     await Actor.updateDocuments(awards.map(({ actor, xp }) => ({ _id: actor.id, "system.xp": actor._source.system.xp + xp })),
@@ -232,6 +280,37 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     for (const el of root.querySelectorAll('[name="xpAmount"], .dash-xp-each')) el.value = "";
     for (const el of root.querySelectorAll('input[name="xpPc"]')) el.checked = false;
     this.render({ parts: ["xp"] });
+  }
+
+  /** Treasure brought back: XP split evenly, companions a half share; each item counts once. */
+  async #awardTreasure(chosen) {
+    const { coins, xp, uuids } = this.#treasureTotal();
+    const companions = companionsOf(chosen);
+    const split = treasureSplit(xp, chosen, companions);
+    const awards = split.pcs.filter((a) => a.xp > 0);
+    if (!awards.length) return ui.notifications.warn("KNAVERY.Dashboard.TreasureNothing", { localize: true });
+    await Actor.updateDocuments(awards.map(({ actor, xp: n }) => ({ _id: actor.id, "system.xp": actor._source.system.xp + n })),
+      { knLogAction: "KNAVERY.Dashboard.AwardXp" });
+    for (const uuid of uuids) {
+      const item = fromUuidSync(uuid, { strict: false });
+      if (item && !item.system.treasureCounted) await item.update({ "system.treasureCounted": true }, { knNoLog: true });
+    }
+    const esc = (s) => foundry.utils.escapeHTML(String(s ?? ""));
+    const lines = [
+      ...awards.map(({ actor, xp: n }) => F("KNAVERY.Dashboard.XpCardLine", { name: actor.name, xp: n })),
+      ...split.companions.filter((c) => c.xp > 0).map(({ actor, xp: n }) => F("KNAVERY.Dashboard.XpCardCompanion", { name: actor.name, xp: n })),
+    ];
+    await ChatMessage.create({
+      speaker: ChatMessage.getSpeaker({ user: game.user }),
+      content: `<div class="knavery-roll-card kind-xp"><header class="card-title"><h3><i class="fas fa-gem"></i> ${esc(L("KNAVERY.Dashboard.TreasureCardTitle"))}</h3></header>`
+        + `<p class="card-note">${esc(F("KNAVERY.Dashboard.TreasureCardWorth", { coins, xp }))}</p>`
+        + `<ul>${lines.map((l) => `<li>${esc(l)}</li>`).join("")}</ul></div>`,
+      flags: { [FLAG_SCOPE]: { xpAward: awards.map(({ actor, xp: n }) => ({ actorId: actor.id, xp: n })), treasure: { coins, xp } } },
+    });
+    const root = this.#form();
+    for (const el of root.querySelectorAll('[name="xpCoins"]')) el.value = "";
+    for (const el of root.querySelectorAll('input[name="xpPc"]')) el.checked = false;
+    this.render({ parts: ["xp", "party"] });
   }
 
   static #onSelectAll(_e, target) {
@@ -418,7 +497,6 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 }
 
-/** Flip a player-tool switch and announce it (shared with the macros). */
 /**
  * Who gets how much XP. `each`: `amount` to every actor; `split`: `amount`
  * shared evenly, rounded down; `individual`: each actor's own value. Whole,
@@ -434,6 +512,69 @@ export const xpAwards = (mode, amount, actors, valueFor = () => 0) => {
   return list.filter((a) => a.xp > 0);
 };
 
+/** The Party tab's rows: every character a player owns. */
+export const partyRows = () => {
+  const capped = spellRule() === "int-per-day";
+  return party().map((a) => {
+    const s = a.system;
+    const owners = game.users.filter((u) => !u.isGM && a.testUserPermission(u, "OWNER"));
+    const books = a.items.filter((i) => i.type === "spellbook" && !i.system.scroll);
+    const ready = books.filter((i) => !i.system.castToday).length;
+    const spellsLeft = Math.max(0, (s.spellsPerDay ?? 0) - (s.spellsCastToday ?? 0));
+    const slotsUsed = a.calcSlotsUsed();
+    return {
+      id: a.id, name: a.name, img: a.img, level: s.level,
+      players: owners.map((u) => u.name).join(", "),
+      hp: { value: s.hp?.value ?? 0, max: s.hp?.max ?? 0 },
+      dead: s.dead, unconscious: s.unconscious,
+      status: s.dead ? L("KNAVERY.Party.Dead") : (s.unconscious ? L("KNAVERY.Party.Unconscious") : ""),
+      wounds: s.wounds ?? 0,
+      slotsUsed, slotsMax: s.slotsMax ?? 0, over: slotsUsed > (s.slotsMax ?? 0),
+      coins: s.coins ?? 0,
+      books: books.length,
+      // Knave 2e caps spells a day at INT; Knave 1e only once a book (rules.js spell-rule).
+      booksLine: capped ? F("KNAVERY.Party.BooksCapped", { ready, total: books.length, left: spellsLeft })
+        : F("KNAVERY.Party.Books", { ready, total: books.length }),
+      lights: a.items.filter((i) => isLight(i)).map((i) => ({
+        lit: i.system.lit,
+        label: (i.system.quantity ?? 1) > 1 ? `${i.name} ×${i.system.quantity}` : i.name,
+      })).sort((x, y) => Number(y.lit) - Number(x.lit)),
+    };
+  });
+};
+
+/** The XP tab's treasure mode: the rule, and the party's uncounted treasure. */
+const treasureContext = () => {
+  if (!treasureXpOn()) return { on: false };
+  const owners = party();
+  return {
+    on: true,
+    hint: L(treasureXpRule() === "gold" ? "KNAVERY.Dashboard.TreasureHintGold" : "KNAVERY.Dashboard.TreasureHintCoin"),
+    items: treasureCarried(owners).map(({ actor, item, value }) => ({
+      actorId: actor.id, uuid: item.uuid, img: item.img, owner: actor.name, value,
+      name: (item.system.quantity ?? 1) > 1 ? `${item.name} ×${item.system.quantity}` : item.name,
+    })),
+  };
+};
+
+/** Redraw the Party tab (and the XP tab's treasure) when a party member or their gear changes. */
+export const registerPartyRefresh = () => {
+  const redraw = foundry.utils.debounce(() => {
+    const app = foundry.applications.instances.get("knavery-gm-dashboard");
+    if (app?.rendered) app.render({ parts: ["party", "xp"] });
+  }, 150);
+  const isParty = (actor) => actor?.type === "character" && actor.hasPlayerOwner;
+  const onActor = (actor) => { if (game.user.isGM && isParty(actor)) redraw(); };
+  const onItem = (item) => onActor(item?.parent);
+  Hooks.on("updateActor", onActor);
+  Hooks.on("createActor", onActor);
+  Hooks.on("deleteActor", onActor);
+  Hooks.on("createItem", onItem);
+  Hooks.on("updateItem", onItem);
+  Hooks.on("deleteItem", onItem);
+};
+
+/** Flip a player-tool switch and announce it (shared with the macros). */
 export const setToggle = async (key, value) => {
   // An Assistant GM may have had "Modify Configuration Settings" taken away.
   if (!game.user.can("SETTINGS_MODIFY")) {

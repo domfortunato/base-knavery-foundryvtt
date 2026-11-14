@@ -95,7 +95,7 @@ export const SETTING_GROUPS = [
     keys: [
       "creation-abilities", "starting-kit", "show-alignment", "show-background", "first-level-hp", "level-hp-rule",
       "death-rule", "hard-mode-wounds", "healing-rule", "spell-rule", "spell-list", "attack-rule", "weapon-breaks-on-1",
-      "price-list", "coins-per-slot", "knave1e-xp", "knave1e-random-raises", "knave1e-initiative", "show-hazard-dice",
+      "price-list", "coins-per-slot", "knave1e-xp", "treasure-xp", "knave1e-random-raises", "knave1e-initiative", "show-hazard-dice",
     ],
   },
   {
@@ -204,6 +204,11 @@ export const registerSettings = () => {
     label: "Knave1eXp", type: Boolean, default: D["knave1e-xp"],
     // The XP ladder is derived data: recompute every character before redrawing.
     onChange: () => { reprepareActors((a) => a.type === "character"); rerenderActorSheets(); },
+  });
+  // XP for treasure brought back (treasure.js): Knave 2e p12, or Knave 1e's designer's note.
+  reg("treasure-xp", {
+    label: "TreasureXp", type: String, choices: choices("TreasureXpChoice", ["off", "gold", "coin"]),
+    default: D["treasure-xp"], onChange: () => foundry.applications.instances.get("knavery-gm-dashboard")?.render({ parts: ["xp"] }),
   });
   reg("knave1e-random-raises", { label: "Knave1eRandomRaises", type: Boolean, default: false });
   reg("knave1e-initiative", { label: "Knave1eInitiative", type: Boolean, default: D["knave1e-initiative"], onChange: () => ui.combat?.render() });

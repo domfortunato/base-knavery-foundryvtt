@@ -6,7 +6,7 @@
  */
 import { ARMOR_TYPES, FEATURE_TYPES, ITEM_KINDS, SYS_PATH, defaultQualityMax } from "../config.js";
 import { usesQuality } from "../rules.js";
-import { hasQuality, qualityOf, repairCost, repairItem } from "../quality.js";
+import { canRepair, hasQuality, qualityOf, repairAny, repairCost, repairsByQuality } from "../quality.js";
 import { pickArt } from "../art.js";
 import { enrichForSheet } from "../clean-html.js";
 
@@ -69,6 +69,8 @@ export class KnaveryItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
       })),
       effects: item.effects.map((e) => ({ id: e.id, name: e.name, img: e.img, disabled: e.disabled })),
       quality: this.#qualityContext(),
+      // A Broken item that Repair mends for free (Knave 2e attacks, or gear without quality).
+      freeRepair: this.isEditable && canRepair(item) && !repairsByQuality(item),
       enrichedDescription: await enrichForSheet(s.description ?? "", { relativeTo: item, secrets: item.isOwner }),
     });
     return context;
@@ -172,7 +174,7 @@ export class KnaveryItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
   }
 
   static async #onRepair() {
-    if (this.isEditable) await repairItem(this.item);
+    if (this.isEditable) await repairAny(this.item);
   }
 
   static async #onToggleEffect(_e, target) {

@@ -178,6 +178,12 @@ picker, change log and marketplace it ports.
   Wear armor button (the dialog records the card on the actor, flag `wornBy`); 0 quality
   = Broken, kept, repairable at 10% of the price a point; daily wages: Pay settles every
   day owed. Lodging & Meals and Buildings are service rows, hidden by default.
+- Features C-E (user rulings 2026-11-14): the party view is the dashboard's Party tab;
+  an item sells for half its price, treasure (`system.treasure`) at full value (`treasure.js`);
+  rule `treasure-xp`: 2e "coin" (p12, 1 XP a coin, companions a half share p59), 1e "off",
+  or 1e's designer's-note "gold" (1 XP per 100c), which still reads as Knave 1e
+  (`config.js` `RULES_ALSO`); an awarded item is `treasureCounted`. Repair under 2e attacks
+  (and for gear without quality) is free (`quality.js` `repairBroken`).
 - Knave 1e death: 0 HP unconscious, -1 dead (character `hp.value` min -1); no direct
   damage, so the Direct button is hidden. 1e healing: d8 + CON after a meal; a safe
   haven, all HP. 1e spells: no daily total; a card's level is the caster's level (L).

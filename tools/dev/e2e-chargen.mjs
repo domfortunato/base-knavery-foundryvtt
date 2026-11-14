@@ -9,7 +9,7 @@
  * default; a blank sheet held to its level's ability points, with HP, coin and career dice; the Attack window's
  * Target list; the narrow header; Rest by the book; red splats; compact attack cards; labels that fit; Create NPC;
  * spell items from the rulebook; weapons and armor first; rations per slot; the review #2 fixes; time and hazards; morale and wages; Backstory and the Knave-page traits; item badges;
- * the Knave 1e rules (part 26) and their second bundle: quality and wear, copper prices, coin slots, daily wages (part 27). GM, Alice and Bob
+ * the Knave 1e rules (part 26) and their second bundle: quality and wear, copper prices, coin slots, daily wages (part 27); the Party tab, treasure to XP, selling and free repair (part 28). GM, Alice and Bob
  * in three browsers.
  *
  *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/e2e-chargen.mjs   (npm run dev:chargen)
@@ -2176,6 +2176,176 @@ await withSettings(gm, async () => {
     ok(m.status === "3 days owed (75c)" && m.amount === "25c a day" && m.paid === 75 && m.nextDue && m.after === "Paid up" && m.days === "1,0,1,3",
       "Pay settles every day owed (three days, 75c) and the hireling is paid up", JSON.stringify(m));
     await gm.evaluate(async (sys) => { const R = await import(`${sys}/rules.js`); await R.applyRules("2e"); }, SYS);
+  });
+
+  await section("28. Features C-E: the Party tab, treasure to XP, selling, free repair under 2e.", async () => {
+    // The world plays 2e again after part 27. Two of Alice's characters, a companion, treasure and a torch.
+    const t = await gm.evaluate(async (sys) => {
+      const ns = "base-knavery";
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const R = await import(`${sys}/rules.js`);
+      const T = await import(`${sys}/treasure.js`);
+      const { RULES_PRESETS } = await import(`${sys}/config.js`);
+      const out = {
+        rule: game.settings.get(ns, "treasure-xp"), known: game.settings.get(ns, "rules-keys").includes("treasure-xp"),
+        plays: [
+          R.rulesFor({ ...RULES_PRESETS["1e"], "treasure-xp": "gold" }), R.rulesFor({ ...RULES_PRESETS["1e"], "treasure-xp": "coin" }),
+          R.rulesFor({ ...RULES_PRESETS["2e"], "treasure-xp": "gold" }),
+        ].join(),
+        gold: [T.xpForTreasure(250, "gold"), T.xpForTreasure(250, "coin"), T.xpForTreasure(250, "off")].join(),
+      };
+      const alice = game.users.getName("Alice");
+      const own = { default: 0, [alice.id]: 3 };
+      const a = await Actor.create({ name: "Probe Party A", type: "character", ownership: own, system: { coins: 0, hp: { value: 0, max: 6 } } });
+      const b = await Actor.create({ name: "Probe Party B", type: "character", ownership: own, system: { coins: 0, hp: { value: 5, max: 5 }, wounds: 1 } });
+      const c = await Actor.create({ name: "Probe Companion", type: "npc", system: { role: "companion", employer: a.id } });
+      await a.createEmbeddedDocuments("Item", [
+        { name: "Probe Gem", type: "item", system: { cost: 100, treasure: true } },
+        { name: "Torch", type: "item", system: { cost: 1, quantity: 3, lit: true } },
+        { name: "Probe Rope", type: "item", system: { cost: 10, quantity: 3 } },
+        { name: "Probe Book", type: "spellbook", system: { castToday: true } },
+        { name: "Probe Book 2", type: "spellbook" },
+      ]);
+      await b.createEmbeddedDocuments("Item", [{ name: "Probe Idol", type: "item", system: { cost: 40, treasure: true } }]);
+      const split = T.treasureSplit(150, [a, b], [c]);
+      out.split = [...split.pcs.map((x) => x.xp), ...split.companions.map((x) => x.xp)].join();
+      out.companions = T.companionsOf([a]).map((x) => x.name).join();
+      out.prices = [T.sellPrice(a.items.getName("Probe Rope"), 3), T.sellPrice(a.items.getName("Probe Gem")), T.sellPrice(a.items.getName("Torch"))].join();
+      // The Party tab.
+      const { openGmDashboard } = await import(`${sys}/gm-dashboard.js`);
+      openGmDashboard();
+      await wait(1200);
+      const app = foundry.applications.instances.get("knavery-gm-dashboard");
+      app.changeTab("party", "primary");
+      await wait(500);
+      const row = (actor) => app.element.querySelector(`.dash-party-row[data-actor-id="${actor.id}"]`);
+      const ra = row(a);
+      const rb = row(b);
+      out.party = {
+        tab: !!app.element.querySelector('[data-tab="party"].active'),
+        a: ra ? { hp: ra.querySelector(".dash-party-stat.hp")?.textContent.replace(/\s+/g, " ").trim(), unconscious: ra.classList.contains("unconscious"),
+          books: ra.querySelector(".dash-party-stat.books")?.textContent.trim(), lit: ra.querySelector(".dash-party-light.lit")?.textContent.trim(),
+          slots: ra.querySelector(".dash-party-stat.slots")?.textContent.trim() } : null,
+        b: rb ? { wounds: rb.querySelector(".dash-party-stat.wounds")?.textContent.trim() } : null,
+        npc: !app.element.querySelector(`.dash-party-row[data-actor-id="${c.id}"]`),
+      };
+      // It keeps up: B heals, and the row follows.
+      await b.update({ "system.hp.value": 2 });
+      await wait(900);
+      out.party.follows = row(b)?.querySelector(".dash-party-stat.hp")?.textContent.replace(/\s+/g, " ").trim();
+      row(a)?.querySelector('[data-action="openSheet"]')?.click();
+      await wait(900);
+      out.party.sheet = !!a.sheet.rendered;
+      await a.sheet.close();
+      return out;
+    }, SYS);
+    await gm.screenshot({ path: `${SHOTS}/dashboard-party.png` });
+    ok(t.rule === "coin" && t.known && t.plays === "1e,custom,custom" && t.gold === "2,250,0",
+      "XP for treasure reached the 2e world as 1 XP a coin; 1e's XP for gold (1 per 100c) still plays Knave 1e", JSON.stringify(t));
+    ok(t.split === "60,60,30" && t.companions === "Probe Companion" && t.prices === "15,100,1",
+      "treasure XP splits evenly with a companion at a half share; items sell at half price, treasure in full", JSON.stringify(t));
+    ok(t.party.tab && t.party.a?.hp === "0/6" && t.party.a.unconscious === false && t.party.a.books === "1/2 ready, 0 spells left today"
+      && t.party.a.lit === "Torch ×3" && /^\d+\/\d+$/.test(t.party.a.slots ?? "") && t.party.b?.wounds === "1" && t.party.npc,
+      "the Party tab shows each player character's HP, wounds, slots, lit lights and spellbooks", JSON.stringify(t.party));
+    ok(t.party.follows === "2/5" && t.party.sheet, "the Party tab keeps up with a change, and a name opens the sheet", JSON.stringify(t.party));
+
+    // Treasure brought back, from the XP tab: A and B, with 50 coins typed in.
+    const x = await gm.evaluate(async () => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const app = foundry.applications.instances.get("knavery-gm-dashboard");
+      app.changeTab("xp", "primary");
+      await wait(400);
+      const root = app.element;
+      const a = game.actors.getName("Probe Party A");
+      const b = game.actors.getName("Probe Party B");
+      const xp0 = [a.system.xp, b.system.xp];
+      const mode = root.querySelector('[name="xpMode"]');
+      mode.value = "treasure";
+      mode.dispatchEvent(new Event("change", { bubbles: true }));
+      for (const actor of [a, b]) {
+        const box = root.querySelector(`input[name="xpPc"][value="${actor.id}"]`);
+        box.checked = true;
+        box.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+      const coins = root.querySelector('[name="xpCoins"]');
+      coins.value = "10";
+      coins.dispatchEvent(new Event("input", { bubbles: true }));
+      await wait(300);
+      const out = {
+        shown: !root.querySelector(".dash-xp-treasure")?.hidden, amountHidden: !!root.querySelector(".dash-xp-amount")?.hidden,
+        items: [...root.querySelectorAll(".dash-xp-treasure-item:not([hidden])")].map((r) => r.querySelector("span")?.textContent).sort().join(),
+        total: root.querySelector(".dash-xp-treasure-total")?.textContent.trim(),
+      };
+      root.querySelector('[data-action="awardXp"]').click();
+      await wait(1500);
+      out.xp = [a.system.xp - xp0[0], b.system.xp - xp0[1]].join();
+      out.counted = [a.items.getName("Probe Gem").system.treasureCounted, b.items.getName("Probe Idol").system.treasureCounted].join();
+      const msg = game.messages.contents.at(-1);
+      out.card = msg.getFlag("base-knavery", "treasure");
+      out.companionLine = /Probe Companion \(companion, half share\): 30 XP/.test(msg.content);
+      await wait(500);
+      out.after = root.ownerDocument.querySelectorAll("#knavery-gm-dashboard .dash-xp-treasure-item").length;
+      return out;
+    });
+    await gm.screenshot({ path: `${SHOTS}/dashboard-xp-treasure.png` });
+    ok(x.shown && x.amountHidden && x.items === "Probe Gem,Probe Idol" && x.total === "Treasure worth 150c: 150 XP, split among 2 and 1 companion(s) at a half share.",
+      "the XP tab's Treasure brought back lists the chosen characters' treasure and adds the coins typed in", JSON.stringify(x));
+    ok(x.xp === "60,60" && x.counted === "true,true" && x.card?.coins === 150 && x.companionLine && x.after === 0,
+      "the award splits 150 XP among two and a companion at half; each item counts once", JSON.stringify(x));
+
+    // Selling from the Inventory row; Repair is free under 2e attacks.
+    const s = await gm.evaluate(async (sys) => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const Q = await import(`${sys}/quality.js`);
+      const a = game.actors.getName("Probe Party A");
+      foundry.applications.instances.get("knavery-gm-dashboard")?.close();
+      await a.sheet.render({ force: true });
+      await wait(900);
+      a.sheet.changeTab?.("inventory", "primary");
+      await wait(300);
+      const rowOf = (name) => a.sheet.element.querySelector(`[data-item-id="${a.items.getName(name).id}"]`);
+      const out = { sellButton: !!rowOf("Probe Rope")?.querySelector('[data-action="itemSell"]'), gemTag: !!rowOf("Probe Gem")?.querySelector(".treasure-tag") };
+      rowOf("Probe Rope").querySelector('[data-action="itemSell"]').click();
+      await wait(900);
+      const dlg = [...foundry.applications.instances.values()].find((d) => d.element?.classList.contains("knavery-sell"));
+      const n = dlg?.element.querySelector('input[name="n"]');
+      if (n) { n.value = "2"; n.dispatchEvent(new Event("input", { bubbles: true })); }
+      out.line = dlg?.element.querySelector(".kn-sell-price")?.textContent.trim();
+      dlg?.element.querySelector('button[data-action="ok"]')?.click();
+      await wait(1200);
+      out.rope = a.items.getName("Probe Rope")?.system.quantity;
+      out.coins = a.system.coins;
+      // The gem, treasure: its full value, and the item goes.
+      rowOf("Probe Gem").querySelector('[data-action="itemSell"]').click();
+      await wait(900);
+      const dlg2 = [...foundry.applications.instances.values()].find((d) => d.element?.classList.contains("knavery-sell"));
+      dlg2?.element.querySelector('button[data-action="ok"]')?.click();
+      await wait(1200);
+      out.gem = !!a.items.getName("Probe Gem");
+      out.coins2 = a.system.coins;
+      // Repair under 2e: a broken item mends for nothing.
+      const sword = (await a.createEmbeddedDocuments("Item", [{ name: "Probe Sword", type: "weapon", system: { cost: 20, broken: true } }]))[0];
+      await wait(700);
+      out.rowRepair = !!rowOf("Probe Sword")?.querySelector('[data-action="itemRepair"]');
+      await sword.sheet.render({ force: true });
+      await wait(900);
+      out.sheetRepair = sword.sheet.element.querySelector(".kn-repair-free")?.textContent.trim();
+      out.quality = !!sword.sheet.element.querySelector(".kn-quality-stats");
+      sword.sheet.element.querySelector(".kn-repair-free")?.click();
+      await wait(1200);
+      out.mended = !sword.system.broken;
+      out.coins3 = a.system.coins;
+      out.free = /Probe Sword is repaired\./.test(game.messages.contents.at(-1)?.content ?? "");
+      out.canAfter = Q.canRepair(sword);
+      await sword.sheet.close();
+      await a.sheet.close();
+      return out;
+    }, SYS);
+    ok(s.sellButton && s.gemTag && s.line === "2 × Probe Rope sells for 10c, half the price." && s.rope === 1 && s.coins === 10,
+      "Sell on the Inventory row sells part of a stack for half its price", JSON.stringify(s));
+    ok(!s.gem && s.coins2 === 110, "treasure sells for its full value, and the item goes", JSON.stringify(s));
+    ok(s.rowRepair && s.sheetRepair === "Repair" && !s.quality && s.mended && s.coins3 === 110 && s.free && !s.canAfter,
+      "under Knave 2e attacks a broken item's Repair is free, from the row or the sheet", JSON.stringify(s));
   });
 
   // Cleanup.

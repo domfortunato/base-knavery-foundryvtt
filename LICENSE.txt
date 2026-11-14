@@ -46,7 +46,7 @@ Its rules are set out in this system as Foundry automation and settings (the
 Knave 1e choices under Configure Rules): ability scores as the lowest of 3d6,
 the starting kit, death at below 0 HP, healing, spellbooks once a day,
 advancement and group initiative, item quality and critical hits, 100 coins to a
-slot, and henchmen's daily wages. Changes: they are adapted as automation and
+slot, henchmen's daily wages, and XP for gold (a designer's note). Changes: they are adapted as automation and
 settings, 1e armor is expressed as armor points, and each can be mixed with the
 Knave 2e rules.
 

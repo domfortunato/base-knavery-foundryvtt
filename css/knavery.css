@@ -5046,3 +5046,31 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-item-sheet .kn-quality-stats .kn-repair { flex: 0 0 auto; width: auto; }
 .knavery .kn-wage-field { display: flex; gap: 4px; align-items: center; }
 .knavery .kn-wage-field select { flex: 0 0 auto; width: auto; }
+
+/* The dashboard's Party tab (features C-E, 2026-11-14). */
+.knavery-gm-dashboard .dash-party { display: flex; flex-direction: column; gap: 6px; }
+.knavery-gm-dashboard .dash-party-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 2px 10px; padding: 4px 0; border-bottom: 1px solid var(--kn-rule); }
+.knavery-gm-dashboard .dash-party-name { display: flex; align-items: center; gap: 6px; font-weight: bold; min-width: 0; }
+.knavery-gm-dashboard .dash-party-name img { width: 30px; height: 30px; border: none; border-radius: 50%; flex: none; }
+.knavery-gm-dashboard .dash-party-name span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.knavery-gm-dashboard .dash-party-players { font-size: calc(11px * var(--kn-text, 1)); color: var(--kn-faint); text-align: right; }
+.knavery-gm-dashboard .dash-party-stats { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 4px 14px; padding-left: 36px; }
+.knavery-gm-dashboard .dash-party-stat { white-space: nowrap; }
+.knavery-gm-dashboard .dash-party-stat i { color: var(--kn-muted); margin-right: 2px; }
+.knavery-gm-dashboard .dash-party-stat em { color: var(--kn-peril); font-style: normal; font-weight: bold; }
+.knavery-gm-dashboard .dash-party-stat.wounds.hurt, .knavery-gm-dashboard .dash-party-stat.slots.over { color: var(--kn-peril); font-weight: bold; }
+.knavery-gm-dashboard .dash-party-stat.coins i { color: var(--kn-gold); }
+.knavery-gm-dashboard .dash-party-row.dead .dash-party-name { color: var(--kn-peril); text-decoration: line-through; }
+.knavery-gm-dashboard .dash-party-lights { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 4px 10px; padding-left: 36px; font-size: calc(12px * var(--kn-text, 1)); color: var(--kn-faint); }
+.knavery-gm-dashboard .dash-party-light.lit { color: inherit; }
+.knavery-gm-dashboard .dash-party-light.lit i { color: var(--kn-amber); }
+/* The XP tab's treasure mode. */
+.knavery-gm-dashboard .dash-xp-treasure-items { display: flex; flex-direction: column; gap: 2px; margin: 4px 0; }
+.knavery-gm-dashboard .dash-xp-treasure-item { display: flex; align-items: center; gap: 6px; }
+.knavery-gm-dashboard .dash-xp-treasure-item img { width: 22px; height: 22px; border: none; }
+.knavery-gm-dashboard .dash-xp-treasure-item em { font-size: calc(11px * var(--kn-text, 1)); color: var(--kn-faint); }
+.knavery-gm-dashboard .dash-xp-treasure-value { margin-left: auto; }
+.knavery-gm-dashboard .dash-xp-treasure-total { font-weight: bold; }
+/* Treasure on the Inventory, and the free repair beside Broken. */
+.knavery .knavery-item-tag.treasure-tag i { color: var(--kn-gold); }
+.knavery-item-sheet .kn-repair-free { flex: 0 0 auto; width: auto; margin-left: 6px; }
