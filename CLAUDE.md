@@ -29,8 +29,10 @@ picker, change log and marketplace it ports.
   logos.
 - The disclaimer string lives in `lang/en.json` `KNAVERY.Disclaimer` and in
   LICENSE.txt and README.md. The welcome window shows it verbatim, with the
-  logo credit. The sheet footer carries only `KNAVERY.DisclaimerShort` (user
-  ruling 2026-11-13).
+  logo credit. The sheet footer carries only `KNAVERY.DisclaimerShort`, in the
+  user's words: "Base Knavery is an unofficial fan-made Foundry system for Knave
+  Second Edition and is not affiliated with Questing Beast LLC." (rulings
+  2026-11-13 and 2026-11-14).
 - The rulebook reader shows the GM's own PDF. The system stores only its path
   (setting `rulebook-pdf`) and page numbers (`config.js` `RULEBOOK`, read from
   the PDF's outline and headings).
@@ -52,6 +54,10 @@ picker, change log and marketplace it ports.
   `tab-rail.js` hangs the pages' thumb-tab rail off the window's edge (DB
   Mythic's mechanism; the rail is a render PART, `templates/parts/tab-rail.html`).
   The Knave page carries the head; Inventory, Growth and Description follow.
+  A character's sheet is narrow (440px × text size: abilities | vitals; user
+  ruling 2026-11-14); its Attack button opens one window to choose an equipped
+  weapon and the edge (`rolls.js` `openAttack`). NPC sheets keep 640px and their
+  attacks column.
 - Feature modules:
   - `rolls.js`: the edge prompt, checks, attacks, spells, dice
   - `damage.js`: chat-card buttons and the GM relay

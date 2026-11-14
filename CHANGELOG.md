@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **A narrower character sheet:** as wide as the abilities and vitals. Inventory, Growth and Description fit one
+  column, and dragging the sheet wider brings back two. Max HP, wounds, AC and the buttons read larger.
+- **One Attack button** (with the damage splat) replaces the Attacks list: it opens a window to choose an equipped
+  weapon, Disadvantage, Normal or Advantage, a modifier, damage in the same card and a power attack.
+- Ability scores above 0 stand out in gold; zeros sit back.
+- The welcome window's intro is lighter, Knave 1e's CC BY 4.0 licence has its own notice with a link and the
+  changes made, and the sheet footer says Base Knavery is an unofficial fan-made system for Knave Second Edition.
 - The welcome window opens each time a Game Master loads the world, not only after an update. Turn it off with
   "Welcome window on start" in the General settings.
 - **Knave 1e rules, one switch each, in the Hacks settings:** a level every 1,000 XP; random ability raises by

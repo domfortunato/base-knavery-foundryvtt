@@ -81,7 +81,7 @@ const gear = await page.evaluate(async (id) => {
 }, actorId);
 ok(gear.ac === 13 && gear.ap === 2, "two armor pieces: AP 2, AC 13", JSON.stringify(gear));
 await page.waitForTimeout(500);
-ok(await page.locator(".knavery.sheet.actor .knavery-attack-row").count() >= 1, "equipped weapon appears under Attacks");
+ok(await page.locator(".knavery.sheet.actor #attack-button:not([disabled])").count() === 1, "an equipped weapon enables the Attack button");
 
 // 5. Advantage formulas in both modes.
 const formulas = await page.evaluate(async () => {
@@ -99,8 +99,9 @@ ok(formulas.two[0] === "2d20kh + 3" && formulas.two[1] === "2d20kl + 3", "2d20 m
 
 // 6. The roll prompt, through the UI: attack with damage at the same time.
 const before = await page.evaluate(() => game.messages.size);
-await page.locator(".knavery.sheet.actor .knavery-attack-row .attack-roll").first().click();
+await page.locator(".knavery.sheet.actor #attack-button").click();
 await page.waitForSelector(".knavery-roll-prompt", { timeout: 10000 });
+ok(await page.locator('.knavery-roll-prompt input[name="weapon"]:checked').count() === 1, "the Attack window lists the equipped weapon, chosen");
 ok(await page.locator('.knavery-roll-prompt input[name="rollDamage"]').isChecked(), "Roll damage at the same time is ticked by default");
 await page.locator(".knavery-roll-prompt").screenshot({ path: path.join(OUT, "roll-prompt.png") });
 await page.locator('.knavery-roll-prompt button[data-action="advantage"]').click();

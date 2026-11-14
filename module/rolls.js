@@ -42,7 +42,7 @@ const advantageMode = () => game.settings.get(SETTINGS_NS, "advantage-mode");
  */
 export const promptEdge = async ({
   title, reason = "", attack = false, melee = false, difficulty = false,
-  defaultDifficulty = DEFAULT_DIFFICULTY, lockDifficulty = false,
+  defaultDifficulty = DEFAULT_DIFFICULTY, lockDifficulty = false, weapons = null,
 } = {}) => {
   const mode = advantageMode();
   const content = await foundry.applications.handlebars.renderTemplate(`${SYS_PATH}/templates/dialog/roll-prompt.html`, {
@@ -54,6 +54,7 @@ export const promptEdge = async ({
     defaultDifficulty,
     target: CHECK_BASE + defaultDifficulty,
     rollDamage: game.settings.get(SETTINGS_NS, "roll-damage-default"),
+    weapons,
     modeHint: L(mode === "2d20" ? "KNAVERY.Roll.Mode2d20Hint" : "KNAVERY.Roll.ModeRawHint"),
   });
   const read = (edge) => (_event, button) => {
@@ -64,6 +65,7 @@ export const promptEdge = async ({
       difficulty: difficulty ? Math.max(0, Number(f.difficulty?.value) || 0) : defaultDifficulty,
       rollDamage: attack ? !!f.rollDamage?.checked : false,
       power: melee ? !!f.power?.checked : false,
+      weaponId: weapons ? (f.weapon?.value ?? null) : null,
     };
   };
   return DialogV2.wait({
@@ -71,6 +73,19 @@ export const promptEdge = async ({
     classes: ["knavery", "knavery-roll-prompt"],
     position: { width: 420 },
     content,
+    // The Attack window: Power attack shows only while a melee weapon is chosen.
+    render: weapons && melee ? (_event, dialog) => {
+      const form = dialog.element.querySelector("form") ?? dialog.element;
+      const power = form.querySelector(".power-group");
+      const sync = () => {
+        const chosen = form.querySelector('input[name="weapon"]:checked');
+        const isMelee = chosen?.closest(".kn-attack-weapon")?.dataset.melee === "1";
+        if (power) power.hidden = !isMelee;
+        if (!isMelee && power) power.querySelector("input").checked = false;
+      };
+      form.querySelectorAll('input[name="weapon"]').forEach((r) => r.addEventListener("change", sync));
+      sync();
+    } : undefined,
     // Only Normal is a submit button: Enter in the Modifier or Difficulty field
     // submits through the first submit button in the form, so the edges are
     // plain buttons (DialogV2 still runs their callbacks on click).
@@ -199,14 +214,56 @@ const currentTargets = () => [...game.user.targets].map((t) => ({
  * targeted token's AC, optionally rolling damage in the same card.
  */
 export const rollAttack = async (actor, weapon, { reason = "" } = {}) => {
-  const ability = weapon.attackAbility;
   const melee = weapon.system.attackType === "melee";
-  const title = F("KNAVERY.Roll.AttackTitle", { weapon: weapon.name });
   const choice = await promptEdge({
-    title, reason, attack: true, melee: melee && actor.type === "character",
+    title: F("KNAVERY.Roll.AttackTitle", { weapon: weapon.name }), reason, attack: true, melee: melee && actor.type === "character",
   });
   if (!choice) return null;
+  return attackWith(actor, weapon, choice, { reason });
+};
 
+/** One equipped weapon as the sheet and the Attack window show it. */
+export const attackRow = (actor, w) => {
+  const ability = w.attackAbility;
+  const bonus = actor.abilityBonus(ability);
+  return {
+    id: w.id, name: w.name, damage: w.system.damage, broken: w.system.broken, melee: w.system.attackType !== "ranged",
+    kind: L(w.system.attackType === "ranged" ? "KNAVERY.Ranged" : "KNAVERY.Melee"),
+    ability: L(`KNAVERY.AbilityShort.${ability}`),
+    bonus: bonus >= 0 ? `+${bonus}` : `${bonus}`,
+    range: w.system.range,
+  };
+};
+
+/** The weapon each actor last attacked with from the Attack window, for this browser session. */
+const lastWeapon = new Map();
+
+/**
+ * The character sheet's Attack button: one window to choose an equipped
+ * weapon, the edge, a modifier, damage in the same card and a power attack.
+ */
+export const openAttack = async (actor, { reason = "" } = {}) => {
+  const weapons = actor.items.filter((i) => i.type === "weapon" && i.system.equipped).sort((a, b) => a.sort - b.sort);
+  if (!weapons.length) return ui.notifications.warn("KNAVERY.NoAttacks", { localize: true });
+  const last = lastWeapon.get(actor.id);
+  const selected = weapons.some((w) => w.id === last) ? last : weapons[0].id;
+  const rows = weapons.map((w) => ({ ...attackRow(actor, w), checked: w.id === selected }));
+  const canPower = actor.type === "character";
+  const choice = await promptEdge({
+    title: L("KNAVERY.Roll.AttackTitleAny"), reason, attack: true, melee: canPower && rows.some((r) => r.melee), weapons: rows,
+  });
+  if (!choice) return null;
+  const weapon = actor.items.get(choice.weaponId) ?? actor.items.get(selected);
+  if (!weapon) return null;
+  lastWeapon.set(actor.id, weapon.id);
+  const power = choice.power && canPower && weapon.system.attackType === "melee";
+  return attackWith(actor, weapon, { ...choice, power }, { reason });
+};
+
+/** Roll an attack whose edge and options are chosen: the card, damage, targets and breakage. */
+const attackWith = async (actor, weapon, choice, { reason = "" } = {}) => {
+  const ability = weapon.attackAbility;
+  const title = F("KNAVERY.Roll.AttackTitle", { weapon: weapon.name });
   const bonus = actor.abilityBonus(ability);
   const formula = d20Formula(bonus, choice.edge, choice.modifier);
   const roll = await new Roll(formula).evaluate();

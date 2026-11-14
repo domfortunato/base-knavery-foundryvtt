@@ -2,10 +2,8 @@
  * The welcome window: what this system is, who made it, that it is
  * unofficial, whose game it serves, and where to buy that game.
  *
- * It opens by itself for a GM once per world per system version (setting
- * `welcome-shown-version`), and at every GM login while the world has no
- * rulebook PDF (the user's ask, 2026-11-13: log in, be asked for the book),
- * unless they untick "Show after each update" (`welcome-on-start`).
+ * It opens by itself at every GM login (user ruling 2026-11-14), unless they
+ * untick "Show each time a Game Master loads the world" (`welcome-on-start`).
  * Players are never shown it unasked; anyone opens it from the Settings
  * sidebar or `game.knavery.openWelcome()`. The wording follows the Knave 2e
  * Third Party License: the §3 disclaimer verbatim (KNAVERY.Disclaimer), only
@@ -19,6 +17,8 @@ const L = (k) => game.i18n.localize(k);
 const F = (k, d) => game.i18n.format(k, d);
 
 const WELCOME_ID = "knavery-welcome";
+/** The licence Knave's first edition is under (Knave 1.0, p1): its tables ship with this system. */
+const CC_BY_URL = "https://creativecommons.org/licenses/by/4.0/";
 
 /** Where to buy Knave: Second Edition. The DriveThruRPG link carries the author's affiliate id. */
 const BUY_LINKS = [
@@ -57,7 +57,11 @@ export class WelcomeWindow extends HandlebarsApplicationMixin(ApplicationV2) {
       logoDark: `${SYS_PATH}/logo/made-for-knave-white.png`,
       disclaimer: L("KNAVERY.Disclaimer"),
       credit: L("KNAVERY.LogoCredit"),
-      credit1e: L("KNAVERY.Knave1eCredit"),
+      knave1eHeading: L("KNAVERY.Welcome.Knave1eHeading"),
+      // The licence link is built here: the string carries only its words.
+      knave1eBody: F("KNAVERY.Welcome.Knave1eBody", {
+        license: `<a href="${CC_BY_URL}" target="_blank" rel="noopener">${L("KNAVERY.Welcome.Knave1eLicense")}</a>`,
+      }),
       links: BUY_LINKS,
       // The "show after each update" box writes a world setting.
       isGM: game.user.isGM && game.user.can("SETTINGS_MODIFY"),

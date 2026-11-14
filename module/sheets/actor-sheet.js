@@ -14,7 +14,7 @@ import { isPetty, slotsForItem } from "../documents/actor.js";
 import { levelLadder } from "../data-models.js";
 import { mayEditAbilities, mayEditCareers, mayEditLevelXp, mayUseCharGen } from "../edit-gates.js";
 import { scaledPosition } from "../settings.js";
-import { castSpell, rollAttack, rollCheck, rollDamage, rollDieOfFate, rollMorale } from "../rolls.js";
+import { attackRow, castSpell, openAttack, rollAttack, rollCheck, rollDamage, rollDieOfFate, rollMorale } from "../rolls.js";
 import { pickArt, randomPortraitPair, setActorArt } from "../art.js";
 import { drawFrom, pickFrom } from "../compendium.js";
 import {
@@ -91,6 +91,9 @@ const mayRandomize = (fn) => function (event, target) {
   }
   return fn.call(this, event, target);
 };
+
+/** A character sheet's width before the text size scales it. NPCs keep DEFAULT_OPTIONS' 640. */
+const CHARACTER_SHEET_WIDTH = 440;
 
 export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static DEFAULT_OPTIONS = {
@@ -175,6 +178,8 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
   _initializeApplicationOptions(options) {
     const applied = super._initializeApplicationOptions(options);
     if (options.document?.type === "npc") applied.classes.push("knavery-npc-sheet");
+    // A character's sheet is as wide as its abilities and vitals (user, 2026-11-14); attacks are a window.
+    else applied.position.width = CHARACTER_SHEET_WIDTH;
     // Opens larger with the player's text size.
     applied.position = scaledPosition(applied.position);
     return applied;
@@ -323,17 +328,7 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       }
     }
 
-    const attacks = inventory.filter((i) => i.type === "weapon" && i.system.equipped).map((w) => {
-      const ability = w.attackAbility;
-      const bonus = actor.abilityBonus(ability);
-      return {
-        id: w.id, name: w.name, damage: w.system.damage, broken: w.system.broken,
-        kind: L(w.system.attackType === "ranged" ? "KNAVERY.Ranged" : "KNAVERY.Melee"),
-        ability: L(`KNAVERY.AbilityShort.${ability}`),
-        bonus: bonus >= 0 ? `+${bonus}` : `${bonus}`,
-        range: w.system.range,
-      };
-    });
+    const attacks = inventory.filter((i) => i.type === "weapon" && i.system.equipped).map((w) => attackRow(actor, w));
 
     const abilities = ABILITIES.map((key) => ({
       key,
@@ -707,9 +702,12 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     await rollMorale(this.actor);
   }
 
+  /** A weapon's own d20 (Inventory, NPCs) attacks with it; the character's Attack button asks which weapon. */
   static async #onAttack(_event, target) {
     if (!this.actor.isOwner) return;
-    const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+    const id = target.closest("[data-item-id]")?.dataset.itemId;
+    if (!id) return openAttack(this.actor);
+    const item = this.actor.items.get(id);
     if (item) await rollAttack(this.actor, item);
   }
 

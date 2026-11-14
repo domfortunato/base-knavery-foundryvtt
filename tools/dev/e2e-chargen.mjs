@@ -5,7 +5,8 @@
  * ability points (one spellbook per STARTING point of INT); the failed-career
  * hack and its petty item; the GM's notes; the dashboard's XP tab; the ability
  * roll link's tooltip; the text size; the footer; traits; changing careers at level 1;
- * the Knave 1e rule hacks (1000-XP levels, d8 HP, random raises, group initiative). GM, Alice and Bob in three browsers.
+ * the Knave 1e rule hacks (1000-XP levels, d8 HP, random raises, group initiative); the narrow
+ * sheet, its Attack window and raised abilities; the welcome window's licence notice. GM, Alice and Bob in three browsers.
  *
  *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/e2e-chargen.mjs   (npm run dev:chargen)
  *
@@ -688,6 +689,84 @@ await withSettings(gm, async () => {
       "each new round rerolls, and its first turn goes to the side that won", JSON.stringify({ rounds, msgs: r.roundMsgs }));
     ok(rounds.some((x) => x.pcsFirst) && rounds.some((x) => !x.pcsFirst), "over 12 rounds both sides win at least once", JSON.stringify(rounds.map((x) => x.pcsFirst)));
     ok(r.offFlag === null && r.offRolled, "with the hack off, initiative is core's roll again", JSON.stringify({ flag: r.offFlag, rolled: r.offRolled }));
+  });
+
+  /* ------------------------------------------------------------------ */
+  await section("16. The narrow sheet, the Attack window, raised abilities, the welcome window, the footer.", async () => {
+    const r = await gm.evaluate(async (pcId) => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const pc = game.actors.get(pcId);
+      for (const s of [...foundry.applications.instances.values()]) if (s.document?.type) await s.close();
+      await pc.update({ "system.abilities.DEX.value": 1, "system.abilities.STR.value": 0 }, { knCreation: true });
+      for (const i of pc.items.filter((x) => x.type === "weapon")) await i.delete();
+      const k = Number(game.settings.get("base-knavery", "text-size")) || 1;
+      await pc.sheet.render({ force: true });
+      await wait(900);
+      const el = pc.sheet.element;
+      const out = {
+        k, width: Math.round(el.getBoundingClientRect().width),
+        playColumn: !!el.querySelector(".knavery-page-knave .knavery-play"),
+        disabled: !!el.querySelector("#attack-button")?.disabled,
+        dexRaised: el.querySelector(".DEX-ability")?.classList.contains("raised") ?? null,
+        strRaised: el.querySelector(".STR-ability")?.classList.contains("raised") ?? null,
+        footer: el.querySelector(".knavery-compat-caption")?.textContent ?? "",
+      };
+      const npc = await Actor.create({ name: "Probe Wolf", type: "npc" });
+      await npc.sheet.render({ force: true });
+      await wait(900);
+      out.npcWidth = Math.round(npc.sheet.element.getBoundingClientRect().width);
+      await npc.sheet.close();
+      await npc.delete();
+      // Two weapons: a sword (melee) and a bow (ranged).
+      await pc.createEmbeddedDocuments("Item", [
+        { name: "Probe Sword", type: "weapon", system: { equipped: true, attackType: "melee", damage: "d6" } },
+        { name: "Probe Bow", type: "weapon", system: { equipped: true, attackType: "ranged", damage: "d6", range: "80ft" } },
+      ]);
+      await wait(600);
+      out.enabled = !pc.sheet.element.querySelector("#attack-button")?.disabled;
+      return out;
+    }, ids.a);
+    const exp = 440 * r.k;
+    ok(Math.abs(r.width - exp) < 30 && Math.abs(r.npcWidth - 640 * r.k) < 40, "a character sheet opens narrow (440 × text size); an NPC's stays at 640", JSON.stringify(r));
+    ok(!r.playColumn && r.disabled && r.enabled, "no attacks column; the Attack button waits for an equipped weapon", JSON.stringify(r));
+    ok(r.dexRaised === true && r.strRaised === false, "a score above 0 is marked raised, a 0 is not", JSON.stringify(r));
+    ok(r.footer.includes("unofficial fan-made Foundry system for Knave Second Edition"), "the sheet footer reads the new sentence", r.footer);
+
+    // The Attack window: both weapons, Power attack for the sword only, the bow rolls.
+    const before = await gm.evaluate(() => game.messages.size);
+    await gm.evaluate((x) => game.actors.get(x).sheet.element.querySelector("#attack-button").click(), ids.a);
+    await gm.waitForSelector(".knavery-roll-prompt .kn-attack-weapons", { timeout: T(10000) });
+    const win = await gm.evaluate(() => {
+      const d = document.querySelector(".knavery-roll-prompt");
+      const names = [...d.querySelectorAll(".kn-attack-weapon strong")].map((e) => e.textContent.trim());
+      const power = () => !d.querySelector(".power-group")?.hidden;
+      const pick = (n) => { const l = [...d.querySelectorAll(".kn-attack-weapon")].find((e) => e.textContent.includes(n)); const i = l.querySelector("input"); i.checked = true; i.dispatchEvent(new Event("change")); };
+      pick("Probe Sword"); const swordPower = power();
+      pick("Probe Bow"); const bowPower = power();
+      return { names, swordPower, bowPower };
+    });
+    await gm.locator('.knavery-roll-prompt button[data-action="normal"]').click();
+    await gm.waitForFunction((n) => game.messages.size > n, before, { timeout: T(10000) });
+    const card = await gm.evaluate(() => game.messages.contents.at(-1).getFlag("base-knavery", "attack")?.weapon ?? null);
+    ok(win.names.includes("Probe Sword") && win.names.includes("Probe Bow") && win.swordPower && !win.bowPower,
+      "the Attack window lists both weapons; Power attack only for the sword", JSON.stringify(win));
+    ok(card === "Probe Bow", "choosing the bow rolls the bow's attack", String(card));
+
+    // The welcome window's licence notice, lighter intro and checkbox.
+    const w = await gm.evaluate(async () => {
+      await game.knavery.openWelcome();
+      await new Promise((res) => setTimeout(res, 900));
+      const el = document.getElementById("knavery-welcome");
+      const out = {
+        link: el?.querySelector(".knavery-welcome-license a")?.href ?? "",
+        weight: el ? getComputedStyle(el.querySelector(".knavery-welcome-unofficial")).fontWeight : "",
+        box: el?.querySelector(".knavery-welcome-onstart")?.textContent.trim() ?? "",
+      };
+      await foundry.applications.instances.get("knavery-welcome")?.close();
+      return out;
+    });
+    ok(w.link.includes("creativecommons.org/licenses/by/4.0") && w.weight === "400" && !/rulebook/i.test(w.box),
+      "the welcome window carries the Knave 1e licence, a lighter intro and the new checkbox text", JSON.stringify(w));
   });
 
   // Cleanup.

@@ -4075,6 +4075,8 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
  ******************************************************************************/
 
 .knavery.sheet.actor { min-width: 560px; }
+/* A character's sheet is as wide as its abilities and vitals (user, 2026-11-14); NPCs keep the wide layout. */
+.knavery.sheet.actor:not(.knavery-npc-sheet) { min-width: 380px; }
 
 /* ---- Name block: name + pronouns / careers / level / counters ------------ */
 .knavery-name-section {
@@ -4215,6 +4217,16 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 }
 .knavery-roll-prompt .roll-mode-hint { font-size: calc(12px * var(--kn-text, 1)); color: var(--kn-muted); }
 .knavery-roll-prompt footer.form-footer button[data-action="normal"] { font-weight: bold; }
+/* The Attack window's weapon list: one radio row per equipped weapon. */
+.knavery-roll-prompt .kn-attack-weapons {
+    display: flex; flex-direction: column; gap: 4px; margin: 0 0 6px; padding: 4px 8px 6px;
+    border: 1px solid var(--kn-rule); border-radius: 4px;
+}
+.knavery-roll-prompt .kn-attack-weapons legend { padding: 0 4px; font-weight: bold; }
+.knavery-roll-prompt .kn-attack-weapon { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; cursor: pointer; }
+.knavery-roll-prompt .kn-attack-weapon input { margin: 0; }
+.knavery-roll-prompt .kn-attack-weapon.broken strong { text-decoration: line-through; }
+.knavery-roll-prompt .power-group[hidden] { display: none; }
 
 .knavery-roll-card .card-title { display: flex; align-items: baseline; gap: 6px; }
 .knavery-roll-card .card-title h3 { margin: 0; border: none; font-size: calc(16px * var(--kn-text, 1)); }
@@ -4430,7 +4442,15 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 
 /* ---- The sheet: banners, pages, footer ------------------------------------- */
 .knavery-sheet { display: flex; flex-direction: column; min-height: 100%; }
-.knavery-pages { flex: 1 0 auto; display: flex; flex-direction: column; }
+.knavery-pages { flex: 1 0 auto; display: flex; flex-direction: column; container-type: inline-size; }
+/* A narrow sheet (a character's default): the pages' two-column grids become one; drag wider and they return. */
+@container (max-width: 600px) {
+    .knavery-level-ladder,
+    .character-traits .trait-grid,
+    .character-traits .bio-top { grid-template-columns: 1fr; }
+    .knavery-items-list-row-header { align-items: flex-start; }
+    .knavery-item-name-and-tags { flex-wrap: wrap; height: auto; min-height: 26px; }
+}
 .knavery-pages > .tab.active { display: flex; flex-direction: column; flex: 1 0 auto; height: auto; }
 
 /* ---- The Knave page: head ------------------------------------------------- */
@@ -4446,6 +4466,18 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery .npc-role-line select { width: auto; flex: 0 1 140px; }
 .knavery .npc-role-line .short-input { width: 54px; flex: 0 0 54px; text-align: center; }
 .knavery-head-counters { grid-template-columns: 1fr 1fr; margin-top: auto; align-self: stretch; }
+/* The narrow character head: a smaller portrait, pronouns under the name, lines that wrap. */
+.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-head { grid-template-columns: 104px 1fr; }
+.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-head .portrait { height: 104px; }
+.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-identity { min-height: 104px; }
+.knavery.sheet.actor:not(.knavery-npc-sheet) .level-line { flex-wrap: wrap; row-gap: 2px; }
+.knavery .pronouns-line { display: flex; flex: 0 0 auto; }
+.knavery .pronouns-line .pronouns-input {
+    flex: 1 1 auto; height: 24px !important; background: none !important; color: var(--kn-ink) !important;
+    border: none !important; border-bottom: 1px solid var(--kn-rule) !important; border-radius: 0;
+    font-size: calc(14px * var(--kn-text, 1)) !important; text-align: left; padding: 0 2px;
+}
+.knavery .pronouns-line .pronouns-input::placeholder { color: var(--kn-faint); opacity: 1; }
 .knavery .slots-counter.peril { border-color: var(--kn-peril); }
 .knavery .slots-counter.peril .resource-input-wrapper span { color: var(--kn-peril); font-weight: bold; }
 
@@ -4487,6 +4519,12 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery .knavery-ability-name:focus-visible .roll-icon { opacity: 1; text-shadow: 0 0 8px var(--kn-accent); }
 .knavery-ability-hint { font-size: calc(13px * var(--kn-text, 1)); font-style: italic; color: var(--kn-muted); }
 .knavery .knavery-ability .ability-defense { flex: 0 0 auto; font-size: calc(12px * var(--kn-text, 1)); color: var(--kn-faint); padding-right: 2px; }
+/* A score above 0 stands out: a gold ring and number, its defense in ink. A 0 sits back. */
+.knavery-ability:not(.raised) .knavery-ability-circle { border: 1px solid var(--kn-rule); }
+.knavery .knavery-ability:not(.raised) .knavery-ability-circle input { color: var(--kn-muted); font-weight: normal; }
+.knavery-ability.raised .knavery-ability-circle { border: 2px solid var(--kn-gold); }
+.knavery .knavery-ability.raised .knavery-ability-circle input { color: var(--kn-gold); font-weight: bold; }
+.knavery .knavery-ability.raised .ability-defense { color: var(--kn-ink); }
 .knavery .npc-no-abilities .hint { font-size: calc(13px * var(--kn-text, 1)); font-style: italic; color: var(--kn-muted); margin: 0; }
 
 .knavery-vitals { display: flex; flex-direction: column; align-items: center; gap: 6px; }
@@ -4533,6 +4571,22 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-vital-buttons .strict-size-button:disabled { opacity: 0.45; }
 .knavery .knavery-vital-buttons .use-abilities-toggle { font-size: calc(12px * var(--kn-text, 1)); display: flex; align-items: center; gap: 4px; }
 
+/* A character's Knave page: abilities | vitals. Attacks are the Attack button's window. */
+.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-body { grid-template-columns: minmax(0, 1fr) 172px; }
+/* A character's vitals read large: AC, armor points, max HP and wounds, the bars and the buttons. */
+.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-shield { width: 66px; height: 72px; }
+.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-shield label { font-size: calc(13px * var(--kn-text, 1)); }
+.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-shield input.ac-input { font-size: calc(24px * var(--kn-text, 1)); height: 30px !important; }
+.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-ap { font-size: calc(14px * var(--kn-text, 1)); }
+.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-bar-block { width: 78px; }
+.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-bar-block > label { font-size: calc(14px * var(--kn-text, 1)); }
+.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-bar-block .bar-max { width: 54px; height: 28px !important; font-size: calc(17px * var(--kn-text, 1)); }
+.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-bar-block .readout { height: 28px; line-height: 28px; font-size: calc(17px * var(--kn-text, 1)); }
+.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-bar { width: 58px; }
+.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-bar input.bar-value { font-size: calc(26px * var(--kn-text, 1)); }
+.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-bar-name { font-size: calc(17px * var(--kn-text, 1)); }
+.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-vital-buttons button { height: 34px; font-size: calc(16px * var(--kn-text, 1)); }
+.knavery-vital-buttons .attack-button { font-weight: bold; }
 .knavery-play { min-width: 0; }
 .knavery-play .knavery-items-list-header { height: 30px; line-height: 30px; }
 .knavery-empty { font-size: calc(12px * var(--kn-text, 1)); font-style: italic; color: var(--kn-muted); margin: 4px 0; }
@@ -4601,7 +4655,18 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 }
 .knavery-welcome-byline { margin: 0; color: var(--kn-muted); font-size: calc(13px * var(--kn-text, 1)); }
 .knavery-welcome-byline a { color: inherit; }
-.knavery-welcome-unofficial { margin: 6px 0 0; }
+/* The intro: regular weight, smaller and softer, so the bold disclaimer under it is the line that stands out. */
+.knavery-welcome-unofficial {
+    margin: 6px 0 0; font-weight: 400; font-size: calc(13px * var(--kn-text, 1)); line-height: 1.45; color: var(--kn-muted);
+}
+/* Knave 1e's CC BY 4.0 notice: title, author, licence link and changes. */
+.knavery-welcome-license { padding: 6px 10px; border: 1px solid var(--kn-rule); border-radius: 4px; }
+.knavery-welcome-license h3 {
+    margin: 0 0 2px; border: none; font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
+    font-variant: small-caps; font-size: calc(14px * var(--kn-text, 1)); color: var(--kn-ink);
+}
+.knavery-welcome-license p { margin: 0; color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
+.knavery-welcome-license a { color: var(--kn-ink); text-decoration: underline; }
 .knavery-welcome-rulebook {
     display: flex; flex-direction: column; align-items: stretch; gap: 6px; margin-top: 6px; padding: 8px 10px;
     border: 1px solid var(--kn-accent); border-radius: 4px; background: var(--kn-accent-wash);
