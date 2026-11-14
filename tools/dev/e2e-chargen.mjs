@@ -693,13 +693,14 @@ await withSettings(gm, async () => {
         // Knave 1e's notice, in Licensing (the art's licences fold in the AI disclosure above it).
         link: el?.querySelector(".knavery-welcome-small .knavery-welcome-license a")?.href ?? "",
         weight: el ? getComputedStyle(el.querySelector(".knavery-welcome-unofficial")).fontWeight : "",
+        align: el ? getComputedStyle(el.querySelector(".knavery-welcome-unofficial")).textAlign : "",
         box: el?.querySelector(".knavery-welcome-onstart")?.textContent.trim() ?? "",
       };
       await foundry.applications.instances.get("knavery-welcome")?.close();
       return out;
     });
-    ok(w.link.includes("creativecommons.org/licenses/by/4.0") && w.weight === "400" && !/rulebook/i.test(w.box),
-      "the welcome window carries the Knave 1e licence, a regular-weight intro and the new checkbox text", JSON.stringify(w));
+    ok(w.link.includes("creativecommons.org/licenses/by/4.0") && w.weight === "300" && w.align === "center" && !/rulebook/i.test(w.box),
+      "the welcome window carries the Knave 1e licence, a centred light-weight intro and the new checkbox text", JSON.stringify(w));
   });
 
   /* ------------------------------------------------------------------ */
