@@ -771,6 +771,7 @@
       "TabTables": "Tables",
       "TabXp": "XP",
       "TabParty": "Party",
+      "TabTools": "Player Tools",
       "Other": "Other",
       "XpHint": "Award XP to the players' characters: the same to each, a different amount to each, a total split evenly, or (when the Rules give XP for treasure) the treasure they brought back.",
       "XpMode": "How",

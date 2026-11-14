@@ -4366,15 +4366,16 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
    dark theme's backdrop blur on .window-content is off, since a backdrop filter
    would make the content the rail's containing block and clip it. Mirrored onto
    the left edge under .knavery-rail-left when the window stands too near the
-   right of its screen (tab-rail.js decides). DB Mythic's mechanism. */
-.knavery.sheet.actor { overflow: visible; }
-.knavery.sheet.actor > .window-header { border-radius: 6px 6px 0 0; }
-.knavery.sheet.actor > .window-content {
+   right of its screen (tab-rail.js decides). DB Mythic's mechanism. The actor sheet and the
+   GM's dashboard both wear knavery-railed. */
+.knavery.knavery-railed { overflow: visible; }
+.knavery.knavery-railed > .window-header { border-radius: 6px 6px 0 0; }
+.knavery.knavery-railed > .window-content {
     border-radius: 0 0 6px 6px;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
 }
-.knavery.sheet.actor > .window-content > nav.knavery-tab-rail {
+.knavery.knavery-railed > .window-content > nav.knavery-tab-rail {
     position: absolute;
     top: calc(var(--header-height, 36px) + 12px);
     left: 100%;
@@ -4394,7 +4395,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
     box-shadow: 3px 3px 8px var(--kn-shadow);
     line-height: normal;
 }
-.knavery.sheet.actor > .window-content > nav.knavery-tab-rail button {
+.knavery.knavery-railed > .window-content > nav.knavery-tab-rail button {
     /* Core keeps a button at least --button-size (2em) tall; a tab is a 32px square. */
     --button-size: 32px;
     position: relative;
@@ -4416,16 +4417,16 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
     cursor: pointer;
     transition: background-color 0.12s, color 0.12s;
 }
-.knavery.sheet.actor > .window-content > nav.knavery-tab-rail button i { margin: 0; color: inherit; pointer-events: none; }
-.knavery.sheet.actor > .window-content > nav.knavery-tab-rail button:hover,
-.knavery.sheet.actor > .window-content > nav.knavery-tab-rail button:focus-visible { background: var(--kn-wash-strong); outline: none; }
-.knavery.sheet.actor > .window-content > nav.knavery-tab-rail button.active { background: var(--kn-bar); color: var(--kn-on-bar); }
+.knavery.knavery-railed > .window-content > nav.knavery-tab-rail button i { margin: 0; color: inherit; pointer-events: none; }
+.knavery.knavery-railed > .window-content > nav.knavery-tab-rail button:hover,
+.knavery.knavery-railed > .window-content > nav.knavery-tab-rail button:focus-visible { background: var(--kn-wash-strong); outline: none; }
+.knavery.knavery-railed > .window-content > nav.knavery-tab-rail button.active { background: var(--kn-bar); color: var(--kn-on-bar); }
 /* Growth's tab while a level-up waits: the Die of Fate's teal, as a dot. */
-.knavery.sheet.actor > .window-content > nav.knavery-tab-rail button.attention::after {
+.knavery.knavery-railed > .window-content > nav.knavery-tab-rail button.attention::after {
     content: ""; position: absolute; top: 3px; right: 3px; width: 7px; height: 7px;
     border-radius: 50%; background: var(--kn-accent);
 }
-.knavery.sheet.actor.knavery-rail-left > .window-content > nav.knavery-tab-rail {
+.knavery.knavery-railed.knavery-rail-left > .window-content > nav.knavery-tab-rail {
     left: auto;
     right: 100%;
     border-left: 1px solid var(--kn-rule-strong);
@@ -4638,9 +4639,9 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-band .coins-input { width: 110px; text-align: right; font-size: calc(16px * var(--kn-text, 1)); }
 .knavery .level-line input:disabled, .knavery-band input:disabled { background: none !important; border-color: transparent !important; opacity: 1; color: var(--kn-ink); }
 /* The rail's Attack button: not a page, so set apart by a rule and the splat in the peril colour. */
-.knavery.sheet.actor > .window-content > nav.knavery-tab-rail .knavery-rail-divider { display: block; height: 1px; margin: 2px 4px; background: var(--kn-rule-strong); }
-.knavery.sheet.actor > .window-content > nav.knavery-tab-rail button.knavery-rail-attack i { color: var(--kn-peril); }
-.knavery.sheet.actor > .window-content > nav.knavery-tab-rail button.knavery-rail-attack:disabled { opacity: 0.4; cursor: default; }
+.knavery.knavery-railed > .window-content > nav.knavery-tab-rail .knavery-rail-divider { display: block; height: 1px; margin: 2px 4px; background: var(--kn-rule-strong); }
+.knavery.knavery-railed > .window-content > nav.knavery-tab-rail button.knavery-rail-attack i { color: var(--kn-peril); }
+.knavery.knavery-railed > .window-content > nav.knavery-tab-rail button.knavery-rail-attack:disabled { opacity: 0.4; cursor: default; }
 .knavery-play { min-width: 0; }
 .knavery-play .knavery-items-list-header { height: 30px; line-height: 30px; }
 .knavery-empty { font-size: calc(12px * var(--kn-text, 1)); font-style: italic; color: var(--kn-muted); margin: 4px 0; }
@@ -4863,7 +4864,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 /* ---- A damage card already applied (damage.js) --------------------------------- */
 .knavery-roll-card .card-apply.applied button { opacity: 0.6; }
 .knavery-roll-card .card-applied { display: block; margin-bottom: 2px; color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
-.knavery.sheet.actor > .window-content > nav.knavery-tab-rail[hidden] { display: none; }
+.knavery.knavery-railed > .window-content > nav.knavery-tab-rail[hidden] { display: none; }
 
 /* ---- Char Gen Mode, Level Up, Growth ----------------------------------------- */
 /* A score, level or XP this user may not change (Char Gen Mode off, or the GM's
@@ -5087,3 +5088,23 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-roll-prompt .roll-locked-edge { margin: 0 0 6px; font-weight: bold; color: var(--kn-muted); }
 .knavery-roll-prompt .roll-locked-edge i { color: var(--kn-accent); margin-right: 4px; }
 .knavery-gm-dashboard .dash-select-all { font-size: calc(12px * var(--kn-text, 1)); margin-left: 6px; }
+/* The GM's dashboard button, atop the left toolbar (knavery.js renderSceneControls): in the
+   column's flow, so the controls move down for it rather than being covered. */
+#ui-left-column-1 > #knavery-dashboard-hud {
+    flex: 0 0 auto;
+    width: calc(var(--control-size, 32px) * 1.6);
+    height: calc(var(--control-size, 32px) * 1.6);
+    margin: 0 0 8px;
+    padding: 0;
+    border: 1px solid var(--kn-rule-strong);
+    border-radius: 8px;
+    background: var(--kn-bar);
+    color: var(--kn-on-bar);
+    font-size: calc(var(--control-size, 32px) * 0.75);
+    box-shadow: 2px 2px 6px var(--kn-shadow);
+    pointer-events: all;
+    cursor: pointer;
+}
+#ui-left-column-1 > #knavery-dashboard-hud:hover,
+#ui-left-column-1 > #knavery-dashboard-hud:focus-visible { filter: brightness(1.15); outline: none; }
+#ui-left-column-1 > #knavery-dashboard-hud i { margin: 0; pointer-events: none; }

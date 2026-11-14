@@ -21,7 +21,7 @@ pages:
         <p>A new world plays Knave first edition as written: its rules, traits, reaction, alignment, starting gear and 100 level-less spells (CC BY 4.0) come with the system. To play Knave 2e, bring your own copy of the book: its tables ship as empty shells you fill from it.</p>
         <ol>
         <li><b>Choose the rules.</b> In <i>Configure Settings → Base Knavery → Configure Rules</i>, the <b>Rules</b> choice sets every rule to Knave 1e or Knave 2e; change any one afterwards to mix them (see <i>Rules: Knave 1e or 2e</i>).</li>
-        <li><b>Playing 2e? Fill the tables.</b> Open the <b>Game Master's Dashboard</b>, either from the clipboard button in the token controls or from the Actors sidebar. On <b>Tables</b>, build them from your PDF, or click <i>Import</i> beside Careers, Spells, Names and the traits and paste your rows.</li>
+        <li><b>Playing 2e? Fill the tables.</b> Open the <b>Game Master's Dashboard</b> from the big button at the top of the left toolbar (or the Actors sidebar). On <b>Tables</b>, build them from your PDF, or click <i>Import</i> beside Careers, Spells, Names and the traits and paste your rows.</li>
         <li><b>Set the table's options.</b> In <i>Configure Settings → Base Knavery</i>:
         <ul>
         <li>choose how advantage works (Knave 2e's ±5, or 2d20 keep-high/low);</li>

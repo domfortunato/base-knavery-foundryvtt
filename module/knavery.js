@@ -201,6 +201,27 @@ Hooks.on("getSceneControlButtons", (controls) => {
   };
 });
 
+/**
+ * The GM's big dashboard button, at the top of the left toolbar (user, 2026-11-14): in the
+ * column's own flow before the scene controls, so Foundry moves them down rather than the
+ * button covering them. The controls re-render only their own element, so it stays.
+ */
+Hooks.on("renderSceneControls", () => {
+  if (!game.user.isGM || document.getElementById("knavery-dashboard-hud")) return;
+  const column = document.getElementById("ui-left-column-1");
+  if (!column) return;
+  const b = document.createElement("button");
+  b.type = "button";
+  b.id = "knavery-dashboard-hud";
+  b.className = "knavery-dashboard-hud";
+  b.setAttribute("aria-label", L("KNAVERY.Dashboard.Title"));
+  b.dataset.tooltip = L("KNAVERY.Dashboard.Title");
+  b.dataset.tooltipDirection = "RIGHT";
+  b.innerHTML = '<i class="fas fa-clipboard-list" inert></i>';
+  b.addEventListener("click", () => openGmDashboard());
+  column.prepend(b);
+});
+
 Hooks.on("hotbarDrop", (_bar, data, slot) => {
   if (data?.type !== "Item") return;
   const item = fromUuidSync(data.uuid);

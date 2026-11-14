@@ -1,0 +1,14 @@
+{{!-- Player Tools: the live switches for the players' tools, and their shop's manager. --}}
+<section class="tab {{tab.cssClass}}" data-tab="tools" data-group="primary">
+  <h3>{{localize "KNAVERY.Dashboard.PlayerTools"}}</h3>
+  <div class="dash-toggles">
+    {{#each toggles}}
+    <button type="button" class="dash-toggle {{#if this.on}}on{{/if}}" data-action="toggleSetting" data-key="{{this.key}}">
+      <i class="fas {{this.icon}}"></i> {{localize this.label}} <i class="fas {{#if this.on}}fa-toggle-on{{else}}fa-toggle-off{{/if}}"></i>
+    </button>
+    {{/each}}
+  </div>
+  <div class="dash-buttons">
+    <button type="button" data-action="marketManager"><i class="fas fa-store"></i> {{localize "KNAVERY.Market.ManagerTitle"}}</button>
+  </div>
+</section>

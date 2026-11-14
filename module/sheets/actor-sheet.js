@@ -131,7 +131,7 @@ const CHARACTER_SHEET_HEIGHT = 660;
 
 export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static DEFAULT_OPTIONS = {
-    classes: ["knavery", "sheet", "actor"],
+    classes: ["knavery", "sheet", "actor", "knavery-railed"],
     position: { width: 640, height: 780 },
     window: { resizable: true },
     form: { submitOnChange: true },

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- **The Game Master's Dashboard** opens from a big button at the top of the left toolbar (the GM's
+  only; the toolbar moves down for it). Its pages are on a thumb-tab rail off the window's edge, as on
+  the character sheet, in place of the tab strip, and the player-tool switches and the Marketplace
+  Manager have a **Player Tools** page of their own, apart from Tables.
 - **Requests set the edge:** the dashboard's Requests tab has an Edge choice (the player chooses,
   Disadvantage, Normal or Advantage). A set edge leaves the player one button, "The GM set this roll";
   the card and the results list say which. **All** beside Who ticks every character (or none).

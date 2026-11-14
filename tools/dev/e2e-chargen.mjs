@@ -9,7 +9,7 @@
  * default; a blank sheet held to its level's ability points, with HP, coin and career dice; the Attack window's
  * Target list; the narrow header; Rest by the book; red splats; compact attack cards; labels that fit; Create NPC;
  * spell items from the rulebook; weapons and armor first; rations per slot; the review #2 fixes; time and hazards; morale and wages; Backstory and the Knave-page traits; item badges;
- * the Knave 1e rules (part 26) and their second bundle: quality and wear, copper prices, coin slots, daily wages (part 27); the Party tab, treasure to XP, selling and free repair (part 28); generating a spell at the GM's request (part 29). GM, Alice and Bob
+ * the Knave 1e rules (part 26) and their second bundle: quality and wear, copper prices, coin slots, daily wages (part 27); the Party tab, treasure to XP, selling and free repair (part 28); generating a spell at the GM's request (part 29); the dashboard's button, rail and Player Tools (part 30). GM, Alice and Bob
  * in three browsers.
  *
  *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/e2e-chargen.mjs   (npm run dev:chargen)
@@ -2452,6 +2452,55 @@ await withSettings(gm, async () => {
       game.actors.get(x).items.getName("Probe Circle of Edits")?.delete();
       foundry.applications.instances.get("knavery-gm-dashboard")?.close();
     }, ids.a);
+  });
+
+  await section("30. The GM's dashboard button atop the left toolbar, the dashboard's thumb rail, Player Tools.", async () => {
+    const hud = await gm.evaluate(() => {
+      const b = document.getElementById("knavery-dashboard-hud");
+      const controls = document.getElementById("scene-controls");
+      const box = (el) => el?.getBoundingClientRect();
+      const bb = box(b); const cb = box(controls);
+      return {
+        there: !!b, inColumn: b?.parentElement?.id === "ui-left-column-1",
+        before: !!(b && controls && (b.compareDocumentPosition(controls) & Node.DOCUMENT_POSITION_FOLLOWING)),
+        clear: !!(bb && cb && bb.bottom <= cb.top + 0.5), size: Math.round(bb?.width ?? 0),
+      };
+    });
+    const aliceHud = await alice.evaluate(() => !!document.getElementById("knavery-dashboard-hud"));
+    await gm.screenshot({ path: `${SHOTS}/hud-button.png`, clip: { x: 0, y: 0, width: 420, height: 420 } });
+    await gm.locator("#knavery-dashboard-hud").click();
+    await gm.waitForSelector("#knavery-gm-dashboard nav.knavery-tab-rail button", { timeout: T(10000) });
+    await gm.waitForTimeout(T(600));
+    const rail = await gm.evaluate(() => {
+      const app = document.getElementById("knavery-gm-dashboard");
+      const nav = app.querySelector("nav.knavery-tab-rail");
+      const fb = app.getBoundingClientRect(); const nb = nav.getBoundingClientRect();
+      return {
+        tabs: [...nav.querySelectorAll("button[data-tab]")].map((b) => b.dataset.tab).join(),
+        strips: app.querySelectorAll("nav.tabs:not(.knavery-tab-rail)").length,
+        outside: nb.left >= fb.right - 1 || nb.right <= fb.left + 1, visible: nb.width > 20 && nb.height > 100,
+      };
+    });
+    await gm.locator('#knavery-gm-dashboard nav.knavery-tab-rail button[data-tab="tools"]').click();
+    await gm.waitForTimeout(T(400));
+    const tools = await gm.evaluate(() => {
+      const app = document.getElementById("knavery-gm-dashboard");
+      return {
+        active: !!app.querySelector('section[data-tab="tools"].active .dash-toggles'),
+        toggles: app.querySelectorAll('section[data-tab="tools"] .dash-toggle').length,
+        manager: !!app.querySelector('section[data-tab="tools"] [data-action="marketManager"]'),
+        tablesClean: !app.querySelector('section[data-tab="tables"] .dash-toggles, section[data-tab="tables"] [data-action="marketManager"]'),
+        tablesImport: !!app.querySelector('section[data-tab="tables"] [data-action="importTable"]'),
+      };
+    });
+    await gm.screenshot({ path: `${SHOTS}/dashboard-rail.png` });
+    ok(hud.there && hud.inColumn && hud.before && hud.clear && hud.size >= 48 && !aliceHud,
+      "the GM has a big dashboard button atop the left toolbar, clear of the scene controls; Alice has none", JSON.stringify({ hud, aliceHud }));
+    ok(rail.tabs === "requests,damage,time,party,dice,xp,tools,tables" && rail.strips === 0 && rail.outside && rail.visible,
+      "the dashboard's pages are on a thumb rail off its edge, with no tab strip", JSON.stringify(rail));
+    ok(tools.active && tools.toggles === 5 && tools.manager && tools.tablesClean && tools.tablesImport,
+      "Player Tools holds the five switches and the Marketplace Manager; Tables keeps the importer", JSON.stringify(tools));
+    await gm.evaluate(() => foundry.applications.instances.get("knavery-gm-dashboard")?.close());
   });
 
   // Cleanup.

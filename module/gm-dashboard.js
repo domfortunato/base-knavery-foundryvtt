@@ -15,8 +15,8 @@
  *   XP        award XP: the same amount to each chosen character, a different
  *             amount to each, a total split evenly, or treasure brought back
  *             (treasure.js: Knave 2e p12, companions a half share p59).
- *   Tables    roll any table, import rows, open the Marketplace Manager, and
- *             the live switches for the players' tools.
+ *   Tools     the live switches for the players' tools, and the Marketplace Manager.
+ *   Tables    roll any table, import rows, the rulebook.
  */
 import {
   ABILITIES, CHECK_BASE, DEFAULT_DIFFICULTY, FLAG_SCOPE, SAVE_CATEGORIES, SETTINGS_NS, SYS_PATH, TABLES,
@@ -31,6 +31,7 @@ import { hasRulebook, openRulebook, pickLocalRulebook, showRulebookPage, tablePa
 import { clock, clockLabel, endTurn, resetClock, setClock, TRAVEL_WATCHES_FREE } from "./hazard.js";
 import { payWage, wageRows } from "./hirelings.js";
 import { scaledPosition } from "./settings.js";
+import { placeRail, placeRailSoon } from "./sheets/tab-rail.js";
 import { openSpellGenerator } from "./spell-generator.js";
 import { isLight, party } from "./hazard.js";
 import { spellRule, usesWounds } from "./rules.js";
@@ -58,7 +59,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
   static DEFAULT_OPTIONS = {
     id: "knavery-gm-dashboard",
     tag: "form",
-    classes: ["knavery", "knavery-gm-dashboard"],
+    classes: ["knavery", "knavery-gm-dashboard", "knavery-railed"],
     window: { title: "KNAVERY.Dashboard.Title", icon: "fas fa-clipboard-list", resizable: true },
     position: { width: 640, height: 720 },
     form: { submitOnChange: false, closeOnSubmit: false },
@@ -98,13 +99,15 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   static PARTS = {
-    tabs: { template: "templates/generic/tab-navigation.hbs" },
+    // The pages on a thumb-tab rail off the window's edge, as on the character sheet (user, 2026-11-14).
+    rail: { template: `${SYS_PATH}/templates/parts/tab-rail.html` },
     requests: { template: `${SYS_PATH}/templates/dashboard/requests.html`, scrollable: [".request-log"] },
     damage: { template: `${SYS_PATH}/templates/dashboard/damage.html` },
     time: { template: `${SYS_PATH}/templates/dashboard/time.html` },
     party: { template: `${SYS_PATH}/templates/dashboard/party.html`, scrollable: [".dash-party"] },
     dice: { template: `${SYS_PATH}/templates/dashboard/dice.html` },
     xp: { template: `${SYS_PATH}/templates/dashboard/xp.html`, scrollable: [".dash-xp-rows"] },
+    tools: { template: `${SYS_PATH}/templates/dashboard/tools.html` },
     tables: { template: `${SYS_PATH}/templates/dashboard/tables.html`, scrollable: [".table-list"] },
   };
 
@@ -117,6 +120,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
         { id: "party", icon: "fas fa-users", label: "KNAVERY.Dashboard.TabParty" },
         { id: "dice", icon: "fas fa-dice", label: "KNAVERY.Dashboard.TabDice" },
         { id: "xp", icon: "fas fa-star", label: "KNAVERY.Dashboard.TabXp" },
+        { id: "tools", icon: "fas fa-sliders", label: "KNAVERY.Dashboard.TabTools" },
         { id: "tables", icon: "fas fa-table-list", label: "KNAVERY.Dashboard.TabTables" },
       ],
       initial: "requests",
@@ -156,6 +160,8 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     }
     const rulebook = hasRulebook();
     for (const t of tables) t.pageTip = t.page ? F("KNAVERY.Rulebook.OpenAt", { page: t.page }) : "";
+    // The rail's tooltips: each page's name.
+    for (const tab of Object.values(context.tabs ?? {})) tab.tip = L(tab.label);
     return Object.assign(context, {
       characters,
       abilities: ABILITIES.map((k) => ({ value: `ability:${k}`, label: L(`KNAVERY.Ability.${k}`) })),
@@ -204,6 +210,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
 
   _onRender(context, options) {
     super._onRender(context, options);
+    placeRailSoon(this);
     const diff = this.element.querySelector('[name="difficulty"]');
     const out = this.element.querySelector(".request-target");
     const showTarget = () => { if (diff && out) out.textContent = CHECK_BASE + (Number(diff.value) || 0); };
@@ -261,6 +268,12 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     const coins = Math.max(0, Math.floor(Number(root.querySelector('[name="xpCoins"]')?.value) || 0))
       + items.reduce((sum, b) => sum + (Number(b.dataset.value) || 0), 0);
     return { coins, xp: xpForTreasure(coins), uuids: items.map((b) => b.value) };
+  }
+
+  /** Every move decides the rail's side again (tab-rail.js), as on the sheets. */
+  _onPosition(position) {
+    super._onPosition(position);
+    placeRail(this, position);
   }
 
   #form() { return this.element; }
@@ -540,7 +553,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
   static async #onToggleSetting(_e, target) {
     const key = target.dataset.key;
     await setToggle(key, !game.settings.get(SETTINGS_NS, key));
-    this.render({ parts: ["tables"] });
+    this.render({ parts: ["tools"] });
   }
 }
 

@@ -83,7 +83,9 @@ picker, change log and marketplace it ports.
   - `edit-gates.js`: who may change abilities, level, XP and the GM's notes
     (Char Gen Mode and the GM's level & XP switch); the sheet disables, and
     `KnaveryActor._preUpdate` drops the rest (client-side only)
-  - `gm-dashboard.js`, `table-importer.js`, `art.js`, `change-log.js`,
+  - `gm-dashboard.js` (its pages on the same thumb-tab rail, frame class `knavery-railed`;
+    opened from the GM's big button atop the left toolbar, `#knavery-dashboard-hud`),
+    `table-importer.js`, `art.js`, `change-log.js`,
     `print.js`
   - `rulebook.js`: the GM's PDF in Foundry's bundled pdf.js viewer (an iframe
     of `scripts/pdfjs/web/viewer.html`, after Mythic-pwd), the B key, showing
