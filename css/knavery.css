@@ -4147,6 +4147,14 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 }
 .knavery-roll-prompt .roll-mode-hint { font-size: calc(12px * var(--kn-text, 1)); color: var(--kn-muted); }
 .knavery-roll-prompt footer.form-footer button[data-action="normal"] { font-weight: bold; }
+/* Disadvantage | Normal | Advantage: one row, worst to best, equal widths. */
+.knavery-roll-prompt footer.form-footer { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.knavery-roll-prompt footer.form-footer button { min-width: 0; padding: 0 6px; white-space: nowrap; }
+/* Core gives a form label one input's height per line, so a wrapped label gaped. Normal line height,
+   and a checkbox sits right beside its label. */
+.knavery-roll-prompt .form-group { align-items: center; }
+.knavery-roll-prompt .form-group > label { line-height: 1.3; }
+.knavery-roll-prompt .form-group:has(> .form-fields > input[type="checkbox"]) > .form-fields { flex: 0 0 auto; }
 /* The Attack window's weapon list: one radio row per equipped weapon. */
 .knavery-roll-prompt .kn-attack-weapons {
     display: flex; flex-direction: column; gap: 4px; margin: 0 0 6px; padding: 4px 8px 6px;
