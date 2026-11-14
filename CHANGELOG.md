@@ -29,7 +29,7 @@
   Knave 1e PDF on itch beside the Knave 2e book, though the 1e rules are built in. An **AI disclosure**
   says first that there is no AI art: Base Knavery ships with more than 2,900 human-made art assets
   (portraits, tokens and icons) and will never use AI-generated art; and no AI game text: no spell, item or
-  monster description was written by AI (its code is written with the help of an AI coding assistant); the
+  monster description was written by AI (Base Knavery's code is written with the help of an AI coding assistant); the
   art's licences fold under it. A **Licensing** section lists each edition's licence as a folded bullet.
   The window is wider, in two columns (one on a narrow screen), and scrolls within the screen. A knight by
   Lydia Comer, used with her permission, stands beside the title (white on the dark theme). The first

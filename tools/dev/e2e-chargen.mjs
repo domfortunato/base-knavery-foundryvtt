@@ -1925,6 +1925,8 @@ await withSettings(gm, async () => {
         twoCols: (() => { const c = [...el.querySelectorAll(".knavery-welcome-col")].map((x) => x.getBoundingClientRect()); return c.length === 2 && Math.abs(c[0].top - c[1].top) < 2 && c[1].left > c[0].right; })(),
         width: Math.round(el.getBoundingClientRect().width),
         knight: (() => { const k = el.querySelector(".knavery-welcome-head .knavery-welcome-knight"); const l = el.querySelector(".knavery-welcome-head .knavery-logo-light, .knavery-welcome-head .knavery-logo-dark:not([style*=none])"); return !!k && k.complete && k.naturalWidth > 0 && Math.round(k.getBoundingClientRect().height) === Math.round([...el.querySelectorAll(".knavery-welcome-head img")].filter((i) => i !== k && i.offsetParent).at(0)?.getBoundingClientRect().height ?? -1); })(),
+        rulesHeading: el.querySelector(".knavery-welcome-col-main .knavery-welcome-heading")?.textContent.trim(),
+        aiCode: el.querySelector(".knavery-welcome-aicode")?.textContent.trim(),
         booksHeading: [...el.querySelectorAll(".knavery-welcome-heading")].find((h) => /books/i.test(h.textContent))?.textContent.trim(),
         licenceOrder: [...el.querySelectorAll(".knavery-welcome-licences summary")].map((x) => x.textContent.trim()).join(" | "),
       };
@@ -1950,7 +1952,8 @@ await withSettings(gm, async () => {
     ok(w.author === "Both editions of Knave were written by Ben Milton.", "the welcome credits Ben Milton for both editions, in one line", w.author);
     ok(w.fits && w.scrolls === "auto" && w.licences === 2 && w.twoCols && w.licenceOrder === "Knave: CC BY 4.0 | Knave: Second Edition Third Party License",
       "the welcome is wide, in two columns, stops at the screen and scrolls; each edition's licence is a folded bullet, 1e first", JSON.stringify(w));
-    ok(w.world === "This world plays: Knave." && w.knight && w.booksHeading === "Buy the books!" && w.itch1e === "https://questingbeast.itch.io/knave" && w.links2e === 3 && w.smallLast && w.licensing === "Licensing",
+    ok(w.world === "This world plays: Knave." && w.knight && w.booksHeading === "Buy the books!" && w.rulesHeading === "System Rules"
+      && w.aiCode === "Base Knavery's code is written with the help of an AI coding assistant." && w.itch1e === "https://questingbeast.itch.io/knave" && w.links2e === 3 && w.smallLast && w.licensing === "Licensing",
       "the welcome shows the knight beside the title at the logo's height, says which rules the world plays, and has Buy the books! with Knave's PDF on itch", JSON.stringify(w));
     ok(h.lines === 5 && h.now2e && h.rules === "2e" && h.hpSame && h.again === true,
       "after the 2e book, the GM is asked to switch; yes plays Knave 2e and changes no character", JSON.stringify(h));
