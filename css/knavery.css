@@ -5083,3 +5083,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-spell-gen .kn-spell-gen-reroll { flex: none; width: auto; padding: 0 8px; }
 .knavery-spell-gen .kn-spell-gen-missing { color: var(--kn-peril); }
 .knavery .kn-spell-gen-name { font-size: calc(16px * var(--kn-text, 1)); text-align: center; margin: 4px 0; }
+/* A GM request's set edge, and Requests' All. */
+.knavery-roll-prompt .roll-locked-edge { margin: 0 0 6px; font-weight: bold; color: var(--kn-muted); }
+.knavery-roll-prompt .roll-locked-edge i { color: var(--kn-accent); margin-right: 4px; }
+.knavery-gm-dashboard .dash-select-all { font-size: calc(12px * var(--kn-text, 1)); margin-left: 6px; }

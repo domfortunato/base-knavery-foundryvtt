@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- **Requests set the edge:** the dashboard's Requests tab has an Edge choice (the player chooses,
+  Disadvantage, Normal or Advantage). A set edge leaves the player one button, "The GM set this roll";
+  the card and the results list say which. **All** beside Who ticks every character (or none).
 - **Generate a spell** (Knave 2e p27), at the GM's request: on the dashboard's Requests tab choose
   *Generate a spell* and the characters. Each player's window rolls a formula and its words (wizard
   name, quality, effect, element, form); they may roll one word again and adjust the wording, then add

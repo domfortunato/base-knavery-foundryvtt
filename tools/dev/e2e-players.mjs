@@ -70,6 +70,36 @@ await alice.locator('.knavery-roll-prompt button[data-action="normal"]').click()
 await gm.waitForSelector("#knavery-gm-dashboard .request li.state-success, #knavery-gm-dashboard .request li.state-failure", { timeout: 15000 });
 ok(true, "the result came back to the dashboard");
 await gm.locator("#knavery-gm-dashboard").screenshot({ path: path.join(OUT, "dashboard-results.png") });
+// 1b. A request to everyone with the edge set: All ticks every character; each player gets only the GM's edge.
+await gm.locator('#knavery-gm-dashboard .dash-select-all').click();
+const ticked = await gm.evaluate(([a, b]) => [a, b].every((x) => document.querySelector(`#knavery-gm-dashboard input[name="pc"][value="${x}"]`)?.checked), [ids.a, ids.b]);
+await gm.locator('#knavery-gm-dashboard select[name="check"]').selectOption("ability:STR");
+await gm.locator('#knavery-gm-dashboard select[name="edge"]').selectOption("advantage");
+await gm.locator('#knavery-gm-dashboard input[name="difficulty"]').fill("3");
+await gm.locator('#knavery-gm-dashboard input[name="reason"]').fill("Probe: lift the portcullis");
+await gm.locator('#knavery-gm-dashboard button[data-action="sendRequest"]').click();
+const edgeSide = async (page) => {
+  await page.waitForSelector(".knavery-roll-prompt .roll-locked-edge", { timeout: 15000 });
+  return page.evaluate(() => {
+    const el = document.querySelector(".knavery-roll-prompt");
+    return { buttons: [...el.querySelectorAll("footer button")].map((b) => b.dataset.action).join(), note: el.querySelector(".roll-locked-edge")?.textContent.trim(),
+      diff: el.querySelector('input[name="difficulty"]')?.value };
+  });
+};
+const ae = await edgeSide(alice);
+const be = await edgeSide(bob);
+ok(ticked && ae.buttons === "advantage" && be.buttons === "advantage" && ae.note === "The GM set this roll: Advantage." && ae.diff === "3",
+  "All ticks every character, and a request with Advantage set leaves each player only that button", JSON.stringify({ ticked, ae, be }));
+await alice.locator('.knavery-roll-prompt button[data-action="advantage"]').click();
+await bob.locator('.knavery-roll-prompt button[data-action="advantage"]').click();
+await gm.waitForFunction(() => document.querySelectorAll("#knavery-gm-dashboard .request:first-child li.state-success, #knavery-gm-dashboard .request:first-child li.state-failure").length === 2, null, { timeout: 15000 });
+const edgeCards = await gm.evaluate(([a, b]) => {
+  const msgs = game.messages.contents.slice(-6).filter((m) => m.getFlag("base-knavery", "check")?.target === 14);
+  return { n: msgs.length, edge: msgs.every((m) => /Advantage/.test(m.content)), who: msgs.map((m) => m.speaker.actor).sort().join() === [a, b].sort().join(),
+    head: document.querySelector("#knavery-gm-dashboard .request:first-child .request-head")?.textContent.replace(/\s+/g, " ").trim() };
+}, [ids.a, ids.b]);
+ok(edgeCards.n === 2 && edgeCards.edge && edgeCards.who && /vs 14, Advantage/.test(edgeCards.head ?? ""),
+  "both roll with Advantage against 14 (difficulty 3), and the results list says so", JSON.stringify(edgeCards));
 await gm.evaluate(() => foundry.applications.instances.get("knavery-gm-dashboard")?.close());
 
 // 2. Alice gives the lantern to Bob's character; Bob accepts.

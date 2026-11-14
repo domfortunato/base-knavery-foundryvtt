@@ -47,7 +47,7 @@ const advantageMode = () => game.settings.get(SETTINGS_NS, "advantage-mode");
  */
 export const promptEdge = async ({
   title, reason = "", attack = false, melee = false, difficulty = false,
-  defaultDifficulty = DEFAULT_DIFFICULTY, lockDifficulty = false, weapons = null, actor = null,
+  defaultDifficulty = DEFAULT_DIFFICULTY, lockDifficulty = false, weapons = null, actor = null, lockEdge = null,
 } = {}) => {
   const mode = advantageMode();
   // The Attack window's Target list: the tokens this user can see on the viewed scene.
@@ -59,6 +59,8 @@ export const promptEdge = async ({
   const content = await foundry.applications.handlebars.renderTemplate(`${SYS_PATH}/templates/dialog/roll-prompt.html`, {
     idp: foundry.utils.randomID(), // ids unique to this window
     reason,
+    // A GM's request may set the edge: only that button is offered.
+    lockedEdge: lockEdge ? F("KNAVERY.Roll.EdgeSetByGm", { edge: L(`KNAVERY.Roll.${{ advantage: "Advantage", disadvantage: "Disadvantage" }[lockEdge] ?? "Normal"}`) }) : "",
     attack,
     melee,
     difficulty,
@@ -131,11 +133,14 @@ export const promptEdge = async ({
     // Only Normal is a submit button: Enter in the Modifier or Difficulty field
     // submits through the first submit button in the form, so the edges are
     // plain buttons (DialogV2 still runs their callbacks on click).
-    buttons: [
-      { action: "disadvantage", type: "button", label: "KNAVERY.Roll.WithDisadvantage", icon: "fas fa-angles-down", callback: read("disadvantage") },
-      { action: "normal", label: "KNAVERY.Roll.Straight", icon: "fas fa-dice-d20", default: true, callback: read("normal") },
-      { action: "advantage", type: "button", label: "KNAVERY.Roll.WithAdvantage", icon: "fas fa-angles-up", callback: read("advantage") },
-    ],
+    buttons: (lockEdge
+      ? [{ action: lockEdge, label: `KNAVERY.Roll.${{ advantage: "WithAdvantage", disadvantage: "WithDisadvantage" }[lockEdge] ?? "Straight"}`,
+        icon: { advantage: "fas fa-angles-up", disadvantage: "fas fa-angles-down" }[lockEdge] ?? "fas fa-dice-d20", default: true, callback: read(lockEdge) }]
+      : [
+        { action: "disadvantage", type: "button", label: "KNAVERY.Roll.WithDisadvantage", icon: "fas fa-angles-down", callback: read("disadvantage") },
+        { action: "normal", label: "KNAVERY.Roll.Straight", icon: "fas fa-dice-d20", default: true, callback: read("normal") },
+        { action: "advantage", type: "button", label: "KNAVERY.Roll.WithAdvantage", icon: "fas fa-angles-up", callback: read("advantage") },
+      ]),
     rejectClose: false,
   });
 };
@@ -198,10 +203,11 @@ const postRolls = async (actor, rolls, content, flags = {}) => ChatMessage.creat
  * @param {number} [o.difficulty]  preset (a GM request)
  * @param {string} [o.reason]
  * @param {string} [o.requestId]   a GM roll request this answers
+ * @param {string} [o.lockEdge]    the edge a GM request set: the player may only roll with it
  * @param {boolean} [o.skipPrompt]
  */
 export const rollCheck = async (actor, ability, {
-  save = null, difficulty = null, reason = "", requestId = null, edge = null,
+  save = null, difficulty = null, reason = "", requestId = null, edge = null, lockEdge = null,
 } = {}) => {
   const abilityLabel = L(`KNAVERY.Ability.${ability}`);
   const title = save
@@ -212,7 +218,7 @@ export const rollCheck = async (actor, ability, {
   else {
     choice = await promptEdge({
       title, reason, difficulty: true, lockDifficulty: difficulty !== null,
-      defaultDifficulty: difficulty ?? DEFAULT_DIFFICULTY,
+      defaultDifficulty: difficulty ?? DEFAULT_DIFFICULTY, lockEdge,
     });
   }
   if (!choice) return null;

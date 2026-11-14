@@ -4,6 +4,9 @@
   {{#if reason}}
   <p class="roll-reason"><i class="fas fa-bullhorn"></i> {{reason}}</p>
   {{/if}}
+  {{#if lockedEdge}}
+  <p class="roll-locked-edge"><i class="fas fa-lock"></i> {{lockedEdge}}</p>
+  {{/if}}
   {{#if targets}}
   <div class="form-group kn-attack-target">
     <label for="kn-roll-target-{{idp}}">{{localize "KNAVERY.Roll.Target"}}</label>

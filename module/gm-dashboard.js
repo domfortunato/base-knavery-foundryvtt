@@ -43,6 +43,9 @@ const F = (k, d) => game.i18n.format(k, d);
 /** Requests sent this session, newest first: {id, label, reason, target, entries:[{actorId,name,state,total,success}]} */
 const requestLog = [];
 
+/** The edges a GM may set on a request. */
+const EDGES = ["disadvantage", "normal", "advantage"];
+
 const TOGGLES = [
   { key: "allow-player-marketplace", label: "KNAVERY.Macro.Marketplace", icon: "fa-store" },
   { key: "allow-player-generate", label: "KNAVERY.Macro.Creation", icon: "fa-user-plus" },
@@ -208,7 +211,9 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     diff?.addEventListener("input", showTarget);
     // A spell request has no difficulty.
     const what = this.element.querySelector('[name="check"]');
-    const showDifficulty = () => this.element.querySelector(".dash-request-difficulty")?.toggleAttribute("hidden", what?.value === "spell:generate");
+    const showDifficulty = () => {
+      for (const el of this.element.querySelectorAll(".dash-request-difficulty, .dash-request-edge")) el.toggleAttribute("hidden", what?.value === "spell:generate");
+    };
     showDifficulty();
     what?.addEventListener("change", showDifficulty);
     // XP: one amount for "same to each" and "split", a box per character for "different to each".
@@ -335,20 +340,23 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     if (!ids.length) return ui.notifications.warn("KNAVERY.Dashboard.PickSomeone", { localize: true });
     const [kind, key] = String(root.querySelector('[name="check"]').value).split(":");
     const difficulty = Math.max(0, Number(root.querySelector('[name="difficulty"]').value) || 0);
+    // The edge the GM sets, or "" for the player's own choice.
+    const edge = EDGES.includes(root.querySelector('[name="edge"]')?.value) ? root.querySelector('[name="edge"]').value : "";
+    const edgeLabel = edge ? L(`KNAVERY.Roll.${edge === "advantage" ? "Advantage" : edge === "disadvantage" ? "Disadvantage" : "Normal"}`) : "";
     const reason = root.querySelector('[name="reason"]').value.trim().slice(0, 300);
     // Knave 2e p27: the player generates a spell (spell-generator.js); no roll against a target.
     if (kind === "spell") return this.#sendSpellRequest(ids, reason);
     const label = kind === "save"
       ? F("KNAVERY.Roll.SaveTitle", { save: L(`KNAVERY.Save.${key}`), ability: L(`KNAVERY.Ability.${SAVE_CATEGORIES[key]}`) })
       : F("KNAVERY.Roll.CheckTitle", { ability: L(`KNAVERY.Ability.${key}`) });
-    const entry = { id: foundry.utils.randomID(), label, reason, target: CHECK_BASE + difficulty, kind, key, difficulty, entries: [] };
+    const entry = { id: foundry.utils.randomID(), label, reason, target: CHECK_BASE + difficulty, kind, key, difficulty, edge, edgeLabel, entries: [] };
     for (const actorId of ids) {
       const actor = game.actors.get(actorId);
       if (!actor) continue;
       const players = game.users.filter((u) => !u.isGM && u.active && actor.testUserPermission(u, "OWNER"));
       entry.entries.push({ actorId, name: actor.name, state: players.length ? "waiting" : "offline" });
       if (players.length) {
-        emit("requestRoll", { requestId: entry.id, actorId, kind, key, difficulty, reason },
+        emit("requestRoll", { requestId: entry.id, actorId, kind, key, difficulty, reason, edge },
           { recipients: players.map((u) => u.id) });
       }
     }
@@ -356,7 +364,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     await ChatMessage.create({
       speaker: { alias: L("KNAVERY.GameMaster") },
       content: `<div class="knavery-roll-card kind-request"><header class="card-title"><h3><i class="fas fa-bullhorn"></i> ${foundry.utils.escapeHTML(label)}</h3></header>`
-        + `<p>${foundry.utils.escapeHTML(entry.entries.map((e) => e.name).join(", "))} — ${foundry.utils.escapeHTML(F("KNAVERY.Roll.VsTarget", { target: entry.target }))}</p>`
+        + `<p>${foundry.utils.escapeHTML(entry.entries.map((e) => e.name).join(", "))} — ${foundry.utils.escapeHTML(F("KNAVERY.Roll.VsTarget", { target: entry.target }))}${edgeLabel ? `, ${foundry.utils.escapeHTML(edgeLabel)}` : ""}</p>`
         + (reason ? `<p class="roll-reason"><i class="fas fa-bullhorn"></i> ${foundry.utils.escapeHTML(reason)}</p>` : "") + "</div>",
     });
     this.render({ parts: ["requests"] });
@@ -390,7 +398,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     const actor = game.actors.get(target.dataset.actor);
     if (!req || !actor) return;
     if (req.kind === "spell") return openSpellGenerator(actor, { requestId: req.id, reason: req.reason });
-    const opts = { difficulty: req.difficulty, reason: req.reason, requestId: req.id };
+    const opts = { difficulty: req.difficulty, reason: req.reason, requestId: req.id, lockEdge: req.edge || null };
     if (req.kind === "save") await rollSave(actor, req.key, opts);
     else await rollCheck(actor, req.key, opts);
   }
@@ -641,7 +649,7 @@ export const registerRequestSocket = () => {
     if (!actor?.isOwner) return;
     const reason = String(msg.reason ?? "").slice(0, 300);
     const difficulty = Math.max(0, Number(msg.difficulty) || 0);
-    const opts = { difficulty, reason, requestId: String(msg.requestId ?? "") };
+    const opts = { difficulty, reason, requestId: String(msg.requestId ?? ""), lockEdge: EDGES.includes(msg.edge) ? msg.edge : null };
     if (msg.kind === "spell") return openSpellGenerator(actor, { requestId: opts.requestId, reason });
     if (msg.kind === "save" && Object.hasOwn(SAVE_CATEGORIES, msg.key)) await rollSave(actor, msg.key, opts);
     else if (ABILITIES.includes(msg.key)) await rollCheck(actor, msg.key, opts);
