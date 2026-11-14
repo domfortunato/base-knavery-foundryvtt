@@ -2571,7 +2571,7 @@ ol.combat-tracker li.combatant.knavery-drop-below {
    (user ask — the stacked bars sit to the right of the d20). Scoped because
    the npc sheet renders the same .portrait-roll alone at right:4px; the
    grid class's spelling is the shipped one. */
-.charater-sheet-grid .portrait-roll {
+.knavery-character .portrait-roll {
     right: 32px;
 }
 
@@ -4814,3 +4814,27 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
    1.25; a lone checkbox takes only its own width, so its label needs no wrap. */
 .knavery-settings-menu .form-group > label { line-height: 1.25; }
 .knavery-settings-menu .form-group:has(input[type="checkbox"]) > .form-fields { flex: 0 0 auto; }
+
+/* ---- Narrow sheet header, Char Gen rollers, Target list (2026-11-14) ------------ */
+/* The header's buttons never shrink; the title gives way first, so ⋮ and close stay in the window. */
+.knavery.sheet .window-header > .header-control { flex: none; }
+.knavery.sheet .window-header > .window-title { flex: 1 1 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Char Gen Mode's dice beside Max HP and Coins, like the name and trait dice. */
+.knavery .hp-roll, .knavery .band-roll { cursor: pointer; color: var(--kn-muted); font-size: 0.85em; }
+.knavery .hp-roll:hover, .knavery .band-roll:hover { color: var(--kn-ink); }
+
+/* The open career slot: a dashed box holding the die and the list. */
+.knavery .career-slot { display: inline-flex; align-items: center; gap: 6px; padding: 0 6px; border: 1px dashed var(--kn-muted); border-radius: 4px; }
+
+/* Char Gen Mode's ability points: gold while some are left to place, red when over. */
+.knavery-ability-points { margin: 2px 4px 4px 0; text-align: right; font-size: calc(13px * var(--kn-text, 1)); font-weight: bold; color: var(--kn-muted); }
+.knavery-ability-points.left { color: var(--kn-gold); }
+.knavery-ability-points.over { color: var(--kn-peril); }
+
+/* A rule between the traits and the Biography on the Description page. */
+.knavery-page .knavery-bio { border-top: 1px solid var(--kn-rule, var(--kn-muted)); padding-top: 10px; }
+
+/* The Attack window's Target list takes the row; its checkbox hugs its label like the others. */
+.knavery-roll-prompt .kn-attack-target .form-fields { flex: 1 1 auto; width: auto; }
+.knavery-roll-prompt .kn-attack-target select { width: 100%; }

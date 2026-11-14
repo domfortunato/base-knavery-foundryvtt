@@ -43,9 +43,15 @@ const advantageMode = () => game.settings.get(SETTINGS_NS, "advantage-mode");
  */
 export const promptEdge = async ({
   title, reason = "", attack = false, melee = false, difficulty = false,
-  defaultDifficulty = DEFAULT_DIFFICULTY, lockDifficulty = false, weapons = null,
+  defaultDifficulty = DEFAULT_DIFFICULTY, lockDifficulty = false, weapons = null, actor = null,
 } = {}) => {
   const mode = advantageMode();
+  // The Attack window's Target list: the tokens this user can see on the viewed scene.
+  const targetList = attack ? visibleTargets(actor) : null;
+  const current = [...game.user.targets];
+  const preset = current.length === 1 ? targetList?.find((t) => t.id === current[0].id) : null;
+  if (preset) preset.selected = true;
+  const hidePcsBox = !!targetList && actor?.type === "character" && targetList.some((t) => t.pc);
   const content = await foundry.applications.handlebars.renderTemplate(`${SYS_PATH}/templates/dialog/roll-prompt.html`, {
     reason,
     attack,
@@ -56,6 +62,11 @@ export const promptEdge = async ({
     target: CHECK_BASE + defaultDifficulty,
     rollDamage: game.settings.get(SETTINGS_NS, "roll-damage-default"),
     weapons,
+    targets: targetList,
+    targetsCurrent: targetList && current.length > 1 ? current.map((t) => t.document.name).join(", ") : null,
+    hidePcsBox,
+    // A player character already targeted on purpose stays in the list.
+    hidePcs: hidePcsBox && !preset?.pc,
   });
   const read = (edge) => (_event, button) => {
     const f = button.form.elements;
@@ -66,6 +77,7 @@ export const promptEdge = async ({
       rollDamage: attack ? !!f.rollDamage?.checked : false,
       power: melee ? !!f.power?.checked : false,
       weaponId: weapons ? (f.weapon?.value ?? null) : null,
+      targetId: targetList ? (f.target?.value ?? "") : null,
     };
   };
   return DialogV2.wait({
@@ -83,6 +95,21 @@ export const promptEdge = async ({
       for (const [action, key] of Object.entries(tips)) {
         const button = dialog.element.querySelector(`footer button[data-action="${action}"]`);
         if (button) button.dataset.tooltip = F(key, { n: ADVANTAGE_BONUS });
+      }
+      // "Hide other player characters" takes them out of the Target list.
+      const select = form.querySelector('select[name="target"]');
+      const hidePcs = form.querySelector('input[name="hidePcs"]');
+      if (select && hidePcs) {
+        const syncPcs = () => {
+          for (const o of select.options) {
+            if (!o.dataset.pc) continue;
+            o.hidden = hidePcs.checked;
+            o.disabled = hidePcs.checked;
+          }
+          if (select.selectedOptions[0]?.disabled) select.value = "";
+        };
+        hidePcs.addEventListener("change", syncPcs);
+        syncPcs();
       }
       // The Attack window: Power attack shows only while a melee weapon is chosen.
       if (!weapons || !melee) return;
@@ -212,12 +239,48 @@ export const rollSave = (actor, save, opts = {}) =>
 /*  Attacks and damage                           */
 /* -------------------------------------------- */
 
-/** The tokens this user is targeting, as {uuid, name, ac}. */
-const currentTargets = () => [...game.user.targets].map((t) => ({
-  uuid: t.document.uuid,
-  name: t.document.name,
-  ac: t.actor?.system?.ac ?? null,
-}));
+/** A token as an attack's target: {uuid, name, ac}. */
+const targetInfo = (t) => ({ uuid: t.document.uuid, name: t.document.name, ac: t.actor?.system?.ac ?? null });
+
+/** The tokens this user is targeting. */
+const currentTargets = () => [...game.user.targets].map(targetInfo);
+
+/**
+ * The Attack window's Target list: tokens on the viewed scene this user can
+ * see, nearest the attacker first, never the attacker's own. Players never
+ * get hidden tokens; a second token of one name is numbered. AC is not shown.
+ * Null when no scene is on the canvas.
+ */
+const visibleTargets = (actor) => {
+  if (!canvas?.ready || !canvas.tokens) return null;
+  const own = actor?.getActiveTokens?.() ?? [];
+  const from = own[0] ?? null;
+  const tokens = canvas.tokens.placeables.filter((t) => t.actor && t.visible && !own.includes(t)
+    && (game.user.isGM || !t.document.hidden));
+  const away = (t) => (from ? Math.hypot(t.center.x - from.center.x, t.center.y - from.center.y) : 0);
+  tokens.sort((a, b) => away(a) - away(b) || a.document.name.localeCompare(b.document.name));
+  const seen = new Map();
+  return tokens.map((t) => {
+    const n = (seen.get(t.document.name) ?? 0) + 1;
+    seen.set(t.document.name, n);
+    return {
+      id: t.id, name: n > 1 ? `${t.document.name} ${n}` : t.document.name,
+      pc: t.actor.type === "character" && t.actor.hasPlayerOwner, selected: false,
+    };
+  });
+};
+
+/**
+ * The Target chosen in the Attack window. `null` (no list was shown) or
+ * "current" keeps the user's own targets; a token is targeted on the canvas
+ * too, and "No target" clears them.
+ */
+const chosenTargets = (targetId) => {
+  if (targetId === null || targetId === undefined || targetId === "current") return currentTargets();
+  const token = targetId ? canvas.tokens?.get(targetId) : null;
+  canvas.tokens?.setTargets(token ? [token.id] : [], { mode: "replace" });
+  return token ? [targetInfo(token)] : [];
+};
 
 /**
  * Attack with a weapon: d20 + STR (melee) or WIS (ranged) against each
@@ -226,7 +289,7 @@ const currentTargets = () => [...game.user.targets].map((t) => ({
 export const rollAttack = async (actor, weapon, { reason = "" } = {}) => {
   const melee = weapon.system.attackType === "melee";
   const choice = await promptEdge({
-    title: F("KNAVERY.Roll.AttackTitle", { weapon: weapon.name }), reason, attack: true, melee: melee && actor.type === "character",
+    title: F("KNAVERY.Roll.AttackTitle", { weapon: weapon.name }), reason, attack: true, melee: melee && actor.type === "character", actor,
   });
   if (!choice) return null;
   return attackWith(actor, weapon, choice, { reason });
@@ -274,7 +337,7 @@ export const openAttack = async (actor, { reason = "" } = {}) => {
   }));
   const canPower = actor.type === "character";
   const choice = await promptEdge({
-    title: L("KNAVERY.Roll.AttackTitleAny"), reason, attack: true, melee: canPower && rows.some((r) => r.melee), weapons: rows,
+    title: L("KNAVERY.Roll.AttackTitleAny"), reason, attack: true, melee: canPower && rows.some((r) => r.melee), weapons: rows, actor,
   });
   if (!choice) return null;
   const pick = (id) => (id === IMPROVISED_ID ? improvised : actor.items.get(id));
@@ -293,7 +356,7 @@ const attackWith = async (actor, weapon, choice, { reason = "" } = {}) => {
   const formula = d20Formula(bonus, choice.edge, choice.modifier);
   const roll = await new Roll(formula).evaluate();
   const natural = naturalOf(roll);
-  const targets = currentTargets().map((t) => ({
+  const targets = chosenTargets(choice.targetId).map((t) => ({
     ...t, hit: t.ac === null ? null : roll.total >= t.ac,
   }));
   const anyHit = targets.length ? targets.some((t) => t.hit) : true;

@@ -8,7 +8,7 @@
  * and Print.
  */
 import {
-  ABILITIES, LEVEL_UP_ABILITIES, NPC_ROLES, SETTINGS_NS, SYS_PATH, TABLES,
+  ABILITIES, LEVEL_UP_ABILITIES, NPC_ROLES, SETTINGS_NS, STARTING_COINS, SYS_PATH, TABLES,
 } from "../config.js";
 import { slotsForItem } from "../documents/actor.js";
 import { levelLadder } from "../data-models.js";
@@ -18,10 +18,10 @@ import { attackRow, castSpell, openAttack, rollAttack, rollCheck, rollDamage, ro
 import { pickArt, randomPortraitPair, setActorArt } from "../art.js";
 import { drawFrom, pickFrom } from "../compendium.js";
 import {
-  addCareer, careerFromText, chooseCareer, drawCareerExcept, pickCareerItem, regenerateCharacter,
+  addCareer, chooseCareer, drawCareerExcept, pickCareerItem, postGenerationCard, regenerateCharacter,
   removeCareer, replaceCareer, rollFullName, rollTraits,
 } from "../character-generator.js";
-import { hpRuleHint, openLevelUp } from "../level-up.js";
+import { abilityBudget, hpRuleHint, openLevelUp, rollHpForLevel } from "../level-up.js";
 import { canOfferItem, offerFromDrop, promptOfferTarget } from "../item-offer.js";
 import { openMarketplace, playerMarketClosed } from "../marketplace.js";
 import { printActorSheet } from "../print.js";
@@ -118,6 +118,8 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       changeCareer: owned(careerGate(KnaveryActorSheet.#onChangeCareer)),
       removeCareer: owned(careerGate(KnaveryActorSheet.#onRemoveCareer)),
       rollAllTraits: owned(mayRandomize(KnaveryActorSheet.#onRollAllTraits)),
+      rollHp: owned(mayRandomize(KnaveryActorSheet.#onRollHp)),
+      rollCoins: owned(mayRandomize(KnaveryActorSheet.#onRollCoins)),
       openCareer: KnaveryActorSheet.#onOpenCareer,
       rollAbility: KnaveryActorSheet.#onRollAbility,
       rollMorale: KnaveryActorSheet.#onRollMorale,
@@ -225,7 +227,9 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
 
   async _renderFrame(options) {
     const frame = await super._renderFrame(options);
-    for (const action of ["rollActor", "toggleGeneration", "detach", "printSheet"]) {
+    // Only the Char Gen buttons carry words; Pop Out and Print stay core's icon buttons with
+    // tooltips, or the narrow sheet's header pushed ⋮ and close out of the window (2026-11-14).
+    for (const action of ["rollActor", "toggleGeneration"]) {
       const button = frame.querySelector(`.window-header button[data-action="${action}"]`);
       if (!button) continue;
       const glyph = [...button.classList].filter((c) => c === "fas" || c.startsWith("fa-"));
@@ -248,6 +252,50 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
 
   _mayRandomize() {
     return mayUseCharGen(this.actor);
+  }
+
+  /** In Char Gen Mode a character's abilities stay within its level's points (user, 2026-11-14). */
+  _prepareSubmitData(event, form, formData, updateData) {
+    const data = super._prepareSubmitData(event, form, formData, updateData);
+    if (this.actor.type === "character" && this.actor.system.generationEnabled === true) this.#holdAbilityBudget(form, data);
+    return data;
+  }
+
+  /**
+   * Clamp raised abilities to what the level leaves: lowering always works, and
+   * lowered points are freed first, so a point can move between scores in one
+   * go. A sheet already over (an older one) may lower but not raise.
+   */
+  #holdAbilityBudget(form, data) {
+    const sent = data.system?.abilities;
+    if (!sent) return;
+    const src = this.actor._source.system.abilities ?? {};
+    const budget = abilityBudget(data.system?.level ?? this.actor._source.system.level);
+    const old = (k) => Number(src[k]?.value) || 0;
+    const want = (k) => Math.max(0, Math.round(Number(sent[k].value) || 0));
+    let used = ABILITIES.reduce((n, k) => n + old(k), 0);
+    const changed = ABILITIES.filter((k) => sent[k]?.value !== undefined && want(k) !== old(k))
+      .sort((a, b) => (want(a) - old(a)) - (want(b) - old(b)));
+    let warning = null;
+    for (const k of changed) {
+      let value = want(k);
+      if (value > old(k)) {
+        const room = budget.total === null ? Infinity : Math.max(0, budget.total - used);
+        const top = Math.min(Math.max(old(k), budget.cap), old(k) + room);
+        if (value > top) {
+          warning = old(k) + room >= Math.max(old(k), budget.cap)
+            ? F("KNAVERY.Notify.AbilityCap", budget)
+            : F("KNAVERY.Notify.AbilityBudget", { level: budget.level, max: budget.total, n: room });
+          value = top;
+        }
+      }
+      used += value - old(k);
+      sent[k].value = value;
+      // Unchanged data renders nothing, so the field is put right here.
+      const input = form.elements[`system.abilities.${k}.value`];
+      if (input && Number(input.value) !== value) input.value = value;
+    }
+    if (warning) ui.notifications.warn(warning);
   }
 
   #syncFrameButtons(root = this.element) {
@@ -365,6 +413,19 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     })) : [];
     const slotsUsed = actor.calcSlotsUsed();
     const showLevelUp = isChar && s.canLevelUp && s.generationEnabled === true && this.isEditable && this._mayRandomize();
+    // Char Gen Mode holds the abilities to the level's points (user, 2026-11-14).
+    let abilityPoints = null;
+    if (gen && isChar) {
+      const budget = abilityBudget(actor._source.system.level);
+      const used = abilities.reduce((n, a) => n + (Number(a.value) || 0), 0);
+      abilityPoints = budget.total === null
+        ? { label: F("KNAVERY.AbilityCapLine", { cap: budget.cap }), tip: F("KNAVERY.AbilityCapTip", budget) }
+        : {
+          label: F("KNAVERY.AbilityPoints", { used, max: budget.total }),
+          tip: F("KNAVERY.AbilityPointsTip", { level: budget.level, max: budget.total, cap: budget.cap }),
+          left: used < budget.total, over: used > budget.total,
+        };
+    }
     // What a new level brings, by the GM's HP rule (stored max: effects are not rolled into it).
     const levelRule = !isChar ? "" : s.nextXp === null ? L("KNAVERY.Growth.TopLevel")
       : F("KNAVERY.Growth.EachLevel", { n: LEVEL_UP_ABILITIES, hp: hpRuleHint(s.level + 1, actor._source.system.hp.max) });
@@ -405,6 +466,9 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
         enriched: await enrichForSheet(s.gmNotes ?? "", { relativeTo: actor, secrets: game.user.isGM }),
       } : null,
       careerEdit,
+      // Two careers (p10): an open slot to roll or pick into while there are fewer.
+      careerSlot: careerEdit && careers.length < 2 ? L(careers.length ? "KNAVERY.SecondCareer" : "KNAVERY.FirstCareer") : null,
+      abilityPoints,
       coinsTakeSlots: game.settings.get(SETTINGS_NS, "coins-take-slots"),
       abilities,
       attacks,
@@ -619,13 +683,41 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     if (r) await this.actor.update({ [`system.traits.${key}`]: r.text });
   }
 
+  /** The careers already on the sheet, or null (with a warning) when both are there. */
+  #careersRoom() {
+    const have = this.actor.items.filter((i) => i.type === "career");
+    if (have.length < 2) return have;
+    ui.notifications.warn("KNAVERY.Notify.TwoCareers", { localize: true });
+    return null;
+  }
+
   static async #onRollCareer() {
-    const r = await drawFrom(TABLES.careers);
-    if (r) await careerFromText(this.actor, r.result, r.text);
+    const have = this.#careersRoom();
+    if (!have) return;
+    // Never the career the knave already has.
+    const career = await drawCareerExcept(have.map((i) => i.name));
+    if (!career) return ui.notifications.warn("KNAVERY.Notify.NoCareers", { localize: true });
+    await addCareer(this.actor, career);
   }
 
   static async #onPickCareer() {
+    if (!this.#careersRoom()) return;
     await pickCareerItem(this.actor);
+  }
+
+  /** Char Gen Mode: max HP for the character's level, rolled as the generator does. */
+  static async #onRollHp() {
+    const hp = await rollHpForLevel(this.actor.system.level || 1);
+    await this.actor.update({ "system.hp.max": hp.max, "system.hp.value": hp.max });
+    await postGenerationCard(this.actor, F("KNAVERY.Gen.HpTitle", { name: this.actor.name }), hp.notes, hp.rolls);
+  }
+
+  /** Char Gen Mode: starting coins, 3d6 × 10 (p10). */
+  static async #onRollCoins() {
+    const roll = await new Roll(STARTING_COINS).evaluate();
+    await this.actor.update({ "system.coins": roll.total });
+    await postGenerationCard(this.actor, F("KNAVERY.Gen.CoinsTitle", { name: this.actor.name }),
+      [F("KNAVERY.Gen.CoinsRoll", { coins: roll.total })], [roll]);
   }
 
   static async #onRemoveCareer(_event, target) {

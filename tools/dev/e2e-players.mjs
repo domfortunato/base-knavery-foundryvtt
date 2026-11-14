@@ -114,6 +114,8 @@ const canCreate = await alice.evaluate(() => game.user.can("ACTOR_CREATE"));
 alice.evaluate(() => { game.knavery.createCharacterInteractive(); });
 await alice.waitForSelector(".knavery-create", { timeout: 10000 });
 await alice.locator('.knavery-create input[name="name"]').fill("Probe Relay");
+// The dice decide unless the player ticks this (2026-11-14).
+await alice.locator('.knavery-create input[name="place"]').check();
 await alice.locator('.knavery-create button[data-action="random"]').click();
 // Random creation first asks where the 3 ability points go: STR 2, INT 1.
 await alice.waitForSelector(".knavery-points .kn-points-row", { timeout: 10000 });

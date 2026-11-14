@@ -38,7 +38,8 @@ export class KnaveryActor extends Actor {
       // The party can see each other's portrait and name (the LIMITED view).
       if ((data.ownership?.default ?? 0) === 0) updates["ownership.default"] = CONST.DOCUMENT_OWNERSHIP_LEVELS.LIMITED;
       if (token.disposition === undefined) updates["prototypeToken.disposition"] = D.FRIENDLY;
-      if (!data.img) updates.img = `${SYS_PATH}/icons/background.svg`;
+      // Foundry's blank portrait until one is picked or rolled (user, 2026-11-14).
+      if (!data.img) updates.img = CONST.DEFAULT_TOKEN;
     } else {
       // Monsters are hostile, people met on the road neutral, the party's hirelings and companions friendly.
       const role = data.system?.role ?? "monster";

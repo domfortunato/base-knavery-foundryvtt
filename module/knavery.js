@@ -18,7 +18,7 @@ import { initSocket, onSocket } from "./socket.js";
 import { bindRollCard, handleApplyDamage } from "./damage.js";
 import { bindOfferCard, registerOfferSocket } from "./item-offer.js";
 import { rebuildChangeLogCard } from "./change-log.js";
-import { createCharacter, createCharacterInteractive, registerCreationSocket } from "./character-generator.js";
+import { createCharacter, createCharacterInteractive, registerCreationSocket, updateCareerIcons } from "./character-generator.js";
 import { GmDashboard, openGmDashboard, registerRequestSocket, setToggle } from "./gm-dashboard.js";
 import { openMarketplace, openMarketplaceManager } from "./marketplace.js";
 import { openTableImporter, importRows, parseRows } from "./table-importer.js";
@@ -224,4 +224,5 @@ Hooks.on("renderSettings", (_app, html) => {
 Hooks.once("ready", () => {
   console.log("Base Knavery | ready");
   maybeOpenWelcome();
+  updateCareerIcons().catch((err) => console.error("Base Knavery | updating career art failed", err));
 });

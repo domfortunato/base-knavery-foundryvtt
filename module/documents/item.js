@@ -8,7 +8,7 @@ const ICONS = {
   weapon: "weapons",
   armor: "armor",
   spellbook: "spellbook",
-  career: "background",
+  career: "career",
   transport: "cart",
 };
 

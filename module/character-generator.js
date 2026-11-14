@@ -24,13 +24,40 @@ import {
 import { drawFrom, pickFromList, plainText, realResults, findTable, resultText, spellTableName } from "./compendium.js";
 import { firstLevelHpFormula, randomAbilityPicks, rollLevelHp } from "./level-up.js";
 import { levelLadder } from "./data-models.js";
-import { randomPortraitPair, pairedTokenFor } from "./art.js";
+import { randomPortraitPair } from "./art.js";
 import { emit, onSocket } from "./socket.js";
 import { mayEditCareers } from "./edit-gates.js";
 
 const L = (k) => game.i18n.localize(k);
 const F = (k, d) => game.i18n.format(k, d);
 const esc = (s) => foundry.utils.escapeHTML(String(s ?? ""));
+
+/** A career's art: a tied scroll (user, 2026-11-14). Careers made earlier carry the shattered heart. */
+export const CAREER_ICON = `${SYS_PATH}/icons/career.svg`;
+const OLD_CAREER_ICON = `${SYS_PATH}/icons/background.svg`;
+
+/** The active GM swaps the old career art for the scroll, on world and actor careers. */
+export const updateCareerIcons = async () => {
+  if (!game.user.isActiveGM) return;
+  const stale = (i) => i.type === "career" && i.img === OLD_CAREER_ICON;
+  const fix = (i) => ({ _id: i.id, img: CAREER_ICON });
+  const world = game.items.filter(stale).map(fix);
+  if (world.length) await Item.implementation.updateDocuments(world);
+  for (const actor of game.actors) {
+    const updates = actor.items.filter(stale).map(fix);
+    if (updates.length) await actor.updateEmbeddedDocuments("Item", updates, { knNoLog: true });
+  }
+};
+
+/** A creation card, whispered to the GM and the owners: a title, its lines, and the dice behind them. */
+export const postGenerationCard = (actor, title, notes, rolls = []) => ChatMessage.create({
+  speaker: ChatMessage.getSpeaker({ actor }),
+  whisper: game.users.filter((u) => u.isGM || actor.testUserPermission(u, "OWNER")).map((u) => u.id),
+  rolls,
+  content: `<div class="knavery-roll-card kind-generation"><header class="card-title"><h3><i class="fas fa-dice-d6"></i> `
+    + `${esc(title)}</h3></header><ul>${notes.map((n) => `<li>${esc(n)}</li>`).join("")}</ul></div>`,
+  flags: { [FLAG_SCOPE]: { generation: true } },
+});
 
 /** Standard kit every PC may take: looked up by name in the gear packs. */
 const STANDARD_KIT = [
@@ -134,7 +161,7 @@ export const careerFromResult = async (result, text) => {
   return {
     name: name.trim() || text,
     type: "career",
-    img: `${SYS_PATH}/icons/background.svg`,
+    img: CAREER_ICON,
     system: {
       startingItems: rest ? rest.split(/\s*,\s*/).filter(Boolean) : [],
       source: result?.parent?.name ?? "",
@@ -354,7 +381,7 @@ export const buildCharacter = async ({ level = 1, abilities = null } = {}) => {
 
   return {
     name,
-    img: art?.img ?? `${SYS_PATH}/icons/background.svg`,
+    img: art?.img ?? CONST.DEFAULT_TOKEN,
     token: art?.token ?? art?.img ?? null,
     system: {
       abilities: Object.fromEntries(ABILITIES.map((k) => [k, { value: values[k] }])),
@@ -390,23 +417,18 @@ const applyBuilt = async (actor, built) => {
   }, { knNoLog: true, knCreation: true });
   for (const c of built.careers) await addCareer(actor, c, { grantItems: true, knNoLog: true });
   if (built.items.length) await actor.addItems(built.items, { knNoLog: true });
-  await ChatMessage.create({
-    speaker: ChatMessage.getSpeaker({ actor }),
-    whisper: game.users.filter((u) => u.isGM || actor.testUserPermission(u, "OWNER")).map((u) => u.id),
-    content: `<div class="knavery-roll-card kind-generation"><header class="card-title"><h3><i class="fas fa-dice-d6"></i> `
-      + `${esc(F("KNAVERY.Gen.Summary", { name: built.name, level: built.system.level }))}</h3></header>`
-      + `<ul>${built.notes.map((n) => `<li>${esc(n)}</li>`).join("")}</ul></div>`,
-    flags: { [FLAG_SCOPE]: { generation: true } },
-  });
+  await postGenerationCard(actor, F("KNAVERY.Gen.Summary", { name: built.name, level: built.system.level }), built.notes);
 };
 
 /** Re-roll an existing character in place (title-bar Roll Character). */
 export const regenerateCharacter = async (actor) => {
   if (actor.type !== "character") return ui.notifications.info("KNAVERY.Notify.NpcRollManual", { localize: true });
   const { min, max } = creationLevels();
-  const level = await promptLevel({ min, max, initial: Math.max(min, actor.system.level) });
-  if (!level) return;
-  const points = await promptAbilityPoints();
+  const chosen = await promptLevel({ min, max, initial: Math.max(min, actor.system.level) });
+  if (!chosen) return;
+  const { level } = chosen;
+  // The dice decide unless the player asked to place the points.
+  const points = chosen.place ? await promptAbilityPoints() : "dice";
   if (!points) return;
   const ok = await foundry.applications.api.DialogV2.confirm({
     window: { title: L("KNAVERY.RollCharacter") },
@@ -490,8 +512,10 @@ export const promptAbilityPoints = async () => {
 const promptLevel = ({ min, max, initial }) => foundry.applications.api.DialogV2.prompt({
   window: { title: L("KNAVERY.Gen.ChooseLevel") },
   content: `<div class="form-group"><label>${L("KNAVERY.Level")}</label><select name="level">${Array.from(
-    { length: max - min + 1 }, (_, i) => min + i).map((l) => `<option value="${l}"${l === initial ? " selected" : ""}>${l} — ${esc(L(`KNAVERY.LevelTitle.${l}`))}</option>`).join("")}</select></div>`,
-  ok: { callback: (_e, b) => Number(b.form.elements.level.value) },
+    { length: max - min + 1 }, (_, i) => min + i).map((l) => `<option value="${l}"${l === initial ? " selected" : ""}>${l} — ${esc(L(`KNAVERY.LevelTitle.${l}`))}</option>`).join("")}</select></div>`
+    + `<div class="form-group"><label for="kn-level-place">${esc(L("KNAVERY.Gen.PlacePoints"))}</label>`
+    + "<div class=\"form-fields\"><input type=\"checkbox\" id=\"kn-level-place\" name=\"place\" /></div></div>",
+  ok: { callback: (_e, b) => ({ level: Number(b.form.elements.level.value), place: !!b.form.elements.place?.checked }) },
   rejectClose: false,
 });
 
@@ -528,7 +552,10 @@ export const createCharacterInteractive = async () => {
     buttons: [
       {
         action: "random", label: "KNAVERY.Gen.Random", icon: "fas fa-dice-d6", default: true,
-        callback: (_e, b) => ({ mode: "random", level: Number(b.form.elements.level.value) || min, name: b.form.elements.name.value.trim() }),
+        callback: (_e, b) => ({
+          mode: "random", level: Number(b.form.elements.level.value) || min, name: b.form.elements.name.value.trim(),
+          place: !!b.form.elements.place?.checked,
+        }),
       },
       {
         action: "blank", label: "KNAVERY.Gen.Blank", icon: "fas fa-file-lines",
@@ -539,7 +566,8 @@ export const createCharacterInteractive = async () => {
   });
   if (!choice) return null;
   choice.level = Math.min(max, Math.max(min, choice.level));
-  if (choice.mode === "random") {
+  // Random rolls the abilities (3d6) unless the player asked to place the 3 points.
+  if (choice.mode === "random" && choice.place) {
     const points = await promptAbilityPoints();
     if (!points) return null;
     choice.abilities = points === "dice" ? null : points;
@@ -568,9 +596,7 @@ export const createCharacter = async ({ mode = "random", level = 1, name = "", o
     if (name) built.name = name;
     await applyBuilt(actor, built);
   } else {
-    const art = await randomPortraitPair("person");
-    if (art) await actor.update({ img: art.img, "prototypeToken.texture.src": (await pairedTokenFor(art.img)) ?? art.img }, { knNoLog: true });
-    // A blank sheet still starts with its traits rolled; the player changes them in Char Gen Mode.
+    // A blank sheet keeps Foundry's blank portrait; its traits start rolled, to change in Char Gen Mode.
     const traits = await rollTraits();
     if (Object.keys(traits).length) await actor.update({ "system.traits": traits }, { knNoLog: true });
   }

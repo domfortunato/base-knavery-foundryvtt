@@ -15,7 +15,9 @@
  * The sheet offers Level Up (the title-bar arrow and the Growth button) only
  * while Char Gen Mode is on AND the character's XP has reached the next level.
  */
-import { ABILITIES, ABILITY_MAX, FLAG_SCOPE, LEVEL_UP_ABILITIES, MAX_LEVEL, SETTINGS_NS, SYS_PATH } from "./config.js";
+import {
+  ABILITIES, ABILITY_MAX, CREATION_POINTS, FLAG_SCOPE, LEVEL_UP_ABILITIES, MAX_LEVEL, SETTINGS_NS, SYS_PATH,
+} from "./config.js";
 
 const L = (k) => game.i18n.localize(k);
 const F = (k, d) => game.i18n.format(k, d);
@@ -48,6 +50,22 @@ const knave1eRaises = (values) => {
 const knave1eRaisesOn = () => game.settings.get(SETTINGS_NS, "knave1e-random-raises") === true;
 
 /** Three different abilities still under the cap: at random, or by Knave 1e's d20 against defense. */
+/**
+ * What a character of `level` may have in its abilities by the rules (Char
+ * Gen Mode holds every sheet to it, GM's too; user ruling 2026-11-14): 3
+ * points at level 1 and +1 to three different abilities a level, so no score
+ * above level + 2. Under Knave 1e's random raises a level's raises vary, so
+ * only the per-score cap holds (`total` null).
+ */
+export const abilityBudget = (level) => {
+  const l = Math.max(1, Math.min(MAX_LEVEL, Number(level) || 1));
+  return {
+    level: l,
+    total: knave1eRaisesOn() ? null : CREATION_POINTS + LEVEL_UP_ABILITIES * (l - 1),
+    cap: Math.min(ABILITY_MAX, CREATION_POINTS + l - 1),
+  };
+};
+
 export const randomAbilityPicks = (values) => {
   if (knave1eRaisesOn()) return knave1eRaises(values);
   const open = ABILITIES.filter((k) => (values[k] ?? 0) < ABILITY_MAX);
@@ -90,6 +108,25 @@ export const rollLevelHp = async (level, oldMax) => {
   const note = higher ? F("KNAVERY.LevelUpHpNew", { max })
     : F(rule === "rerollBest" ? "KNAVERY.LevelUpHpKeptBest" : "KNAVERY.LevelUpHpKept", { rolled: roll.total, max });
   return { max, rolled: roll.total, roll, note };
+};
+
+/**
+ * Max HP for a character of `level`, rolled the generator's way: the
+ * first-level die, then each level by the GM's rule. Returns the max, the
+ * rolls and one line per level.
+ */
+export const rollHpForLevel = async (level) => {
+  const first = await new Roll(firstLevelHpFormula()).evaluate();
+  let max = first.total;
+  const rolls = [first];
+  const notes = [F("KNAVERY.Gen.HpRoll", { level: 1, rolled: first.total, max })];
+  for (let l = 2; l <= level; l++) {
+    const hp = await rollLevelHp(l, max);
+    rolls.push(hp.roll);
+    notes.push(F("KNAVERY.Gen.HpRoll", { level: l, rolled: hp.rolled, max: hp.max }));
+    max = hp.max;
+  }
+  return { max, rolls, notes };
 };
 
 /** One sentence: how max HP will change on reaching `level` from `max`. */

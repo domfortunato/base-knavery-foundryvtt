@@ -4,6 +4,26 @@
   {{#if reason}}
   <p class="roll-reason"><i class="fas fa-bullhorn"></i> {{reason}}</p>
   {{/if}}
+  {{#if targets}}
+  <div class="form-group kn-attack-target">
+    <label for="kn-roll-target">{{localize "KNAVERY.Roll.Target"}}</label>
+    <div class="form-fields">
+      <select id="kn-roll-target" name="target">
+        {{#if targetsCurrent}}<option value="current" selected>{{localize "KNAVERY.Roll.CurrentTargets" names=targetsCurrent}}</option>{{/if}}
+        <option value="">{{localize "KNAVERY.Roll.NoTarget"}}</option>
+        {{#each targets}}<option value="{{this.id}}"{{#if this.pc}} data-pc="1"{{/if}}{{#if this.selected}} selected{{/if}}>{{this.name}}</option>{{/each}}
+      </select>
+    </div>
+  </div>
+  {{#if hidePcsBox}}
+  <div class="form-group kn-attack-hide-pcs">
+    <label for="kn-roll-hide-pcs">{{localize "KNAVERY.Roll.HidePcs"}}</label>
+    <div class="form-fields">
+      <input type="checkbox" id="kn-roll-hide-pcs" name="hidePcs" {{checked hidePcs}} />
+    </div>
+  </div>
+  {{/if}}
+  {{/if}}
   {{#if weapons}}
   <fieldset class="kn-attack-weapons">
     <legend>{{localize "KNAVERY.AttackChoose"}}</legend>

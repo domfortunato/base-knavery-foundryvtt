@@ -22,7 +22,8 @@ credited under CC BY 3.0. The icons used here are by **Lorc**, **Delapouite**,
 | `spellscroll.svg` | spell scrolls | Scroll Unfurled | Lorc | <https://game-icons.net/1x1/lorc/scroll-unfurled.html> |
 | `tools.svg` | tools | Toolbox | Delapouite | <https://game-icons.net/1x1/delapouite/toolbox.html> |
 | `generic-item.svg` | all other gear (default) | Expense | Delapouite | <https://game-icons.net/1x1/delapouite/expense.html> |
-| `background.svg` | character backgrounds (2e + Barebones) | Shattered Heart | Delapouite | <https://game-icons.net/1x1/delapouite/shattered-heart.html> |
+| `background.svg` | careers made before 2026-11-14 (kept for old worlds) | Shattered Heart | Delapouite | <https://game-icons.net/1x1/delapouite/shattered-heart.html> |
+| `career.svg` | careers | Tied Scroll | Lorc | <https://game-icons.net/1x1/lorc/tied-scroll.html> |
 | `monster.svg` | monster / NPC actors | Monster Grasp | Lorc | <https://game-icons.net/1x1/lorc/monster-grasp.html> |
 | `backpack.svg` | worn pack containers | Knapsack | Lorc | <https://game-icons.net/1x1/lorc/knapsack.html> |
 | `sack.svg` | worn sack containers | Swap Bag | Lorc | <https://game-icons.net/1x1/lorc/swap-bag.html> |

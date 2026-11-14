@@ -10,9 +10,21 @@
 - Brighter glow on the ability rolls, larger defense numbers, and careers side by side on the Growth page.
 - The character sheet opens just tall enough for the Knave page; the traits on the Description page are smaller and lighter.
 - The HP bar turns gold when HP is below its maximum.
-- The roll window: Roll with Disadvantage, Roll Straight (highlighted) and Roll with Advantage on one row, each
+- The roll window: Roll with Disadvantage, Straight Roll (highlighted) and Roll with Advantage on one row, each
   saying what it does when hovered; the mode line is gone, and the modifier and checkboxes sit by their labels.
 - The free-maneuver and power-attack notes on chat cards are dark teal and bold, readable on the card.
+- **A Target list in the Attack window:** the tokens you can see on the scene, nearest first. "Hide other player
+  characters" is ticked by default. The chosen token is targeted, and the card says hit or miss against its AC.
+- **Random creation rolls the abilities** (3d6). Tick "Place the 3 ability points myself" to place them instead.
+- **A blank sheet is built by the rules.** In Char Gen Mode the abilities hold to the level's points (3 at level
+  1, +3 a level, no score above level + 2), with a counter under them, for the Game Master too. New dice roll
+  max HP for the level and the starting coins (3d6 × 10). The careers line keeps a slot open until there are
+  two, and a rolled career is never one the knave already has. A blank sheet starts with Foundry's blank portrait.
+- The portrait's die is no longer hidden under its list button.
+- The sheet's header fits the narrow window: Pop Out and Print are icons, so the menu and close stay in view.
+- Careers show a tied scroll instead of the shattered heart; existing careers change over when the GM loads the world.
+- A rule above the Biography on the Description page.
+- The spell line reads "Spells left today: 2 / 2": each spellbook once a day, as many a day as your INT.
 - **The Knave page, rearranged.** Level, XP (with its progress bar) and Coins sit in a band at the bottom; the head
   keeps the name, Careers and Slots. Level and XP are plain text unless Char Gen Mode is on.
 - HP and Wounds change with + and − under each bar; their current values are no longer typed. Wounds − replaces

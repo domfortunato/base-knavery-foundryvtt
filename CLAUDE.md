@@ -58,6 +58,8 @@ picker, change log and marketplace it ports.
   ruling 2026-11-14); its Attack button opens one window to choose an equipped
   weapon and the edge (`rolls.js` `openAttack`). NPC sheets keep 640px and their
   attacks column.
+  Every attack window lists the tokens the user can see as its Target (`visibleTargets`;
+  other PCs hidden by default for a character), and the choice becomes the user's target.
 - Feature modules:
   - `rolls.js`: the edge prompt, checks, attacks, spells, dice
   - `damage.js`: chat-card buttons and the GM relay
@@ -141,6 +143,11 @@ picker, change log and marketplace it ports.
   slot, in the Attack window (`rolls.js` `IMPROVISED_ID`; user ruling
   2026-11-14).
 - No failed-career hack: Knave 2e gives two careers (removed 2026-11-14).
+- Char Gen Mode holds every sheet's abilities, the GM's too, to the level's points: 3 + 3 per level
+  above 1, no score above level + 2 (`level-up.js` `abilityBudget`, enforced in the sheet's
+  `_prepareSubmitData`; user ruling 2026-11-14). With Char Gen Mode off the GM sets any score.
+- Random creation rolls 3d6 for the abilities unless the player ticks "Place the 3 ability points
+  myself" (user, 2026-11-14).
 
 ## Foundry v14 gotchas met so far
 - `FilePathField({categories: []})` throws in init; use `type: String` with

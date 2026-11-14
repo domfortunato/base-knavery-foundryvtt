@@ -5,7 +5,9 @@
  * ability points (one spellbook per STARTING point of INT); the GM's notes; the dashboard's XP tab; the ability
  * roll link's tooltip; the text size; the footer; traits; changing careers at level 1;
  * the Knave 1e rule hacks (1000-XP levels, d8 HP, random raises, group initiative); the narrow
- * sheet, its Attack window and raised abilities; the welcome window's licence notice. GM, Alice and Bob in three browsers.
+ * sheet, its Attack window and raised abilities; the welcome window's licence notice; random creation rolling by
+ * default; a blank sheet held to its level's ability points, with HP, coin and career dice; the Attack window's
+ * Target list; the narrow header. GM, Alice and Bob in three browsers.
  *
  *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/e2e-chargen.mjs   (npm run dev:chargen)
  *
@@ -28,7 +30,7 @@ const T = (ms) => ms * TIME_SCALE;
 const SYS = "/systems/base-knavery/module";
 
 const browser = await chromium.launch();
-watchdog(420000, "e2e-chargen", () => browser.close());
+watchdog(540000, "e2e-chargen", () => browser.close());
 const ctx = () => browser.newContext({ viewport: VIEWPORT });
 const gm = await (await ctx()).newPage();
 const alice = await (await ctx()).newPage();
@@ -777,10 +779,145 @@ await withSettings(gm, async () => {
     ok(r.threeWounds.items.join() === "Probe Rock 9" && r.threeWounds.tag === "Unusable", "then the lowest item, marked Unusable", JSON.stringify(r.threeWounds));
   });
 
+  /* ------------------------------------------------------------------ */
+  await section("18. Random rolls by default; a blank sheet built by the rules; the Attack window's Target; the header.", async () => {
+    // Random creation, as the GM: the dice decide unless "Place the 3 ability points myself" is ticked.
+    gm.evaluate(() => { game.knavery.createCharacterInteractive(); });
+    await gm.waitForSelector(".knavery-create .form-footer", { timeout: T(10000) });
+    const placeBox = await gm.locator('.knavery-create input[name="place"]').isChecked().catch(() => null);
+    await gm.locator('.knavery-create input[name="name"]').fill("Probe Rolled");
+    await gm.locator('.knavery-create button[data-action="random"]').click();
+    await gm.waitForFunction(() => game.actors.getName("Probe Rolled")?.items.size > 0, null, { timeout: T(30000) }).catch(() => {});
+    const rolled = await gm.evaluate(() => {
+      const a = game.actors.getName("Probe Rolled");
+      return {
+        made: !!a, pointsWindow: !!document.querySelector(".knavery-points"),
+        total: a ? Object.values(a._source.system.abilities).reduce((n, x) => n + x.value, 0) : null, level: a?.system.level,
+      };
+    });
+    await closeDialogs();
+    ok(placeBox === false && rolled.made && !rolled.pointsWindow && (rolled.level > 1 || rolled.total === 3),
+      "Random creation rolls the abilities (3d6) without the points window; placing them is a box to tick", JSON.stringify({ placeBox, ...rolled }));
+
+    const r = await gm.evaluate(async (sys) => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const { createCharacter } = await import(`${sys}/character-generator.js`);
+      const pc = await createCharacter({ mode: "blank", name: "Probe Blank Build" });
+      await wait(1200);
+      const el = () => pc.sheet.element;
+      const out = { img: pc.img, gen: pc.system.generationEnabled, careers0: pc.items.filter((i) => i.type === "career").length };
+      // The portrait die is not hidden under the list button.
+      const die = el().querySelector(".portrait-roll");
+      if (die) {
+        const b = die.getBoundingClientRect();
+        out.dieOnTop = !!document.elementFromPoint(b.left + b.width / 2, b.top + b.height / 2)?.closest(".portrait-roll");
+      }
+      // Abilities: 3 points at level 1, so 24 typed into STR leaves 3, and nothing is left for DEX.
+      const type = async (k, v) => {
+        const input = el().querySelector(`input[name="system.abilities.${k}.value"]`);
+        input.value = String(v);
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+        await wait(900);
+      };
+      await type("STR", 24);
+      out.str = pc._source.system.abilities.STR.value;
+      out.strField = el().querySelector('input[name="system.abilities.STR.value"]').value;
+      await type("DEX", 1);
+      out.dex = pc._source.system.abilities.DEX.value;
+      out.counter = el().querySelector(".knavery-ability-points")?.textContent.trim() ?? "";
+      // Moving a point: STR 2 frees one for DEX.
+      await type("STR", 2);
+      await type("DEX", 1);
+      out.moved = [pc._source.system.abilities.STR.value, pc._source.system.abilities.DEX.value];
+      // HP, coins and two different careers from the sheet's dice.
+      el().querySelector('[data-action="rollHp"]')?.click();
+      await wait(1200);
+      out.hp = [pc.system.hp.value, pc.system.hp.max];
+      el().querySelector('[data-action="rollCoins"]')?.click();
+      await wait(1200);
+      out.coins = pc.system.coins;
+      for (let i = 0; i < 2; i++) {
+        el().querySelector('.knavery-head [data-action="rollCareer"]')?.click();
+        await wait(1800);
+      }
+      const careers = pc.items.filter((i) => i.type === "career");
+      out.careers = careers.map((c) => c.name);
+      out.careerImg = careers[0]?.img ?? "";
+      out.slotAfter = !!el().querySelector(".knavery-head .career-slot");
+      // The header: ⋮ and close inside the window, Pop Out and Print as icons.
+      const win = el().getBoundingClientRect();
+      const close = el().querySelector('.window-header button[data-action="close"]')?.getBoundingClientRect();
+      const dots = el().querySelector('.window-header button[data-action="toggleControls"]')?.getBoundingClientRect();
+      out.closeInside = !!close && close.right <= win.right + 1 && close.width > 10;
+      out.dotsInside = !!dots && dots.right <= win.right + 1 && dots.width > 10;
+      out.printText = el().querySelector('.window-header button[data-action="printSheet"]')?.textContent.trim() ?? null;
+      // The Description page: a rule above the Biography.
+      out.bioRule = getComputedStyle(el().querySelector(".knavery-bio")).borderTopStyle;
+      return { id: pc.id, ...out };
+    }, SYS);
+    await gm.screenshot({ path: `${SHOTS}/chargen-blank-build.png` });
+    ok(r.img === "icons/svg/mystery-man.svg" && r.gen === true && r.careers0 === 0, "a Blank Sheet starts with Foundry's blank portrait, in Char Gen Mode, with no careers", JSON.stringify(r));
+    ok(r.dieOnTop === true, "the portrait's die is visible beside the list button, not under it", JSON.stringify(r));
+    ok(r.str === 3 && r.strField === "3" && r.dex === 0 && /3 \/ 3/.test(r.counter), "24 typed into STR at level 1 leaves 3, with nothing left for DEX; the counter reads 3 / 3", JSON.stringify(r));
+    ok(r.moved[0] === 2 && r.moved[1] === 1, "lowering STR frees a point for DEX", JSON.stringify(r.moved));
+    ok(r.hp[1] >= 1 && r.hp[1] <= 6 && r.hp[0] === r.hp[1], "Roll HP sets max HP from 1d6, and HP to it", JSON.stringify(r.hp));
+    ok(r.coins >= 30 && r.coins <= 180 && r.coins % 10 === 0, "Roll Coins gives 3d6 × 10", String(r.coins));
+    ok(r.careers.length === 2 && r.careers[0] !== r.careers[1] && !r.slotAfter, "two career rolls give two different careers, then the slot closes", JSON.stringify(r));
+    ok(r.careerImg.endsWith("/icons/career.svg"), "a rolled career carries the scroll icon", r.careerImg);
+    ok(r.closeInside && r.dotsInside && r.printText === "", "the narrow header keeps ⋮ and close inside the window; Print is an icon", JSON.stringify(r));
+    ok(r.bioRule === "solid", "a rule above the Biography", r.bioRule);
+
+    // The Attack window: "Straight Roll", and a Target list on a scene with tokens.
+    const t = await gm.evaluate(async (pcId) => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const before = canvas.scene?.id ?? null;
+      const pc = game.actors.get(pcId);
+      const bob = game.actors.getName("Probe Bob PC");
+      const gob = await Actor.create({ name: "Probe Goblin", type: "npc", system: { role: "monster" } });
+      const scene = await Scene.create({ name: "Probe Scene", width: 1000, height: 1000, grid: { size: 100 } });
+      await scene.view();
+      for (let i = 0; i < 40 && !(canvas.ready && canvas.scene?.id === scene.id); i++) await wait(250);
+      const out = { canvas: canvas.ready && canvas.scene?.id === scene.id, before };
+      const tok = async (a, x) => (await a.getTokenDocument({ x, y: 100 })).toObject();
+      await scene.createEmbeddedDocuments("Token", [await tok(pc, 100), await tok(bob, 300), await tok(gob, 500)]);
+      await wait(1500);
+      pc.sheet.render(true);
+      await wait(900);
+      pc.sheet.element.querySelector("#attack-button").click();
+      await wait(1200);
+      const dlg = document.querySelector(".knavery-roll-prompt");
+      const select = dlg?.querySelector('select[name="target"]');
+      out.straight = dlg?.querySelector('footer button[data-action="normal"]')?.textContent.trim() ?? "";
+      out.options = select ? [...select.options].map((o) => ({ name: o.textContent.trim(), pc: !!o.dataset.pc, hidden: o.hidden })) : null;
+      out.hideBox = dlg?.querySelector('input[name="hidePcs"]')?.checked ?? null;
+      const gobOpt = select ? [...select.options].find((o) => o.textContent.trim() === "Probe Goblin") : null;
+      if (gobOpt) select.value = gobOpt.value;
+      dlg?.querySelector('footer button[data-action="normal"]')?.click();
+      await wait(1500);
+      const card = game.messages.contents.at(-1);
+      out.cardTarget = card?.content.includes("Probe Goblin") ?? false;
+      out.cardHitMiss = /Hit|Miss/.test(card?.content ?? "");
+      out.targeted = [...game.user.targets].map((x) => x.document.name);
+      canvas.tokens.setTargets([], { mode: "replace" });
+      if (before) await game.scenes.get(before)?.view();
+      await scene.delete();
+      await gob.delete();
+      return out;
+    }, r.id);
+    const names = (t.options ?? []).map((o) => o.name);
+    const bobOpt = (t.options ?? []).find((o) => o.name === "Probe Bob PC");
+    ok(t.straight === "Straight Roll", "the middle button reads Straight Roll", t.straight);
+    ok(t.canvas && names[0] === "No target" && names.includes("Probe Goblin") && !names.includes("Probe Blank Build"),
+      "the Attack window lists the tokens on the scene, never the attacker's own", JSON.stringify(t));
+    ok(t.hideBox === true && bobOpt?.pc && bobOpt.hidden, "\"Hide other player characters\" is ticked by default and hides them", JSON.stringify(t.options));
+    ok(t.cardTarget && t.cardHitMiss && t.targeted.join() === "Probe Goblin", "the chosen target is targeted and the card says hit or miss", JSON.stringify(t));
+  });
+
   // Cleanup.
   await gm.evaluate(async (tables) => {
     for (const app of [...foundry.applications.instances.values()]) if (app.id !== "sidebar") app.close?.();
     for (const a of game.actors.filter((x) => x.name.startsWith("Probe"))) await a.delete();
+    for (const s of game.scenes.filter((x) => x.name.startsWith("Probe"))) await s.delete();
     for (const id of tables) await game.tables.get(id)?.delete();
     for (const m of game.messages.filter((x) => x.getFlag("base-knavery", "xpAward"))) await m.delete();
   }, made.tables);

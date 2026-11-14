@@ -136,7 +136,7 @@ c("Royal", 120000);
 {
   const _id = id("careers", "Example Career");
   add("careers", {
-    _id, _key: `!items!${_id}`, name: "Example Career (duplicate me)", type: "career", img: ICON("background"),
+    _id, _key: `!items!${_id}`, name: "Example Career (duplicate me)", type: "career", img: ICON("career"),
     system: {
       description: "<p>A template for a custom career or background. Duplicate it into your world, rename it, and "
         + "edit it: the <b>starting items</b> are granted in Char Gen Mode, each <b>feature</b> becomes "

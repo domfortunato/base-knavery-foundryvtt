@@ -6,7 +6,7 @@ _id: TMHbpWp154egIYk3
 _key: '!items!TMHbpWp154egIYk3'
 name: Example Career (duplicate me)
 type: career
-img: systems/base-knavery/icons/background.svg
+img: systems/base-knavery/icons/career.svg
 system:
   description: '<p>A template for a custom career or background. Duplicate it into your world, rename it, and edit it: the <b>starting items</b> are granted in Char Gen Mode, each <b>feature</b> becomes a field on the character sheet, and any <b>effect</b> applies to whoever holds the career.</p>'
   key: example

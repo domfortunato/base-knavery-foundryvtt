@@ -49,9 +49,12 @@
             {{else}}
             <span class="career-none">{{localize "KNAVERY.NoCareers"}}</span>
             {{/each}}
-            {{#if careerEdit}}
-            <a class="background-roll" data-action="rollCareer" data-tooltip="KNAVERY.RollCareer" aria-label="{{localize 'KNAVERY.RollCareer'}}"><i class="fas fa-dice-d20"></i></a>
-            <a class="background-pick" data-action="pickCareer" data-tooltip="KNAVERY.PickCareer" aria-label="{{localize 'KNAVERY.PickCareer'}}"><i class="fas fa-list-ul"></i></a>
+            {{!-- Two careers (p10): an open slot while there are fewer; changing one is on the Growth page. --}}
+            {{#if careerSlot}}
+            <span class="career-slot" data-tooltip-text="{{careerSlot}}">
+              <a class="background-roll" data-action="rollCareer" data-tooltip="KNAVERY.RollCareer" aria-label="{{localize 'KNAVERY.RollCareer'}}"><i class="fas fa-dice-d20"></i></a>
+              <a class="background-pick" data-action="pickCareer" data-tooltip="KNAVERY.PickCareer" aria-label="{{localize 'KNAVERY.PickCareer'}}"><i class="fas fa-list-ul"></i></a>
+            </span>
             {{/if}}
           </div>
 
@@ -61,6 +64,9 @@
       <div class="knavery-body">
         <div class="knavery-left">
           {{> "systems/base-knavery/templates/parts/ability-list.html"}}
+          {{#if abilityPoints}}
+          <div class="knavery-ability-points{{#if abilityPoints.left}} left{{/if}}{{#if abilityPoints.over}} over{{/if}}" data-tooltip-text="{{abilityPoints.tip}}">{{abilityPoints.label}}</div>
+          {{/if}}
 
           {{!-- Level, XP and Coins under the abilities (user, 2026-11-14). Level and XP are
                 fields only in Char Gen Mode (and the GM's switch still gates players). --}}
@@ -90,6 +96,9 @@
             <div class="band-row band-coins">
               <label class="band-label" for="{{idp}}-coins" data-tooltip="KNAVERY.CoinsTip">{{localize "KNAVERY.Coins"}}</label>
               <input type="number" min="0" step="1" id="{{idp}}-coins" class="coins-input" name="system.coins" value="{{source.coins}}"{{{effAttrs.coins}}} data-dtype="Number" />
+              {{#if generationEnabled}}
+              <a class="band-roll coins-roll" data-action="rollCoins" data-tooltip="KNAVERY.RollCoins" aria-label="{{localize 'KNAVERY.RollCoins'}}"><i class="fas fa-dice-d20"></i></a>
+              {{/if}}
             </div>
           </div>
         </div>
@@ -106,7 +115,8 @@
 
           <div class="knavery-bars">
             <div class="knavery-bar-block hp-bar {{#if hpLow}}low{{/if}} {{#if hpPeril}}peril{{/if}}">
-              <label for="{{idp}}-hp-max" data-tooltip="KNAVERY.HPTip">{{localize "KNAVERY.MaxHP"}}</label>
+              {{!-- The die sits in the label's line, so the block keeps its rows. --}}
+              <label for="{{idp}}-hp-max" data-tooltip="KNAVERY.HPTip">{{localize "KNAVERY.MaxHP"}}{{#if generationEnabled}} <a class="hp-roll" data-action="rollHp" data-tooltip="KNAVERY.RollHp" aria-label="{{localize 'KNAVERY.RollHp'}}"><i class="fas fa-dice-d20" inert></i></a>{{/if}}</label>
               <input type="number" min="0" step="1" class="stat-input bar-max" id="{{idp}}-hp-max" name="system.hp.max" value="{{source.hp.max}}"{{{effAttrs.hpMax}}} data-dtype="Number" />
               <div class="knavery-bar">
                 <div class="knavery-bar-fill" style="height: {{hpPercent}}%"></div>
