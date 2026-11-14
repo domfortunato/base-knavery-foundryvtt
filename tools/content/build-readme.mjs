@@ -40,6 +40,9 @@ const raw = `${repo.replace("https://github.com/", "https://raw.githubuserconten
 const portrait = (n, white) => `art/welcome/portraits/${n}${white ? "-white" : ""}.png`;
 const alt = esc(W("PortraitAlt"));
 const knave1eBody = (href) => W("Knave1eBody", { license: `<a href="${href}">${esc(W("Knave1eLicense"))}</a>` });
+// The README keeps the credit only; its list of changes stays in the welcome window, the listing and
+// LICENSE.txt (user, 2026-11-14: keep the README tight).
+const knave1eCredit = (href) => knave1eBody(href).replace(/\s*Changes:.*$/s, "");
 const credit = (a, link) => `${link(a.url, esc(a.name))}, ${esc(a.by)}: ${a.licenseUrl ? link(a.licenseUrl, esc(a.license)) : esc(a.license)}`;
 const AI = [["🖌️", "NoAiArt", "NoAiArtBody"], ["📜", "NoAiText", "NoAiTextBody"], ["🧠", "AiCode", null]];
 
@@ -83,7 +86,7 @@ const readmeLicensing = [
   "",
   `### ${W("KnaveLicensing")}`,
   "",
-  fold(esc(W("Knave1eHeading")), knave1eBody(CC_BY_URL)),
+  fold(esc(W("Knave1eHeading")), knave1eCredit(CC_BY_URL)),
   fold(esc(W("Knave2eHeading")), L("KNAVERY.LogoCredit")),
   "",
   fold(esc(W("ArtLicensing")), ART_CREDITS.map((a) => `- ${credit(a, mdLink)}`).join("\n")),

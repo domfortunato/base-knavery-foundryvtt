@@ -33,156 +33,17 @@ In Foundry's **Game Systems → Install System**, paste the manifest URL:
 https://github.com/domfortunato/base-knavery-foundryvtt/releases/latest/download/system.json
 ```
 
-A world made before 0.2.0 keeps the Knave 2e rules it played; a new world plays Knave.
-
 ## What you get
 
-**Knave, built in**
-- Abilities as the lowest of 3d6 (swap two if you like), rolled starting gear
-  and a weapon of your choice, unconscious at 0 HP and dead below it, d8 + CON
-  healing, any number of spellbooks a day.
-- Weapons and armor wear down: a natural 20 adds a damage die and costs the
-  target's armor a point of quality (its owner picks the piece), a natural 1 costs
-  the weapon one, and repairs cost 10% of the price a point.
-- The 1e price list in copper as shop aisles, 100 coins to a slot, and
-  henchmen paid by the day.
-- XP for deeds, or the designer's note's XP for gold (1 XP per 100 copper).
-- The Rules choice at the top of **Configure Rules** sets every rule to one
-  edition; each rule also has its own switch.
-
-**The character sheet**
-- Laid out after the Knave 2e sheet, its pages on a thumb-tab rail off the
-  window's edge: **Knave**, **Inventory**, **Growth** and **Description**.
-- The Knave page: portrait, name with **pronouns** beside it, careers, level,
-  XP and coins over six circled abilities (each showing its defense), AC in a
-  shield, HP and wounds as bars, and the attacks.
-- **Rest**, **Heal Wound** and the **Die of Fate**.
-- Growth holds the level ladder and the careers; Description the traits,
-  biography and notes.
-- Values highlight when they are low or in peril (amber below max, red at 0),
-  and banners appear for no HP, wounded slots, overburdened and dead.
-
-**Rolls**
-- Every check, save and attack asks **Disadvantage / Normal / Advantage**.
-- The GM chooses how edges work:
-  - *Knave 2e as written*: +5 / −5.
-  - *2d20*: keep the higher or the lower die.
-- Attacks have a **"Roll damage at the same time"** box, ticked by default.
-- Attacks roll d20 + STR (melee) or WIS (ranged) against each targeted
-  token's AC.
-  - A total of 21 or more flags a free maneuver.
-  - A natural 1 breaks the weapon. This is a setting.
-  - A power attack doubles the damage dice.
-- Saves from other games (paralysis, breath and blast, poison and death,
-  magic device, spells) resolve as the matching ability check.
-
-**Rules, one switch each** (Settings → Configure Rules; the Rules choice at the
-top sets them all to Knave 1e or Knave 2e)
-- Ability scores: 1e's lowest of 3d6 with an optional swap, or 2e's 3 points.
-- Starting kit: 1e's rolled gear, two rations and a weapon of choice; 2e's two
-  careers and coins; or the careers plus the 1e gear tables.
-- Death: 1e's unconscious at 0 HP and dead below it, or 2e's wounds.
-- Healing: 1e's d8 + CON a night (a safe haven, all HP), or 2e's full HP.
-- Spells: 1e's any number of books a day, or 2e's as many as INT.
-- A level every 1,000 XP, in place of 2e's XP table.
-- Group initiative: one d6 a round, 1–3 the enemies act first, 4–6 the PCs.
-- Max HP at each new level: 1e's one d8 per level (below the old maximum,
-  +1), with 1d8 at first level.
-- Outside the presets: random ability raises by 1e's method (a d20 against
-  each ability's defense until three have risen), hard-mode wounds and the
-  hazard dice.
-
-**Damage and wounds** (Knave 2e's death rule)
-- Damage comes off HP first. Each point past 0 fills an item slot with a
-  wound, from the bottom up: empty slots, then coins, then the lowest item,
-  which is marked *Unusable* until the wound heals.
-- Direct damage skips HP. Monsters take it tripled.
-
-**Inventory**
-- 10 + CON slots, and every full 500 coins fill one.
-- Equipping armor raises AC (11 + armor points, at most 7).
-- Equipping a weapon adds it to **Attacks**.
-- **Give** an item to another character: the other player accepts it on a chat
-  card, and no GM needs to be online.
-
-**Marketplace**
-- Aisles of gear with prices.
-- The GM's **Marketplace Manager** can add aisles, stock them by drag and drop,
-  override prices and hide aisles.
-
-**Character creation**
-- **Create Character** makes a **random** knave; the GM can also make a
-  **blank sheet**.
-- The player chooses a starting level within the range the GM allows.
-- **Char Gen Mode** adds dice and pick-lists to every field.
-- **Level Up** appears once the XP is there.
-- **Careers** are custom backgrounds. A career can:
-  - add fields to the sheet (text, numbers, checkboxes, tracks, dice);
-  - grant starting items;
-  - carry Active Effects for mechanical bonuses.
-
-**Portraits**
-- A gallery and picker with four art sets, your own portrait folder, or any
-  image path.
-
-**Change log**
-- Every hand edit to a sheet is whispered to the GM and the owners.
-
-**The Game Master's Dashboard**
-- Ask players for a check or save **and say why**. Each player sees the reason
-  and a locked difficulty, and the results come back to the dashboard.
-- Apply damage.
-- Hazard dice, reaction, encounter distance and morale.
-- Every table the system rolls on.
-- Switches for the players' tools.
-
-**Your rulebook, inside Foundry**
-- **Choose your own copy** of the Knave 2e PDF from your computer; it is
-  uploaded to your Foundry server and opens. Nothing of the book ships with the
-  system, which stores only the file's path.
-- It opens in Foundry's own PDF viewer, with the book's outline and search.
-  **B** opens and closes it.
-- The dashboard puts a book icon on each table at its page, so you can read
-  the table while you fill it.
-- **Show this page to players** opens the same page for everyone, when you let
-  players read it.
-- **Build tables from the book**: Base Knavery reads every table in your copy
-  (careers, spells, names, reaction, and about seventy more) and, after you
-  review and correct the rows, writes them as roll tables in your world, where
-  the system rolls on them at once. Rebuilding never overwrites a table you
-  made or edited.
-
-**Welcome window**
-- Opens for the GM at every login (a setting turns it off): what Base Knavery is, that it is
-  unofficial, which rules this world plays, the credits, and where to buy
-  Knave 1e and Knave 2e. Anyone can open it from
-  the Settings sidebar.
-
-**GM macros**
-- Toggle the player marketplace, character creation, Char Gen Mode, level & XP and the
-  change log.
-- Open the dashboard, the Marketplace Manager and the table importer.
-
-**Bestiary**
-- Classic monsters and hirelings as statistics, ready to drop on a scene.
-
-## The tables are yours to fill
-
-Knave 2e's text is not licensed for reuse, so **every rollable table ships as
-an empty shell**. That covers careers, spells, names and mishaps.
-(The exceptions come from Knave's first edition, which is CC BY 4.0, and ship
-filled: the character traits, alignment, reaction, starting gear and 100
-level-less spells. A table you build from your 2e book replaces its 1e
-counterpart; the spell list can be switched back to 1e in the settings.) Each shell has the right name and dice. With your own copy of the PDF,
-**Build tables from the book** fills them for you (see above); otherwise:
-
-To fill a table:
-1. Open the GM Dashboard, go to **Tables**, and click **Import** next to it.
-2. Paste your rows, e.g. `01-05 Rat-catcher: cage, sack, terrier`.
-
-This creates a **world** table with the same name, and the system uses it from
-then on. Careers written as `Name: item, item, item` bring their starting items
-with them.
+- A complete system that runs Knave (the first edition) out of the box, with its CC BY 4.0 rules included.
+- Full Knave 2e support, with rich content, once you upload your own copy of the Knave 2e PDF to your Foundry server.
+- Instant random character creation for PCs, NPCs and monsters.
+- A random spell generator.
+- A bestiary, and more than 2,900 pieces of human-made art (portraits, tokens and icons).
+- A fully customizable marketplace.
+- Fully customizable backgrounds, weapons, gear, spells, magic items and potions.
+- GM macros for importing additional tables, quickly turning features on and off, and more.
+- A complete guide, in the compendium, that explains every feature.
 
 <!-- licensing:start (generated by `npm run build:readme` from lang/en.json and module/welcome-data.js: edit those, not this) -->
 ## Licensing
@@ -193,7 +54,7 @@ Base Knavery is an independent production of Dom Bosco and is not affiliated wit
 
 <details><summary><b>Knave: CC BY 4.0</b></summary>
 
-The Knave rules, traits, alignment, reaction, starting gear, price list and the 100 level-less spells come from <i>Knave</i> by Ben Milton, licensed under <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0</a>. Changes: the rules set out as Foundry automation and settings, the tables as roll tables, the price list as items and shop aisles with one item per weapon, 1e armor as armor points, and "Misfortunes" named Misfortune. A table you build from your Knave 2e book replaces its 1e counterpart.
+The Knave rules, traits, alignment, reaction, starting gear, price list and the 100 level-less spells come from <i>Knave</i> by Ben Milton, licensed under <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0</a>.
 
 </details>
 <details><summary><b>Knave: Second Edition Third Party License</b></summary>
@@ -228,10 +89,3 @@ See [LICENSE.txt](LICENSE.txt).
   be sold. The two knaves beside the title are hers too, used with her
   permission in Base Knavery and to promote it; that permission does not pass
   to forks.
-- The Knave 2e logo is not used, as its licence requires.
-- This README shows the yellow Made for Knave logo; the system and the Foundry
-  listing show the black and white ones.
-- The sheet's thumb-tab rail follows DB Mythic's, itself after Mythic-pwd's,
-  and the rulebook reader follows Mythic-pwd's (PrinceWitherdick).
-- The system contains no text from Knave 2e and none from Dungeon Crawl
-  Classics.
