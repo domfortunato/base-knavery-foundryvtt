@@ -113,6 +113,7 @@
        as --kn-ok-strong / --kn-peril's light values, deliberately restated:
        those tokens flip with the theme, these must not. */
     --kn-save-pass-chat: #1a7a3a;
+    --kn-chat-accent: #0b6470;        /* the accent on chat cards' pale paper, in either theme */
     --kn-save-fail-chat: #c62828;
 
     /* The sheet's bars (HP, wounds, XP) and the thumb-tab rail's shadow
@@ -4146,19 +4147,28 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
     padding: 4px 8px; margin: 4px 0; font-style: italic;
 }
 .knavery-roll-prompt .roll-mode-hint { font-size: calc(12px * var(--kn-text, 1)); color: var(--kn-muted); }
-.knavery-roll-prompt footer.form-footer button[data-action="normal"] { font-weight: bold; }
+/* Roll Straight is the default: bold, with the accent border and wash. */
+.knavery-roll-prompt footer.form-footer button[data-action="normal"] {
+    font-weight: bold; border-color: var(--kn-accent); background: var(--kn-accent-wash); box-shadow: 0 0 6px var(--kn-accent);
+}
 /* Disadvantage | Normal | Advantage: one row, worst to best, equal widths. */
 .knavery-roll-prompt footer.form-footer { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-.knavery-roll-prompt footer.form-footer button { min-width: 0; padding: 0 6px; white-space: nowrap; }
+/* "Roll with Disadvantage" may need two lines at large text sizes. */
+.knavery-roll-prompt footer.form-footer button { min-width: 0; padding: 4px 6px; white-space: normal; line-height: 1.2; height: auto; min-height: 2.6em; }
 /* Core gives a form label one input's height per line, so a wrapped label gaped. Normal line height,
    and a checkbox sits right beside its label. */
 .knavery-roll-prompt .form-group { align-items: center; }
 .knavery-roll-prompt .form-group > label { line-height: 1.3; }
+/* Other modifier and the checkboxes hug their labels instead of spanning the window. */
+.knavery-roll-prompt .form-group { justify-content: flex-start; }
+.knavery-roll-prompt .form-group > label { flex: 0 0 auto; min-width: calc(150px * var(--kn-text, 1)); }
+.knavery-roll-prompt .form-group > .form-fields { flex: 0 0 auto; width: auto; }
+.knavery-roll-prompt .form-group input[name="modifier"], .knavery-roll-prompt .form-group input[name="difficulty"] { width: calc(70px * var(--kn-text, 1)); text-align: center; }
 /* A checkbox row: the label shares its line with the box at the right; a hint takes the next line. */
 .knavery-roll-prompt .form-group:has(> .form-fields > input[type="checkbox"]) { flex-wrap: wrap; column-gap: 8px; }
-.knavery-roll-prompt .form-group:has(> .form-fields > input[type="checkbox"]) > label { flex: 1 1 0; min-width: 0; }
+.knavery-roll-prompt .form-group:has(> .form-fields > input[type="checkbox"]) > label { flex: 0 0 auto; }
 /* Core makes .form-fields width: 100% (foundry2.css .standard-form .form-fields), which pushed the box to a line of its own. */
-.knavery-roll-prompt .form-group:has(> .form-fields > input[type="checkbox"]) > .form-fields { flex: 0 0 auto; width: auto; margin-left: auto; }
+.knavery-roll-prompt .form-group:has(> .form-fields > input[type="checkbox"]) > .form-fields { flex: 0 0 auto; width: auto; }
 .knavery-roll-prompt .form-group:has(> .form-fields > input[type="checkbox"]) > p.hint { flex: 0 0 100%; margin: 0; }
 /* The Attack window's weapon list: one radio row per equipped weapon. */
 .knavery-roll-prompt .kn-attack-weapons {
@@ -4192,7 +4202,10 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-roll-card .card-targets li.failure strong { color: var(--kn-save-fail-chat); }
 .knavery-roll-card .target-ac { font-size: calc(11px * var(--kn-text, 1)); color: var(--kn-muted); }
 .knavery-roll-card .card-note { margin: 3px 0; font-size: calc(13px * var(--kn-text, 1)); }
-.knavery-roll-card .card-note.maneuver, .knavery-roll-card .card-note.power { color: var(--kn-accent); }
+/* The free maneuver and power-attack notes: dark teal and bold, readable on the card's pale paper. */
+.knavery-roll-card .card-note.maneuver, .knavery-roll-card .card-note.power {
+    color: var(--kn-chat-accent); font-weight: bold; font-size: calc(14px * var(--kn-text, 1));
+}
 .knavery-roll-card .card-note.fumble, .knavery-roll-card .card-note.broke { color: var(--kn-save-fail-chat); }
 .knavery-roll-card .card-damage h4 { margin: 6px 0 2px; border-bottom: 1px solid var(--kn-rule); }
 .knavery-roll-card .card-apply { display: flex; gap: 4px; margin-top: 4px; }

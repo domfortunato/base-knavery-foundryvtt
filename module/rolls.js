@@ -56,7 +56,6 @@ export const promptEdge = async ({
     target: CHECK_BASE + defaultDifficulty,
     rollDamage: game.settings.get(SETTINGS_NS, "roll-damage-default"),
     weapons,
-    modeHint: L(mode === "2d20" ? "KNAVERY.Roll.Mode2d20Hint" : "KNAVERY.Roll.ModeRawHint"),
   });
   const read = (edge) => (_event, button) => {
     const f = button.form.elements;
@@ -75,9 +74,18 @@ export const promptEdge = async ({
     // Grows with the text size, so the three edges always fit on one row.
     position: scaledPosition({ width: 440 }),
     content,
-    // The Attack window: Power attack shows only while a melee weapon is chosen.
-    render: weapons && melee ? (_event, dialog) => {
+    render: (_event, dialog) => {
       const form = dialog.element.querySelector("form") ?? dialog.element;
+      // Each edge says what it does to the roll, by the GM's paradigm.
+      const tips = mode === "2d20"
+        ? { disadvantage: "KNAVERY.Roll.TipDis2d20", normal: "KNAVERY.Roll.TipStraight", advantage: "KNAVERY.Roll.TipAdv2d20" }
+        : { disadvantage: "KNAVERY.Roll.TipDisRaw", normal: "KNAVERY.Roll.TipStraight", advantage: "KNAVERY.Roll.TipAdvRaw" };
+      for (const [action, key] of Object.entries(tips)) {
+        const button = dialog.element.querySelector(`footer button[data-action="${action}"]`);
+        if (button) button.dataset.tooltip = F(key, { n: ADVANTAGE_BONUS });
+      }
+      // The Attack window: Power attack shows only while a melee weapon is chosen.
+      if (!weapons || !melee) return;
       const power = form.querySelector(".power-group");
       const sync = () => {
         const chosen = form.querySelector('input[name="weapon"]:checked');
@@ -87,14 +95,14 @@ export const promptEdge = async ({
       };
       form.querySelectorAll('input[name="weapon"]').forEach((r) => r.addEventListener("change", sync));
       sync();
-    } : undefined,
+    },
     // Only Normal is a submit button: Enter in the Modifier or Difficulty field
     // submits through the first submit button in the form, so the edges are
     // plain buttons (DialogV2 still runs their callbacks on click).
     buttons: [
-      { action: "disadvantage", type: "button", label: "KNAVERY.Roll.Disadvantage", icon: "fas fa-angles-down", callback: read("disadvantage") },
-      { action: "normal", label: "KNAVERY.Roll.Normal", icon: "fas fa-dice-d20", default: true, callback: read("normal") },
-      { action: "advantage", type: "button", label: "KNAVERY.Roll.Advantage", icon: "fas fa-angles-up", callback: read("advantage") },
+      { action: "disadvantage", type: "button", label: "KNAVERY.Roll.WithDisadvantage", icon: "fas fa-angles-down", callback: read("disadvantage") },
+      { action: "normal", label: "KNAVERY.Roll.Straight", icon: "fas fa-dice-d20", default: true, callback: read("normal") },
+      { action: "advantage", type: "button", label: "KNAVERY.Roll.WithAdvantage", icon: "fas fa-angles-up", callback: read("advantage") },
     ],
     rejectClose: false,
   });

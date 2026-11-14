@@ -10,7 +10,9 @@
 - Brighter glow on the ability rolls, larger defense numbers, and careers side by side on the Growth page.
 - The character sheet opens just tall enough for the Knave page; the traits on the Description page are smaller and lighter.
 - The HP bar turns gold when HP is below its maximum.
-- The roll window keeps Disadvantage, Normal and Advantage on one row, and its labels no longer gape when they wrap.
+- The roll window: Roll with Disadvantage, Roll Straight (highlighted) and Roll with Advantage on one row, each
+  saying what it does when hovered; the mode line is gone, and the modifier and checkboxes sit by their labels.
+- The free-maneuver and power-attack notes on chat cards are dark teal and bold, readable on the card.
 - **The Knave page, rearranged.** Level, XP (with its progress bar) and Coins sit in a band at the bottom; the head
   keeps the name, Careers and Slots. Level and XP are plain text unless Char Gen Mode is on.
 - HP and Wounds change with + and − under each bar; their current values are no longer typed. Wounds − replaces
