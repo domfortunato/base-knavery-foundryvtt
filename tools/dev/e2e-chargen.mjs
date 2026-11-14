@@ -248,7 +248,8 @@ await withSettings(gm, async () => {
     await openAs(alice, ids.a);
     await settle();
     await alice.evaluate((x) => game.actors.get(x).sheet.changeTab("growth", "primary"), ids.a);
-    const die = `${sheet}[id$="${ids.a}"] .failed-career-roll`;
+    // On the Growth page: the Knave page carries a twin in its Failed Career line.
+    const die = `${sheet}[id$="${ids.a}"] .knavery-page-growth .failed-career-roll`;
     await alice.waitForSelector(die, { timeout: T(10000) });
     await alice.locator(die).click();
     await gm.waitForFunction((x) => game.actors.get(x).items.some((i) => i.type === "career" && i.system.failed), ids.a, { timeout: T(15000) });
