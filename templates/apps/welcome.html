@@ -30,6 +30,8 @@
   {{/unless}}{{/if}}
 
   <h2 class="knavery-welcome-heading">{{localize "KNAVERY.Welcome.GetTheBook"}}</h2>
+  {{!-- Both books' own author credits: 1e p1 "created by", 2e p5 "writing" (user, 2026-11-14). --}}
+  <p class="knavery-welcome-author">{{localize "KNAVERY.Welcome.Author"}}</p>
   {{#each books}}
   <div class="knavery-welcome-book" data-edition="{{this.edition}}">
     <span class="knavery-welcome-book-name">{{localize this.label}}</span>

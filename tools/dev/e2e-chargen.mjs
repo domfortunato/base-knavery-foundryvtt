@@ -690,7 +690,8 @@ await withSettings(gm, async () => {
       await new Promise((res) => setTimeout(res, 900));
       const el = document.getElementById("knavery-welcome");
       const out = {
-        link: el?.querySelector(".knavery-welcome-license a")?.href ?? "",
+        // Knave 1e's notice, in Licensing (the art's licences fold in the AI disclosure above it).
+        link: el?.querySelector(".knavery-welcome-small .knavery-welcome-license a")?.href ?? "",
         weight: el ? getComputedStyle(el.querySelector(".knavery-welcome-unofficial")).fontWeight : "",
         box: el?.querySelector(".knavery-welcome-onstart")?.textContent.trim() ?? "",
       };
@@ -698,7 +699,7 @@ await withSettings(gm, async () => {
       return out;
     });
     ok(w.link.includes("creativecommons.org/licenses/by/4.0") && w.weight === "400" && !/rulebook/i.test(w.box),
-      "the welcome window carries the Knave 1e licence, a lighter intro and the new checkbox text", JSON.stringify(w));
+      "the welcome window carries the Knave 1e licence, a regular-weight intro and the new checkbox text", JSON.stringify(w));
   });
 
   /* ------------------------------------------------------------------ */
@@ -1916,6 +1917,7 @@ await withSettings(gm, async () => {
         noAi: el.querySelector(".knavery-welcome-ai p")?.textContent.trim() ?? "",
         artFolded: el.querySelector("details.knavery-welcome-art")?.open === false,
         artLinks: el.querySelectorAll("details.knavery-welcome-art li").length,
+        author: el.querySelector(".knavery-welcome-author")?.textContent.trim(),
       };
     }, SYS);
     await gm.screenshot({ path: `${SHOTS}/welcome-1e.png` });
@@ -1935,6 +1937,8 @@ await withSettings(gm, async () => {
     }, SYS);
     ok(w.noAi.startsWith("No AI art.") && /never use AI-generated art/.test(w.noAi) && w.artFolded && w.artLinks === 5,
       "the AI disclosure opens with no AI art, the art's licences folded under it", JSON.stringify(w));
+    ok(w.author === "Knave was created by Ben Milton. Knave: Second Edition was written by Ben Milton.",
+      "the welcome credits Ben Milton for both editions, as each book does", w.author);
     ok(w.world === "This world plays: Knave 1e." && w.itch1e === "https://questingbeast.itch.io/knave" && w.links2e === 3 && w.smallLast && w.licensing === "Licensing",
       "the welcome says which rules the world plays and links the Knave 1e PDF on itch beside the 2e book", JSON.stringify(w));
     ok(h.lines === 5 && h.now2e && h.rules === "2e" && h.hpSame && h.again === true,

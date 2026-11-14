@@ -4969,6 +4969,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
     margin: 4px 0 0; padding: 4px 10px; border: 1px solid var(--kn-accent); border-radius: 4px; background: var(--kn-accent-wash);
     font-weight: bold;
 }
+.knavery-welcome-author { margin: 0; font-size: calc(13px * var(--kn-text, 1)); }
 /* Each book: its name in a narrow first column; the links, then the note, beside it. */
 .knavery-welcome-book { display: grid; grid-template-columns: max-content 1fr; align-items: center; gap: 4px 10px; }
 .knavery-welcome-book-name { grid-column: 1; min-width: 60px; font-weight: bold; font-variant: small-caps; font-size: calc(13px * var(--kn-text, 1)); }
