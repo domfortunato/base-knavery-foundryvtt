@@ -14,5 +14,13 @@
     <i class="{{tab.icon}}" inert></i>
   </button>
   {{/each}}
+  {{#if isCharacter}}
+  {{!-- Not a page: the Attack window, from any page. Live on a sheet this user cannot edit only while a weapon is equipped. --}}
+  <span class="knavery-rail-divider" aria-hidden="true"></span>
+  <button type="button" class="knavery-rail-attack" data-action="attack"{{#if attacks.length}} data-always-live{{/if}}
+    aria-label="{{localize 'KNAVERY.Attack'}}" data-tooltip-text="{{#if attacks.length}}{{localize 'KNAVERY.Attack'}}{{else}}{{localize 'KNAVERY.NoAttacks'}}{{/if}}"{{#unless attacks.length}} disabled{{/unless}}>
+    <i class="fas fa-burst" inert></i>
+  </button>
+  {{/if}}
   {{/unless}}
 </nav>

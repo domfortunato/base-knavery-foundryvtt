@@ -135,7 +135,8 @@ export const registerSettings = () => {
   });
 
   /* Hacks */
-  reg("failed-career", { label: "FailedCareer", type: Boolean, default: false, onChange: rerenderActorSheets });
+  // On by default (user ruling 2026-11-14): every Knave has a failed career, labelled as one.
+  reg("failed-career", { label: "FailedCareer", type: Boolean, default: true, onChange: rerenderActorSheets });
   reg("failed-career-item", { label: "FailedCareerItem", type: Boolean, default: true });
   reg("knave1e-starting-gear", { label: "Knave1eStartingGear", type: Boolean, default: false });
   // Knave 1e rules, one switch each (data-models.js levelLadder, level-up.js, initiative.js).

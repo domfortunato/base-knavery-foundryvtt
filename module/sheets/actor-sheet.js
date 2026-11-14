@@ -127,6 +127,8 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       rest: owned(KnaveryActorSheet.#onRest),
       healWound: owned(KnaveryActorSheet.#onHealWound),
       addWound: owned(KnaveryActorSheet.#onAddWound),
+      hpUp: owned(KnaveryActorSheet.#onHpStep),
+      hpDown: owned(KnaveryActorSheet.#onHpStep),
       levelUp: owned(KnaveryActorSheet.#onLevelUp),
       acReset: owned(KnaveryActorSheet.#onAcReset),
       itemCreate: owned(KnaveryActorSheet.#onItemCreate),
@@ -420,6 +422,8 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       careers,
       levelTitle: levelRow ? L(`KNAVERY.LevelTitle.${levelRow.level}`) : "",
       levelLadder: levelLadderRows,
+      hpFull: isChar && s.hp.value >= s.hp.max,
+      woundsFull: isChar && s.wounds >= s.slotsMax,
       xpPercent: isChar ? (s.nextXp ? percent(s.xp - xpFloor, s.nextXp - xpFloor) : 100) : 0,
       showLevelUp,
       hpLow: s.hp.value < s.hp.max,
@@ -732,6 +736,13 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
 
   static async #onHealWound() {
     await this.actor.healWound();
+  }
+
+  /** The HP bar's + and −: one point, between 0 and max. A manual step never spills into wounds. */
+  static async #onHpStep(_event, target) {
+    const { value, max } = this.actor.system.hp;
+    const next = Math.max(0, Math.min(max, value + (target.dataset.action === "hpUp" ? 1 : -1)));
+    if (next !== value) await this.actor.update({ "system.hp.value": next });
   }
 
   static async #onAddWound() {

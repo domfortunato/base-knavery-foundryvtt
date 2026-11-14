@@ -4519,7 +4519,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 /* The roll link: a large d20 and the ability's name, one link; hovering either
    lights both (the icon is inert, so the link owns the hover and the tooltip). */
 .knavery .knavery-ability-name { display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; }
-.knavery .knavery-ability-name .roll-icon { font-size: calc(22px * var(--kn-text, 1)); margin: 0; opacity: 0.85; transition: text-shadow 0.15s, opacity 0.15s; }
+.knavery .knavery-ability-name .roll-icon { font-size: calc(18px * var(--kn-text, 1)); margin: 0; opacity: 0.85; transition: text-shadow 0.15s, opacity 0.15s; }
 .knavery .knavery-ability-name:hover,
 .knavery .knavery-ability-name:focus-visible { text-shadow: 0 0 6px var(--kn-accent); }
 .knavery .knavery-ability-name:hover .roll-icon,
@@ -4594,6 +4594,44 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-bar-name { font-size: calc(17px * var(--kn-text, 1)); }
 .knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-vital-buttons button { height: 34px; font-size: calc(16px * var(--kn-text, 1)); }
 .knavery-vital-buttons .attack-button { font-weight: bold; }
+/* The bars' current values: read-only numbers, changed by the + and − under each bar. */
+.knavery .knavery-bar .bar-readout {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-size: calc(18px * var(--kn-text, 1)); font-weight: bold; color: var(--kn-ink);
+}
+.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-bar .bar-readout { font-size: calc(26px * var(--kn-text, 1)); }
+.knavery .hp-bar.peril .bar-readout, .knavery .wounds-bar.peril .bar-readout { color: var(--kn-peril); }
+.knavery .hp-bar.low:not(.peril) .bar-readout { color: var(--kn-amber); }
+.knavery .bar-steps { display: flex; gap: 4px; justify-content: center; margin-top: 2px; }
+.knavery .bar-steps button {
+    --button-size: 26px; width: 28px; height: 26px; min-height: 26px; padding: 0; margin: 0;
+    display: flex; align-items: center; justify-content: center; font-size: calc(13px * var(--kn-text, 1));
+}
+.knavery .bar-steps button i { margin: 0; }
+.knavery .bar-steps button:disabled { opacity: 0.35; }
+/* Slots alone in the head, at the right. */
+.knavery-head-counters.slots-only > .slots-counter { grid-column: 2; }
+/* The bottom band: Level, XP and Coins, pushed to the foot of the Knave page. */
+.knavery-band {
+    margin-top: auto; padding-top: 8px; border-top: 2px solid var(--kn-line);
+    display: flex; flex-direction: column; gap: 6px;
+    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif; font-size: calc(16px * var(--kn-text, 1));
+}
+.knavery-page-knave .knavery-body { margin-bottom: 12px; }
+.knavery-band .band-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.knavery-band .band-label { flex: 0 0 64px; font-weight: bold; font-variant: small-caps; }
+.knavery-band .band-value { font-weight: bold; font-size: calc(18px * var(--kn-text, 1)); }
+.knavery-band .level-title { font-style: italic; color: var(--kn-muted); }
+.knavery-band .level-up-button { margin-left: auto; width: auto; }
+.knavery-band .level-input { width: 48px; text-align: center; }
+.knavery-band .xp-input { width: 84px; text-align: right; }
+.knavery-band .knavery-xp-bar { flex: 1 1 160px; margin: 0; }
+.knavery-band .coins-input { width: 110px; text-align: right; font-size: calc(16px * var(--kn-text, 1)); }
+.knavery .level-line input:disabled, .knavery-band input:disabled { background: none !important; border-color: transparent !important; opacity: 1; color: var(--kn-ink); }
+/* The rail's Attack button: not a page, so set apart by a rule and the splat in the peril colour. */
+.knavery.sheet.actor > .window-content > nav.knavery-tab-rail .knavery-rail-divider { display: block; height: 1px; margin: 2px 4px; background: var(--kn-rule-strong); }
+.knavery.sheet.actor > .window-content > nav.knavery-tab-rail button.knavery-rail-attack i { color: var(--kn-peril); }
+.knavery.sheet.actor > .window-content > nav.knavery-tab-rail button.knavery-rail-attack:disabled { opacity: 0.4; cursor: default; }
 .knavery-play { min-width: 0; }
 .knavery-play .knavery-items-list-header { height: 30px; line-height: 30px; }
 .knavery-empty { font-size: calc(12px * var(--kn-text, 1)); font-style: italic; color: var(--kn-muted); margin: 4px 0; }

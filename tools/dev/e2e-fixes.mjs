@@ -104,6 +104,8 @@ await withSettings(gm, async () => {
     await a.createEmbeddedDocuments("ActiveEffect", [{
       name: "Probe Tough", img: "icons/svg/aura.svg", changes: [{ key: "system.hp.max", mode: 2, value: "2" }],
     }]);
+    // XP is a field only in Char Gen Mode.
+    await a.update({ "system.generationEnabled": true });
     await a.sheet.render({ force: true });
   }, ids.a);
   await gm.waitForSelector(`#${await gm.evaluate((id) => game.actors.get(id).sheet.id, ids.a)} input[name="system.hp.max"]`, { timeout: T(15000) });

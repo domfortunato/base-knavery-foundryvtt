@@ -88,8 +88,9 @@ await withSettings(gm, async () => {
     const el = game.actors.get(x).sheet.element;
     return {
       str: el.querySelector('input[name="system.abilities.STR.value"]')?.disabled,
-      level: el.querySelector('input[name="system.level"]')?.disabled,
-      xp: el.querySelector('input[name="system.xp"]')?.disabled,
+      // No field at all (Char Gen Mode off: plain text) counts as locked.
+      level: el.querySelector('input[name="system.level"]')?.disabled ?? true,
+      xp: el.querySelector('input[name="system.xp"]')?.disabled ?? true,
     };
   }, id);
   const settle = () => alice.waitForTimeout(T(700));
@@ -767,6 +768,60 @@ await withSettings(gm, async () => {
     });
     ok(w.link.includes("creativecommons.org/licenses/by/4.0") && w.weight === "400" && !/rulebook/i.test(w.box),
       "the welcome window carries the Knave 1e licence, a lighter intro and the new checkbox text", JSON.stringify(w));
+  });
+
+  /* ------------------------------------------------------------------ */
+  await section("17. The Knave page: Failed Career on by default, the bottom band, HP and Wounds by + and −, the rail's Attack.", async () => {
+    const r = await gm.evaluate(async (pcId) => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const pc = game.actors.get(pcId);
+      const cfg = game.settings.settings.get("base-knavery.failed-career");
+      await game.settings.set("base-knavery", "failed-career", cfg.default);
+      await pc.update({ "system.generationEnabled": false, "system.hp.max": 3, "system.hp.value": 3, "system.wounds": 0 }, { knCreation: true });
+      await pc.sheet.render({ force: true });
+      await wait(900);
+      const el = () => pc.sheet.element;
+      const out = {
+        hackDefault: cfg.default,
+        failedLabel: el().querySelector(".failed-career-line .background-label")?.textContent.trim() ?? "",
+        band: [...el().querySelectorAll(".knavery-page-knave .knavery-band .band-label")].map((e) => e.textContent.trim()),
+        xpBar: !!el().querySelector(".knavery-band .knavery-xp-bar"),
+        coins: !!el().querySelector('.knavery-band input[name="system.coins"]'),
+        levelInputOff: !!el().querySelector('input[name="system.level"]'),
+        xpInputOff: !!el().querySelector('input[name="system.xp"]'),
+        hpInput: !!el().querySelector('input[name="system.hp.value"]'),
+        woundInput: !!el().querySelector('input[name="system.wounds"]'),
+        healButton: !!el().querySelector("#heal-wound-button"),
+      };
+      const press = async (action) => { el().querySelector(`.knavery-page-knave [data-action="${action}"]`).click(); await wait(500); };
+      out.upAtMax = !!el().querySelector('[data-action="hpUp"]')?.disabled;
+      await press("hpDown"); await press("hpDown"); out.hpAfterTwoDown = pc.system.hp.value;
+      await press("hpUp"); out.hpAfterUp = pc.system.hp.value;
+      await press("hpDown"); await press("hpDown"); out.downAtZero = !!el().querySelector('[data-action="hpDown"]')?.disabled; out.hpZero = pc.system.hp.value;
+      await press("addWound"); await press("addWound"); out.woundsTwo = pc.system.wounds;
+      await press("healWound"); out.woundsOne = pc.system.wounds;
+      await pc.update({ "system.generationEnabled": true });
+      await wait(700);
+      out.levelInputOn = !!el().querySelector('input[name="system.level"]');
+      // The rail's Attack opens the window from the Inventory page.
+      el().querySelector('nav.knavery-tab-rail button[data-tab="inventory"]').click();
+      await wait(400);
+      const railAttack = el().querySelector("nav.knavery-tab-rail .knavery-rail-attack");
+      out.railAttack = !!railAttack && !railAttack.disabled;
+      railAttack?.click();
+      await wait(900);
+      out.windowOpen = !!document.querySelector(".knavery-roll-prompt .kn-attack-weapons");
+      for (const app of [...foundry.applications.instances.values()]) if (app instanceof foundry.applications.api.DialogV2) await app.close();
+      await pc.update({ "system.wounds": 0, "system.hp.value": 3 });
+      return out;
+    }, ids.a);
+    ok(r.hackDefault === true && r.failedLabel === "Failed Career", "failed careers are on by default, on a line labelled Failed Career", JSON.stringify(r));
+    ok(r.band.join() === "Level,XP,Coins" && r.xpBar && r.coins, "the bottom band holds Level, the XP bar and Coins", JSON.stringify(r.band));
+    ok(!r.levelInputOff && !r.xpInputOff && r.levelInputOn, "Level and XP are text with Char Gen Mode off, fields with it on", JSON.stringify(r));
+    ok(!r.hpInput && !r.woundInput && !r.healButton, "current HP and wounds are not fields; Heal Wound is the wounds' −", JSON.stringify(r));
+    ok(r.upAtMax && r.hpAfterTwoDown === 1 && r.hpAfterUp === 2 && r.hpZero === 0 && r.downAtZero && r.woundsTwo === 2 && r.woundsOne === 1,
+      "HP and Wounds step by + and −, stopping at max and at 0", JSON.stringify(r));
+    ok(r.railAttack && r.windowOpen, "the rail's Attack opens the Attack window from the Inventory page", JSON.stringify(r));
   });
 
   // Cleanup.

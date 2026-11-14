@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **The Knave page, rearranged.** Level, XP (with its progress bar) and Coins sit in a band at the bottom; the head
+  keeps the name, Careers, the Failed Career line and Slots. Level and XP are plain text unless Char Gen Mode is on.
+- HP and Wounds change with + and − under each bar; their current values are no longer typed. Wounds − replaces
+  the Heal Wound button.
+- Failed careers are on by default, each on its own line labelled Failed Career.
+- The thumb rail has an Attack button too, under the pages: the Attack window from any page.
+- The d20 beside each ability is a little smaller.
 - **A narrower character sheet:** as wide as the abilities and vitals. Inventory, Growth and Description fit one
   column, and dragging the sheet wider brings back two. Max HP, wounds, AC and the buttons read larger.
 - **One Attack button** (with the damage splat) replaces the Attacks list: it opens a window to choose an equipped

@@ -69,25 +69,8 @@
           </div>
           {{/if}}
 
-          <div class="level-line">
-            <label for="{{idp}}-level">{{localize "KNAVERY.Level"}}</label>
-            <input type="number" id="{{idp}}-level" class="level-input" name="system.level" value="{{source.level}}"{{{effAttrs.level}}} min="1" max="10" step="1" data-dtype="Number"{{#unless mayEditLevelXp}} disabled{{/unless}} />
-            <span class="level-title">{{levelTitle}}</span>
-            <label for="{{idp}}-xp">{{localize "KNAVERY.XP"}}</label>
-            <input type="number" id="{{idp}}-xp" class="xp-input" name="system.xp" value="{{source.xp}}"{{{effAttrs.xp}}} min="0" step="1" data-dtype="Number"{{#unless mayEditLevelXp}} disabled{{/unless}} />
-            {{#if system.nextXp}}<span class="xp-next" data-tooltip="KNAVERY.NextLevelTip">/ {{system.nextXp}}</span>{{/if}}
-            {{#if showLevelUp}}
-            <button type="button" class="level-up-button" data-action="levelUp"><i class="fas fa-angles-up"></i> {{localize "KNAVERY.LevelUp"}}</button>
-            {{/if}}
-          </div>
-
-          <div class="knavery-counter-row knavery-head-counters">
-            <div class="resource-counter coins-counter">
-              <label for="{{idp}}-coins" data-tooltip="KNAVERY.CoinsTip">{{localize "KNAVERY.Coins"}}</label>
-              <div class="resource-input-wrapper">
-                <input type="number" min="0" step="1" id="{{idp}}-coins" name="system.coins" value="{{source.coins}}"{{{effAttrs.coins}}} data-dtype="Number" />
-              </div>
-            </div>
+          {{!-- Level, XP and Coins are the bottom band (below); the head keeps Slots. --}}
+          <div class="knavery-counter-row knavery-head-counters slots-only">
             <div class="resource-counter slots-counter {{#if overburdened}}peril{{/if}}">
               <label data-tooltip="KNAVERY.SlotsTip">{{localize "KNAVERY.Slots"}}</label>
               <div class="resource-input-wrapper"><span>{{slotsUsed}} / {{slotsMax}}</span></div>
@@ -115,16 +98,24 @@
               <input type="number" min="0" step="1" class="stat-input bar-max" id="{{idp}}-hp-max" name="system.hp.max" value="{{source.hp.max}}"{{{effAttrs.hpMax}}} data-dtype="Number" />
               <div class="knavery-bar">
                 <div class="knavery-bar-fill" style="height: {{hpPercent}}%"></div>
-                <input type="number" min="0" step="1" class="stat-input bar-value" id="{{idp}}-hp" name="system.hp.value" value="{{source.hp.value}}"{{{effAttrs.hpValue}}} data-dtype="Number" aria-label="{{localize 'KNAVERY.HP'}}" />
+                <span class="bar-value bar-readout" aria-label="{{localize 'KNAVERY.HP'}}">{{system.hp.value}}</span>
+              </div>
+              <div class="bar-steps">
+                <button type="button" data-action="hpDown" data-tooltip="KNAVERY.HpDown" aria-label="{{localize 'KNAVERY.HpDown'}}"{{#unless system.hp.value}} disabled{{/unless}}><i class="fas fa-minus" inert></i></button>
+                <button type="button" data-action="hpUp" data-tooltip="KNAVERY.HpUp" aria-label="{{localize 'KNAVERY.HpUp'}}"{{#if hpFull}} disabled{{/if}}><i class="fas fa-plus" inert></i></button>
               </div>
               <span class="knavery-bar-name">{{localize "KNAVERY.HP"}}</span>
             </div>
             <div class="knavery-bar-block wounds-bar {{#if woundPeril}}peril{{/if}}">
-              <label for="{{idp}}-wounds" data-tooltip="KNAVERY.WoundsTip">{{localize "KNAVERY.MaxWounds"}}</label>
+              <label data-tooltip="KNAVERY.WoundsTip">{{localize "KNAVERY.MaxWounds"}}</label>
               <span class="bar-max readout">{{slotsMax}}</span>
               <div class="knavery-bar">
                 <div class="knavery-bar-fill" style="height: {{woundPercent}}%"></div>
-                <input type="number" min="0" step="1" class="stat-input bar-value" id="{{idp}}-wounds" name="system.wounds" value="{{source.wounds}}"{{{effAttrs.wounds}}} data-dtype="Number" aria-label="{{localize 'KNAVERY.Wounds'}}" />
+                <span class="bar-value bar-readout" aria-label="{{localize 'KNAVERY.Wounds'}}">{{system.wounds}}</span>
+              </div>
+              <div class="bar-steps">
+                <button type="button" data-action="healWound" data-tooltip="KNAVERY.WoundDown" aria-label="{{localize 'KNAVERY.WoundDown'}}"{{#unless system.wounds}} disabled{{/unless}}><i class="fas fa-minus" inert></i></button>
+                <button type="button" data-action="addWound" data-tooltip="KNAVERY.WoundUp" aria-label="{{localize 'KNAVERY.WoundUp'}}"{{#if woundsFull}} disabled{{/if}}><i class="fas fa-plus" inert></i></button>
               </div>
               <span class="knavery-bar-name">{{localize "KNAVERY.Wounds"}}</span>
             </div>
@@ -135,11 +126,41 @@
             <button id="attack-button" type="button" data-action="attack"{{#if attacks.length}} data-always-live{{/if}} class="strict-size-button attack-button"
               data-tooltip="{{#if attacks.length}}KNAVERY.AttackTip{{else}}KNAVERY.NoAttacks{{/if}}"{{#unless attacks.length}} disabled{{/unless}}><i class="fas fa-burst"></i> {{localize "KNAVERY.Attack"}}</button>
             <button id="rest-button" type="button" data-action="rest" class="strict-size-button" data-tooltip="KNAVERY.RestTip"><i class="fas fa-campground"></i> {{localize "KNAVERY.Rest"}}</button>
-            <button id="heal-wound-button" type="button" data-action="healWound" class="strict-size-button" data-tooltip="KNAVERY.HealWoundTip" {{#unless system.wounds}}disabled{{/unless}}><i class="fas fa-heart-pulse"></i> {{localize "KNAVERY.HealWound"}}</button>
             <button id="die-of-fate-button" type="button" data-action="dieOfFate" data-always-live class="strict-size-button" data-tooltip="KNAVERY.DieOfFateTip"><i class="fas fa-dice-d6"></i> {{localize "KNAVERY.DieOfFate"}}</button>
           </div>
         </div>
 
+      </div>
+
+      {{!-- The bottom band: Level, XP and Coins (user, 2026-11-14). Level and XP are
+            fields only in Char Gen Mode (and the GM's switch still gates players). --}}
+      <div class="knavery-band">
+        <div class="band-row band-level">
+          <label class="band-label" for="{{idp}}-level">{{localize "KNAVERY.Level"}}</label>
+          {{#if generationEnabled}}
+          <input type="number" id="{{idp}}-level" class="level-input" name="system.level" value="{{source.level}}"{{{effAttrs.level}}} min="1" max="10" step="1" data-dtype="Number"{{#unless mayEditLevelXp}} disabled{{/unless}} />
+          {{else}}
+          <span class="band-value level-value">{{system.level}}</span>
+          {{/if}}
+          <span class="level-title">{{levelTitle}}</span>
+          {{#if showLevelUp}}
+          <button type="button" class="level-up-button" data-action="levelUp"><i class="fas fa-angles-up"></i> {{localize "KNAVERY.LevelUp"}}</button>
+          {{/if}}
+        </div>
+        <div class="band-row band-xp">
+          <label class="band-label" for="{{idp}}-xp">{{localize "KNAVERY.XP"}}</label>
+          {{#if generationEnabled}}
+          <input type="number" id="{{idp}}-xp" class="xp-input" name="system.xp" value="{{source.xp}}"{{{effAttrs.xp}}} min="0" step="1" data-dtype="Number"{{#unless mayEditLevelXp}} disabled{{/unless}} />
+          {{/if}}
+          <div class="knavery-xp-bar" data-tooltip="KNAVERY.NextLevelTip">
+            <div class="knavery-xp-fill" style="width: {{xpPercent}}%"></div>
+            <span>{{#if system.nextXp}}{{localize "KNAVERY.XpProgress" xp=system.xp next=system.nextXp}}{{else}}{{localize "KNAVERY.XpTop" xp=system.xp}}{{/if}}</span>
+          </div>
+        </div>
+        <div class="band-row band-coins">
+          <label class="band-label" for="{{idp}}-coins" data-tooltip="KNAVERY.CoinsTip">{{localize "KNAVERY.Coins"}}</label>
+          <input type="number" min="0" step="1" id="{{idp}}-coins" class="coins-input" name="system.coins" value="{{source.coins}}"{{{effAttrs.coins}}} data-dtype="Number" />
+        </div>
       </div>
     </div>
 
