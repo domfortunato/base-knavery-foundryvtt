@@ -4112,9 +4112,9 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-careers > .knavery-career { margin: 0; min-width: 0; }
 /* A card is narrow now: the name takes its own line, tags and controls wrap under it. */
 .knavery-careers .knavery-career .career-name { flex: 1 1 120px; min-width: 0; font-size: calc(16px * var(--kn-text, 1)); line-height: 1.15; }
-/* The Description page's traits, lighter (user, 2026-11-14): regular weight, not bold. */
-.knavery .character-traits .trait-label { font-weight: 400; }
-.knavery .character-traits .trait-input { font-weight: 400; }
+/* The Description page's traits, lighter (user, 2026-11-14): regular weight and smaller. */
+.knavery .character-traits .trait-label { font-weight: 400; font-size: calc(13px * var(--kn-text, 1)); }
+.knavery .character-traits .trait-input { font-weight: 400; font-size: calc(13px * var(--kn-text, 1)); height: calc(26px * var(--kn-text, 1)); }
 .knavery-career { border: 1px solid var(--kn-rule-strong); border-radius: 4px; padding: 6px 8px; margin: 6px 0; }
 .knavery-career .career-head { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .knavery-career .career-head img { width: 28px; height: 28px; border: none; }
