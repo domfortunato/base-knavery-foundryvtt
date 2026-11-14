@@ -1233,7 +1233,10 @@ await withSettings(gm, async () => {
       const dlg = document.querySelector(".knavery-roll-prompt");
       const opts = [...(dlg?.querySelectorAll('select[name="target"] option') ?? [])].map((o) => o.textContent.trim());
       const elIds = [...(dlg?.querySelectorAll(".dialog-content [id]") ?? [])].map((e) => e.id);
-      for (const app of [...foundry.applications.instances.values()]) if (app.id !== "sidebar") await app.close?.();
+      // Sheets and dialogs only: closing core's chat log too would break every later message update here.
+      for (const app of [...foundry.applications.instances.values()]) {
+        if (app.document || app instanceof foundry.applications.api.DialogV2) await app.close();
+      }
       return { opts, ids: elIds, canvas: canvas.scene?.id === sceneId };
     }, { pcId: ids.a, sceneId: sceneInfo.scene });
     await gm.evaluate(async ({ before, scene }) => {
@@ -1435,8 +1438,8 @@ await withSettings(gm, async () => {
       await report.delete();
       return out;
     }, ids.a);
-    ok(apply.untouched && apply.button && apply.after === "1,2" && apply.applied,
-      "a burn card changes nothing until the GM clicks; then the lit stack of 3 torches loses one and goes dark", JSON.stringify(apply));
+    ok(apply.untouched && apply.button && apply.after === "2,2" && apply.applied,
+      "a burn card changes nothing until the GM clicks; then the lit stack of 3 torches loses one and goes dark, the unlit 2 kept", JSON.stringify(apply));
     ok(apply.rations === apply.expected, "depletion rolls a d6 per ration and each 1 spoils", JSON.stringify(apply));
 
     // Fatigue: resting sets it aside; otherwise the GM's ticks take 1 damage.
