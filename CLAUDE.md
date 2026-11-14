@@ -97,7 +97,13 @@ picker, change log and marketplace it ports.
     every 30 days of world time (`system.wageDue`), Pay on the Time tab (user rulings
     2026-11-14)
   - `welcome.js`: the welcome window, at every GM login unless setting
-    `welcome-on-start` is off (user ruling 2026-11-14)
+    `welcome-on-start` is off (user ruling 2026-11-14). It is also the README and
+    the Foundry package listing (user, 2026-11-14): `npm run build:readme`
+    (`tools/content/build-readme.mjs`) writes README.md's `welcome` and
+    `licensing` blocks and `docs/foundry-listing.html` from `lang/en.json` and
+    `welcome-data.js` (the books, links, art credits and book ends). Edit those,
+    never the generated text; `npm run check` catches drift. No GitHub Pages:
+    the listing's images load from the mirror's `master` (raw.githubusercontent).
   - `rulebook-import.js`: build world roll tables from the GM's PDF, with a
     review first; a rebuild replaces only tables it built that are unchanged
     (`flags.base-knavery.rulebook.hash`), never the GM's own. The Spells table also

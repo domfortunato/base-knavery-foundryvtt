@@ -34,6 +34,9 @@
   The window is wider, in two columns (one on a narrow screen), and scrolls within the screen. Two knaves by
   Lydia Comer, used with her permission, stand as book ends either side of the title, facing it (her white versions on
   the dark theme).
+  The README now opens with the welcome window's words, and `docs/foundry-listing.html` holds the
+  same for the Foundry package listing: both are generated from the welcome's strings
+  (`npm run build:readme`), and `npm run check` fails if they fall out of step.
   LICENSE.txt and the README now say the name Base Knavery is not part of the MIT licence: a fork
   that is shared needs its own name, marked Base Knavery™ on the welcome and in the README. The Made for
   Knave logo is a faint watermark behind the welcome's Licensing section. The first

@@ -97,8 +97,10 @@ Lydia Comer galleries — CC BY-NC-SA 4.0
 
 Welcome window art — used with permission
     art/welcome/: two knaves by Lydia Comer (each in two versions, cropped
-    with her permission), © Lydia Comer, used with her permission. Not covered by MIT, nor by the CC BY-NC-SA terms of
-    art/lydia-comer/. See art/welcome/CREDITS.md.
+    with her permission), © Lydia Comer. Her permission covers use in Base
+    Knavery and to promote or advertise the Base Knavery Foundry system or its
+    repository. Not covered by MIT, nor by the CC BY-NC-SA terms of
+    art/lydia-comer/, and not granted to forks. See art/welcome/CREDITS.md.
 
 Alegreya fonts — SIL Open Font License 1.1
     fonts/. See fonts/OFL.txt.
