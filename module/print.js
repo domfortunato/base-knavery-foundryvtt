@@ -3,8 +3,9 @@
  * The window is opened SYNCHRONOUSLY in the click handler — a popup blocker
  * allows window.open only inside the user gesture, before any await.
  */
-import { ABILITIES, LEVELS, SAVE_CATEGORIES, SYS_PATH, TABLES } from "./config.js";
+import { ABILITIES, SAVE_CATEGORIES, SYS_PATH, TABLES } from "./config.js";
 import { slotsForItem } from "./documents/actor.js";
+import { nextLevelXp } from "./data-models.js";
 
 const L = (k) => game.i18n.localize(k);
 const TextEditor = foundry.applications.ux.TextEditor.implementation;
@@ -59,7 +60,7 @@ const fill = async (win, actor) => {
     level: s.level,
     levelTitle: isChar ? L(`KNAVERY.LevelTitle.${s.level}`) : "",
     xp: s.xp,
-    nextXp: LEVELS.find((r) => r.level === s.level + 1)?.xp ?? null,
+    nextXp: nextLevelXp(s.level),
     abilities: ABILITIES.map((k) => ({ label: L(`KNAVERY.AbilityShort.${k}`), value: s.abilities[k].value, defense: s.abilities[k].defense })),
     saves: Object.entries(SAVE_CATEGORIES).map(([k, a]) => ({ label: L(`KNAVERY.Save.${k}`), ability: L(`KNAVERY.AbilityShort.${a}`) })),
     hp: s.hp,

@@ -56,6 +56,9 @@ picker, change log and marketplace it ports.
   - `rolls.js`: the edge prompt, checks, attacks, spells, dice
   - `damage.js`: chat-card buttons and the GM relay
   - `item-offer.js`, `marketplace.js`, `character-generator.js`, `level-up.js`
+  - `initiative.js`: `KnaveryCombat`, core's Combat unless the GM's hack
+    `knave1e-initiative` is on: then one d6 a round orders the sides (the GM
+    rolls; a round a player advances is rolled by the active GM's client)
   - `edit-gates.js`: who may change abilities, level, XP and the GM's notes
     (Char Gen Mode and the GM's level & XP switch); the sheet disables, and
     `KnaveryActor._preUpdate` drops the rest (client-side only)

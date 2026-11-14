@@ -7,7 +7,7 @@
  */
 import {
   ABILITIES, ABILITY_MAX, AC_BASE, ARMOR_TYPES, COINS_PER_SLOT, FEATURE_TYPES, HIRELING_SLOTS,
-  LEVELS, MAX_ARMOR_POINTS, MAX_LEVEL, NPC_ROLES, SLOT_BASE,
+  LEVELS, LEVELS_1E, MAX_ARMOR_POINTS, MAX_LEVEL, NPC_ROLES, SLOT_BASE,
 } from "./config.js";
 
 const {
@@ -41,11 +41,15 @@ const coinsTakeSlots = () => {
   try { return game.settings.get("base-knavery", "coins-take-slots") !== false; } catch { return true; }
 };
 
+/** The XP ladder: Knave 2e's, or a level every 1000 XP under the GM's Knave 1e hack. Safe before settings exist. */
+export const levelLadder = () => {
+  try { return game.settings.get("base-knavery", "knave1e-xp") === true ? LEVELS_1E : LEVELS; } catch { return LEVELS; }
+};
 /** The level whose XP threshold `xp` has reached. */
 export const levelForXp = (xp) =>
-  LEVELS.reduce((lvl, row) => (xp >= row.xp ? row.level : lvl), 1);
+  levelLadder().reduce((lvl, row) => (xp >= row.xp ? row.level : lvl), 1);
 /** XP needed for the level after `level`, or null at the top. */
-export const nextLevelXp = (level) => LEVELS.find((r) => r.level === level + 1)?.xp ?? null;
+export const nextLevelXp = (level) => levelLadder().find((r) => r.level === level + 1)?.xp ?? null;
 
 /* -------------------------------------------- */
 /*  Actors                                       */

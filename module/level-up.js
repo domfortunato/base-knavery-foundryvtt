@@ -4,8 +4,13 @@
  *   reroll      Knave 2e: reroll one d6 per level; not higher, +1.
  *   add1d6      add one d6.
  *   rerollBest  reroll, and keep the higher of the roll and the old max.
- * Under both reroll rules the first die is the first-level formula
- * (setting `first-level-hp`, 1d6 or 1d4+2).
+ *   knave1e     Knave 1e: roll one d8 per level; below the old max, +1.
+ * Under the two d6 reroll rules the first die is the first-level formula
+ * (setting `first-level-hp`: 1d6, 1d4+2 or 1d8).
+ *
+ * The Random button raises three different abilities at random, or, under the
+ * GM's hack `knave1e-random-raises`, by Knave 1e's method: a d20 against each
+ * ability's defense in turn until three have risen.
  *
  * The sheet offers Level Up (the title-bar arrow and the Growth button) only
  * while Char Gen Mode is on AND the character's XP has reached the next level.
@@ -15,8 +20,36 @@ import { ABILITIES, ABILITY_MAX, FLAG_SCOPE, LEVEL_UP_ABILITIES, MAX_LEVEL, SETT
 const L = (k) => game.i18n.localize(k);
 const F = (k, d) => game.i18n.format(k, d);
 
-/** Three different abilities still under the cap, at random. */
+/**
+ * Knave 1e's random raises: roll a d20 for each ability, raising it when the
+ * roll is under its defense (11 + score); keep cycling, skipping abilities that
+ * are maxed or already raised, until three have risen. Strong abilities rise faster.
+ */
+const knave1eRaises = (values) => {
+  const open = ABILITIES.filter((k) => (values[k] ?? 0) < ABILITY_MAX);
+  // "In any order": one shuffle, then the same cycle each pass.
+  for (let i = open.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [open[i], open[j]] = [open[j], open[i]];
+  }
+  const picks = [];
+  const want = Math.min(LEVEL_UP_ABILITIES, open.length);
+  // Every open ability's defense is at least 11, so each roll succeeds at least half the time.
+  while (picks.length < want) {
+    for (const k of open) {
+      if (picks.length >= want) break;
+      if (picks.includes(k)) continue;
+      if (Math.ceil(Math.random() * 20) < 11 + (values[k] ?? 0)) picks.push(k);
+    }
+  }
+  return picks;
+};
+
+const knave1eRaisesOn = () => game.settings.get(SETTINGS_NS, "knave1e-random-raises") === true;
+
+/** Three different abilities still under the cap: at random, or by Knave 1e's d20 against defense. */
 export const randomAbilityPicks = (values) => {
+  if (knave1eRaisesOn()) return knave1eRaises(values);
   const open = ABILITIES.filter((k) => (values[k] ?? 0) < ABILITY_MAX);
   const picks = [];
   while (picks.length < LEVEL_UP_ABILITIES && open.length) {
@@ -26,10 +59,16 @@ export const randomAbilityPicks = (values) => {
 };
 
 const hpRule = () => game.settings.get(SETTINGS_NS, "level-hp-rule");
-/** The first-level HP formula: 1d6, or 1d4+2. */
-export const firstLevelHpFormula = () => game.settings.get(SETTINGS_NS, "first-level-hp") === "1d4+2" ? "1d4 + 2" : "1d6";
-/** The reroll formula for `level`: the first-level formula plus a d6 for each level after the first. */
-export const levelHpFormula = (level) => (level > 1 ? `${firstLevelHpFormula()} + ${level - 1}d6` : firstLevelHpFormula());
+/** The first-level HP formula: 1d6, 1d4+2 or 1d8. */
+export const firstLevelHpFormula = () => ({ "1d4+2": "1d4 + 2", "1d8": "1d8" })[game.settings.get(SETTINGS_NS, "first-level-hp")] ?? "1d6";
+/**
+ * The reroll formula for `level`: under Knave 1e, one d8 per level; otherwise
+ * the first-level formula plus a d6 for each level after the first.
+ */
+export const levelHpFormula = (level) => {
+  if (hpRule() === "knave1e") return `${level}d8`;
+  return level > 1 ? `${firstLevelHpFormula()} + ${level - 1}d6` : firstLevelHpFormula();
+};
 
 /** Max HP for reaching `level` from `oldMax`, by the GM's rule: {max, rolled, roll, note}. */
 export const rollLevelHp = async (level, oldMax) => {
@@ -40,6 +79,12 @@ export const rollLevelHp = async (level, oldMax) => {
     return { max, rolled: roll.total, roll, note: F("KNAVERY.LevelUpHpAdded", { rolled: roll.total, max }) };
   }
   const roll = await new Roll(levelHpFormula(level)).evaluate();
+  if (rule === "knave1e") {
+    // Knave 1e: only a result below the previous maximum gives that maximum + 1.
+    const lower = roll.total < oldMax;
+    const max = lower ? oldMax + 1 : roll.total;
+    return { max, rolled: roll.total, roll, note: lower ? F("KNAVERY.LevelUpHpKeptLower", { rolled: roll.total, max }) : F("KNAVERY.LevelUpHpNew", { max }) };
+  }
   const higher = roll.total > oldMax;
   const max = higher ? roll.total : (rule === "rerollBest" ? oldMax : oldMax + 1);
   const note = higher ? F("KNAVERY.LevelUpHpNew", { max })
@@ -51,6 +96,7 @@ export const rollLevelHp = async (level, oldMax) => {
 export const hpRuleHint = (level, max) => {
   const rule = hpRule();
   if (rule === "add1d6") return F("KNAVERY.HpHint.Add", { max });
+  if (rule === "knave1e") return F("KNAVERY.HpHint.Knave1e", { formula: levelHpFormula(level), max, next: max + 1 });
   return F(rule === "rerollBest" ? "KNAVERY.HpHint.Best" : "KNAVERY.HpHint.Reroll", { formula: levelHpFormula(level), max, next: max + 1 });
 };
 

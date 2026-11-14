@@ -46,6 +46,14 @@ https://github.com/domfortunato/base-knavery-foundryvtt/releases/latest/download
 - Saves from other games (paralysis, breath and blast, poison and death,
   magic device, spells) resolve as the matching ability check.
 
+**Knave 1e rules, one switch each** (Settings → Hacks, all off at first)
+- A level every 1,000 XP, in place of 2e's XP table.
+- Random ability raises by 1e's method: a d20 against each ability's
+  defense until three have risen, so strong abilities rise faster.
+- Group initiative: one d6 a round, 1–3 the enemies act first, 4–6 the PCs.
+- And under "Max HP at each new level": 1e's one d8 per level (below the
+  old maximum, +1), with 1d8 as a first-level choice.
+
 **Damage and wounds**
 - Damage comes off HP first. Each point past 0 fills an item slot with a
   wound, from the top down, and items in wounded slots are marked

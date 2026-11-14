@@ -4,7 +4,8 @@
  * Level Up arrow and its window; the HP rules; random creation from placed
  * ability points (one spellbook per STARTING point of INT); the failed-career
  * hack and its petty item; the GM's notes; the dashboard's XP tab; the ability
- * roll link's tooltip; the text size; the footer; traits; changing careers at level 1. GM, Alice and Bob in three browsers.
+ * roll link's tooltip; the text size; the footer; traits; changing careers at level 1;
+ * the Knave 1e rule hacks (1000-XP levels, d8 HP, random raises, group initiative). GM, Alice and Bob in three browsers.
  *
  *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/e2e-chargen.mjs   (npm run dev:chargen)
  *
@@ -27,7 +28,7 @@ const T = (ms) => ms * TIME_SCALE;
 const SYS = "/systems/base-knavery/module";
 
 const browser = await chromium.launch();
-watchdog(360000, "e2e-chargen", () => browser.close());
+watchdog(420000, "e2e-chargen", () => browser.close());
 const ctx = () => browser.newContext({ viewport: VIEWPORT });
 const gm = await (await ctx()).newPage();
 const alice = await (await ctx()).newPage();
@@ -597,6 +598,95 @@ await withSettings(gm, async () => {
     ok(r.books === 3 && r.booksFrom1e === 3 && r.withEffect === 3, "on 1e, three INT draw three 1e spellbooks, each with its effect", JSON.stringify(r));
     ok(r.gearNote.split(",").length >= 4, "the starting-gear hack rolls Knave 1e gear at creation", r.gearNote);
     ok(r.reactionWorld || r.reactionRows === 5, "Reaction ships filled from Knave 1e", JSON.stringify(r));
+  });
+
+  /* ------------------------------------------------------------------ */
+  await section("15. Knave 1e rule hacks: 1000-XP levels, d8 HP, random raises, group initiative.", async () => {
+    const r = await gm.evaluate(async ([sys, pcId]) => {
+      const lu = await import(`${sys}/level-up.js`);
+      const { buildCharacter } = await import(`${sys}/character-generator.js`);
+      const set = (k, v) => game.settings.set("base-knavery", k, v);
+      const pc = game.actors.get(pcId);
+      const out = {};
+
+      // Advancement: Knave 2e's ladder, then a level every 1000 XP.
+      await pc.update({ "system.level": 1, "system.xp": 1000 }, { knCreation: true });
+      out.off = { next: pc.system.nextXp, can: pc.system.canLevelUp };
+      await set("knave1e-xp", true);
+      pc.prepareData();
+      out.on = { next: pc.system.nextXp, can: pc.system.canLevelUp };
+      await pc.sheet.render({ force: true });
+      await new Promise((res) => setTimeout(res, 800));
+      out.ladder = [...pc.sheet.element.querySelectorAll(".ladder-xp")].map((e) => parseInt(e.textContent, 10));
+      await pc.sheet.close();
+      out.built3 = (await buildCharacter({ level: 3, abilities: { STR: 3 } })).system?.xp;
+      await set("knave1e-xp", false);
+
+      // HP: one d8 per level; below the old max, old max + 1.
+      await set("level-hp-rule", "knave1e");
+      await set("first-level-hp", "1d8");
+      out.first = lu.firstLevelHpFormula();
+      out.formula4 = lu.levelHpFormula(4);
+      out.low = (await lu.rollLevelHp(3, 30)).max;
+      const up = await lu.rollLevelHp(2, 1);
+      out.up = { max: up.max, rolled: up.rolled };
+      out.hint = lu.hpRuleHint(4, 12);
+      await set("level-hp-rule", "reroll");
+      await set("first-level-hp", "1d6");
+
+      // Random raises: a d20 under defense favours strong abilities.
+      const strong = { STR: 9, DEX: 0, CON: 0, INT: 0, WIS: 0, CHA: 0 };
+      const rate = () => { let n = 0; for (let i = 0; i < 400; i++) if (lu.randomAbilityPicks(strong).includes("STR")) n++; return n / 400; };
+      out.rateOff = rate();
+      await set("knave1e-random-raises", true);
+      out.rateOn = rate();
+      const sets = Array.from({ length: 50 }, () => lu.randomAbilityPicks({ STR: 10, DEX: 10, CON: 10, INT: 2, WIS: 2, CHA: 2 }));
+      out.picksOk = sets.every((p) => p.length === 3 && new Set(p).size === 3 && p.every((k) => ["INT", "WIS", "CHA"].includes(k)));
+      await set("knave1e-random-raises", false);
+
+      // Group initiative: one d6 a round orders the sides.
+      await set("knave1e-initiative", true);
+      const npc = await Actor.create({ name: "Probe Goblin", type: "npc" });
+      const combat = await Combat.create({});
+      await combat.createEmbeddedDocuments("Combatant", [{ actorId: pc.id }, { actorId: npc.id }]);
+      const msgs = () => game.messages.filter((m) => m.getFlag("base-knavery", "groupInitiative") !== undefined && m.timestamp >= t0).length;
+      const t0 = Date.now() - 1000;
+      await combat.rollAll();
+      out.preRoll = { flag: combat.getFlag("base-knavery", "groupInitiative"), inits: combat.combatants.map((c) => c.initiative).sort(), msgs: msgs() };
+      await combat.startCombat();
+      out.started = { round: combat.getFlag("base-knavery", "groupInitiative")?.round, msgs: msgs() };
+      const rounds = [];
+      for (let i = 0; i < 12; i++) {
+        await combat.nextRound();
+        const g = combat.getFlag("base-knavery", "groupInitiative");
+        rounds.push({ round: combat.round, flagRound: g?.round, pcsFirst: g?.pcsFirst, firstIsPc: combat.combatant?.actor?.type === "character" });
+      }
+      out.rounds = rounds;
+      out.roundMsgs = msgs();
+      await set("knave1e-initiative", false);
+      await combat.resetAll();
+      await combat.rollAll();
+      out.offFlag = combat.getFlag("base-knavery", "groupInitiative") ?? null;
+      out.offRolled = combat.combatants.every((c) => Number.isFinite(c.initiative));
+      await combat.delete();
+      await npc.delete();
+      for (const m of game.messages.filter((x) => x.getFlag("base-knavery", "groupInitiative") !== undefined)) await m.delete();
+      return out;
+    }, [SYS, ids.a]);
+    ok(r.off.next === 2000 && !r.off.can && r.on.next === 1000 && r.on.can, "Knave 1e advancement: level 2 at 1000 XP", JSON.stringify({ off: r.off, on: r.on }));
+    ok(r.ladder.join() === "0,1000,2000,3000,4000,5000,6000,7000,8000,9000" && r.built3 === 2000,
+      "the Growth ladder and random creation follow the 1000-XP levels", JSON.stringify({ ladder: r.ladder, built3: r.built3 }));
+    ok(r.first === "1d8" && r.formula4 === "4d8" && r.low === 31 && r.up.max === r.up.rolled && r.hint.includes("4d8"),
+      "Knave 1e HP: 1d8 at first level, then a d8 per level, below the old max +1", JSON.stringify({ first: r.first, f: r.formula4, low: r.low, up: r.up, hint: r.hint }));
+    ok(r.rateOn > 0.9 && r.rateOff < 0.75 && r.picksOk, "Knave 1e random raises favour strong abilities and skip maxed ones",
+      JSON.stringify({ on: r.rateOn, off: r.rateOff, picksOk: r.picksOk }));
+    ok(r.preRoll.flag?.round === 0 && r.preRoll.inits.join() === "1,2" && r.preRoll.msgs === 1 && r.started.round === 1 && r.started.msgs === 1,
+      "group initiative: one d6 lines up both sides, and Begin Combat keeps a roll made before it", JSON.stringify({ pre: r.preRoll, started: r.started }));
+    const rounds = r.rounds ?? [];
+    ok(rounds.length === 12 && rounds.every((x) => x.flagRound === x.round && x.firstIsPc === x.pcsFirst) && r.roundMsgs === 13,
+      "each new round rerolls, and its first turn goes to the side that won", JSON.stringify({ rounds, msgs: r.roundMsgs }));
+    ok(rounds.some((x) => x.pcsFirst) && rounds.some((x) => !x.pcsFirst), "over 12 rounds both sides win at least once", JSON.stringify(rounds.map((x) => x.pcsFirst)));
+    ok(r.offFlag === null && r.offRolled, "with the hack off, initiative is core's roll again", JSON.stringify({ flag: r.offFlag, rolled: r.offRolled }));
   });
 
   // Cleanup.

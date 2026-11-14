@@ -61,7 +61,10 @@ export const SETTING_GROUPS = [
     button: "KNAVERY.Settings.GroupHacksButton",
     hint: "KNAVERY.Settings.GroupHacksHint",
     icon: "fa-solid fa-flask",
-    keys: ["failed-career", "failed-career-item", "knave1e-starting-gear", "hard-mode-wounds", "show-hazard-dice"],
+    keys: [
+      "failed-career", "failed-career-item", "knave1e-starting-gear", "knave1e-xp", "knave1e-random-raises",
+      "knave1e-initiative", "hard-mode-wounds", "show-hazard-dice",
+    ],
   },
   {
     id: "rulebook",
@@ -135,6 +138,14 @@ export const registerSettings = () => {
   reg("failed-career", { label: "FailedCareer", type: Boolean, default: false, onChange: rerenderActorSheets });
   reg("failed-career-item", { label: "FailedCareerItem", type: Boolean, default: true });
   reg("knave1e-starting-gear", { label: "Knave1eStartingGear", type: Boolean, default: false });
+  // Knave 1e rules, one switch each (data-models.js levelLadder, level-up.js, initiative.js).
+  reg("knave1e-xp", {
+    label: "Knave1eXp", type: Boolean, default: false,
+    // The XP ladder is derived data: recompute every character before redrawing.
+    onChange: () => { for (const a of game.actors) if (a.type === "character") a.prepareData(); rerenderActorSheets(); },
+  });
+  reg("knave1e-random-raises", { label: "Knave1eRandomRaises", type: Boolean, default: false });
+  reg("knave1e-initiative", { label: "Knave1eInitiative", type: Boolean, default: false, onChange: () => ui.combat?.render() });
   reg("hard-mode-wounds", { label: "HardModeWounds", type: Boolean, default: false });
   reg("show-hazard-dice", { label: "ShowHazardDice", type: Boolean, default: true });
 

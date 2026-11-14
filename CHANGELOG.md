@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- **Knave 1e rules, one switch each, in the Hacks settings:** a level every 1,000 XP; random ability raises by
+  1e's d20 against defense (Level Up's Random button and random creation above level 1); and group initiative,
+  one d6 at the start of each round (1–3 the enemies act first, 4–6 the PCs), rolled by the Game Master. The
+  "Max HP at each new level" setting gains 1e's one d8 per level, and first-level HP gains 1d8.
 - **More of Knave 1e, which is CC BY 4.0.** Reaction, Alignment (a new trait), the starting-gear tables and the
   100 level-less spells ship filled. A table you build from your 2e book replaces its 1e counterpart by name.
   Random spellbooks draw from your own Spells table once it has rows, otherwise from 1e's; the new "Spell list"

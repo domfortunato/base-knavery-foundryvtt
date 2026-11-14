@@ -8,9 +8,10 @@
  * and Print.
  */
 import {
-  ABILITIES, FLAG_SCOPE, LEVEL_UP_ABILITIES, LEVELS, NPC_ROLES, SETTINGS_NS, SYS_PATH, TABLES,
+  ABILITIES, FLAG_SCOPE, LEVEL_UP_ABILITIES, NPC_ROLES, SETTINGS_NS, SYS_PATH, TABLES,
 } from "../config.js";
 import { isPetty, slotsForItem } from "../documents/actor.js";
+import { levelLadder } from "../data-models.js";
 import { mayEditAbilities, mayEditCareers, mayEditLevelXp, mayUseCharGen } from "../edit-gates.js";
 import { scaledPosition } from "../settings.js";
 import { castSpell, rollAttack, rollCheck, rollDamage, rollDieOfFate, rollMorale } from "../rolls.js";
@@ -354,12 +355,13 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     // Careers change at creation only: players in Char Gen Mode at level 1; the GM in Char Gen Mode at any level.
     const careerEdit = gen && isChar && mayEditCareers(actor);
     const careers = await this.#careerContext(careerEdit);
-    const levelRow = LEVELS.find((r) => r.level === s.level);
+    const ladder = levelLadder();
+    const levelRow = ladder.find((r) => r.level === s.level);
 
     // The bars and the Growth page's ladder: shares of a whole, clamped to 0–100.
     const percent = (value, max) => (max > 0 ? Math.max(0, Math.min(100, Math.round((100 * value) / max))) : 0);
     const xpFloor = levelRow?.xp ?? 0;
-    const levelLadder = isChar ? LEVELS.map((r) => ({
+    const levelLadderRows = isChar ? ladder.map((r) => ({
       level: r.level, xp: r.xp, title: L(`KNAVERY.LevelTitle.${r.level}`),
       current: r.level === s.level, reached: s.xp >= r.xp,
     })) : [];
@@ -422,7 +424,7 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       banners,
       careers,
       levelTitle: levelRow ? L(`KNAVERY.LevelTitle.${levelRow.level}`) : "",
-      levelLadder,
+      levelLadder: levelLadderRows,
       xpPercent: isChar ? (s.nextXp ? percent(s.xp - xpFloor, s.nextXp - xpFloor) : 100) : 0,
       showLevelUp,
       hpLow: s.hp.value < s.hp.max,

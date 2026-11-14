@@ -10,6 +10,7 @@ import * as KNAVERY from "./config.js";
 import { ACTOR_DATA_MODELS, ITEM_DATA_MODELS } from "./data-models.js";
 import { KnaveryActor } from "./documents/actor.js";
 import { KnaveryItem } from "./documents/item.js";
+import { KnaveryCombat } from "./initiative.js";
 import { KnaveryActorSheet } from "./sheets/actor-sheet.js";
 import { KnaveryItemSheet } from "./sheets/item-sheet.js";
 import { applyTextScale, registerSettings } from "./settings.js";
@@ -44,6 +45,8 @@ Hooks.once("init", () => {
   };
   // Initiative: each side's leader rolls CHA vs CHA; per-token it is d20 + CHA.
   CONFIG.Combat.initiative = { formula: "1d20 + @CHA", decimals: 0 };
+  // Under the GM's hack `knave1e-initiative`, one d6 a round orders the two sides instead.
+  CONFIG.Combat.documentClass = KnaveryCombat;
 
   const { DocumentSheetConfig } = foundry.applications.apps;
   DocumentSheetConfig.registerSheet(Actor, SETTINGS_NS, KnaveryActorSheet, { makeDefault: true, label: "KNAVERY.SheetLabel" });

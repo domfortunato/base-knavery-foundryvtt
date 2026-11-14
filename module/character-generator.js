@@ -26,6 +26,7 @@ import {
 } from "./config.js";
 import { drawFrom, pickFromList, plainText, realResults, findTable, resultText, spellTableName } from "./compendium.js";
 import { firstLevelHpFormula, randomAbilityPicks, rollLevelHp } from "./level-up.js";
+import { levelLadder } from "./data-models.js";
 import { randomPortraitPair, pairedTokenFor } from "./art.js";
 import { emit, onSocket } from "./socket.js";
 import { mayEditCareers } from "./edit-gates.js";
@@ -402,7 +403,7 @@ export const buildCharacter = async ({ level = 1, abilities = null } = {}) => {
       abilities: Object.fromEntries(ABILITIES.map((k) => [k, { value: values[k] }])),
       hp: { value: hpMax, max: hpMax },
       level,
-      xp: LEVELS.find((r) => r.level === level)?.xp ?? 0,
+      xp: levelLadder().find((r) => r.level === level)?.xp ?? 0,
       coins,
       traits,
       generationEnabled: true,
@@ -604,7 +605,7 @@ export const createCharacter = async ({ mode = "random", level = 1, name = "", o
     name: name || L("KNAVERY.DefaultCharacterName"),
     type: "character",
     ownership,
-    system: { level, xp: LEVELS.find((r) => r.level === level)?.xp ?? 0, generationEnabled: true, hp: { value: 1, max: 1 } },
+    system: { level, xp: levelLadder().find((r) => r.level === level)?.xp ?? 0, generationEnabled: true, hp: { value: 1, max: 1 } },
   });
   if (!actor) return null;
   if (mode === "random") {
