@@ -37,9 +37,11 @@ https://github.com/domfortunato/base-knavery-foundryvtt/releases/latest/download
 
 - A complete system that runs Knave (the first edition) out of the box, with its CC BY 4.0 rules included.
 - Full Knave 2e support, with rich content, once you upload your own copy of the Knave 2e PDF to your Foundry server.
+- Mix the two editions' rules, one switch per rule.
 - Instant random character creation for PCs, NPCs and monsters.
 - A random spell generator.
 - A bestiary, and more than 2,900 pieces of human-made art (portraits, tokens and icons).
+- A Game Master's Dashboard: requests, damage, time and hazards, the party, XP.
 - A fully customizable marketplace.
 - Fully customizable backgrounds, weapons, gear, spells, magic items and potions.
 - GM macros for importing additional tables, quickly turning features on and off, and more.
