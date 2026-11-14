@@ -2242,8 +2242,8 @@ await withSettings(gm, async () => {
     await gm.screenshot({ path: `${SHOTS}/dashboard-party.png` });
     ok(t.rule === "coin" && t.known && t.plays === "1e,custom,custom" && t.gold === "2,250,0",
       "XP for treasure reached the 2e world as 1 XP a coin; 1e's XP for gold (1 per 100c) still plays Knave 1e", JSON.stringify(t));
-    ok(t.split === "60,60,30" && t.companions === "Probe Companion" && t.prices === "15,100,1",
-      "treasure XP splits evenly with a companion at a half share; items sell at half price, treasure in full", JSON.stringify(t));
+    ok(t.split === "60,60,30" && t.companions === "Probe Companion" && t.prices === "15,100,0",
+      "treasure XP splits evenly with a companion at a half share; items sell at half price rounded down (a 1c torch for nothing), treasure in full", JSON.stringify(t));
     ok(t.party.tab && t.party.a?.hp === "0/6" && t.party.a.unconscious === false && t.party.a.books === "1/2 ready, 0 spells left today"
       && t.party.a.lit === "Torch ×3" && /^\d+\/\d+$/.test(t.party.a.slots ?? "") && t.party.b?.wounds === "1" && t.party.npc,
       "the Party tab shows each player character's HP, wounds, slots, lit lights and spellbooks", JSON.stringify(t.party));

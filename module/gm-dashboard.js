@@ -232,7 +232,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     const showAll = () => { showMode(); showTreasure(); };
     showAll();
     // Once per drawing of the XP part: a render of another part keeps this section and its listeners.
-    const xpTab = this.element.querySelector('[data-tab="xp"]');
+    const xpTab = this.element.querySelector('section[data-tab="xp"]');
     if (xpTab && !xpTab.dataset.knBound) {
       xpTab.dataset.knBound = "1";
       mode?.addEventListener("change", showAll);
