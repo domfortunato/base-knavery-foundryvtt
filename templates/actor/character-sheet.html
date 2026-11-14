@@ -131,7 +131,8 @@
           </div>
 
           <div class="knavery-vital-buttons">
-            <button id="attack-button" type="button" data-action="attack" data-always-live class="strict-size-button attack-button"
+            {{!-- Kept live on a sheet this user cannot edit only while there is a weapon: the sheet re-enables every data-always-live control. --}}
+            <button id="attack-button" type="button" data-action="attack"{{#if attacks.length}} data-always-live{{/if}} class="strict-size-button attack-button"
               data-tooltip="{{#if attacks.length}}KNAVERY.AttackTip{{else}}KNAVERY.NoAttacks{{/if}}"{{#unless attacks.length}} disabled{{/unless}}><i class="fas fa-burst"></i> {{localize "KNAVERY.Attack"}}</button>
             <button id="rest-button" type="button" data-action="rest" class="strict-size-button" data-tooltip="KNAVERY.RestTip"><i class="fas fa-campground"></i> {{localize "KNAVERY.Rest"}}</button>
             <button id="heal-wound-button" type="button" data-action="healWound" class="strict-size-button" data-tooltip="KNAVERY.HealWoundTip" {{#unless system.wounds}}disabled{{/unless}}><i class="fas fa-heart-pulse"></i> {{localize "KNAVERY.HealWound"}}</button>

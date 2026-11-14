@@ -348,7 +348,7 @@ await withSettings(gm, async () => {
     ok(before === "1.2", "the default is Large", String(before));
 
     const foot = await gm.evaluate((id) => game.actors.get(id).sheet.element.querySelector(".knavery-compat-caption")?.textContent.trim(), ids.a);
-    ok(foot === "Base Knavery is not affiliated with Questing Beast LLC.", "the sheet footer is the short line", foot);
+    ok(foot === "Base Knavery is an unofficial fan-made Foundry system for Knave Second Edition and is not affiliated with Questing Beast LLC.", "the sheet footer is the short line", foot);
     const welcome = await gm.evaluate(async () => {
       await game.knavery.openWelcome();
       await new Promise((r) => setTimeout(r, 800));

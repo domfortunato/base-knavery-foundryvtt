@@ -64,7 +64,7 @@ await withSettings(page, async () => {
   for (const scheme of ["dark", "light"]) {
     await page.evaluate((s) => game.settings.set("core", "uiConfig", foundry.utils.mergeObject(game.settings.get("core", "uiConfig"), { colorScheme: { applications: s, interface: s } })), scheme);
     await page.evaluate((id) => game.actors.get(id).sheet.render(true), id);
-    await page.waitForSelector(".knavery.sheet.actor .knavery-attacks", { timeout: 15000 });
+    await page.waitForSelector(".knavery.sheet.actor #attack-button", { timeout: 15000 });
     await page.waitForTimeout(800);
     await shot(page, ".knavery.sheet.actor", `sheet-knave-${scheme}`);
     const rail = (tab) => page.locator(`.knavery.sheet.actor nav.knavery-tab-rail button[data-tab="${tab}"]`);

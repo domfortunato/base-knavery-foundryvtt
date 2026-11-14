@@ -4449,6 +4449,13 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
     .character-traits .trait-grid,
     .character-traits .bio-top { grid-template-columns: 1fr; }
     .knavery-items-list-row-header { align-items: flex-start; }
+    /* The inventory header wraps instead of spilling over the rows: the hint goes under Name, the links never break. */
+    .knavery-items-list-header {
+        height: auto; min-height: 36px; line-height: 1.25; padding: 4px 0;
+        flex-wrap: wrap; align-items: center; gap: 2px 12px;
+    }
+    .knavery-items-list-header > div:first-child i { display: block; font-weight: normal; font-size: calc(12px * var(--kn-text, 1)); color: var(--kn-muted); }
+    .items-header-controls { white-space: nowrap; margin-left: auto; }
     .knavery-item-name-and-tags { flex-wrap: wrap; height: auto; min-height: 26px; }
 }
 .knavery-pages > .tab.active { display: flex; flex-direction: column; flex: 1 0 auto; height: auto; }
