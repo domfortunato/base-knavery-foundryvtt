@@ -26,7 +26,10 @@ picker, change log and marketplace it ports.
   and "eye tyrant" are left out on purpose.
 - Level titles, hints and the guide are this project's own writing. Exception
   (user ruling 2026-11-13): the ability taglines (`KNAVERY.AbilityHint`) follow
-  the wording of the edm00se/knave2e sheet, as lists of mechanics, not book text.
+  the wording of the edm00se/knave2e sheet, as lists of mechanics, not book text. A world
+  playing Knave 1e shows the 1e set (`KNAVERY.AbilityHint1e`, `rules.js` `abilityHint`): CON
+  poison, sickness, slots, healing; INT no spells a day; WIS spotting illusions; CHA henchmen, no
+  initiative. 2e and Custom keep the 2e set (user ruling 2026-11-14).
 - `questing-beast/*.pdf` is reference only and gitignored. Only the "Made for
   Knave" logos ship (in `logo/`). Never use the Knave 2e or Questing Beast
   logos.

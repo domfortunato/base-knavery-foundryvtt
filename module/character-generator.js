@@ -28,7 +28,7 @@ import { randomPortraitPair } from "./art.js";
 import { emit, onSocket } from "./socket.js";
 import { mayEditCareers } from "./edit-gates.js";
 import { traitShown } from "./settings.js";
-import { creationAbilities, startingKit, usesCareers, usesPrices1e } from "./rules.js";
+import { abilityHint, creationAbilities, startingKit, usesCareers, usesPrices1e } from "./rules.js";
 
 const L = (k) => game.i18n.localize(k);
 const F = (k, d) => game.i18n.format(k, d);
@@ -569,7 +569,7 @@ export const validPoints = (abilities) => {
 export const promptAbilityPoints = async () => {
   const rows = ABILITIES.map((k) => `<div class="kn-points-row" data-ability="${k}">`
     + `<span class="kn-points-name"><strong>${esc(L(`KNAVERY.Ability.${k}`))}</strong>`
-    + ` <span class="kn-points-hint">${esc(L(`KNAVERY.AbilityHint.${k}`))}</span></span>`
+    + ` <span class="kn-points-hint">${esc(abilityHint(k))}</span></span>`
     + `<button type="button" class="kn-points-step" data-delta="-1" aria-label="${esc(F("KNAVERY.Gen.PointsLess", { name: L(`KNAVERY.Ability.${k}`) }))}"><i class="fas fa-minus" inert></i></button>`
     + `<input type="number" name="${k}" value="0" readonly tabindex="-1" />`
     + `<button type="button" class="kn-points-step" data-delta="1" aria-label="${esc(F("KNAVERY.Gen.PointsMore", { name: L(`KNAVERY.Ability.${k}`) }))}"><i class="fas fa-plus" inert></i></button>`

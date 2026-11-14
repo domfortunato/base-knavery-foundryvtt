@@ -14,7 +14,7 @@ import { slotsForItem } from "../documents/actor.js";
 import { levelLadder } from "../data-models.js";
 import { mayEditAbilities, mayEditCareers, mayEditLevelXp, mayUseCharGen } from "../edit-gates.js";
 import { KNAVE_PAGE_TRAITS, scaledPosition, traitShown } from "../settings.js";
-import { healingRule, usesCareers, usesQuality, usesWounds } from "../rules.js";
+import { abilityHint, healingRule, usesCareers, usesQuality, usesWounds } from "../rules.js";
 import { canRepair, qualityOf, repairAny, repairCost, repairsByQuality } from "../quality.js";
 import { canSell, sellItem } from "../treasure.js";
 import { attackRow, castSpell, openAttack, rollAttack, rollCheck, rollDamage, rollDieOfFate, rollMorale } from "../rolls.js";
@@ -432,7 +432,7 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       key,
       label: L(`KNAVERY.AbilityShort.${key}`),
       name: L(`KNAVERY.Ability.${key}`),
-      hint: L(`KNAVERY.AbilityHint.${key}`),
+      hint: abilityHint(key),
       value: actor._source.system.abilities?.[key]?.value ?? 0,
       effAttrs: effectAttrs(actor, `abilities.${key}.value`),
       defense: s.abilities[key].defense,

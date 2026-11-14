@@ -36,6 +36,9 @@
     come from the 1e list. Create NPC offers 1e's ten henchmen at their daily wages, and the Time tab's
     **Pay** settles every day owed. A hireling's sheet says whether the wage is by the month or the day.
   - Coins per slot: 100 (1e) or 500 (2e).
+  - The ability taglines in a 1e world: CON "Resisting poison and sickness, item slots, healing", INT
+    "Lockpicking, alchemy, resisting magic", WIS "...spotting illusions", CHA "Persuasion, henchmen,
+    blessings". A 2e or Custom world keeps the 2e lines.
   - XP for treasure: off in 1e (XP for deeds), or 1e's designer's-note XP for gold at 1 XP per 100 copper
     (still Knave 1e); 1 XP per coin in 2e.
   - A world already on this version's rules gets the new ones in the edition its others play.

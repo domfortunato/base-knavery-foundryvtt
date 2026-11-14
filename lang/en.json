@@ -113,6 +113,14 @@
       "WIS": "Ranged attacks, foraging, navigation, spell resistance",
       "CHA": "Initiative, persuasion, companions, blessings"
     },
+    "AbilityHint1e": {
+      "STR": "Melee attacks, lifting, climbing, breaking free",
+      "DEX": "Dodging, sneaking, sleight of hand",
+      "CON": "Resisting poison and sickness, item slots, healing",
+      "INT": "Lockpicking, alchemy, resisting magic",
+      "WIS": "Ranged attacks, foraging, navigation, spotting illusions",
+      "CHA": "Persuasion, henchmen, blessings"
+    },
     "Check": "Check",
 
     "Saves": "Saves",

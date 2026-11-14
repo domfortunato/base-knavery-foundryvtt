@@ -47,6 +47,13 @@ export const rulesFor = (values) => {
 /** The edition this world plays now. */
 export const currentRules = () => rulesFor(Object.fromEntries(RULE_KEYS.map((k) => [k, rule(k)])));
 
+/**
+ * An ability's tagline: the Knave 1e set in a world playing 1e, else the 2e set (a Custom world
+ * too; user ruling 2026-11-14). 1e (p2): CON heals and resists poison, INT resists magic, WIS
+ * spots illusions, CHA employs henchmen; no wounds, spells a day or CHA initiative.
+ */
+export const abilityHint = (key) => game.i18n.localize(`KNAVERY.${currentRules() === "1e" ? "AbilityHint1e" : "AbilityHint"}.${key}`);
+
 /** Write an edition's value for every rule (the GM's own switches are overwritten). */
 export const applyRules = async (edition) => {
   const preset = RULES_PRESETS[edition];

@@ -2346,6 +2346,32 @@ await withSettings(gm, async () => {
     ok(!s.gem && s.coins2 === 110, "treasure sells for its full value, and the item goes", JSON.stringify(s));
     ok(s.rowRepair && s.sheetRepair === "Repair" && !s.quality && s.mended && s.coins3 === 110 && s.free && !s.canAfter,
       "under Knave 2e attacks a broken item's Repair is free, from the row or the sheet", JSON.stringify(s));
+
+    // The ability taglines follow the edition: 2e (and Custom) the 2e set, 1e its own.
+    const h = await gm.evaluate(async (sys) => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const R = await import(`${sys}/rules.js`);
+      const a = game.actors.getName("Probe Party A");
+      const hints = async () => {
+        await a.sheet.render({ force: true });
+        await wait(900);
+        const out = Object.fromEntries([...a.sheet.element.querySelectorAll(".knavery-ability-hint")].map((el, i) => [["STR", "DEX", "CON", "INT", "WIS", "CHA"][i], el.textContent.trim()]));
+        await a.sheet.close();
+        return out;
+      };
+      const out = { e2: await hints() };
+      await R.applyRules("1e");
+      out.e1 = await hints();
+      await game.settings.set("base-knavery", "death-rule", "wounds");
+      out.custom = R.abilityHint("CON");
+      await R.applyRules("2e");
+      return out;
+    }, SYS);
+    ok(h.e2.CON === "Physical resistance, item slots, wounds" && h.e2.INT === "Lockpicking, alchemy, spells per day"
+      && h.e1.CON === "Resisting poison and sickness, item slots, healing" && h.e1.INT === "Lockpicking, alchemy, resisting magic"
+      && h.e1.WIS === "Ranged attacks, foraging, navigation, spotting illusions" && h.e1.CHA === "Persuasion, henchmen, blessings"
+      && h.e1.STR === h.e2.STR && h.custom === "Physical resistance, item slots, wounds",
+      "a 1e world shows the 1e ability taglines (CON healing, INT no spells a day, WIS illusions, CHA henchmen); 2e and Custom the 2e ones", JSON.stringify(h));
   });
 
   // Cleanup.
