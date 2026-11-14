@@ -1,93 +1,114 @@
 {{!-- The welcome window (module/welcome.js). The Made for Knave logo is the
      black/white pair the sheet footer swaps by theme. The disclaimer is the
      Knave 2e Third Party License §3 sentence, verbatim. Knave 1e plays out of
-     the box; Knave 2e comes with the GM's book (user rulings 2026-11-14). --}}
+     the box; Knave 2e comes with the GM's book (user rulings 2026-11-14).
+     Wide and in two columns, so nothing is cut and little scrolls: the rules
+     and what to do on the left; the books, the AI disclosure and the
+     licences on the right (one column when the window is narrow). Every fold
+     is a bullet whose marker is the fold's own arrow. --}}
 <div class="knavery-welcome-body">
   <header class="knavery-welcome-head">
-    <h1 class="knavery-welcome-title">{{title}}</h1>
-    <p class="knavery-welcome-byline">
-      {{#if authorUrl}}<a href="{{authorUrl}}" target="_blank" rel="noopener">{{byline}}</a>{{else}}{{byline}}{{/if}}
-    </p>
+    <div class="knavery-welcome-titles">
+      <h1 class="knavery-welcome-title">{{title}}</h1>
+      <p class="knavery-welcome-byline">
+        {{#if authorUrl}}<a href="{{authorUrl}}" target="_blank" rel="noopener">{{byline}}</a>{{else}}{{byline}}{{/if}}
+      </p>
+    </div>
     <img class="knavery-logo-light" src="{{logo}}" alt="{{localize 'KNAVERY.MadeForKnave'}}">
     <img class="knavery-logo-dark" src="{{logoDark}}" alt="{{localize 'KNAVERY.MadeForKnave'}}">
   </header>
 
   <p class="knavery-welcome-unofficial">{{localize "KNAVERY.Welcome.Unofficial"}}</p>
 
-  <h2 class="knavery-welcome-heading">{{localize "KNAVERY.Welcome.RulesHeading"}}</h2>
-  <ul class="knavery-welcome-rules">
-    <li><strong>{{localize "KNAVERY.Welcome.Rules1eTitle"}}</strong> {{localize "KNAVERY.Welcome.Rules1eBody"}}</li>
-    <li><strong>{{localize "KNAVERY.Welcome.Rules2eTitle"}}</strong> {{localize "KNAVERY.Welcome.Rules2eBody"}}</li>
-    <li><strong>{{localize "KNAVERY.Welcome.RulesMixTitle"}}</strong> {{localize "KNAVERY.Welcome.RulesMixBody"}}</li>
-  </ul>
-  <p class="knavery-welcome-world" data-rules="{{rules}}"><i class="fa-solid fa-scale-balanced" inert></i> {{thisWorld}}</p>
-
-  {{#if isGM}}{{#unless hasRulebook}}
-  <div class="knavery-welcome-rulebook">
-    <p>{{localize "KNAVERY.Welcome.NoRulebook"}}</p>
-    <button type="button" data-action="chooseRulebook"><i class="fa-solid fa-file-arrow-up" inert></i> {{localize "KNAVERY.Welcome.ChooseRulebook"}}</button>
-  </div>
-  {{/unless}}{{/if}}
-
-  <h2 class="knavery-welcome-heading">{{localize "KNAVERY.Welcome.GetTheBook"}}</h2>
-  {{!-- Both books credit Ben Milton as their author (1e p1, 2e p5); one line (user, 2026-11-14). --}}
-  <p class="knavery-welcome-author">{{localize "KNAVERY.Welcome.Author"}}</p>
-  {{#each books}}
-  <div class="knavery-welcome-book" data-edition="{{this.edition}}">
-    <span class="knavery-welcome-book-name">{{localize this.label}}</span>
-    <div class="knavery-welcome-links">
-      {{#each this.links}}
-      <a class="knavery-welcome-link" href="{{this.href}}" target="_blank" rel="noopener">
-        <i class="{{this.icon}}" inert></i> {{localize this.label}}
-      </a>
-      {{/each}}
-    </div>
-    {{#if this.note}}<p class="knavery-welcome-book-note">{{localize this.note}}</p>{{/if}}
-  </div>
-  {{/each}}
-
-  <h2 class="knavery-welcome-heading">{{localize "KNAVERY.Welcome.StartHere"}}</h2>
-  <div class="knavery-welcome-actions">
-    <button type="button" data-action="openGuide"><i class="fa-solid fa-book-atlas" inert></i> {{localize "KNAVERY.Welcome.OpenGuide"}}</button>
-    {{#if (and hasRulebook canReadRulebook)}}
-      <button type="button" data-action="openRulebook"><i class="fa-solid fa-book-open" inert></i> {{localize "KNAVERY.Welcome.OpenRulebook"}}</button>
-    {{/if}}
-  </div>
-
-  {{!-- AI disclosure (user, 2026-11-14): no AI art, first; the art's licences folded below. --}}
-  <h2 class="knavery-welcome-heading">{{localize "KNAVERY.Welcome.AiHeading"}}</h2>
-  <section class="knavery-welcome-ai">
-    <p class="knavery-welcome-noai"><i class="fa-solid fa-paintbrush" inert></i> <strong>{{localize "KNAVERY.Welcome.NoAiArt"}}</strong> {{localize "KNAVERY.Welcome.NoAiArtBody"}}</p>
-    {{!-- Spells are Knave 1e's (Ben Milton) or the GM's own book; items and monsters are statistics only.
-         Rule explanations (guide, hints) are not claimed: they were written with the AI assistant (user, 2026-11-14). --}}
-    <p class="knavery-welcome-noai knavery-welcome-notext"><i class="fa-solid fa-scroll" inert></i> <strong>{{localize "KNAVERY.Welcome.NoAiText"}}</strong> {{localize "KNAVERY.Welcome.NoAiTextBody"}}</p>
-    <p class="knavery-welcome-aicode">{{localize "KNAVERY.Welcome.AiCode"}}</p>
-    <details class="knavery-welcome-license knavery-welcome-art">
-      <summary>{{localize "KNAVERY.Welcome.ArtLicensing"}}</summary>
-      <ul>
-        {{#each art}}
-        <li><a href="{{this.url}}" target="_blank" rel="noopener">{{this.name}}</a>, {{this.by}}: <a href="{{this.licenseUrl}}" target="_blank" rel="noopener">{{this.license}}</a></li>
-        {{/each}}
+  <div class="knavery-welcome-cols">
+    <div class="knavery-welcome-col knavery-welcome-col-main">
+      <h2 class="knavery-welcome-heading">{{localize "KNAVERY.Welcome.RulesHeading"}}</h2>
+      <ul class="knavery-welcome-rules">
+        <li><strong>{{localize "KNAVERY.Welcome.Rules1eTitle"}}</strong> {{localize "KNAVERY.Welcome.Rules1eBody"}}</li>
+        <li><strong>{{localize "KNAVERY.Welcome.Rules2eTitle"}}</strong> {{localize "KNAVERY.Welcome.Rules2eBody"}}</li>
+        <li><strong>{{localize "KNAVERY.Welcome.RulesMixTitle"}}</strong> {{localize "KNAVERY.Welcome.RulesMixBody"}}</li>
       </ul>
-    </details>
-  </section>
+      <p class="knavery-welcome-world" data-rules="{{rules}}"><i class="fa-solid fa-scale-balanced" inert></i> {{thisWorld}}</p>
 
-  {{!-- Licensing, last: the 2e licence's disclaimer, then each edition's licence as its own
-       bullet, Knave 1e's CC BY notice folded (user, 2026-11-14). --}}
-  <h2 class="knavery-welcome-heading">{{localize "KNAVERY.Welcome.Licensing"}}</h2>
-  <section class="knavery-welcome-small">
-    <p class="knavery-welcome-disclaimer">{{disclaimer}}</p>
-    <h3 class="knavery-welcome-subheading">{{localize "KNAVERY.Welcome.KnaveLicensing"}}</h3>
-    <ul class="knavery-welcome-licences">
-      <li class="knavery-welcome-credit">{{credit}}</li>
-      <li>
-        <details class="knavery-welcome-license">
-          <summary>{{knave1eHeading}}</summary>
-          <p>{{{knave1eBody}}}</p>
-        </details>
-      </li>
-    </ul>
-  </section>
+      {{#if isGM}}{{#unless hasRulebook}}
+      <div class="knavery-welcome-rulebook">
+        <p>{{localize "KNAVERY.Welcome.NoRulebook"}}</p>
+        <button type="button" data-action="chooseRulebook"><i class="fa-solid fa-file-arrow-up" inert></i> {{localize "KNAVERY.Welcome.ChooseRulebook"}}</button>
+      </div>
+      {{/unless}}{{/if}}
+
+      <h2 class="knavery-welcome-heading">{{localize "KNAVERY.Welcome.StartHere"}}</h2>
+      <div class="knavery-welcome-actions">
+        <button type="button" data-action="openGuide"><i class="fa-solid fa-book-atlas" inert></i> {{localize "KNAVERY.Welcome.OpenGuide"}}</button>
+        {{#if (and hasRulebook canReadRulebook)}}
+          <button type="button" data-action="openRulebook"><i class="fa-solid fa-book-open" inert></i> {{localize "KNAVERY.Welcome.OpenRulebook"}}</button>
+        {{/if}}
+      </div>
+    </div>
+
+    <div class="knavery-welcome-col knavery-welcome-col-side">
+      <h2 class="knavery-welcome-heading">{{localize "KNAVERY.Welcome.GetTheBook"}}</h2>
+      {{!-- Both books credit Ben Milton as their author (1e p1, 2e p5); one line (user, 2026-11-14). --}}
+      <p class="knavery-welcome-author">{{localize "KNAVERY.Welcome.Author"}}</p>
+      {{#each books}}
+      <div class="knavery-welcome-book" data-edition="{{this.edition}}">
+        <span class="knavery-welcome-book-name">{{localize this.label}}</span>
+        <div class="knavery-welcome-links">
+          {{#each this.links}}
+          <a class="knavery-welcome-link" href="{{this.href}}" target="_blank" rel="noopener">
+            <i class="{{this.icon}}" inert></i> {{localize this.label}}
+          </a>
+          {{/each}}
+        </div>
+        {{#if this.note}}<p class="knavery-welcome-book-note">{{localize this.note}}</p>{{/if}}
+      </div>
+      {{/each}}
+
+      {{!-- AI disclosure (user, 2026-11-14): no AI art first, then no AI game text. Spells are Knave 1e's
+           (Ben Milton) or the GM's own book; items and monsters are statistics only. Rule explanations
+           (guide, hints) are not claimed: they were written with the AI assistant. --}}
+      <h2 class="knavery-welcome-heading">{{localize "KNAVERY.Welcome.AiHeading"}}</h2>
+      <section class="knavery-welcome-ai">
+        <p class="knavery-welcome-noai"><i class="fa-solid fa-paintbrush" inert></i> <strong>{{localize "KNAVERY.Welcome.NoAiArt"}}</strong> {{localize "KNAVERY.Welcome.NoAiArtBody"}}</p>
+        <p class="knavery-welcome-noai knavery-welcome-notext"><i class="fa-solid fa-scroll" inert></i> <strong>{{localize "KNAVERY.Welcome.NoAiText"}}</strong> {{localize "KNAVERY.Welcome.NoAiTextBody"}}</p>
+        <p class="knavery-welcome-aicode">{{localize "KNAVERY.Welcome.AiCode"}}</p>
+        <ul class="knavery-welcome-folds">
+          <li>
+            <details class="knavery-welcome-fold knavery-welcome-art">
+              <summary>{{localize "KNAVERY.Welcome.ArtLicensing"}}</summary>
+              <ul>
+                {{#each art}}
+                <li><a href="{{this.url}}" target="_blank" rel="noopener">{{this.name}}</a>, {{this.by}}: <a href="{{this.licenseUrl}}" target="_blank" rel="noopener">{{this.license}}</a></li>
+                {{/each}}
+              </ul>
+            </details>
+          </li>
+        </ul>
+      </section>
+
+      {{!-- Licensing, last: the 2e licence's disclaimer stays in view; each edition's licence is a bullet
+           that folds open (user, 2026-11-14). --}}
+      <h2 class="knavery-welcome-heading">{{localize "KNAVERY.Welcome.Licensing"}}</h2>
+      <section class="knavery-welcome-small">
+        <p class="knavery-welcome-disclaimer">{{disclaimer}}</p>
+        <h3 class="knavery-welcome-subheading">{{localize "KNAVERY.Welcome.KnaveLicensing"}}</h3>
+        <ul class="knavery-welcome-folds knavery-welcome-licences">
+          <li>
+            <details class="knavery-welcome-fold knavery-welcome-2e">
+              <summary>{{localize "KNAVERY.Welcome.Knave2eHeading"}}</summary>
+              <p class="knavery-welcome-credit">{{credit}}</p>
+            </details>
+          </li>
+          <li>
+            <details class="knavery-welcome-fold knavery-welcome-license">
+              <summary>{{knave1eHeading}}</summary>
+              <p>{{{knave1eBody}}}</p>
+            </details>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </div>
 
   <footer class="knavery-welcome-foot">
     {{#if isGM}}

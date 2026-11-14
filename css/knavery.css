@@ -4694,13 +4694,15 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-rulebook .knavery-rulebook-frame { display: block; width: 100%; height: 100%; border: 0; }
 
 /* ---- Welcome window (welcome.js) --------------------------------------------- */
-.knavery-welcome .window-content { padding: 16px 20px; }
-/* The welcome is taller than many screens: the window stops at the viewport and its content scrolls (user, 2026-11-14). */
+/* Wide and in two columns, so nothing is cut and little scrolls (user, 2026-11-14). The window stops
+   at the screen and its content scrolls; one column when it is narrow (a container query). */
 #knavery-welcome { max-height: calc(100vh - 20px); }
-#knavery-welcome .window-content { overflow-y: auto; min-height: 0; }
+#knavery-welcome .window-content { padding: 14px 20px; overflow-y: auto; min-height: 0; container-type: inline-size; }
 .knavery-welcome-body { display: flex; flex-direction: column; gap: 8px; color: var(--kn-ink); }
-.knavery-welcome-head { display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; }
-.knavery-welcome-head img { display: block; width: 100%; max-width: 220px; height: auto; margin: 8px auto 0; border: none; }
+/* The head: the title and byline beside the Made for Knave logo. */
+.knavery-welcome-head { display: flex; align-items: center; justify-content: center; gap: 24px; }
+.knavery-welcome-titles { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.knavery-welcome-head img { display: block; flex: 0 0 auto; width: 150px; height: auto; border: none; }
 .knavery-welcome .knavery-logo-dark { display: none; }
 .theme-dark .knavery-welcome:not(.theme-light) .knavery-logo-light,
 .knavery-welcome.theme-dark .knavery-logo-light { display: none; }
@@ -4712,40 +4714,86 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 }
 .knavery-welcome-byline { margin: 0; color: var(--kn-muted); font-size: calc(13px * var(--kn-text, 1)); }
 .knavery-welcome-byline a { color: inherit; }
-/* The intro: what Base Knavery is, the window's lead line (larger, user 2026-11-14; the disclaimer is in Licensing). */
+/* The intro: what Base Knavery is, the window's lead line (larger, user 2026-11-14). */
 .knavery-welcome-unofficial {
-    margin: 6px 0 0; font-weight: 400; font-size: calc(16px * var(--kn-text, 1)); line-height: 1.4; color: var(--kn-ink);
+    margin: 0; font-weight: 400; font-size: calc(16px * var(--kn-text, 1)); line-height: 1.4; color: var(--kn-ink);
 }
-/* Knave 1e's CC BY 4.0 notice: title, author, licence link and changes. */
-.knavery-welcome-license { padding: 4px 10px; border: 1px solid var(--kn-rule); border-radius: 4px; }
-/* Folded until opened (user, 2026-11-14): the summary is its title. */
-.knavery-welcome-license summary {
-    cursor: pointer; font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
-    font-variant: small-caps; font-weight: bold; font-size: calc(13px * var(--kn-text, 1)); color: var(--kn-ink);
+
+/* The two columns: the rules and what to do; the books, the AI disclosure and the licences. */
+.knavery-welcome-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 28px; align-items: start; }
+@container (max-width: 620px) { .knavery-welcome-cols { grid-template-columns: 1fr; } }
+.knavery-welcome-col { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.knavery-welcome-heading {
+    margin: 8px 0 0; padding-bottom: 2px; border-bottom: 1px solid var(--kn-rule);
+    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif; font-variant: small-caps;
+    font-size: calc(17px * var(--kn-text, 1)); color: var(--kn-ink);
 }
-.knavery-welcome-license p { margin: 4px 0 0; color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
-.knavery-welcome-license a { color: var(--kn-ink); text-decoration: underline; }
+.knavery-welcome-col > .knavery-welcome-heading:first-child { margin-top: 0; }
+.knavery-welcome-subheading {
+    margin: 2px 0 0; border: none; font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
+    font-variant: small-caps; font-weight: bold; font-size: calc(14px * var(--kn-text, 1)); color: var(--kn-ink);
+}
+
+/* Rules: the three lines, then which rules this world plays. */
+.knavery-welcome-rules { margin: 0; padding-left: 18px; font-size: calc(13px * var(--kn-text, 1)); line-height: 1.45; }
+.knavery-welcome-rules li { margin: 2px 0; }
+.knavery-welcome-world {
+    margin: 0; padding: 4px 10px; border: 1px solid var(--kn-accent); border-radius: 4px; background: var(--kn-accent-wash);
+    font-weight: bold;
+}
 .knavery-welcome-rulebook {
-    display: flex; flex-direction: column; align-items: stretch; gap: 6px; margin-top: 6px; padding: 8px 10px;
+    display: flex; flex-direction: column; align-items: stretch; gap: 6px; padding: 8px 10px;
     border: 1px solid var(--kn-accent); border-radius: 4px; background: var(--kn-accent-wash);
+    font-size: calc(13px * var(--kn-text, 1));
 }
 .knavery-welcome-rulebook p { margin: 0; }
 .knavery-welcome-rulebook button { width: auto; }
-.knavery-welcome-disclaimer { margin: 0; font-weight: bold; }
-.knavery-welcome-credit { margin: 0; color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
-.knavery-welcome-heading {
-    margin: 8px 0 0; padding-bottom: 2px; border-bottom: 1px solid var(--kn-rule);
-    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif; font-variant: small-caps; font-size: calc(17px * var(--kn-text, 1)); color: var(--kn-ink);
-}
-.knavery-welcome-links, .knavery-welcome-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.knavery-welcome-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.knavery-welcome-actions button { flex: 1 1 auto; width: auto; }
+
+/* Get the books: the author, then each book's name in a narrow column, its links and note beside it. */
+.knavery-welcome-author { margin: 0; font-size: calc(13px * var(--kn-text, 1)); }
+.knavery-welcome-book { display: grid; grid-template-columns: max-content 1fr; align-items: center; gap: 4px 10px; }
+.knavery-welcome-book-name { grid-column: 1; min-width: 60px; font-weight: bold; font-variant: small-caps; font-size: calc(13px * var(--kn-text, 1)); }
+.knavery-welcome-book .knavery-welcome-links { grid-column: 2; }
+.knavery-welcome-book-note { grid-column: 2; margin: 0; color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
+.knavery-welcome-links { display: flex; flex-wrap: wrap; gap: 6px; }
 .knavery-welcome-link {
     display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; font-size: calc(13px * var(--kn-text, 1));
     border: 1px solid var(--kn-rule-strong); border-radius: 4px; color: var(--kn-ink); text-decoration: none;
 }
 .knavery-welcome-link:hover, .knavery-welcome-link:focus-visible { background: var(--kn-wash-strong); text-shadow: none; }
-.knavery-welcome-actions button { flex: 1 1 auto; width: auto; }
+
+/* The AI disclosure: no AI art, then no AI game text, then the code note. */
+.knavery-welcome-ai { display: flex; flex-direction: column; gap: 4px; }
+.knavery-welcome-noai { margin: 0; font-size: calc(13px * var(--kn-text, 1)); line-height: 1.4; }
+.knavery-welcome-noai i { color: var(--kn-accent); }
+.knavery-welcome-aicode { margin: 0; color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
+
+/* Licensing: the 2e licence's disclaimer in view, then the editions' licences as folds. */
+.knavery-welcome-small { display: flex; flex-direction: column; gap: 4px; }
+.knavery-welcome-disclaimer { margin: 0; font-weight: bold; font-size: calc(12px * var(--kn-text, 1)); }
+
+/* Folds as bullets (user, 2026-11-14): each fold's arrow is its bullet; open, the arrow turns and the
+   text sits indented under the title. Art licensing, Knave 2e and Knave 1e all look the same. */
+.knavery-welcome-folds { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.knavery-welcome-fold > summary {
+    display: flex; align-items: baseline; gap: 6px; list-style: none; cursor: pointer;
+    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif; font-variant: small-caps; font-weight: bold;
+    font-size: calc(14px * var(--kn-text, 1)); color: var(--kn-ink);
+}
+.knavery-welcome-fold > summary::-webkit-details-marker { display: none; }
+.knavery-welcome-fold > summary::before {
+    content: "▸"; display: inline-block; width: 10px; color: var(--kn-accent); font-variant: normal; transition: transform 0.15s;
+}
+.knavery-welcome-fold[open] > summary::before { transform: rotate(90deg); }
+.knavery-welcome-fold > summary:hover, .knavery-welcome-fold > summary:focus-visible { color: var(--kn-accent); }
+.knavery-welcome-fold > :not(summary) { margin: 2px 0 4px 16px; color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); line-height: 1.4; }
+.knavery-welcome-fold ul { padding-left: 16px; }
+.knavery-welcome-fold a { color: var(--kn-ink); text-decoration: underline; }
+
 .knavery-welcome-foot {
-    display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px;
+    display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 4px;
     padding-top: 8px; border-top: 1px solid var(--kn-rule);
 }
 .knavery-welcome-onstart { display: flex; align-items: center; gap: 4px; color: var(--kn-muted); font-size: calc(13px * var(--kn-text, 1)); }
@@ -4965,31 +5013,3 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-lowest .kn-lowest-score { font-weight: bold; font-size: calc(15px * var(--kn-text, 1)); }
 .knavery-lowest .kn-lowest-dice { color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
 .knavery-lowest .form-fields { align-items: center; gap: 6px; }
-/* The welcome: which rules, which world, which books; the licences in small print last. */
-.knavery-welcome-rules { margin: 2px 0 0; padding-left: 18px; font-size: calc(13px * var(--kn-text, 1)); line-height: 1.45; }
-.knavery-welcome-rules li { margin: 2px 0; }
-.knavery-welcome-world {
-    margin: 4px 0 0; padding: 4px 10px; border: 1px solid var(--kn-accent); border-radius: 4px; background: var(--kn-accent-wash);
-    font-weight: bold;
-}
-.knavery-welcome-author { margin: 0; font-size: calc(13px * var(--kn-text, 1)); }
-/* Each book: its name in a narrow first column; the links, then the note, beside it. */
-.knavery-welcome-book { display: grid; grid-template-columns: max-content 1fr; align-items: center; gap: 4px 10px; }
-.knavery-welcome-book-name { grid-column: 1; min-width: 60px; font-weight: bold; font-variant: small-caps; font-size: calc(13px * var(--kn-text, 1)); }
-.knavery-welcome-book .knavery-welcome-links { grid-column: 2; }
-.knavery-welcome-book-note { grid-column: 2; margin: 0; color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
-.knavery-welcome-small { display: flex; flex-direction: column; gap: 6px; }
-/* The AI disclosure: no AI art leads, the art's licences folded under it. */
-.knavery-welcome-ai { display: flex; flex-direction: column; gap: 4px; }
-.knavery-welcome-noai { margin: 0; font-size: calc(14px * var(--kn-text, 1)); }
-.knavery-welcome-noai i { color: var(--kn-accent); }
-.knavery-welcome-aicode { margin: 0; color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
-.knavery-welcome-art ul { margin: 4px 0 0; padding-left: 18px; color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
-.knavery-welcome-art a { color: var(--kn-ink); text-decoration: underline; }
-.knavery-welcome-subheading {
-    margin: 2px 0 0; border: none; font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
-    font-variant: small-caps; font-weight: bold; font-size: calc(14px * var(--kn-text, 1)); color: var(--kn-ink);
-}
-.knavery-welcome-licences { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; }
-.knavery-welcome-licences details.knavery-welcome-license { margin-left: -4px; }
-.knavery-welcome-small .knavery-welcome-disclaimer { font-size: calc(12px * var(--kn-text, 1)); }

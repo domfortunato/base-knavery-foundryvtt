@@ -12,6 +12,7 @@
  */
 import { SETTINGS_NS, SYS_PATH, SYSTEM_ID } from "./config.js";
 import { currentRules } from "./rules.js";
+import { scaledPosition } from "./settings.js";
 import { canReadRulebook, hasRulebook, isClosing, openRulebook, pickLocalRulebook, renderWhenGone } from "./rulebook.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -55,13 +56,21 @@ export class WelcomeWindow extends HandlebarsApplicationMixin(ApplicationV2) {
     id: WELCOME_ID,
     classes: ["knavery", "knavery-welcome"],
     window: { title: "KNAVERY.Welcome.Title", icon: "fa-solid fa-dungeon" },
-    position: { width: 560, height: "auto" },
+    // Wide, in two columns (user, 2026-11-14: too long; nothing cut). Grown with the text size below.
+    position: { width: 800, height: "auto" },
     actions: {
       openGuide: WelcomeWindow.#onOpenGuide,
       chooseRulebook: () => pickLocalRulebook(),
       openRulebook: () => openRulebook(),
     },
   };
+
+  _initializeApplicationOptions(options) {
+    const applied = super._initializeApplicationOptions(options);
+    // Opens larger with the player's text size, kept on the screen (settings.js).
+    applied.position = scaledPosition(applied.position);
+    return applied;
+  }
 
   static PARTS = {
     body: { template: `${SYS_PATH}/templates/apps/welcome.html` },
