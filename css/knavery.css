@@ -4699,13 +4699,11 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 #knavery-welcome { max-height: calc(100vh - 20px); }
 #knavery-welcome .window-content { padding: 14px 20px; overflow-y: auto; min-height: 0; container-type: inline-size; }
 .knavery-welcome-body { display: flex; flex-direction: column; gap: 8px; color: var(--kn-ink); }
-/* The head: a frieze of knaves by Lydia Comer across the top row (user, 2026-11-14), the title and
-   byline centred under it. Her line art on the light theme, her white-filled versions on the dark. */
-.knavery-welcome-head { display: flex; flex-direction: column; align-items: stretch; gap: 4px; }
-.knavery-welcome-frieze { display: flex; justify-content: space-between; align-items: flex-end; gap: 6px; }
-.knavery-welcome-frieze img {
-    display: block; flex: 0 1 auto; min-width: 0; width: 112px; height: 112px; object-fit: contain; border: none;
-}
+/* The head: two knaves by Lydia Comer as book ends either side of the title, each facing away from it
+   (user, 2026-11-14). Her line art on the light theme, her white-filled versions on the dark. */
+.knavery-welcome-head { display: flex; align-items: center; justify-content: center; gap: 20px; }
+.knavery-welcome-bookend { display: flex; flex: 0 0 auto; }
+.knavery-welcome-bookend img { display: block; width: 104px; height: 104px; object-fit: contain; border: none; }
 .knavery-welcome .knavery-portrait-dark { display: none; }
 .theme-dark .knavery-welcome:not(.theme-light) .knavery-portrait-light,
 .knavery-welcome.theme-dark .knavery-portrait-light { display: none; }
@@ -4749,7 +4747,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-welcome-rules li { margin: 2px 0; }
 .knavery-welcome-world {
     margin: 0; padding: 4px 10px; border: 1px solid var(--kn-accent); border-radius: 4px; background: var(--kn-accent-wash);
-    font-weight: bold;
+    font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; /* one line, always (user, 2026-11-14) */
 }
 .knavery-welcome-rulebook {
     display: flex; flex-direction: column; align-items: stretch; gap: 6px; padding: 8px 10px;
@@ -4786,10 +4784,10 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
    the file is unaltered. */
 .knavery-welcome-licensing { position: relative; isolation: isolate; min-height: 120px; }
 .knavery-welcome-licensing .knavery-welcome-watermark {
-    position: absolute; right: 0; bottom: 0; z-index: -1; width: 150px; height: auto; border: none;
+    position: absolute; right: 48px; bottom: 0; z-index: -1; width: 150px; height: auto; border: none;
     opacity: 0.14; pointer-events: none;
 }
-.knavery-welcome-disclaimer { margin: 0; font-weight: bold; font-size: calc(12px * var(--kn-text, 1)); }
+.knavery-welcome-disclaimer { margin: 0; font-size: calc(12px * var(--kn-text, 1)); }
 
 /* Folds as bullets (user, 2026-11-14): each fold's arrow is its bullet; open, the arrow turns and the
    text sits indented under the title. Art licensing, Knave 2e and Knave 1e all look the same. */

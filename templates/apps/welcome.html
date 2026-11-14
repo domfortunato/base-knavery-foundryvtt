@@ -8,12 +8,11 @@
      is a bullet whose marker is the fold's own arrow. --}}
 <div class="knavery-welcome-body">
   <header class="knavery-welcome-head">
-    {{!-- A frieze of knaves by Lydia Comer, used and cropped with her permission (user, 2026-11-14). --}}
-    <div class="knavery-welcome-frieze">
-      {{#each portraits}}
-      <img class="knavery-welcome-portrait knavery-portrait-light" src="{{this.light}}" alt="{{localize 'KNAVERY.Welcome.PortraitAlt'}}">
-      <img class="knavery-welcome-portrait knavery-portrait-dark" src="{{this.dark}}" alt="{{localize 'KNAVERY.Welcome.PortraitAlt'}}">
-      {{/each}}
+    {{!-- Two knaves by Lydia Comer as book ends, facing away from the title; used and cropped with her
+         permission (user, 2026-11-14). --}}
+    <div class="knavery-welcome-bookend knavery-welcome-bookend-left">
+      <img class="knavery-portrait-light" src="{{bookends.left.light}}" alt="{{localize 'KNAVERY.Welcome.PortraitAlt'}}">
+      <img class="knavery-portrait-dark" src="{{bookends.left.dark}}" alt="{{localize 'KNAVERY.Welcome.PortraitAlt'}}">
     </div>
     <div class="knavery-welcome-titles">
       {{!-- The name is marked as the author's (user, 2026-11-14; LICENSE.txt "The name"). --}}
@@ -21,6 +20,10 @@
       <p class="knavery-welcome-byline">
         {{#if authorUrl}}<a href="{{authorUrl}}" target="_blank" rel="noopener">{{byline}}</a>{{else}}{{byline}}{{/if}}
       </p>
+    </div>
+    <div class="knavery-welcome-bookend knavery-welcome-bookend-right">
+      <img class="knavery-portrait-light" src="{{bookends.right.light}}" alt="{{localize 'KNAVERY.Welcome.PortraitAlt'}}">
+      <img class="knavery-portrait-dark" src="{{bookends.right.dark}}" alt="{{localize 'KNAVERY.Welcome.PortraitAlt'}}">
     </div>
   </header>
 

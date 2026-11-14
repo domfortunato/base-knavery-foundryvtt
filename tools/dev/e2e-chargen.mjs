@@ -1924,8 +1924,10 @@ await withSettings(gm, async () => {
         licences: el.querySelectorAll(".knavery-welcome-licences > li > details.knavery-welcome-fold:not([open])").length,
         twoCols: (() => { const c = [...el.querySelectorAll(".knavery-welcome-col")].map((x) => x.getBoundingClientRect()); return c.length === 2 && Math.abs(c[0].top - c[1].top) < 2 && c[1].left > c[0].right; })(),
         width: Math.round(el.getBoundingClientRect().width),
-        // The frieze: seven knaves showing (one version each for the theme), loaded, in one row across the top.
-        knight: (() => { const shown = [...el.querySelectorAll(".knavery-welcome-frieze img")].filter((i) => i.offsetParent); const tops = new Set(shown.map((i) => Math.round(i.getBoundingClientRect().top))); return shown.length === 7 && shown.every((i) => i.complete && i.naturalWidth > 0) && tops.size === 1; })(),
+        // The book ends: two knaves showing (one version each for the theme), loaded, either side of the title.
+        knight: (() => { const shown = [...el.querySelectorAll(".knavery-welcome-bookend img")].filter((i) => i.offsetParent); const t = el.querySelector(".knavery-welcome-title")?.getBoundingClientRect(); if (shown.length !== 2 || !t || !shown.every((i) => i.complete && i.naturalWidth > 0)) return false; const [a, b] = shown.map((i) => i.getBoundingClientRect()); return a.right <= t.left && b.left >= t.right && a.top < t.bottom && b.top < t.bottom; })(),
+        // The world line is one line.
+        worldOneLine: (() => { const p = el.querySelector(".knavery-welcome-world"); return !!p && getComputedStyle(p).whiteSpace === "nowrap" && p.scrollWidth <= p.clientWidth + 1; })(),
         watermark: (() => { const m = [...el.querySelectorAll(".knavery-welcome-licensing .knavery-welcome-watermark")].find((i) => i.offsetParent); return !!m && getComputedStyle(m).position === "absolute" && Number(getComputedStyle(m).opacity) < 0.3; })(),
         rulesHeading: el.querySelector(".knavery-welcome-col-main .knavery-welcome-heading")?.textContent.trim(),
         aiCode: el.querySelector(".knavery-welcome-aicode")?.textContent.trim(),
@@ -1954,9 +1956,9 @@ await withSettings(gm, async () => {
     ok(w.author === "Both editions of Knave were written by Ben Milton.", "the welcome credits Ben Milton for both editions, in one line", w.author);
     ok(w.fits && w.scrolls === "auto" && w.licences === 2 && w.twoCols && w.licenceOrder === "Knave: CC BY 4.0 | Knave: Second Edition Third Party License",
       "the welcome is wide, in two columns, stops at the screen and scrolls; each edition's licence is a folded bullet, 1e first", JSON.stringify(w));
-    ok(w.world === "This world plays: Knave." && w.knight && w.watermark && w.booksHeading === "Buy the books!" && w.rulesHeading === "System Rules"
+    ok(w.world === "This world plays Knave." && w.knight && w.worldOneLine && w.watermark && w.booksHeading === "Buy the books!" && w.rulesHeading === "System Rules"
       && w.aiCode === "Base Knavery's code is written with the help of an AI coding assistant." && w.itch1e === "https://questingbeast.itch.io/knave" && w.links2e === 3 && w.smallLast && w.licensing === "Licensing",
-      "seven knaves across the welcome's top, the logo a watermark in Licensing, says which rules the world plays, and has Buy the books! with Knave's PDF on itch", JSON.stringify(w));
+      "two knaves as book ends either side of the welcome's title, the logo a watermark in Licensing, says which rules the world plays, and has Buy the books! with Knave's PDF on itch", JSON.stringify(w));
     ok(h.lines === 5 && h.now2e && h.rules === "2e" && h.hpSame && h.again === true,
       "after the 2e book, the GM is asked to switch; yes plays Knave 2e and changes no character", JSON.stringify(h));
   });

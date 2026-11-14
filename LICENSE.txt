@@ -96,7 +96,7 @@ Lydia Comer galleries — CC BY-NC-SA 4.0
     these galleries ship with it, this system as a whole may not be sold.
 
 Welcome window art — used with permission
-    art/welcome/: seven knaves by Lydia Comer (each in two versions, cropped
+    art/welcome/: two knaves by Lydia Comer (each in two versions, cropped
     with her permission), © Lydia Comer, used with her permission. Not covered by MIT, nor by the CC BY-NC-SA terms of
     art/lydia-comer/. See art/welcome/CREDITS.md.
 

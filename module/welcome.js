@@ -37,8 +37,8 @@ const ART_CREDITS = [
   { name: "Alegreya fonts", by: "The Alegreya Project Authors", url: "https://github.com/huertatipografica/Alegreya", license: "SIL OFL 1.1", licenseUrl: "https://openfontlicense.org/" },
 ];
 
-/** The frieze across the top, left to right: the ones on the left look in, the knight stands mid-way. */
-const WELCOME_PORTRAITS = ["femme", "hooded", "peasant", "knight", "bandit", "knight-grin", "jester"];
+/** The book ends either side of the title, each facing away from it: the knight looks left, the woman right. */
+const WELCOME_BOOKENDS = { left: "knight", right: "femme" };
 
 /** Where to buy Knave (first edition): its rules ship here, and the PDF supports its author (user, 2026-11-14). */
 const BUY_LINKS_1E = [
@@ -86,11 +86,11 @@ export class WelcomeWindow extends HandlebarsApplicationMixin(ApplicationV2) {
       title: game.system.title,
       byline: F("KNAVERY.Welcome.By", { author: author.name, version: game.system.version }),
       authorUrl: author.url ?? "",
-      // Lydia Comer's knaves across the top, used and cropped with her permission (art/welcome/CREDITS.md):
-      // her line art for the light theme, her white-filled versions for the dark one.
-      portraits: WELCOME_PORTRAITS.map((n) => ({
+      // Lydia Comer's knaves either side of the title, used and cropped with her permission
+      // (art/welcome/CREDITS.md): her line art for the light theme, her white-filled versions for the dark one.
+      bookends: Object.fromEntries(Object.entries(WELCOME_BOOKENDS).map(([side, n]) => [side, {
         light: `${SYS_PATH}/art/welcome/portraits/${n}.png`, dark: `${SYS_PATH}/art/welcome/portraits/${n}-white.png`,
-      })),
+      }])),
       logo: `${SYS_PATH}/logo/made-for-knave-black.png`,
       logoDark: `${SYS_PATH}/logo/made-for-knave-white.png`,
       disclaimer: L("KNAVERY.Disclaimer"),
