@@ -139,7 +139,7 @@ export const createItemOffer = async (giver, item, target) => {
     content: `<div class="knavery-offer-card">${esc(game.i18n.format("KNAVERY.Offer.CardBody", { giver: giver.name, item: item.name, target: target.name }))}</div>`,
     flags: { [FLAG_SCOPE]: { [FLAG]: flag } },
   });
-  ui.notifications.info(game.i18n.format("KNAVERY.Offer.Posted", { item: item.name, target: target.name }));
+  ui.notifications.info("KNAVERY.Offer.Posted", { format: { item: item.name, target: target.name } });
   return message;
 };
 
@@ -190,9 +190,9 @@ const onAccept = async (message) => {
   const offer = message.getFlag(FLAG_SCOPE, FLAG);
   if (!offer || offer.state !== "open") return ui.notifications.warn(REFUSALS.answered, { localize: true });
   const target = fromUuidSync(offer.targetActorUuid);
-  if (!target) return ui.notifications.warn(game.i18n.format(REFUSALS.targetGone, names(offer)));
+  if (!target) return ui.notifications.warn(REFUSALS.targetGone, { format: names(offer) });
   if (!(game.user.isGM || target.testUserPermission(game.user, "OWNER"))) {
-    return ui.notifications.warn(game.i18n.format(REFUSALS.notYours, names(offer)));
+    return ui.notifications.warn(REFUSALS.notYours, { format: names(offer) });
   }
   if (capacityVerdict(target, offer.item?.slots ?? 1) === "overburden") {
     const yes = await foundry.applications.api.DialogV2.confirm({
@@ -209,7 +209,7 @@ const onAccept = async (message) => {
   }
   const giver = fromUuidSync(offer.giverActorUuid);
   if ((game.user.isGM || message.isAuthor) && giver?.isOwner && target.isOwner) return runLocal(message);
-  if (!message.author?.active) return ui.notifications.warn(game.i18n.format("KNAVERY.Offer.GiverOffline", names(offer)));
+  if (!message.author?.active) return ui.notifications.warn("KNAVERY.Offer.GiverOffline", { format: names(offer) });
   pendingAccepts.set(message.id, true);
   emit("offerAccept", { messageId: message.id }, { recipients: [message.author.id] });
 };
@@ -221,7 +221,7 @@ const onDecline = async (message) => {
     if (!inFlight.has(message.id)) await message.setFlag(FLAG_SCOPE, FLAG, { state: "declined" });
     return;
   }
-  if (!message.author?.active) return ui.notifications.warn(game.i18n.format("KNAVERY.Offer.GiverOffline", names(offer)));
+  if (!message.author?.active) return ui.notifications.warn("KNAVERY.Offer.GiverOffline", { format: names(offer) });
   emit("offerDecline", { messageId: message.id }, { recipients: [message.author.id] });
 };
 
@@ -368,7 +368,7 @@ const onRefused = (msg, senderId) => {
   if (message && message.author?.id !== senderId) return;
   pendingAccepts.delete(msg.messageId);
   const key = REFUSALS[msg.reason];
-  if (key) ui.notifications.warn(game.i18n.format(key, names(message?.getFlag(FLAG_SCOPE, FLAG))));
+  if (key) ui.notifications.warn(key, { format: names(message?.getFlag(FLAG_SCOPE, FLAG)) });
 };
 
 export const registerOfferSocket = () => {

@@ -70,7 +70,12 @@ for (const [doc, map] of Object.entries(maps)) {
     const declared = new Set(manifest.documentTypes?.[doc]?.[type]?.htmlFields ?? []);
     for (const f of actual) if (!declared.has(f)) fail(`${doc}.${type}: HTML field "${f}" missing from system.json htmlFields`);
     for (const f of declared) if (!actual.has(f)) fail(`${doc}.${type}: htmlFields lists "${f}" but the model has no such HTML field`);
+    // gmOnlyFields is the server's guard (a player's update of the field is refused): it must name real fields.
+    const schema = cls.defineSchema();
+    for (const f of manifest.documentTypes?.[doc]?.[type]?.gmOnlyFields ?? []) {
+      if (!schema[f.split(".")[0]]) fail(`${doc}.${type}: gmOnlyFields lists "${f}" but the model has no such field`);
+    }
   }
 }
 if (bad) process.exit(1);
-console.log("fields: htmlFields match the data models.");
+console.log("fields: htmlFields and gmOnlyFields match the data models.");

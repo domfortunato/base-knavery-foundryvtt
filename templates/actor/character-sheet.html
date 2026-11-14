@@ -209,32 +209,7 @@
     <!-- Description: traits, biography and notes -->
     <div class="tab knavery-page knavery-page-description {{tabs.description.cssClass}}" data-group="primary" data-tab="description">
       <div class="description">
-        {{#if showTraits}}
-        <div class="character-traits">
-          <div class="trait-picklist-section">
-            <div class="trait-picklist-header">
-              <label class="trait-picklist-label">{{localize "KNAVERY.Traits"}}</label>
-              {{#if generationEnabled}}<a class="trait-roll-all" data-action="rollAllTraits" data-tooltip="KNAVERY.RollAllTraits" aria-label="{{localize 'KNAVERY.RollAllTraits'}}"><i class="fas fa-dice-d20"></i></a>{{/if}}
-              <a class="trait-toggle" data-action="toggleTraits"><i class="fas {{#if traitsCollapsed}}fa-plus-square{{else}}fa-minus-square{{/if}}"></i></a>
-            </div>
-            <div class="trait-grid">
-              {{#each traitRows}}
-              {{#if this.heading}}<div class="trait-group-heading">{{this.heading}}</div>{{/if}}
-              {{#if (or this.value (not @root.traitsCollapsed))}}
-              <div class="trait-row">
-                <label class="trait-label">{{this.label}}</label>
-                {{#if @root.generationEnabled}}
-                <a class="trait-roll" data-action="rollTrait" data-key="{{this.key}}" data-tooltip="KNAVERY.RollTrait"><i class="fas fa-dice-d20"></i></a>
-                <a class="trait-pick" data-action="pickTrait" data-key="{{this.key}}" data-tooltip="KNAVERY.PickTrait"><i class="fas fa-list-ul"></i></a>
-                {{/if}}
-                <input class="trait-input" type="text" name="system.traits.{{this.key}}" value="{{this.value}}" />
-              </div>
-              {{/if}}
-              {{/each}}
-            </div>
-          </div>
-        </div>
-        {{/if}}
+        {{> "systems/base-knavery/templates/parts/traits-block.html"}}
         <div class="knavery-bio">
           <label class="trait-picklist-label">{{localize "KNAVERY.Biography"}}</label>
           <prose-mirror name="system.biography" value="{{system.biography}}" toggled collaborate relative

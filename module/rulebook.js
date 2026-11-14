@@ -24,7 +24,6 @@ import { cataloguePage } from "./rulebook-catalogue.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 const L = (k) => game.i18n.localize(k);
-const F = (k, d) => game.i18n.format(k, d);
 
 const READER_ID = "knavery-rulebook";
 /** Where a PDF picked from the GM's computer is uploaded, at the user data root (outside systems/). */
@@ -159,7 +158,7 @@ export class RulebookReader extends HandlebarsApplicationMixin(ApplicationV2) {
       const path = rulebookPath();
       if (app.pagesCount !== RULEBOOK.pdfPages && !warnedEdition.has(path)) {
         warnedEdition.add(path);
-        ui.notifications.warn(F("KNAVERY.Rulebook.OtherEdition", { pages: app.pagesCount, expected: RULEBOOK.pdfPages }));
+        ui.notifications.warn("KNAVERY.Rulebook.OtherEdition", { format: { pages: app.pagesCount, expected: RULEBOOK.pdfPages } });
       }
       const page = this.#pending ?? this.#page;
       this.#pending = null;
@@ -241,14 +240,14 @@ export const pickLocalRulebook = () => {
 /** Upload a PDF File into RULEBOOK_DIR and point the world at it. */
 export const uploadRulebook = async (file) => {
   const FP = foundry.applications.apps.FilePicker.implementation;
-  const note = ui.notifications.info(game.i18n.format("KNAVERY.Rulebook.Uploading", { name: file.name }), { permanent: true });
+  const note = ui.notifications.info("KNAVERY.Rulebook.Uploading", { format: { name: file.name }, permanent: true });
   try {
     const root = await FP.browse("data", "");
     if (!root.dirs.includes(RULEBOOK_DIR)) await FP.createDirectory("data", RULEBOOK_DIR, {});
     const result = await FP.upload("data", RULEBOOK_DIR, file, {}, { notify: false });
     if (!result?.path) return null;
     await game.settings.set(SETTINGS_NS, "rulebook-pdf", result.path);
-    ui.notifications.info(game.i18n.format("KNAVERY.Rulebook.Uploaded", { name: file.name }));
+    ui.notifications.info("KNAVERY.Rulebook.Uploaded", { format: { name: file.name } });
     openRulebook();
     // Then offer its tables: the review writes nothing until the GM presses Build.
     import("./rulebook-import.js").then((m) => m.openRulebookTablesReview());
@@ -313,7 +312,7 @@ export const showRulebookPage = (page) => {
   }
   const printed = Math.max(1, Math.round(Number(page) || 1));
   emit("showRulebookPage", { page: printed });
-  ui.notifications.info(F("KNAVERY.Rulebook.ShownPlayers", { page: printed }));
+  ui.notifications.info("KNAVERY.Rulebook.ShownPlayers", { format: { page: printed } });
 };
 
 /** Socket and settings wiring, called once from init. */
@@ -336,7 +335,7 @@ export const registerRulebook = () => {
       const path = await pickLocalRulebook();
       if (path) picker.value = path;
     });
-    picker.closest(".form-fields")?.after(button) ?? picker.after(button);
+    picker.after(button);
     const build = document.createElement("button");
     build.type = "button";
     build.className = "knavery-rulebook-local";

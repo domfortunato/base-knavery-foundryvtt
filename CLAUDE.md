@@ -161,6 +161,12 @@ picker, change log and marketplace it ports.
   myself" (user, 2026-11-14).
 
 ## Foundry v14 gotchas met so far
+- Re-preparing actors after a setting changes: `reset()` (settings.js `reprepareActors`), never
+  `prepareData()` alone, which applies Active Effects again on top (review #2).
+- Dialog content ids carry the window's own `idp` (`foundry.utils.randomID()`): two dialogs can be
+  open at once, and a `<label for>` resolves to the first matching id in the page.
+- Notifications with names: pass the key and `{format: {...}}`, so core escapes the values.
+- `system.json` `gmOnlyFields` makes the server refuse a player's write (gmNotes).
 - `FilePathField({categories: []})` throws in init; use `type: String` with
   `filePicker: "folder"`.
 - Pack YAML must carry `folder: null`, `sort: 0` and `ownership: {default: 0}`

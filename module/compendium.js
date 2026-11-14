@@ -81,12 +81,12 @@ export const spellTableName = () => {
 export const drawFrom = async (name, { warn = true } = {}) => {
   const table = await findTable(name);
   if (!table) {
-    if (warn) ui.notifications.warn(game.i18n.format("KNAVERY.Notify.TableMissing", { name }));
+    if (warn) ui.notifications.warn("KNAVERY.Notify.TableMissing", { format: { name } });
     return null;
   }
   const real = realResults(table);
   if (!real.length) {
-    if (warn) ui.notifications.warn(game.i18n.format("KNAVERY.Notify.TableEmpty", { name }));
+    if (warn) ui.notifications.warn("KNAVERY.Notify.TableEmpty", { format: { name } });
     return null;
   }
   // Our own draw rather than RollTable#draw: a compendium shell is locked, and
@@ -104,12 +104,12 @@ export const drawFrom = async (name, { warn = true } = {}) => {
 export const pickFrom = async (name, { title } = {}) => {
   const table = await findTable(name);
   if (!table) {
-    ui.notifications.warn(game.i18n.format("KNAVERY.Notify.TableMissing", { name }));
+    ui.notifications.warn("KNAVERY.Notify.TableMissing", { format: { name } });
     return null;
   }
   const rows = realResults(table).map((r) => ({ id: r.id, text: plainText(resultText(r)), range: r.range }));
   if (!rows.length) {
-    ui.notifications.warn(game.i18n.format("KNAVERY.Notify.TableEmpty", { name }));
+    ui.notifications.warn("KNAVERY.Notify.TableEmpty", { format: { name } });
     return null;
   }
   const chosen = await pickFromList(rows.map((r) => ({

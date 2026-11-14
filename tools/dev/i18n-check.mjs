@@ -45,6 +45,10 @@ for (const f of files) {
 
 /* Dynamic keys, from the arrays the code builds them from */
 const { ABILITIES, ARMOR_TYPES, NPC_ROLES, FEATURE_TYPES, HAZARD_DICE, SAVE_CATEGORIES, LEVELS, TABLES } = config;
+// HIRELINGS lives in npc-generator.js, which needs Foundry to load: read its keys from the source.
+const npcSource = fs.readFileSync(path.join(root, "module/npc-generator.js"), "utf8");
+const hirelingKeys = [...(npcSource.match(/export const HIRELINGS = \{([\s\S]*?)^\};/m)?.[1] ?? "").matchAll(/^\s+(\w+):/gm)].map((m) => m[1]);
+if (hirelingKeys.length < 2) problems.push("i18n-check: could not read HIRELINGS from module/npc-generator.js");
 const DYNAMIC = {
   "KNAVERY.Ability": ABILITIES,
   "KNAVERY.AbilityShort": ABILITIES,
@@ -59,6 +63,10 @@ const DYNAMIC = {
   "KNAVERY.ArmorType": ARMOR_TYPES,
   "KNAVERY.RulebookTables.Status": ["new", "replace", "keep"],
   "KNAVERY.Trait": Object.keys(TABLES.traits),
+  "KNAVERY.Npc.Hireling": hirelingKeys,
+  "KNAVERY.Npc.Hint": ["monster", "person", "hireling"],
+  "KNAVERY.RulebookSpells": ["Spellbooks", "Scrolls"],
+  "KNAVERY.Roll": ["Advantage", "Disadvantage"],
 };
 for (const [prefix, keys] of Object.entries(DYNAMIC)) {
   for (const k of keys) if (!has(`${prefix}.${k}`)) missing.set(`${prefix}.${k}`, "(dynamic)");
@@ -71,7 +79,7 @@ for (const [doc, types] of Object.entries(manifest.documentTypes ?? {})) {
 
 /* Settings: every registered label needs name + hint. */
 const settings = fs.readFileSync(path.join(root, "module/settings.js"), "utf8");
-for (const m of settings.matchAll(/label: "([A-Za-z]+)"/g)) {
+for (const m of settings.matchAll(/label: "(\w+)"/g)) {
   for (const k of [`KNAVERY.Settings.${m[1]}`, `KNAVERY.Settings.${m[1]}Hint`]) if (!has(k)) missing.set(k, "settings.js");
 }
 

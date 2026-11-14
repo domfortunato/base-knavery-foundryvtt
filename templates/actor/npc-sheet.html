@@ -45,6 +45,10 @@
             <input type="text" name="system.movement" value="{{source.movement}}" class="short-input" />
             <label data-tooltip="KNAVERY.NumberAppearingTip">{{localize "KNAVERY.NumberAppearing"}}</label>
             <input type="text" name="system.numberAppearing" value="{{source.numberAppearing}}" class="short-input" />
+            {{#if (eq system.role "hireling")}}
+            <label data-tooltip="KNAVERY.WageTip">{{localize "KNAVERY.Wage"}}</label>
+            <input type="number" min="0" step="1" name="system.wage" value="{{source.wage}}" class="short-input" data-dtype="Number" />
+            {{/if}}
           </div>
           <div class="level-line">
             <label>{{localize "KNAVERY.AttacksText"}}</label>
@@ -131,6 +135,7 @@
 
     <div class="tab knavery-page knavery-page-description {{tabs.description.cssClass}}" data-group="primary" data-tab="description">
       <div class="description">
+        {{> "systems/base-knavery/templates/parts/traits-block.html"}}
         <div class="knavery-bio">
           <label class="trait-picklist-label">{{localize "KNAVERY.Description"}}</label>
           <prose-mirror name="system.description" value="{{system.description}}" toggled collaborate relative

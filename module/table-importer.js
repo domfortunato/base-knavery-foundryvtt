@@ -150,10 +150,10 @@ export const openTableImporter = async (name = "") => {
     table = await importRows(data.name, rows, { ...data, report });
   } catch (err) {
     console.error("Base Knavery | table import failed", err);
-    return ui.notifications.error(F("KNAVERY.Import.Failed", { name: data.name }));
+    return ui.notifications.error("KNAVERY.Import.Failed", { format: { name: data.name } });
   }
-  ui.notifications.info(F("KNAVERY.Import.Done", { n: rows.length, name: table.name }));
-  if (report.unlinked) ui.notifications.warn(F("KNAVERY.Import.Unlinked", { n: report.unlinked }));
+  ui.notifications.info("KNAVERY.Import.Done", { format: { n: rows.length, name: table.name } });
+  if (report.unlinked) ui.notifications.warn("KNAVERY.Import.Unlinked", { format: { n: report.unlinked } });
   foundry.applications.instances.get("knavery-gm-dashboard")?.render();
   return table;
 };

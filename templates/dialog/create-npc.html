@@ -2,15 +2,15 @@
       dialog's own footer tiles (module/npc-generator.js). --}}
 <div class="knavery-create-body">
   <div class="form-group">
-    <label for="kn-npc-name">{{localize "KNAVERY.Name"}}</label>
-    <div class="form-fields"><input type="text" id="kn-npc-name" name="name" placeholder="{{localize 'KNAVERY.Gen.NameHint'}}" /></div>
+    <label for="kn-npc-name-{{idp}}">{{localize "KNAVERY.Name"}}</label>
+    <div class="form-fields"><input type="text" id="kn-npc-name-{{idp}}" name="name" placeholder="{{localize 'KNAVERY.Gen.NameHint'}}" /></div>
   </div>
   <fieldset class="kn-npc-options">
     <legend>{{localize "KNAVERY.Npc.Kind.monster"}}</legend>
     <div class="form-group">
-      <label for="kn-npc-monster">{{localize "KNAVERY.Npc.FromBestiary"}}</label>
+      <label for="kn-npc-monster-{{idp}}">{{localize "KNAVERY.Npc.FromBestiary"}}</label>
       <div class="form-fields">
-        <select id="kn-npc-monster" name="monster">
+        <select id="kn-npc-monster-{{idp}}" name="monster">
           <option value="">{{localize "KNAVERY.Npc.Random"}}</option>
           {{#each monsters}}<option value="{{this.id}}">{{this.name}}</option>{{/each}}
         </select>
@@ -27,9 +27,9 @@
   <fieldset class="kn-npc-options">
     <legend>{{localize "KNAVERY.Npc.Kind.hireling"}}</legend>
     <div class="form-group">
-      <label for="kn-npc-hireling">{{localize "KNAVERY.Npc.Which"}}</label>
+      <label for="kn-npc-hireling-{{idp}}">{{localize "KNAVERY.Npc.Which"}}</label>
       <div class="form-fields">
-        <select id="kn-npc-hireling" name="hireling">
+        <select id="kn-npc-hireling-{{idp}}" name="hireling">
           {{#each hirelings}}<option value="{{this.key}}">{{this.label}}</option>{{/each}}
         </select>
       </div>

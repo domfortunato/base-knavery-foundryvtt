@@ -68,7 +68,7 @@ const TAB_IDS = {
 /** Guard: the sheet must be editable by this user. */
 const owned = (fn) => function (event, target) {
   if (!this.isEditable) {
-    ui.notifications.warn(F("KNAVERY.Notify.NotEditable", { name: this.document.name }));
+    ui.notifications.warn("KNAVERY.Notify.NotEditable", { format: { name: this.document.name } });
     return undefined;
   }
   return fn.call(this, event, target);
@@ -164,6 +164,7 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
         `${SYS_PATH}/templates/parts/ability-list.html`,
         `${SYS_PATH}/templates/parts/items-list.html`,
         `${SYS_PATH}/templates/parts/careers-block.html`,
+        `${SYS_PATH}/templates/parts/traits-block.html`,
       ],
       scrollable: [""],
     },
@@ -611,7 +612,13 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       return null;
     }
     if (item.parent === this.actor) return super._onDropItem(event, item);
+    // A dropped career passes the same gates as the sheet's career buttons (review #2).
     if (item.type === "career") {
+      if (!mayEditCareers(this.actor)) {
+        ui.notifications.warn("KNAVERY.Notify.CareersLocked", { localize: true });
+        return null;
+      }
+      if (!this.#careersRoom()) return null;
       await addCareer(this.actor, item);
       return null;
     }
@@ -814,8 +821,9 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
    * ready again either way (a new day).
    */
   static async #onRest() {
-    const box = (name, key, checked) => `<div class="form-group"><label for="kn-rest-${name}">${L(key)}</label>`
-      + `<div class="form-fields"><input type="checkbox" id="kn-rest-${name}" name="${name}"${checked ? " checked" : ""} /></div></div>`;
+    const idp = foundry.utils.randomID(); // ids unique to this window
+    const box = (name, key, checked) => `<div class="form-group"><label for="kn-rest-${name}-${idp}">${L(key)}</label>`
+      + `<div class="form-fields"><input type="checkbox" id="kn-rest-${name}-${idp}" name="${name}"${checked ? " checked" : ""} /></div></div>`;
     const choice = await foundry.applications.api.DialogV2.wait({
       window: { title: L("KNAVERY.RestTitle"), icon: "fas fa-campfire" },
       classes: ["knavery", "knavery-rest"],

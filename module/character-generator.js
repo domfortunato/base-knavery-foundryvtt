@@ -510,16 +510,19 @@ export const promptAbilityPoints = async () => {
   return result || null;
 };
 
-const promptLevel = ({ min, max, initial }) => foundry.applications.api.DialogV2.prompt({
+const promptLevel = ({ min, max, initial }) => {
+  const idp = foundry.utils.randomID(); // ids unique to this window
+  return foundry.applications.api.DialogV2.prompt({
   classes: ["knavery"],
   window: { title: L("KNAVERY.Gen.ChooseLevel") },
   content: `<div class="form-group"><label>${L("KNAVERY.Level")}</label><select name="level">${Array.from(
     { length: max - min + 1 }, (_, i) => min + i).map((l) => `<option value="${l}"${l === initial ? " selected" : ""}>${l} — ${esc(L(`KNAVERY.LevelTitle.${l}`))}</option>`).join("")}</select></div>`
-    + `<div class="form-group"><label for="kn-level-place">${esc(L("KNAVERY.Gen.PlacePoints"))}</label>`
-    + "<div class=\"form-fields\"><input type=\"checkbox\" id=\"kn-level-place\" name=\"place\" /></div></div>",
+    + `<div class="form-group"><label for="kn-level-place-${idp}">${esc(L("KNAVERY.Gen.PlacePoints"))}</label>`
+    + `<div class="form-fields"><input type="checkbox" id="kn-level-place-${idp}" name="place" /></div></div>`,
   ok: { callback: (_e, b) => ({ level: Number(b.form.elements.level.value), place: !!b.form.elements.place?.checked }) },
   rejectClose: false,
-});
+  });
+};
 
 /* -------------------------------------------- */
 /*  The creation dialog                          */
@@ -532,6 +535,7 @@ export const createCharacterInteractive = async () => {
   }
   const { min, max } = creationLevels();
   const content = await foundry.applications.handlebars.renderTemplate(`${SYS_PATH}/templates/dialog/create-character.html`, {
+    idp: foundry.utils.randomID(), // ids unique to this window
     levels: Array.from({ length: max - min + 1 }, (_, i) => ({ level: min + i, title: L(`KNAVERY.LevelTitle.${min + i}`) })),
     min,
   });

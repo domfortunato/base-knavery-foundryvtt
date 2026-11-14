@@ -122,7 +122,7 @@ const acquire = async (actor, data, pay) => {
   const cost = Math.max(0, Math.ceil(Number(data.system.cost) || 0));
   const coins = actor._source.system.coins ?? 0;
   if (pay && coins < cost) {
-    ui.notifications.warn(F("KNAVERY.Notify.NotEnoughCoins", { name: data.name, cost }));
+    ui.notifications.warn("KNAVERY.Notify.NotEnoughCoins", { format: { name: data.name, cost } });
     return false;
   }
   // The coins go first: an item handed over before a payment that then failed
@@ -141,7 +141,7 @@ const acquire = async (actor, data, pay) => {
       whisper: game.users.filter((u) => u.isGM || actor.testUserPermission(u, "OWNER")).map((u) => u.id),
     });
   }
-  if (actor.overburdened) ui.notifications.warn(F("KNAVERY.Notify.Overburdened", { name: actor.name }));
+  if (actor.overburdened) ui.notifications.warn("KNAVERY.Notify.Overburdened", { format: { name: actor.name } });
   return true;
 };
 
@@ -357,7 +357,7 @@ export class MarketplaceManager extends HandlebarsApplicationMixin(ApplicationV2
     const data = game.tables.fromCompendium(src);
     const copy = await RollTable.create(data);
     this.#selected = copy.uuid;
-    ui.notifications.info(F("KNAVERY.Market.Customized", { name: aisleName(copy) }));
+    ui.notifications.info("KNAVERY.Market.Customized", { format: { name: aisleName(copy) } });
     this.render();
   }
 

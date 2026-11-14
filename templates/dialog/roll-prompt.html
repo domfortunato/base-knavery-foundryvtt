@@ -6,9 +6,9 @@
   {{/if}}
   {{#if targets}}
   <div class="form-group kn-attack-target">
-    <label for="kn-roll-target">{{localize "KNAVERY.Roll.Target"}}</label>
+    <label for="kn-roll-target-{{idp}}">{{localize "KNAVERY.Roll.Target"}}</label>
     <div class="form-fields">
-      <select id="kn-roll-target" name="target">
+      <select id="kn-roll-target-{{idp}}" name="target">
         {{#if targetsCurrent}}<option value="current" selected>{{localize "KNAVERY.Roll.CurrentTargets" names=targetsCurrent}}</option>{{/if}}
         <option value="">{{localize "KNAVERY.Roll.NoTarget"}}</option>
         {{#each targets}}<option value="{{this.id}}"{{#if this.pc}} data-pc="1"{{/if}}{{#if this.selected}} selected{{/if}}>{{this.name}}</option>{{/each}}
@@ -17,9 +17,9 @@
   </div>
   {{#if hidePcsBox}}
   <div class="form-group kn-attack-hide-pcs">
-    <label for="kn-roll-hide-pcs">{{localize "KNAVERY.Roll.HidePcs"}}</label>
+    <label for="kn-roll-hide-pcs-{{idp}}">{{localize "KNAVERY.Roll.HidePcs"}}</label>
     <div class="form-fields">
-      <input type="checkbox" id="kn-roll-hide-pcs" name="hidePcs" {{checked hidePcs}} />
+      <input type="checkbox" id="kn-roll-hide-pcs-{{idp}}" name="hidePcs" {{checked hidePcs}} />
     </div>
   </div>
   {{/if}}
@@ -41,32 +41,32 @@
   {{/if}}
   {{#if difficulty}}
   <div class="form-group">
-    <label for="kn-roll-difficulty">{{localize "KNAVERY.Roll.Difficulty"}}</label>
+    <label for="kn-roll-difficulty-{{idp}}">{{localize "KNAVERY.Roll.Difficulty"}}</label>
     <div class="form-fields">
-      <input type="number" id="kn-roll-difficulty" name="difficulty" min="0" max="20" step="1"
+      <input type="number" id="kn-roll-difficulty-{{idp}}" name="difficulty" min="0" max="20" step="1"
         value="{{defaultDifficulty}}" {{#if lockDifficulty}}readonly{{/if}} />
     </div>
     <p class="hint">{{localize "KNAVERY.Roll.DifficultyHint" target=target}}</p>
   </div>
   {{/if}}
   <div class="form-group">
-    <label for="kn-roll-modifier">{{localize "KNAVERY.Roll.Modifier"}}</label>
+    <label for="kn-roll-modifier-{{idp}}">{{localize "KNAVERY.Roll.Modifier"}}</label>
     <div class="form-fields">
-      <input type="number" id="kn-roll-modifier" name="modifier" step="1" value="0" />
+      <input type="number" id="kn-roll-modifier-{{idp}}" name="modifier" step="1" value="0" />
     </div>
   </div>
   {{#if attack}}
   <div class="form-group">
-    <label for="kn-roll-damage">{{localize "KNAVERY.Roll.RollDamageToo"}}</label>
+    <label for="kn-roll-damage-{{idp}}">{{localize "KNAVERY.Roll.RollDamageToo"}}</label>
     <div class="form-fields">
-      <input type="checkbox" id="kn-roll-damage" name="rollDamage" {{checked rollDamage}} />
+      <input type="checkbox" id="kn-roll-damage-{{idp}}" name="rollDamage" {{checked rollDamage}} />
     </div>
   </div>
   {{#if melee}}
   <div class="form-group power-group">
-    <label for="kn-roll-power">{{localize "KNAVERY.Roll.PowerAttack"}}</label>
+    <label for="kn-roll-power-{{idp}}">{{localize "KNAVERY.Roll.PowerAttack"}}</label>
     <div class="form-fields">
-      <input type="checkbox" id="kn-roll-power" name="power" />
+      <input type="checkbox" id="kn-roll-power-{{idp}}" name="power" />
     </div>
     <p class="hint">{{localize "KNAVERY.Roll.PowerAttackHint"}}</p>
   </div>

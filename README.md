@@ -56,8 +56,8 @@ https://github.com/domfortunato/base-knavery-foundryvtt/releases/latest/download
 
 **Damage and wounds**
 - Damage comes off HP first. Each point past 0 fills an item slot with a
-  wound, from the top down, and items in wounded slots are marked
-  *drop it*.
+  wound, from the bottom up: empty slots, then coins, then the lowest item,
+  which is marked *Unusable* until the wound heals.
 - Direct damage skips HP. Monsters take it tripled.
 
 **Inventory**
@@ -73,7 +73,8 @@ https://github.com/domfortunato/base-knavery-foundryvtt/releases/latest/download
   override prices and hide aisles.
 
 **Character creation**
-- **Create Character** offers a **random** knave or a **blank sheet**.
+- **Create Character** makes a **random** knave; the GM can also make a
+  **blank sheet**.
 - The player chooses a starting level within the range the GM allows.
 - **Char Gen Mode** adds dice and pick-lists to every field.
 - **Level Up** appears once the XP is there.
@@ -114,7 +115,7 @@ https://github.com/domfortunato/base-knavery-foundryvtt/releases/latest/download
   made or edited.
 
 **Welcome window**
-- Opens for the GM after each update: what Base Knavery is, that it is
+- Opens for the GM at every login (a setting turns it off): what Base Knavery is, that it is
   unofficial, the credits, and where to buy Knave 2e. Anyone can open it from
   the Settings sidebar.
 
@@ -129,7 +130,7 @@ https://github.com/domfortunato/base-knavery-foundryvtt/releases/latest/download
 ## The tables are yours to fill
 
 Knave 2e's text is not licensed for reuse, so **every rollable table ships as
-an empty shell**. That covers careers, spells, names, reaction and mishaps.
+an empty shell**. That covers careers, spells, names and mishaps.
 (The exceptions come from Knave's first edition, which is CC BY 4.0, and ship
 filled: the character traits, alignment, reaction, starting gear and 100
 level-less spells. A table you build from your 2e book replaces its 1e

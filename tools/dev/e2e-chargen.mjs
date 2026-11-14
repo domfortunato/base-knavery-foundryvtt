@@ -8,7 +8,7 @@
  * sheet, its Attack window and raised abilities; the welcome window's licence notice; random creation rolling by
  * default; a blank sheet held to its level's ability points, with HP, coin and career dice; the Attack window's
  * Target list; the narrow header; Rest by the book; red splats; compact attack cards; labels that fit; Create NPC;
- * spell items from the rulebook; weapons and armor first; rations per slot. GM, Alice and Bob
+ * spell items from the rulebook; weapons and armor first; rations per slot; the review #2 fixes. GM, Alice and Bob
  * in three browsers.
  *
  *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/e2e-chargen.mjs   (npm run dev:chargen)
@@ -32,7 +32,7 @@ const T = (ms) => ms * TIME_SCALE;
 const SYS = "/systems/base-knavery/module";
 
 const browser = await chromium.launch();
-watchdog(720000, "e2e-chargen", () => browser.close());
+watchdog(900000, "e2e-chargen", () => browser.close());
 const ctx = () => browser.newContext({ viewport: VIEWPORT });
 const gm = await (await ctx()).newPage();
 const alice = await (await ctx()).newPage();
@@ -1025,7 +1025,7 @@ await withSettings(gm, async () => {
     await gm.waitForSelector(".knavery-create .form-footer", { timeout: T(10000) });
     const win = await gm.evaluate(() => {
       const el = document.querySelector(".knavery-create");
-      const label = el.querySelector('label[for="kn-create-place"]');
+      const label = el.querySelector('label[for^="kn-create-place-"]');
       const cs = getComputedStyle(label);
       const fs = parseFloat(cs.fontSize);
       return {
@@ -1151,6 +1151,148 @@ await withSettings(gm, async () => {
     ok(inv.axeAfter === "Probe Sword", "on a sheet whose items all sort 0, a new weapon still lands under the last weapon", JSON.stringify(inv));
     ok(inv.three === 1 && inv.four === 2 && inv.twoAtOne === 2, "rations per slot: 3 to a slot fills 1 then 2; at 1 a slot, 2 rations fill 2", JSON.stringify(inv));
     ok(/wounded and marked unusable or damaged first/.test(inv.hint), "the Inventory footer's new sentence", inv.hint);
+  });
+
+  /* ------------------------------------------------------------------ */
+  await section("21. Review #2: effects apply once; GM notes held by the server; career drops gated; hidden names; spell digest; initiative turns.", async () => {
+    // A setting change re-prepares actors from their source: an Add effect counts once.
+    const fx = await gm.evaluate(async (pcId) => {
+      const pc = game.actors.get(pcId);
+      const [career] = await pc.createEmbeddedDocuments("Item", [{ name: "Probe Effect Career", type: "career" }], { knKeepSort: true });
+      await career.createEmbeddedDocuments("ActiveEffect", [{
+        name: "Probe +1 STR", transfer: true,
+        changes: [{ key: "system.abilities.STR.value", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: "1" }],
+      }]);
+      const base = pc._source.system.abilities.STR.value;
+      const before = pc.system.abilities.STR.value;
+      await game.settings.set("base-knavery", "rations-per-slot", 3);
+      await game.settings.set("base-knavery", "rations-per-slot", 1);
+      const after = pc.system.abilities.STR.value;
+      await career.delete();
+      return { base, before, after };
+    }, ids.a);
+    ok(fx.before === fx.base + 1 && fx.after === fx.before, "a setting change leaves a +1 STR effect at +1, not +2 or +3", JSON.stringify(fx));
+
+    // GM notes: the server refuses a player's write (system.json gmOnlyFields).
+    await gm.evaluate(async (pcId) => game.actors.get(pcId).update({ "system.gmNotes": "<p>Probe secret</p>" }), ids.a);
+    const notes = await alice.evaluate(async (pcId) => {
+      try { await game.actors.get(pcId).update({ "system.gmNotes": "<p>Alice was here</p>" }, { knCreation: true }); return "accepted"; }
+      catch (e) { return `refused: ${e.message}`; }
+    }, ids.a);
+    const kept = await gm.evaluate((pcId) => game.actors.get(pcId)._source.system.gmNotes, ids.a);
+    ok(kept.includes("Probe secret") && !kept.includes("Alice"), "a player cannot overwrite the GM's notes, even past the sheet", `${notes} / ${kept}`);
+
+    // A career dropped on the sheet: no third career.
+    const careerId = await gm.evaluate(async (pcId) => {
+      const pc = game.actors.get(pcId);
+      for (const i of pc.items.filter((x) => x.type === "career")) await i.delete();
+      await pc.createEmbeddedDocuments("Item", [{ name: "Probe Career One", type: "career" }, { name: "Probe Career Two", type: "career" }]);
+      const loose = await Item.create({ name: "Probe Career Three", type: "career", ownership: { default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER } });
+      return loose.id;
+    }, ids.a);
+    const drop = await alice.evaluate(async ({ pcId, careerId }) => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const pc = game.actors.get(pcId);
+      await pc.sheet.render({ force: true });
+      await wait(700);
+      await pc.sheet._onDropItem(new DragEvent("drop"), game.items.get(careerId));
+      await wait(700);
+      await pc.sheet.close();
+      return pc.items.filter((i) => i.type === "career").map((i) => i.name);
+    }, { pcId: ids.a, careerId });
+    await gm.evaluate(async ({ pcId, careerId }) => {
+      await game.items.get(careerId)?.delete();
+      for (const i of game.actors.get(pcId).items.filter((x) => x.type === "career")) await i.delete();
+    }, { pcId: ids.a, careerId });
+    ok(drop.length === 2 && !drop.includes("Probe Career Three"), "a career dropped on a sheet with two careers is refused", JSON.stringify(drop));
+
+    // The Target list as a player: a name the GM hid reads "Unknown creature".
+    const sceneInfo = await gm.evaluate(async () => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const before = game.scenes.active?.id ?? null;
+      const M = CONST.TOKEN_DISPLAY_MODES;
+      const named = await Actor.create({ name: "Probe Named Goblin", type: "npc", system: { role: "monster" } });
+      const secret = await Actor.create({ name: "Probe Secret Goblin", type: "npc", system: { role: "monster" } });
+      const scene = await Scene.create({ name: "Probe Names Scene", width: 1000, height: 1000, grid: { size: 100 } });
+      const tok = async (a, x, displayName) => ({ ...(await a.getTokenDocument({ x, y: 100 })).toObject(), displayName });
+      await scene.createEmbeddedDocuments("Token", [await tok(named, 200, M.ALWAYS), await tok(secret, 400, M.NONE)]);
+      await scene.activate();
+      await wait(1000);
+      return { before, scene: scene.id };
+    });
+    const names = await alice.evaluate(async ({ pcId, sceneId }) => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      for (let i = 0; i < 60 && !(canvas.ready && canvas.scene?.id === sceneId); i++) await wait(250);
+      await wait(800);
+      const pc = game.actors.get(pcId);
+      await pc.sheet.render({ force: true });
+      await wait(900);
+      pc.sheet.element.querySelector("#attack-button")?.click();
+      await wait(1200);
+      const dlg = document.querySelector(".knavery-roll-prompt");
+      const opts = [...(dlg?.querySelectorAll('select[name="target"] option') ?? [])].map((o) => o.textContent.trim());
+      const elIds = [...(dlg?.querySelectorAll(".dialog-content [id]") ?? [])].map((e) => e.id);
+      for (const app of [...foundry.applications.instances.values()]) if (app.id !== "sidebar") await app.close?.();
+      return { opts, ids: elIds, canvas: canvas.scene?.id === sceneId };
+    }, { pcId: ids.a, sceneId: sceneInfo.scene });
+    await gm.evaluate(async ({ before, scene }) => {
+      if (before) await game.scenes.get(before)?.activate();
+      await game.scenes.get(scene)?.delete();
+      for (const a of game.actors.filter((x) => ["Probe Named Goblin", "Probe Secret Goblin"].includes(x.name))) await a.delete();
+    }, sceneInfo);
+    ok(names.canvas && names.opts.includes("Probe Named Goblin") && names.opts.includes("Unknown creature") && !names.opts.includes("Probe Secret Goblin"),
+      "a player's Target list shows the names the GM shows, and \"Unknown creature\" for a hidden one", JSON.stringify(names));
+    ok(names.ids.length > 0 && names.ids.every((id) => !/^kn-[a-z-]+$/.test(id)), "the attack window's ids are its own (no fixed kn-... ids)", JSON.stringify(names.ids));
+
+    // The Spells digest reads the stored rows: editing a linked spellbook leaves the table "unchanged".
+    const dig = await gm.evaluate(async () => {
+      const { writeSpellItems, digest, SPELL_PACK } = await import("/systems/base-knavery/module/rulebook-import.js");
+      const had = !!game.packs.get(`world.${SPELL_PACK}`);
+      const table = await RollTable.create({
+        name: "Probe Digest Table", formula: "1d1",
+        results: [{ type: "text", name: "Probe Glow", description: "<p>A glow.</p>", range: [1, 1], weight: 1 }],
+      });
+      await writeSpellItems(table);
+      const hash = digest(table);
+      const pack = game.packs.get(`world.${SPELL_PACK}`);
+      const docs = (await pack.getDocuments()).filter((d) => d.flags?.["base-knavery"]?.rulebookSpell?.spell === "Probe Glow");
+      const book = docs.find((d) => !d.system.scroll);
+      await book.update({ img: "icons/svg/book.svg" });
+      await pack.getIndex();
+      table.reset();
+      const after = digest(table);
+      for (const d of docs) await d.delete();
+      await table.delete();
+      if (!had) await pack.deleteCompendium();
+      return { same: hash === after, linked: !!book };
+    });
+    ok(dig.linked && dig.same, "editing a spellbook the Spells table links to does not mark the table as edited", JSON.stringify(dig));
+
+    // Knave 1e group initiative: at every rollover the round's end goes to the combatant who held the turn.
+    const ini = await gm.evaluate(async (pcId) => {
+      await game.settings.set("base-knavery", "knave1e-initiative", true);
+      const foes = [];
+      for (const n of ["Probe Foe A", "Probe Foe B", "Probe Foe C"]) foes.push(await Actor.create({ name: n, type: "npc", system: { role: "monster" } }));
+      const combat = await Combat.create({ scene: null });
+      await combat.createEmbeddedDocuments("Combatant", [{ actorId: pcId }, ...foes.map((f) => ({ actorId: f.id }))]);
+      await combat.startCombat();
+      const rounds = [];
+      for (let r = 0; r < 8; r++) {
+        // End the round on its last combatant, as Next Turn would.
+        await combat.update({ turn: combat.turns.length - 1 });
+        const holder = combat.combatant?.id;
+        let prior = null;
+        const hook = Hooks.on("combatTurnChange", (c, prev) => { if (c === combat) prior = prev.combatantId; });
+        await combat.nextRound();
+        Hooks.off("combatTurnChange", hook);
+        rounds.push({ ok: prior === holder, stored: combat._source.turn, local: combat.turn });
+      }
+      await combat.delete();
+      for (const f of foes) await f.delete();
+      await game.settings.set("base-knavery", "knave1e-initiative", false);
+      return rounds;
+    }, ids.a);
+    ok(ini.every((r) => r.ok && r.stored === r.local), "every rollover ends the turn of the combatant who held it; the stored turn matches", JSON.stringify(ini));
   });
 
   // Cleanup.

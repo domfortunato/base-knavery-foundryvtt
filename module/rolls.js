@@ -53,6 +53,7 @@ export const promptEdge = async ({
   if (preset) preset.selected = true;
   const hidePcsBox = !!targetList && actor?.type === "character" && targetList.some((t) => t.pc);
   const content = await foundry.applications.handlebars.renderTemplate(`${SYS_PATH}/templates/dialog/roll-prompt.html`, {
+    idp: foundry.utils.randomID(), // ids unique to this window
     reason,
     attack,
     melee,
@@ -63,7 +64,7 @@ export const promptEdge = async ({
     rollDamage: game.settings.get(SETTINGS_NS, "roll-damage-default"),
     weapons,
     targets: targetList,
-    targetsCurrent: targetList && current.length > 1 ? current.map((t) => t.document.name).join(", ") : null,
+    targetsCurrent: targetList && current.length > 1 ? current.map((t) => tokenName(t)).join(", ") : null,
     hidePcsBox,
     // A player character already targeted on purpose stays in the list.
     hidePcs: hidePcsBox && !preset?.pc,
@@ -239,8 +240,23 @@ export const rollSave = (actor, save, opts = {}) =>
 /*  Attacks and damage                           */
 /* -------------------------------------------- */
 
+/**
+ * A token's name as this user may read it: what its nameplate would show. A token whose
+ * Display Name keeps it from this user, or a secret one they don't own, reads "Unknown
+ * creature" (review #2: the Target list must not tell players what the GM hid).
+ */
+const tokenName = (t) => {
+  if (game.user.isGM) return t.document.name;
+  const M = CONST.TOKEN_DISPLAY_MODES;
+  const owner = t.isOwner;
+  const secret = t.document.disposition === CONST.TOKEN_DISPOSITIONS.SECRET && !owner;
+  const mode = t.document.displayName;
+  const shown = !secret && (mode === M.ALWAYS || mode === M.HOVER || (owner && mode !== M.NONE));
+  return shown ? t.document.name : L("KNAVERY.Roll.UnknownTarget");
+};
+
 /** A token as an attack's target: {uuid, name, ac}. */
-const targetInfo = (t) => ({ uuid: t.document.uuid, name: t.document.name, ac: t.actor?.system?.ac ?? null });
+const targetInfo = (t) => ({ uuid: t.document.uuid, name: tokenName(t), ac: t.actor?.system?.ac ?? null });
 
 /** The tokens this user is targeting. */
 const currentTargets = () => [...game.user.targets].map(targetInfo);
@@ -258,13 +274,14 @@ const visibleTargets = (actor) => {
   const tokens = canvas.tokens.placeables.filter((t) => t.actor && t.visible && !own.includes(t)
     && (game.user.isGM || !t.document.hidden));
   const away = (t) => (from ? Math.hypot(t.center.x - from.center.x, t.center.y - from.center.y) : 0);
-  tokens.sort((a, b) => away(a) - away(b) || a.document.name.localeCompare(b.document.name));
+  tokens.sort((a, b) => away(a) - away(b) || tokenName(a).localeCompare(tokenName(b)));
   const seen = new Map();
   return tokens.map((t) => {
-    const n = (seen.get(t.document.name) ?? 0) + 1;
-    seen.set(t.document.name, n);
+    const name = tokenName(t);
+    const n = (seen.get(name) ?? 0) + 1;
+    seen.set(name, n);
     return {
-      id: t.id, name: n > 1 ? `${t.document.name} ${n}` : t.document.name,
+      id: t.id, name: n > 1 ? `${name} ${n}` : name,
       pc: t.actor.type === "character" && t.actor.hasPlayerOwner, selected: false,
     };
   });
@@ -416,7 +433,7 @@ const attackWith = async (actor, weapon, choice, { reason = "" } = {}) => {
 export const rollDamage = async (actor, { formula, label = "", power = false, targets = null, direct = false } = {}) => {
   const f = power ? doubleDice(formula) : normalizeDice(formula);
   if (!isRollable(f)) {
-    ui.notifications.warn(F("KNAVERY.Notify.NotADamageFormula", { formula: String(formula ?? "") }));
+    ui.notifications.warn("KNAVERY.Notify.NotADamageFormula", { format: { formula: String(formula ?? "") } });
     return null;
   }
   const roll = await new Roll(f).evaluate();
@@ -446,9 +463,9 @@ export const castSpell = async (actor, book) => {
   // A character's INT; a monster's level, when its stat block uses no abilities.
   const int = actor.abilityBonus("INT");
   if (!s.scroll && actor.type === "character") {
-    if (s.castToday) return ui.notifications.warn(F("KNAVERY.Spell.AlreadyCast", { name: book.name }));
+    if (s.castToday) return ui.notifications.warn("KNAVERY.Spell.AlreadyCast", { format: { name: book.name } });
     if (actor.system.spellsCastToday >= int) {
-      return ui.notifications.warn(F(int === 1 ? "KNAVERY.Spell.DailyLimitOne" : "KNAVERY.Spell.DailyLimit", { n: int }));
+      return ui.notifications.warn(int === 1 ? "KNAVERY.Spell.DailyLimitOne" : "KNAVERY.Spell.DailyLimit", { format: { n: int } });
     }
   }
   const description = await foundry.applications.ux.TextEditor.implementation.enrichHTML(s.description ?? "", {

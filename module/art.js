@@ -243,13 +243,14 @@ export async function pickArt({ current, title, kind = "person", onPick, onRoll 
     });
   }
   root.querySelector(".knavery-portrait-refresh")?.addEventListener("click", async (ev) => {
-    ev.currentTarget.disabled = true;
+    const btn = ev.currentTarget; // null once the await below yields
+    btn.disabled = true;
     const list = await refreshCustomPortraits();
     const pane = root.querySelector('[data-pane="custom"] .knavery-portrait-grid');
     if (pane) { pane.innerHTML = list.map((p) => cellFor(p)).join(""); wire(pane); }
     const empty = root.querySelector(".knavery-portrait-empty");
     if (empty) empty.hidden = list.length > 0;
-    ev.currentTarget.disabled = false;
+    btn.disabled = false;
   });
   const input = root.querySelector(".knavery-portrait-url-input");
   const applyUrl = () => { const v = input?.value.trim(); if (v) commit(v); };

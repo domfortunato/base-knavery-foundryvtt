@@ -23,7 +23,8 @@
  * One trap, handled in release.mjs and worth knowing if a tag is ever made by
  * hand: git's DEFAULT tag-message cleanup (`--cleanup=strip`) drops every line
  * that starts with `#` as a comment, headings included, silently. The tag is
- * made with `--cleanup=whitespace`, which keeps them. Proven in a throwaway
+ * made with `--cleanup=verbatim` (release.mjs), which keeps them, and keeps the
+ * Markdown hard breaks that `whitespace` would trim. Proven in a throwaway
  * clone on 2026-09-15: the same file under each mode, the heading present in one
  * body and gone from the other.
  */

@@ -1,19 +1,19 @@
 <div class="knavery-create-body">
   <div class="form-group">
-    <label for="kn-create-name">{{localize "KNAVERY.Name"}}</label>
-    <div class="form-fields"><input type="text" id="kn-create-name" name="name" placeholder="{{localize 'KNAVERY.Gen.NameHint'}}" /></div>
+    <label for="kn-create-name-{{idp}}">{{localize "KNAVERY.Name"}}</label>
+    <div class="form-fields"><input type="text" id="kn-create-name-{{idp}}" name="name" placeholder="{{localize 'KNAVERY.Gen.NameHint'}}" /></div>
   </div>
   <div class="form-group">
-    <label for="kn-create-level">{{localize "KNAVERY.Level"}}</label>
+    <label for="kn-create-level-{{idp}}">{{localize "KNAVERY.Level"}}</label>
     <div class="form-fields">
-      <select id="kn-create-level" name="level">
+      <select id="kn-create-level-{{idp}}" name="level">
         {{#each levels}}<option value="{{this.level}}" {{#if (eq this.level ../min)}}selected{{/if}}>{{this.level}} — {{this.title}}</option>{{/each}}
       </select>
     </div>
   </div>
   {{!-- Random rolls the abilities unless this is ticked (user, 2026-11-14). --}}
   <div class="form-group">
-    <label for="kn-create-place">{{localize "KNAVERY.Gen.PlacePoints"}}</label>
-    <div class="form-fields"><input type="checkbox" id="kn-create-place" name="place" /></div>
+    <label for="kn-create-place-{{idp}}">{{localize "KNAVERY.Gen.PlacePoints"}}</label>
+    <div class="form-fields"><input type="checkbox" id="kn-create-place-{{idp}}" name="place" /></div>
   </div>
 </div>

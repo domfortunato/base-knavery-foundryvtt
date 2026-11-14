@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- **Foundry review #2 fixes:**
+  - Changing *Rations per slot* or the Knave 1e XP hack no longer adds a career's effects a second time.
+  - The GM's notes are guarded by the server too: a player cannot overwrite them, even outside the sheet.
+  - A career dropped onto a sheet follows the same rules as the career buttons (Char Gen Mode, two at most).
+  - The Attack window's Target list shows players only the names the GM lets them see; a hidden name reads
+    "Unknown creature".
+  - A hireling's sheet shows its monthly wage, and an NPC's Description page shows its traits.
+  - Names with `<` or `&` show as typed in notifications.
+  - Under the Knave 1e initiative hack, a new round ends the turn of the combatant who held it.
+  - Editing one spell item from the rulebook no longer stops the Spells table from being rebuilt.
+  - The portrait picker's Refresh button works more than once; the Import a Table macro has its icon.
+  - Two windows open at once no longer share their labels' targets.
+  - The guide, README and licence describe the current rules and the filled Knave 1e tables.
+  - A release stamps the packs with its own version.
 - **An improvised attack for everyone:** d4 with STR, no item and no slot, always in the Attack window. The
   Attack button is never greyed out now.
 - **Wounds make items unusable.** A wound with no empty slot lands on the lowest coin slot or item and marks it

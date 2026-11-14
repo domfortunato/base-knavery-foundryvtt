@@ -36,6 +36,9 @@
           "biography",
           "notes",
           "gmNotes"
+        ],
+        "gmOnlyFields": [
+          "gmNotes"
         ]
       },
       "npc": {
@@ -120,7 +123,7 @@
     },
     {
       "name": "tables",
-      "label": "Tables (shells)",
+      "label": "Tables",
       "path": "packs/tables",
       "type": "RollTable",
       "system": "base-knavery",

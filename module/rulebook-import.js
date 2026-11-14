@@ -111,8 +111,10 @@ const hashText = (key) => {
   return (h >>> 0).toString(36);
 };
 
-const digest = (table) => {
-  const rows = [...table.results].map((r) => [
+// The stored rows, not the prepared ones: a document row's name and img are filled from the
+// linked item when the table prepares, so an edited spell item must not read as an edited table.
+export const digest = (table) => {
+  const rows = [...table.results].map((r) => r._source).map((r) => [
     `${r.range[0]}-${r.range[1]}`, r.type, r.name ?? "", r.description ?? "", r.documentUuid ?? "", r.img ?? "", r.weight ?? "",
   ].join("|")).sort();
   return hashText([`formula:${table.formula ?? ""}`, `replacement:${table.replacement}`, ...rows].join("\n"));
@@ -362,12 +364,12 @@ export class RulebookTablesReview extends HandlebarsApplicationMixin(Application
     } finally {
       if (button) button.disabled = false;
     }
-    ui.notifications.info(F("KNAVERY.RulebookTables.Done", {
+    ui.notifications.info("KNAVERY.RulebookTables.Done", { format: {
       created: report.created.length, replaced: report.replaced.length, kept: report.kept.length,
-    }));
-    if (report.spells) ui.notifications.info(F("KNAVERY.RulebookSpells.Done", report.spells));
+    } });
+    if (report.spells) ui.notifications.info("KNAVERY.RulebookSpells.Done", { format: report.spells });
     if (report.kept.length) {
-      ui.notifications.warn(F("KNAVERY.RulebookTables.KeptList", { names: report.kept.join(", ") }));
+      ui.notifications.warn("KNAVERY.RulebookTables.KeptList", { format: { names: report.kept.join(", ") } });
     }
     foundry.applications.instances.get("knavery-gm-dashboard")?.render();
     await this.close();

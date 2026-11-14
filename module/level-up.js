@@ -207,7 +207,7 @@ export const openLevelUp = async (actor) => {
   if (!picks) return;
   const openCount = ABILITIES.filter((k) => s.abilities[k].value < ABILITY_MAX).length;
   if (picks.length && picks.length < Math.min(LEVEL_UP_ABILITIES, openCount)) {
-    return ui.notifications.warn(F("KNAVERY.Notify.PickThree", { n: LEVEL_UP_ABILITIES }));
+    return ui.notifications.warn("KNAVERY.Notify.PickThree", { format: { n: LEVEL_UP_ABILITIES } });
   }
   await applyLevelUp(actor, picks);
 };

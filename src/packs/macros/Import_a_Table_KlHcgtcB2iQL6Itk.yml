@@ -6,7 +6,7 @@ _id: KlHcgtcB2iQL6Itk
 _key: '!macros!KlHcgtcB2iQL6Itk'
 name: Import a Table
 type: script
-img: icons/svg/scroll.svg
+img: icons/svg/book.svg
 scope: global
 command: game.knavery.openTableImporter();
 author: null

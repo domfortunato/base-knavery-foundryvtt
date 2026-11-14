@@ -21,6 +21,18 @@ export const scaledPosition = (position = {}) => {
 };
 
 /** Re-render every open actor sheet, so a live toggle takes effect at once. */
+/**
+ * Recompute every actor's derived data after a setting it reads changes: world actors and
+ * the synthetic actors of unlinked tokens. reset() rebuilds from the source first, so Active
+ * Effects apply once (prepareData alone would stack them again; review #2).
+ */
+export const reprepareActors = (filter = () => true) => {
+  const seen = new Set();
+  const redo = (a) => { if (a && !seen.has(a) && filter(a)) { seen.add(a); a.reset(); } };
+  for (const a of game.actors) redo(a);
+  for (const scene of game.scenes) for (const t of scene.tokens) if (!t.actorLink) redo(t.actor);
+};
+
 export const rerenderActorSheets = () => {
   for (const app of foundry.applications.instances.values()) {
     if (app.document instanceof Actor) app.render();
@@ -125,7 +137,7 @@ export const registerSettings = () => {
   // Both books count a day's rations as one slot; a GM may bundle them (user, 2026-11-14).
   reg("rations-per-slot", {
     label: "RationsPerSlot", type: Number, default: 1, choices: { 1: "1", 2: "2", 3: "3", 5: "5" },
-    onChange: () => { for (const a of game.actors) a.prepareData(); rerenderActorSheets(); },
+    onChange: () => { reprepareActors(); rerenderActorSheets(); },
   });
 
   /* Text size: each player's own (client), in core's Configure Settings. */
@@ -145,7 +157,7 @@ export const registerSettings = () => {
   reg("knave1e-xp", {
     label: "Knave1eXp", type: Boolean, default: false,
     // The XP ladder is derived data: recompute every character before redrawing.
-    onChange: () => { for (const a of game.actors) if (a.type === "character") a.prepareData(); rerenderActorSheets(); },
+    onChange: () => { reprepareActors((a) => a.type === "character"); rerenderActorSheets(); },
   });
   reg("knave1e-random-raises", { label: "Knave1eRandomRaises", type: Boolean, default: false });
   reg("knave1e-initiative", { label: "Knave1eInitiative", type: Boolean, default: false, onChange: () => ui.combat?.render() });

@@ -110,6 +110,7 @@ export const createNpcInteractive = async () => {
   const index = pack ? await pack.getIndex() : [];
   const monsters = [...index].map((e) => ({ id: e._id, name: e.name })).sort((a, b) => a.name.localeCompare(b.name, game.i18n.lang));
   const content = await foundry.applications.handlebars.renderTemplate(`${SYS_PATH}/templates/dialog/create-npc.html`, {
+    idp: foundry.utils.randomID(), // ids unique to this window
     monsters,
     hirelings: Object.entries(HIRELINGS).map(([key, h]) => ({ key, label: F(`KNAVERY.Npc.HirelingWage`, { kind: L(`KNAVERY.Npc.Hireling.${key}`), wage: h.wage }) })),
   });

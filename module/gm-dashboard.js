@@ -297,7 +297,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       actors = tokens.map((t) => actorFromUuid(t.document.uuid)).filter(Boolean);
     }
     if (!actors.length) return ui.notifications.warn("KNAVERY.Notify.NoTargets", { localize: true });
-    if (!isRollable(formula)) return ui.notifications.warn(F("KNAVERY.Notify.NotADamageFormula", { formula }));
+    if (!isRollable(formula)) return ui.notifications.warn("KNAVERY.Notify.NotADamageFormula", { format: { formula } });
     const roll = await new Roll(formula).evaluate();
     await roll.toMessage({
       speaker: { alias: L("KNAVERY.GameMaster") },
@@ -395,7 +395,7 @@ export const setToggle = async (key, value) => {
   }
   await game.settings.set(SETTINGS_NS, key, value);
   const t = TOGGLES.find((x) => x.key === key);
-  ui.notifications.info(F(value ? "KNAVERY.Macro.TurnedOn" : "KNAVERY.Macro.TurnedOff", { what: L(t?.label ?? key) }));
+  ui.notifications.info(value ? "KNAVERY.Macro.TurnedOn" : "KNAVERY.Macro.TurnedOff", { format: { what: L(t?.label ?? key) } });
 };
 
 export const openGmDashboard = () => {

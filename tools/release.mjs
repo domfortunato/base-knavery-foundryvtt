@@ -139,7 +139,10 @@ if (!redo) {
 
 // 7. Commit, tag, push branch + tag to origin.
 if (!redo) {
-  run(`git add system.json`);
+  // The packs carry the system version in _stats (build-content.mjs): regenerate them
+  // with the new number, so the release is not stamped with the last one (review #2).
+  run(`npm run build:content`);
+  run(`git add system.json src/packs`);
   run(`git commit -m "Release ${version}"`);
 }
 // The tag message comes from a file, not `-m`: it is many lines, and a quoted

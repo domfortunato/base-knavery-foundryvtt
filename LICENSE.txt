@@ -17,9 +17,9 @@ with Questing Beast LLC.
 It is compatible with Knave 2e under the Knave: Second Edition Third Party
 License, Version 1.0. That licence permits reuse of the general concepts, rules
 and game mechanics of Knave: Second Edition. It does not permit verbatim
-passages of its text or its art, and this system ships none: every rollable
+passages of its text or its art, and this system ships none: every Knave 2e
 table ships as an empty shell for the Game Master to fill, and the bestiary
-carries statistics only. The Knave: Second Edition logo and the Questing Beast
+carries statistics only. (The filled tables are Knave first edition's, below.) The Knave: Second Edition logo and the Questing Beast
 logo are not used anywhere in this system.
 
 This system contains no text from Dungeon Crawl Classics.
@@ -52,8 +52,8 @@ Code and compendium content — MIT
     module/  templates/  css/  tools/  lang/  system.json
     packs/ (in the release zip), built from src/packs/ by
     tools/content/build-content.mjs: the guide, the bestiary's statistics, the
-    gear, the macros and the table shells (but not the Knave 1e trait tables,
-    CC BY 4.0, above). Images they show keep the licences
+    gear, the macros and the table shells (but not the Knave 1e tables listed
+    above, which stay CC BY 4.0). Images they show keep the licences
     given for them below.
     Descends from Air Bladder (MIT, © Dom Bosco), itself descended from
     Cairn-FoundryVTT by Yochai Gal & Oskar Świda (MIT).

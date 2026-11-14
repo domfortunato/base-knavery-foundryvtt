@@ -6,8 +6,9 @@
  *
  * Content policy (see LICENSE.txt): only GAME MECHANICS ship — prices, damage
  * dice, armor points, slots, monster statistics — under plain generic names.
- * No Knave 2e prose, no table text. Every rollable table is a SHELL: the right
- * name and dice with one placeholder row, for the GM to fill by importing.
+ * No Knave 2e prose. Every Knave 2e table is a SHELL: the right name and dice
+ * with one placeholder row, for the GM to fill by importing. The Knave 1e tables
+ * (CC BY 4.0, credited in each) ship filled.
  *
  * IDs are derived from names, so regenerating never churns them.
  */
@@ -500,7 +501,7 @@ macro("Toggle Player Level & XP", "icons/svg/upgrade.svg", 'game.knavery.toggle(
 macro("Toggle Change Log", "icons/svg/book.svg", 'game.knavery.toggle("change-log");');
 macro("Game Master's Dashboard", "icons/svg/eye.svg", "game.knavery.openDashboard();");
 macro("Marketplace Manager", "icons/svg/chest.svg", "game.knavery.openMarketplaceManager();");
-macro("Import a Table", "icons/svg/scroll.svg", "game.knavery.openTableImporter();");
+macro("Import a Table", "icons/svg/book.svg", "game.knavery.openTableImporter();");
 
 /* -------------------------------------------- */
 /*  The guide (this project's own writing)       */
@@ -525,7 +526,7 @@ const journal = (name, pages) => {
 };
 journal("Base Knavery Guide", [
   ["Getting Started (GM)", `
-<p>Base Knavery runs Knave 2e's rules. Its tables are empty shells: you fill them with your own copies.</p>
+<p>Base Knavery runs Knave 2e's rules. Its Knave 2e tables are empty shells: you fill them from your own copy of the book. The traits, reaction, alignment, starting gear and a list of spells from Knave's first edition (CC BY 4.0) come filled.</p>
 <ol>
 <li><b>Fill the tables.</b> Open the <b>Game Master's Dashboard</b>, either from the clipboard button in the token controls or from the Actors sidebar. On <b>Tables</b>, click <i>Import</i> beside Careers, Spells, Names and the traits, and paste your rows.</li>
 <li><b>Set the rules.</b> In <i>Configure Settings → Base Knavery</i>:
@@ -534,7 +535,7 @@ journal("Base Knavery Guide", [
 <li>set the lowest and highest starting levels;</li>
 <li>switch hacks on or off.</li>
 </ul></li>
-<li><b>Let players in.</b> Players click <b>Create Character</b> in the Actors sidebar and pick a random knave or a blank sheet. Players who may not create actors have the GM's client create one for them.</li>
+<li><b>Let players in.</b> Players click <b>Create Character</b> in the Actors sidebar for a random knave; a blank sheet is the GM's to make. Players who may not create actors have the GM's client create one for them.</li>
 <li><b>Stock the market.</b> In the <b>Marketplace Manager</b>, <i>Customize</i> an aisle to change its prices, drop items in, or add new aisles.</li>
 </ol>
 <p>The <b>GM Macros</b> compendium turns the player marketplace, character creation, Char Gen Mode, players' level and XP, and the change log on and off. Drag the macros to your hotbar.</p>`],
@@ -580,7 +581,7 @@ journal("Base Knavery Guide", [
 <li>A natural 1 breaks the weapon.</li>
 <li>A power attack doubles the damage dice and breaks the weapon.</li>
 </ul></li>
-<li><b>Damage</b> comes off HP first. Each point past 0 fills an item slot with a wound, from the highest slot down, and whatever sits there must be dropped. When every slot is wounded, the character dies. <b>Direct</b> damage skips HP. Monsters take direct damage tripled and die at 0 HP.</li>
+<li><b>Damage</b> comes off HP first. Each point past 0 fills an item slot with a wound, from the bottom of the inventory up: empty slots first, then coins, then the lowest item, which becomes <i>Unusable</i> until the wound heals (whether it was dropped or broken is the table's call). When every slot is wounded, the character dies. <b>Direct</b> damage skips HP. Monsters take direct damage tripled and die at 0 HP.</li>
 <li>The <b>Die of Fate</b> is a d6 for when fate, not skill, decides.</li>
 </ul>`],
   ["Levels", `
