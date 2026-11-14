@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- **Difficulty guide** under the Requests tab's Difficulty: 0 to 10, 5 for most tasks; against a creature,
+  its ability score or level; the situation sets the edge (Knave 2e p7, Knave 1e p2, in our words).
 - **The Game Master's Dashboard** opens from a big button at the top of the left toolbar (the GM's
   only; the toolbar moves down for it). Its pages are on a thumb-tab rail off the window's edge, as on
   the character sheet, in place of the tab strip, and the player-tool switches and the Marketplace

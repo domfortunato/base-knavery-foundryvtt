@@ -35,6 +35,12 @@
     <input type="number" name="difficulty" value="{{difficulty}}" min="0" max="20" step="1" />
     <span class="hint">{{localize "KNAVERY.Dashboard.TargetIs"}} <strong class="request-target">{{target}}</strong></span>
   </div>
+  {{!-- Knave 2e p7 and Knave 1e p2, in our words: the two editions agree. --}}
+  <ul class="hint dash-request-difficulty dash-difficulty-guide">
+    <li>{{localize "KNAVERY.Dashboard.DifficultyUsual"}}</li>
+    <li>{{localize "KNAVERY.Dashboard.DifficultyCreature"}}</li>
+    <li>{{localize "KNAVERY.Dashboard.DifficultyEdge"}}</li>
+  </ul>
   <div class="form-group">
     <label>{{localize "KNAVERY.Dashboard.Reason"}}</label>
     <input type="text" name="reason" maxlength="300" placeholder="{{localize 'KNAVERY.Dashboard.ReasonHint'}}" />

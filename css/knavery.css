@@ -5108,3 +5108,5 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 #ui-left-column-1 > #knavery-dashboard-hud:hover,
 #ui-left-column-1 > #knavery-dashboard-hud:focus-visible { filter: brightness(1.15); outline: none; }
 #ui-left-column-1 > #knavery-dashboard-hud i { margin: 0; pointer-events: none; }
+.knavery-gm-dashboard .dash-difficulty-guide { margin: -2px 0 8px; padding-left: 1.2em; font-size: calc(12px * var(--kn-text, 1)); }
+.knavery-gm-dashboard .dash-difficulty-guide li { margin: 0; }
