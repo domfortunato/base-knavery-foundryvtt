@@ -271,7 +271,9 @@ results:
       - 20
     drawn: false
     flags: {}
-flags: {}
+flags:
+  base-knavery:
+    key: virtue
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

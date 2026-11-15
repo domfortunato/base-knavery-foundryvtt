@@ -13,7 +13,10 @@ system:
   bundle: 1
   cost: 1
 effects: []
-flags: {}
+flags:
+  base-knavery:
+    key: candle-4-hours
+    kind: candle
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

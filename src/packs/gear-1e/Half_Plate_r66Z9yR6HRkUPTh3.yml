@@ -15,7 +15,9 @@ system:
   qualityMax: 6
   cost: 4000
 effects: []
-flags: {}
+flags:
+  base-knavery:
+    key: half-plate
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

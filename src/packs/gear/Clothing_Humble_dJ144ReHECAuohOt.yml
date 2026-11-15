@@ -12,7 +12,9 @@ system:
   quantity: 1
   cost: 120
 effects: []
-flags: {}
+flags:
+  base-knavery:
+    key: clothing-humble
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

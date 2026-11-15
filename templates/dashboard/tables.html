@@ -21,7 +21,7 @@
   <div class="table-list">
     {{#each tables}}
     <div class="dash-table" data-table="{{this.name}}">
-      <span class="dash-table-name">{{this.name}}</span>
+      <span class="dash-table-name">{{this.label}}</span>
       {{#if this.world}}<span class="knavery-item-tag">{{localize "KNAVERY.Dashboard.WorldCopy"}}</span>{{else}}<span class="knavery-item-tag">{{localize "KNAVERY.Dashboard.Shell"}}</span>{{/if}}
       <span class="dash-table-rows">{{this.rows}}</span>
       {{#if (and @root.rulebook this.page)}}<a class="dash-table-book" data-action="openRulebook" data-page="{{this.page}}" data-tooltip-text="{{this.pageTip}}"><i class="fa-solid fa-book-open"></i></a>{{/if}}

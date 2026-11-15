@@ -13,7 +13,9 @@ system:
   bundle: 1
   cost: 50
 effects: []
-flags: {}
+flags:
+  base-knavery:
+    key: perfume
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

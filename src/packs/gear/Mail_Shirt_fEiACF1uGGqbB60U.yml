@@ -14,7 +14,9 @@ system:
   points: 1
   cost: 200
 effects: []
-flags: {}
+flags:
+  base-knavery:
+    key: mail-shirt
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

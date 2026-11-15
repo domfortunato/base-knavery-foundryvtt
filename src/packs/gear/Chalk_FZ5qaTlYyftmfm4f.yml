@@ -13,7 +13,9 @@ system:
   bundle: 10
   cost: 5
 effects: []
-flags: {}
+flags:
+  base-knavery:
+    key: chalk
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

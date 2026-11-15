@@ -15,7 +15,7 @@ import {
   ARMOR_LINES, ARMOR_TYPES, FLAG_SCOPE, ITEM_KINDS, PRICE_BANDS, SYS_PATH, WEAPON_LINES, defaultQualityMax,
 } from "./config.js";
 import { usesPrices1e, usesQuality } from "./rules.js";
-import { drawFrom } from "./compendium.js";
+import { drawFrom, inTableGroup } from "./compendium.js";
 import { FORMULA_TABLE, SLOT_TABLES, missingTables, rollSpell } from "./spell-generator.js";
 import { aisleName, marketPrefix, nextRow, renumberAisle } from "./marketplace.js";
 
@@ -255,7 +255,7 @@ const whereOptions = (selected = "world") => {
   const actors = (type) => game.actors.filter((a) => a.type === type).sort(byName)
     .map((a) => ({ value: `actor:${a.id}`, label: a.name, selected: selected === `actor:${a.id}` }));
   const prefix = marketPrefix();
-  const aisles = game.tables.filter((t) => t.name.startsWith(prefix)).sort(byName)
+  const aisles = game.tables.filter((t) => inTableGroup(t, prefix)).sort(byName)
     .map((t) => ({ value: `aisle:${t.uuid}`, label: aisleName(t), selected: selected === `aisle:${t.uuid}` }));
   const groups = [
     { label: L("KNAVERY.ItemMaker.WhereCharacters"), options: actors("character") },

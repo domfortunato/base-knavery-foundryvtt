@@ -15,7 +15,9 @@ system:
   crew: 0
   speed: ''
 effects: []
-flags: {}
+flags:
+  base-knavery:
+    key: dog-small-but-vicious
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

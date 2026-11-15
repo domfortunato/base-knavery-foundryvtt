@@ -7,7 +7,7 @@
     <h3>{{localize "KNAVERY.Market.Aisles"}}</h3>
     <ul>
       {{#each aisles}}
-      <li class="mm-aisle {{#if this.selected}}active{{/if}} {{#if this.hidden}}hidden-aisle{{/if}}" data-uuid="{{this.uuid}}" data-name="{{this.name}}">
+      <li class="mm-aisle {{#if this.selected}}active{{/if}} {{#if this.hidden}}hidden-aisle{{/if}}" data-uuid="{{this.uuid}}" data-name="{{this.id}}">
         <a data-action="selectAisle" data-uuid="{{this.uuid}}">{{this.name}}</a>
         <span class="mm-count">{{this.count}}</span>
         {{#unless this.world}}<span class="mm-badge" data-tooltip="KNAVERY.Market.ShippedHint">{{localize "KNAVERY.Market.Shipped"}}</span>{{/unless}}

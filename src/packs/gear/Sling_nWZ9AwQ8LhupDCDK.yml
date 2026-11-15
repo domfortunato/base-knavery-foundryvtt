@@ -16,7 +16,9 @@ system:
   range: 60'
   cost: 50
 effects: []
-flags: {}
+flags:
+  base-knavery:
+    key: sling
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

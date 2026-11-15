@@ -258,7 +258,11 @@ results:
       - 19
     drawn: false
     flags: {}
-flags: {}
+flags:
+  base-knavery:
+    key: market-1e-food
+    market: 1e
+    aisle: Food
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

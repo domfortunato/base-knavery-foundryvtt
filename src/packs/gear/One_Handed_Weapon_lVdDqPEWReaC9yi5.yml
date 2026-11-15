@@ -15,7 +15,9 @@ system:
   attackType: melee
   cost: 50
 effects: []
-flags: {}
+flags:
+  base-knavery:
+    key: one-handed-weapon
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

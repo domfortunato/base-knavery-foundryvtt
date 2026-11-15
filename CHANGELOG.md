@@ -8,6 +8,10 @@
 - Removed: the "Hazard dice on the Random page" switch (Configure General and the Toggles page). The hazard dice
   and the Time page's clock always show.
 - The Printing settings have their own window, **Configure Printing**, out of Configure General.
+- Ready for translations, step one: the system finds its tables, items, market aisles and Guide pages by a
+  hidden key as well as by name, so a table or compendium entry in another language still works. The table
+  importer has **Use as**: a pasted table under any name can stand in for one of the system's (a Careers table
+  in your language, for example).
 
 ## 0.3.0
 

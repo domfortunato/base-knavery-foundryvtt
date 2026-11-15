@@ -13,7 +13,9 @@ system:
   bundle: 1
   cost: 2
 effects: []
-flags: {}
+flags:
+  base-knavery:
+    key: cheese-1-lb
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

@@ -1311,7 +1311,9 @@ results:
       - 100
     drawn: false
     flags: {}
-flags: {}
+flags:
+  base-knavery:
+    key: spells-knave-1e
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

@@ -13,7 +13,9 @@ system:
   bundle: 1
   cost: 20
 effects: []
-flags: {}
+flags:
+  base-knavery:
+    key: padlock-and-key
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

@@ -16,7 +16,9 @@ system:
   range: 120'
   cost: 100
 effects: []
-flags: {}
+flags:
+  base-knavery:
+    key: bow
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

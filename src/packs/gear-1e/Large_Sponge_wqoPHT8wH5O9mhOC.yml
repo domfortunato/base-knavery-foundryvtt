@@ -13,7 +13,9 @@ system:
   bundle: 1
   cost: 5
 effects: []
-flags: {}
+flags:
+  base-knavery:
+    key: large-sponge
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

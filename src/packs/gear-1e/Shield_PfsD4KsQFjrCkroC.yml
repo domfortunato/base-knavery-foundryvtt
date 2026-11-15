@@ -15,7 +15,9 @@ system:
   qualityMax: 1
   cost: 40
 effects: []
-flags: {}
+flags:
+  base-knavery:
+    key: shield
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

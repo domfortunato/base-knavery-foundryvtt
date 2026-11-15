@@ -335,7 +335,11 @@ results:
       base-knavery:
         price: 120
         service: true
-flags: {}
+flags:
+  base-knavery:
+    key: market-1e-animals-transport
+    market: 1e
+    aisle: Animals & Transport
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

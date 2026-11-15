@@ -3110,6 +3110,88 @@ await withSettings(gm, async () => {
     await closeDialogs();
   });
 
+  /* ------------------------------------------------------------------ */
+  await section("38. Keys, not English names (0.4.0, localization Phase 0): a table, an item, an aisle and the Guide stay found when renamed.", async () => {
+    const r = await gm.evaluate(async (sys) => {
+      const ns = "base-knavery";
+      const keys = await import(`${sys}/keys.js`);
+      const comp = await import(`${sys}/compendium.js`);
+      const { findItemByName } = await import(`${sys}/character-generator.js`);
+      const { isRations, isTorch } = await import(`${sys}/documents/actor.js`);
+      const { isLight } = await import(`${sys}/hazard.js`);
+      const { importRows } = await import(`${sys}/table-importer.js`);
+      const { marketTables, aisleName } = await import(`${sys}/marketplace.js`);
+      const cfg = await import(`${sys}/config.js`);
+      const out = {};
+      const made = [];
+      // (a) A "Careers" table in another language, imported with Use as: the system draws from it.
+      // The world's own Careers tables (built from the book) get their key back afterwards.
+      const keyed = game.tables.filter((t) => t.getFlag(ns, "key") === "careers").map((t) => t.id);
+      const pre = await RollTable.create({ name: "Careers (probe old)", formula: "1d1", flags: { [ns]: { key: "careers" } }, results: [{ type: "text", name: "Old: Rope", range: [1, 1] }] });
+      made.push(pre.id);
+      const fr = await importRows("Carrières (probe)", [{ range: [1, 1], text: "Ménestrel: Luth" }], { useAs: "Careers" });
+      made.push(fr.id);
+      out.table = {
+        key: fr.getFlag(ns, "key"), oldKey: pre.getFlag(ns, "key") ?? null,
+        found: (await comp.findTable("Careers"))?.id === fr.id,
+        drawn: (await comp.drawFrom("Careers", { warn: false }))?.text,
+      };
+      // (b) The stamp gives an unflagged world table the key of its own name.
+      const plain = await RollTable.create({ name: "Probe Stamp Table", formula: "1d1" });
+      made.push(plain.id);
+      await keys.stampTableKeys();
+      out.stamp = plain.getFlag(ns, "key");
+      // (c) Compendium indexes carry the keys; a pack item is found by key whatever its index name says.
+      const gearIndex = game.packs.get(`${ns}.gear`).index;
+      const torchEntry = gearIndex.find((e) => e.flags?.[ns]?.key === "torch");
+      out.index = { torch: !!torchEntry, kind: torchEntry?.flags?.[ns]?.kind ?? null };
+      const realName = torchEntry.name;
+      torchEntry.name = "Torche (probe)";
+      out.index.byKey = (await findItemByName("Torch"))?.id === torchEntry._id;
+      torchEntry.name = realName;
+      // (d) Kinds: a flagged item with a foreign name, and an old unflagged English one.
+      const fake = (name, kind) => ({ type: "item", name, flags: kind ? { [ns]: { kind } } : {} });
+      out.kinds = {
+        flagged: isRations(fake("Pain de voyage", "rations")) && isTorch(fake("Flambeau", "torch")) && isLight(fake("Bougie", "candle")),
+        english: isRations(fake("Rations")) && isTorch(fake("Torches")) && isLight(fake("Lantern")),
+        wrong: !isRations(fake("Rations", "torch")) && !isLight(fake("Rope")),
+      };
+      // (e) A customized aisle renamed in another language still shadows the shipped one and keeps its place.
+      const shipped = await comp.findTable(`${cfg.MARKET_PREFIX}Weapons`);
+      const copyData = shipped.toObject();
+      delete copyData._id;
+      copyData.name = "Armes (probe)";
+      const copy = await RollTable.create(copyData);
+      made.push(copy.id);
+      const before = game.settings.get(ns, "price-list");
+      await game.settings.set(ns, "price-list", "knave2e");
+      const aisles = await marketTables({ includeHidden: true });
+      out.aisle = {
+        count: aisles.filter((x) => x.getFlag(ns, "aisle") === "Weapons").length,
+        isCopy: aisles.some((x) => x.id === copy.id),
+        first: aisleName(aisles[0]), key: copy.getFlag(ns, "key"),
+        others: game.tables.filter((t) => t.id !== copy.id && (t.getFlag(ns, "key") === "market-weapons" || t.name === `${cfg.MARKET_PREFIX}Weapons`)).length,
+      };
+      await game.settings.set(ns, "price-list", before);
+      // (f) The Guide's headings carry ids, the anchors the dashboard's Guide button aims at.
+      const guide = await game.packs.get(`${ns}.guide`).getDocuments();
+      const page = keys.findByKey(guide[0].pages, "The Game Master's Dashboard (GM)");
+      const toc = foundry.documents.JournalEntryPage.buildTOC(new DOMParser().parseFromString(page.text.content, "text/html").body);
+      out.guide = { page: page?.getFlag(ns, "key"), anchors: ["dashboard-dice", "dashboard-combat", "dashboard-toggles"].every((a) => toc[a]) };
+      for (const id of made) await game.tables.get(id)?.delete();
+      for (const id of keyed) await game.tables.get(id)?.setFlag(ns, "key", "careers");
+      return out;
+    }, SYS);
+    ok(r.table.key === "careers" && r.table.oldKey === null && r.table.found && /Ménestrel/.test(r.table.drawn ?? ""),
+      "a Careers table under another name, imported with Use as, is the one the system draws from (and the old one lets go)", JSON.stringify(r.table));
+    ok(r.stamp === "probe-stamp-table", "the GM's login stamp gives a world table the key of its own name", String(r.stamp));
+    ok(r.index.torch && r.index.kind === "torch" && r.index.byKey, "compendium indexes carry the keys; a pack item is found by key under another name", JSON.stringify(r.index));
+    ok(r.kinds.flagged && r.kinds.english && r.kinds.wrong, "rations, torches and lights by their kind flag, by English name without one, and the flag wins", JSON.stringify(r.kinds));
+    ok(r.aisle.count === 1 && r.aisle.key === "market-weapons" && (r.aisle.others > 0 || (r.aisle.isCopy && r.aisle.first === "Armes (probe)")),
+      "a customized aisle renamed in another language shadows the shipped one and keeps its shelf place", JSON.stringify(r.aisle));
+    ok(r.guide.page === "the-game-master-s-dashboard-gm" && r.guide.anchors, "the Guide's pages carry keys and its headings the dashboard's anchors", JSON.stringify(r.guide));
+  });
+
   // Cleanup.
   await gm.evaluate(async (tables) => {
     for (const app of [...foundry.applications.instances.values()]) if (app.id !== "sidebar") app.close?.();

@@ -23,6 +23,7 @@ import {
   ABILITIES, ABILITY_MAX, CREATION_POINTS, FLAG_SCOPE, GEAR_1E_PACK, LEVELS, LOWEST_DIE_MAX, SETTINGS_NS, STARTING_COINS, SYS_PATH, TABLES,
 } from "./config.js";
 import { drawFrom, pickFromList, plainText, realResults, findTable, resultText, spellTableName } from "./compendium.js";
+import { docKey, isKind, keyOf } from "./keys.js";
 import { firstLevelHpFormula, randomAbilityPicks, rollLevelHp } from "./level-up.js";
 import { levelLadder } from "./data-models.js";
 import { randomPortraitPair } from "./art.js";
@@ -103,14 +104,20 @@ const creationLevels = () => {
 /*  Item lookups                                 */
 /* -------------------------------------------- */
 
-/** Find an Item by name: world items first, then Item compendia. */
+/**
+ * Find an Item by its English name: world items first (by name, then by key), then Item
+ * compendia (by key, then by name), so a translated compendium entry is still found (keys.js).
+ */
 export const findItemByName = async (name, type = null) => {
   const lc = String(name).trim().toLowerCase();
-  const match = (e) => e.name?.toLowerCase() === lc && (!type || e.type === type);
-  const world = game.items.find(match);
+  const key = keyOf(name);
+  const typed = (e) => !type || e.type === type;
+  const byName = (e) => e.name?.toLowerCase() === lc && typed(e);
+  const byKey = (e) => docKey(e) === key && typed(e);
+  const world = game.items.find(byName) ?? game.items.find(byKey);
   if (world) return world;
   for (const pack of itemPacks()) {
-    const entry = pack.index.find(match);
+    const entry = pack.index.find(byKey) ?? pack.index.find(byName);
     if (entry) return pack.getDocument(entry._id);
   }
   return null;
@@ -143,7 +150,8 @@ const resolveStartingItem = async (entry) => {
 /*  Careers                                      */
 /* -------------------------------------------- */
 
-const slug = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || foundry.utils.randomID(6);
+/** A career's key from its name, in any script (keys.js keyOf); a random one when nothing is left. */
+const slug = (s) => keyOf(s) || foundry.utils.randomID(6);
 
 /**
  * Add a career Item to an actor. In Char Gen Mode its starting items come too,
@@ -524,7 +532,7 @@ const applyBuilt = async (actor, built) => {
   if (built.items.length) await actor.addItems(built.items, { knNoLog: true });
   // Knave 2e (p4): a quiver of 20 arrows comes with a missile weapon.
   if (usesCareers() && actor.items.some((i) => i.type === "weapon" && i.system.attackType === "ranged")
-    && !actor.items.some((i) => /\barrows?\b/i.test(i.name))) {
+    && !actor.items.some((i) => isKind(i, "arrows") || /\barrows?\b/i.test(i.name))) {
     const arrows = await findItemByName("Arrows");
     if (arrows) await actor.addItems([itemData(arrows, { system: { quantity: 20 } })], { knNoLog: true });
   }

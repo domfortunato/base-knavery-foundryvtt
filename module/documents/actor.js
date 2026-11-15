@@ -8,13 +8,12 @@ import {
 } from "../change-log.js";
 import { stripLockedChanges } from "../edit-gates.js";
 import { healingRule, usesWounds } from "../rules.js";
+import { isKind } from "../keys.js";
 
-/** Food: an item named Ration(s). */
-export const RATIONS_RE = /\brations?\b/i;
-export const isRations = (item) => item?.type === "item" && RATIONS_RE.test(String(item.name ?? ""));
-/** Torches: an item named Torch(es); hazard.js burns them, the Inventory Hacks bundle them. */
-export const TORCH_RE = /\btorch(es)?\b/i;
-export const isTorch = (item) => item?.type === "item" && TORCH_RE.test(String(item.name ?? ""));
+/** Food: an item of kind "rations" (keys.js: its flag, else its name). */
+export const isRations = (item) => isKind(item, "rations");
+/** Torches (kind "torch"): hazard.js burns them, the Inventory Hacks bundle them. */
+export const isTorch = (item) => isKind(item, "torch");
 /** The GM's per-slot bundles (Configure Inventory, Hacks), 1 when they cannot be read yet. */
 const perSlot = (key) => {
   try { return Math.max(1, Number(game.settings.get(SETTINGS_NS, key)) || 1); } catch { return 1; }

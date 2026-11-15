@@ -19,6 +19,9 @@ import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 
 const yaml = createRequire(import.meta.url)("js-yaml");
+// Every document carries the key of its English name, and the items a rule reads carry their kind
+// (module/keys.js): a translation may rename them, the system still finds them (2026-11-15).
+import { keyOf, kindOfName } from "../../module/keys.js";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const SYS = "systems/base-knavery";
 const ICON = (n) => `${SYS}/icons/${n}.svg`;
@@ -52,7 +55,9 @@ const add = (pack, doc) => {
 
 const itemDoc = (pack, name, type, img, system) => {
   const _id = id(pack, name);
-  const doc = { _id, _key: `!items!${_id}`, name, type, img, system, effects: [], flags: {}, _stats: STATS };
+  const kind = type === "item" ? kindOfName(name) : null;
+  const flags = { "base-knavery": { key: keyOf(name), ...(kind ? { kind } : {}) } };
+  const doc = { _id, _key: `!items!${_id}`, name, type, img, system, effects: [], flags, _stats: STATS };
   add(pack, doc);
   return doc;
 };
@@ -234,7 +239,7 @@ const aisle1e = (name, docs, rows = []) => tableDoc("marketplace", `Market 1e: $
     name: text, img: "icons/svg/coins.svg", range: [docs.length + i + 1, docs.length + i + 1],
     flags: { "base-knavery": { price, service: true } },
   })),
-], { img: "icons/svg/coins.svg", description: KNAVE_1E_CREDIT });
+], { img: "icons/svg/coins.svg", description: KNAVE_1E_CREDIT, flags: { "base-knavery": { market: "1e", aisle: name } } });
 
 /* -------------------------------------------- */
 /*  Careers: one worked example of a custom one  */
@@ -258,7 +263,7 @@ const aisle1e = (name, docs, rows = []) => tableDoc("marketplace", `Market 1e: $
         { key: "sworn", label: "Sworn", type: "checkbox", initial: "false", max: 0, hint: "" },
       ],
     },
-    effects: [], flags: {}, _stats: STATS,
+    effects: [], flags: { "base-knavery": { key: keyOf("Example Career (duplicate me)") } }, _stats: STATS,
   });
 }
 
@@ -279,14 +284,14 @@ const tableDoc = (pack, name, formula, results, extra = {}) => {
         flags: r.flags ?? {},
       };
     }),
-    flags: extra.flags ?? {},
+    flags: { ...(extra.flags ?? {}), "base-knavery": { key: keyOf(name), ...(extra.flags?.["base-knavery"] ?? {}) } },
     _stats: STATS,
   });
 };
 
 const aisle = (name, docs) => tableDoc("marketplace", `Market: ${name}`, `1d${docs.length}`, docs.map((d, i) => ({
   type: "document", name: d.name, img: d.img, documentUuid: `Compendium.base-knavery.gear.Item.${d._id}`, range: [i + 1, i + 1],
-})), { img: "icons/svg/coins.svg" });
+})), { img: "icons/svg/coins.svg", flags: { "base-knavery": { market: "2e", aisle: name } } });
 aisle("Weapons", gear.weapons);
 aisle("Armor", gear.armor);
 aisle("Gear", gear.gear);
@@ -631,21 +636,37 @@ macro("Import a Table", "icons/svg/book.svg", "game.knavery.openTableImporter();
 /*  The guide (this project's own writing)       */
 /* -------------------------------------------- */
 
+/**
+ * Each h2 gets an id, "<page>-<heading>" (the page's PAGE key, the heading's key): Foundry's
+ * table of contents takes a heading's id as its anchor, so a translated heading keeps the anchor
+ * the dashboard's Guide button aims at (gm-dashboard.js).
+ */
+const anchorHeadings = (pageKey, html) => {
+  const seen = new Set();
+  return html.replace(/<h2>(.*?)<\/h2>/g, (_m, inner) => {
+    let slug = `${pageKey}-${keyOf(inner.replace(/<[^>]+>/g, ""))}`;
+    for (let n = 2; seen.has(slug); n++) slug = `${slug.replace(/-\d+$/, "")}-${n}`;
+    seen.add(slug);
+    return `<h2 id="${slug}">${inner}</h2>`;
+  });
+};
 const journal = (name, pages) => {
   const _id = id("guide", name);
+  const pageKeyOf = Object.fromEntries(Object.entries(PAGE).map(([k, v]) => [v, k]));
   add("guide", {
     _id, _key: `!journal!${_id}`, name, categories: [],
-    pages: pages.map(([title, html], i) => {
+    pages: pages.map(([title, raw], i) => {
       const pid = id("guide", name, title);
+      const html = anchorHeadings(pageKeyOf[title] ?? keyOf(title), raw);
       // Trimmed as Foundry's StringField stores it: the template literals open with a
       // newline, and a leading newline the first world launch drops makes the pack
       // build guard report drift on every server (met on the probe fleet, 2026-11-13).
       return {
         _id: pid, _key: `!journal.pages!${_id}.${pid}`, name: title, type: "text", sort: (i + 1) * 100000,
-        title: { show: true, level: 1 }, text: { format: 1, content: html.trim() }, flags: {}, ownership: { default: -1 },
+        title: { show: true, level: 1 }, text: { format: 1, content: html.trim() }, flags: { "base-knavery": { key: keyOf(title) } }, ownership: { default: -1 },
       };
     }),
-    flags: {}, _stats: STATS,
+    flags: { "base-knavery": { key: keyOf(name) } }, _stats: STATS,
   });
 };
 /*

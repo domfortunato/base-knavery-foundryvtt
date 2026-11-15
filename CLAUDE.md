@@ -50,6 +50,14 @@ picker, change log and marketplace it ports.
   (`module/rulebook-catalogue.js`) holds table names, pages and layout only,
   and output of `tools/dev/rulebook-tables-check.mjs --show` is never committed.
 
+## Translations (user rulings 2026-11-15)
+- Interface: we ship volunteers' language files, and fans may publish translation modules.
+- Shipped content: through Babele, keyed by the frozen ids. Never rename a document in the generator.
+- A translated Knave 2e book is treated like the English one: the system stores its path and a page map
+  (numbers and table titles), never its text. A shared or shipped map carries no text.
+- Translated Knave 1e text ships only under its translator's licence and credit, approved per language.
+- Human translations only; an AI draft needs a line in the welcome's AI disclosure.
+
 ## Layout
 - `module/knavery.js`: entry point; hooks, the `game.knavery` API.
 - `module/config.js`: every mechanics number (levels, AC, slots…), and
@@ -59,6 +67,14 @@ picker, change log and marketplace it ports.
   (`stampRules`: at the first GM login on 0.2.0+, an existing world gets the 2e
   value of every rule it never stored; a new world plays the 1e defaults), and
   `offerRulesSwitch` (asked after a table build from the 2e book).
+- `module/keys.js` (0.4.0, localization Phase 0): identity by key, not English name. Every shipped
+  document carries `flags.base-knavery.key` (the slug of its English name, `keyOf`); `findTable`,
+  `findItemByName`, the aisles (`market`/`aisle` flags) and the Guide (page keys, heading ids
+  `<page>-<heading>`) look the key up first, then the name. Callers still pass the English name.
+  Items a rule reads carry `kind` (rations, torch, candle, lantern, arrows; `isKind`). A world
+  table gets its own name's key at the GM's login (`stampTableKeys`); the importer's **Use as** sets
+  another table's key. Compendium `_id`s are frozen: `npm run check:ids` (`tools/content/ids.lock.json`,
+  `-- --update` to freeze new ones). Plan: `memory localization-plan-2026-11-15`.
 - `module/data-models.js`: TypeDataModels. HTML fields must also be listed
   in `system.json` `htmlFields`; `npm run check:fields` enforces this.
 - `module/documents/`: the Actor (slots, wound layout, damage, rest,

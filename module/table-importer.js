@@ -13,6 +13,7 @@
  * For Careers, "Name: item, item, item" gives a career its starting items.
  */
 import { FLAG_SCOPE, MARKET_PREFIX, TABLES } from "./config.js";
+import { keyOf, tableLabel } from "./keys.js";
 import { canReadRulebook, hasRulebook, openRulebook, tablePage } from "./rulebook.js";
 
 const L = (k) => game.i18n.localize(k);
@@ -59,9 +60,15 @@ export const parseRows = (raw) => {
  * if writing fails the table is left as it was rather than emptied.
  * @returns {Promise<RollTable>}
  */
-export const importRows = async (name, rows, { mode = "replace", formula = "", report = null } = {}) => {
+export const importRows = async (name, rows, { mode = "replace", formula = "", report = null, useAs = "" } = {}) => {
   let table = game.tables.find((t) => t.name === name);
   if (!table) table = await RollTable.create({ name, replacement: true, formula: "1d1" });
+  // "Use as" (keys.js): this table stands for one of the system's, whatever its name; no other world table keeps that key.
+  const key = keyOf(useAs || name);
+  if (useAs) {
+    const others = game.tables.filter((t) => t.id !== table.id && t.getFlag(FLAG_SCOPE, "key") === key);
+    for (const t of others) await t.unsetFlag(FLAG_SCOPE, "key");
+  }
   const old = mode === "replace" ? table.results.map((r) => r.id) : [];
   const offset = mode === "append" ? Math.max(0, ...table.results.map((r) => r.range[1])) : 0;
   const results = [];
@@ -82,7 +89,7 @@ export const importRows = async (name, rows, { mode = "replace", formula = "", r
   if (results.length) await table.createEmbeddedDocuments("TableResult", results);
   if (old.length) await table.deleteEmbeddedDocuments("TableResult", old);
   const top = Math.max(1, ...table.results.map((r) => r.range[1]));
-  await table.update({ formula: formula || `1d${top}`, [`flags.${FLAG_SCOPE}.imported`]: true });
+  await table.update({ formula: formula || `1d${top}`, [`flags.${FLAG_SCOPE}.imported`]: true, [`flags.${FLAG_SCOPE}.key`]: key });
   if (report) report.unlinked = unlinked;
   return table;
 };
@@ -113,10 +120,14 @@ export const openTableImporter = async (name = "") => {
   if (!game.user.isGM) return;
   const options = [...new Set([...knownNames(), ...game.tables.map((t) => t.name)])]
     .map((n) => `<option value="${esc(n)}"></option>`).join("");
+  const useAsOptions = knownNames().map((n) => `<option value="${esc(n)}">${esc(tableLabel(n))}</option>`).join("");
   const content = `<div class="knavery-importer">
     <p>${L("KNAVERY.Import.Intro")}</p>
     <div class="form-group"><label>${L("KNAVERY.Import.TableName")}</label>
       <input type="text" name="table" list="kn-import-names" value="${esc(name)}" required /><datalist id="kn-import-names">${options}</datalist></div>
+    <div class="form-group"><label>${L("KNAVERY.Import.UseAs")}</label>
+      <select name="useAs"><option value="">${L("KNAVERY.Import.UseAsNone")}</option>${useAsOptions}</select>
+      <p class="hint">${L("KNAVERY.Import.UseAsHint")}</p></div>
     <div class="form-group"><label>${L("KNAVERY.Import.Formula")}</label>
       <input type="text" name="formula" placeholder="${L("KNAVERY.Import.FormulaHint")}" /></div>
     <div class="form-group"><label>${L("KNAVERY.Import.Mode")}</label>
@@ -135,7 +146,7 @@ export const openTableImporter = async (name = "") => {
       action: "import", label: "KNAVERY.Import.Go", icon: "fas fa-file-import", default: true,
       callback: (_e, b) => {
         const f = b.form.elements;
-        return { name: f.table.value.trim(), formula: f.formula.value.trim(), mode: f.mode.value, rows: f.rows.value };
+        return { name: f.table.value.trim(), formula: f.formula.value.trim(), mode: f.mode.value, rows: f.rows.value, useAs: f.useAs.value };
       },
     }],
     rejectClose: false,

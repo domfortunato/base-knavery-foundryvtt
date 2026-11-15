@@ -14,7 +14,9 @@ system:
   points: 1
   cost: 500
 effects: []
-flags: {}
+flags:
+  base-knavery:
+    key: leg-plate
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

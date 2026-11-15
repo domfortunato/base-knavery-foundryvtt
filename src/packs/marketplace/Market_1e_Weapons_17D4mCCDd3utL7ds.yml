@@ -245,7 +245,11 @@ results:
       - 18
     drawn: false
     flags: {}
-flags: {}
+flags:
+  base-knavery:
+    key: market-1e-weapons
+    market: 1e
+    aisle: Weapons
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

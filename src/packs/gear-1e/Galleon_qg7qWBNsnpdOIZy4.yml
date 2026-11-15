@@ -15,7 +15,9 @@ system:
   crew: 200
   speed: ''
 effects: []
-flags: {}
+flags:
+  base-knavery:
+    key: galleon
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

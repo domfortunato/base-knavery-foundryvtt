@@ -908,7 +908,11 @@ results:
       - 69
     drawn: false
     flags: {}
-flags: {}
+flags:
+  base-knavery:
+    key: market-1e-gear
+    market: 1e
+    aisle: Gear
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

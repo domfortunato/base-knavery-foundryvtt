@@ -27,7 +27,12 @@ export const playerMarketClosed = () => !game.user.isGM && !game.settings.get(SE
 
 /** The aisle tables' prefix for the world's price list. */
 export const marketPrefix = () => (usesPrices1e() ? MARKET_1E_PREFIX : MARKET_PREFIX);
-export const aisleName = (table) => table.name.slice((table.name.startsWith(MARKET_1E_PREFIX) ? MARKET_1E_PREFIX : MARKET_PREFIX).length).trim();
+/** The prefix an aisle's name starts with, or "" (a translated aisle may have none; its `market` flag counts). */
+const prefixOf = (table) => (table.name.startsWith(MARKET_1E_PREFIX) ? MARKET_1E_PREFIX : table.name.startsWith(MARKET_PREFIX) ? MARKET_PREFIX : "");
+/** The aisle's name as shown: its table name without the prefix. */
+export const aisleName = (table) => table.name.slice(prefixOf(table).length).trim();
+/** The aisle's English name, for hiding and shelf order: its `aisle` flag (kept by a translation), else its name. */
+const aisleId = (table) => table.flags?.[FLAG_SCOPE]?.aisle ?? aisleName(table);
 /** Each price list hides its own aisles (both have a "Weapons"); 1e's services ship hidden. */
 const hiddenKey = () => (usesPrices1e() ? "market-hidden-aisles-1e" : "market-hidden-aisles");
 const hiddenAisles = () => new Set(game.settings.get(SETTINGS_NS, hiddenKey()) ?? []);
@@ -36,9 +41,9 @@ const hiddenAisles = () => new Set(game.settings.get(SETTINGS_NS, hiddenKey()) ?
 export const marketTables = async ({ includeHidden = false } = {}) => {
   const hidden = hiddenAisles();
   const tables = (await findTablesByPrefix(marketPrefix()))
-    .filter((t) => includeHidden || !hidden.has(aisleName(t)));
+    .filter((t) => includeHidden || !hidden.has(aisleId(t)));
   const order = (t) => {
-    const i = AISLE_ORDER.indexOf(aisleName(t));
+    const i = AISLE_ORDER.indexOf(aisleId(t));
     return i === -1 ? AISLE_ORDER.length : i;
   };
   return tables.sort((a, b) => order(a) - order(b) || a.name.localeCompare(b.name));
@@ -266,7 +271,7 @@ export const marketPageContext = async (app) => {
   const hidden = hiddenAisles();
   const tables = await marketTables({ includeHidden: true });
   const aisles = tables.map((t) => ({
-    uuid: t.uuid, name: aisleName(t), world: !t.pack, hidden: hidden.has(aisleName(t)), count: t.results.size,
+    uuid: t.uuid, id: aisleId(t), name: aisleName(t), world: !t.pack, hidden: hidden.has(aisleId(t)), count: t.results.size,
   }));
   if (!app.marketSelected || !aisles.some((a) => a.uuid === app.marketSelected)) app.marketSelected = aisles[0]?.uuid ?? null;
   const table = app.marketSelected ? await fromUuid(app.marketSelected) : null;
@@ -385,7 +390,7 @@ export const MARKET_ACTIONS = {
       ok: { callback: (_e2, b) => b.form.elements.aisle.value.trim() },
       rejectClose: false,
     });
-    if (name) await table.update({ name: `${table.name.startsWith(MARKET_1E_PREFIX) ? MARKET_1E_PREFIX : MARKET_PREFIX}${name}` });
+    if (name) await table.update({ name: `${prefixOf(table)}${name}` });
     rerender(this);
   },
 

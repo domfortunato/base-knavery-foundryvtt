@@ -232,7 +232,11 @@ results:
       - 17
     drawn: false
     flags: {}
-flags: {}
+flags:
+  base-knavery:
+    key: market-animals-transport
+    market: 2e
+    aisle: Animals & Transport
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

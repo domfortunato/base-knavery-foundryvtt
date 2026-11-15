@@ -9,7 +9,8 @@
  * `base-knavery.placeholder`. Knave 2e's table text is not ours to ship. A
  * draw that lands only on placeholders reports "empty" instead of pretending.
  */
-import { FLAG_SCOPE, SETTINGS_NS, TABLES } from "./config.js";
+import { FLAG_SCOPE, MARKET_1E_PREFIX, MARKET_PREFIX, SETTINGS_NS, TABLES } from "./config.js";
+import { docKey, findByKey, keyOf, tableLabel, worldTable } from "./keys.js";
 
 const L = (k) => game.i18n.localize(k);
 
@@ -17,27 +18,40 @@ const L = (k) => game.i18n.localize(k);
 const tablePacks = () => game.packs.filter((p) => p.documentName === "RollTable")
   .sort((a, b) => Number(b.metadata.packageType === "system") - Number(a.metadata.packageType === "system"));
 
-/** Resolve a table by name: world first, then compendia. */
+/**
+ * Resolve a table by its English name: world first, then compendia. Each side is searched
+ * by key first (keys.js), so a translated or renamed copy still stands for it.
+ */
 export const findTable = async (name) => {
   if (!name) return null;
-  const world = game.tables.find((t) => t.name === name);
+  const world = worldTable(name);
   if (world) return world;
   for (const pack of tablePacks()) {
-    const entry = pack.index.find((e) => e.name === name);
+    const entry = findByKey(pack.index, name);
     if (entry) return pack.getDocument(entry._id);
   }
   return null;
 };
 
-/** All tables whose name starts with `prefix`, world copies shadowing compendium ones. */
+/** The market aisles carry `flags.base-knavery.market` ("2e" or "1e"), so a translated name still counts. */
+const MARKET_GROUPS = { [MARKET_PREFIX]: "2e", [MARKET_1E_PREFIX]: "1e" };
+/** Whether a table (or index entry) belongs to the group of tables named with `prefix`. */
+export const inTableGroup = (entry, prefix) => {
+  const market = entry?.flags?.[FLAG_SCOPE]?.market;
+  if (market && MARKET_GROUPS[prefix]) return market === MARKET_GROUPS[prefix];
+  return !!entry?.name?.startsWith(prefix);
+};
+
+/** All tables of the group named with `prefix`, world copies (same key) shadowing compendium ones. */
 export const findTablesByPrefix = async (prefix) => {
   const out = new Map();
+  const id = (e) => docKey(e) ?? keyOf(e.name);
   for (const pack of tablePacks().reverse()) {
     for (const e of pack.index) {
-      if (e.name?.startsWith(prefix)) out.set(e.name, () => pack.getDocument(e._id));
+      if (inTableGroup(e, prefix)) out.set(id(e), () => pack.getDocument(e._id));
     }
   }
-  for (const t of game.tables) if (t.name.startsWith(prefix)) out.set(t.name, () => t);
+  for (const t of game.tables) if (inTableGroup(t, prefix)) out.set(id(t), () => t);
   const docs = [];
   for (const [, get] of out) docs.push(await get());
   return docs.filter(Boolean).sort((a, b) => a.name.localeCompare(b.name));
@@ -70,7 +84,7 @@ export const realResults = (table) => (table?.results?.contents ?? []).filter((r
  */
 export const spellTableName = () => {
   if (game.settings.get(SETTINGS_NS, "spell-list") === "1e") return TABLES.spells1e;
-  const world = game.tables.find((t) => t.name === TABLES.spells);
+  const world = worldTable(TABLES.spells);
   return world && realResults(world).length ? TABLES.spells : TABLES.spells1e;
 };
 
@@ -81,12 +95,12 @@ export const spellTableName = () => {
 export const drawFrom = async (name, { warn = true } = {}) => {
   const table = await findTable(name);
   if (!table) {
-    if (warn) ui.notifications.warn("KNAVERY.Notify.TableMissing", { format: { name } });
+    if (warn) ui.notifications.warn("KNAVERY.Notify.TableMissing", { format: { name: tableLabel(name) } });
     return null;
   }
   const real = realResults(table);
   if (!real.length) {
-    if (warn) ui.notifications.warn("KNAVERY.Notify.TableEmpty", { format: { name } });
+    if (warn) ui.notifications.warn("KNAVERY.Notify.TableEmpty", { format: { name: tableLabel(name) } });
     return null;
   }
   // Our own draw rather than RollTable#draw: a compendium shell is locked, and
@@ -104,19 +118,19 @@ export const drawFrom = async (name, { warn = true } = {}) => {
 export const pickFrom = async (name, { title } = {}) => {
   const table = await findTable(name);
   if (!table) {
-    ui.notifications.warn("KNAVERY.Notify.TableMissing", { format: { name } });
+    ui.notifications.warn("KNAVERY.Notify.TableMissing", { format: { name: tableLabel(name) } });
     return null;
   }
   const rows = realResults(table).map((r) => ({ id: r.id, text: plainText(resultText(r)), range: r.range }));
   if (!rows.length) {
-    ui.notifications.warn("KNAVERY.Notify.TableEmpty", { format: { name } });
+    ui.notifications.warn("KNAVERY.Notify.TableEmpty", { format: { name: tableLabel(name) } });
     return null;
   }
   const chosen = await pickFromList(rows.map((r) => ({
     value: r.id,
     label: r.text,
     prefix: r.range?.[0] === r.range?.[1] ? `${r.range?.[0]}` : `${r.range?.[0]}–${r.range?.[1]}`,
-  })), { title: title ?? name });
+  })), { title: title ?? tableLabel(name) });
   if (!chosen) return null;
   const result = table.results.get(chosen);
   return { result, text: plainText(resultText(result)), table };

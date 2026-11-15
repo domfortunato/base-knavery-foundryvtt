@@ -18,6 +18,7 @@
  *   - Nothing is written until they press Build in the review.
  */
 import { FLAG_SCOPE, SETTINGS_NS, SYS_PATH } from "./config.js";
+import { keyOf, worldTable } from "./keys.js";
 import { COMBINED_TABLES, RULEBOOK_TABLES } from "./rulebook-catalogue.js";
 import { capitalise, pageItems, parseTable, splitNamed } from "./rulebook-tables.js";
 import { rulebookPath, hasRulebook } from "./rulebook.js";
@@ -204,7 +205,7 @@ export const writeSpellItems = async (table) => {
  *   keep     made or imported by hand, or edited since it was built
  */
 export const tableStatus = (name) => {
-  const table = game.tables.find((t) => t.name === name);
+  const table = worldTable(name);
   if (!table) return "new";
   const flag = table.getFlag(FLAG_SCOPE, "rulebook");
   if (!flag?.hash) return "keep";
@@ -250,8 +251,9 @@ export const writeRulebookTables = async (tables) => {
       continue;
     }
     const results = resultData(t.kind, t.rows);
-    const flags = { [FLAG_SCOPE]: { rulebook: { page: t.pages?.[0] ?? null, built: game.system.version } } };
-    let table = game.tables.find((x) => x.name === t.name);
+    // The key (keys.js) keeps the table found by the system after a rename or a translation.
+    const flags = { [FLAG_SCOPE]: { key: keyOf(t.name), rulebook: { page: t.pages?.[0] ?? null, built: game.system.version } } };
+    let table = worldTable(t.name);
     if (table) {
       await table.deleteEmbeddedDocuments("TableResult", table.results.map((r) => r.id));
       await table.createEmbeddedDocuments("TableResult", results);

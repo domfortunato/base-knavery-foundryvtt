@@ -13,7 +13,9 @@ system:
   bundle: 1
   cost: 3
 effects: []
-flags: {}
+flags:
+  base-knavery:
+    key: salt-1-bushel
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

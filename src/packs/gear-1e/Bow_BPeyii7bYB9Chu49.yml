@@ -17,7 +17,9 @@ system:
   cost: 15
   qualityMax: 3
 effects: []
-flags: {}
+flags:
+  base-knavery:
+    key: bow
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

@@ -26,7 +26,9 @@ results:
     flags:
       base-knavery:
         placeholder: true
-flags: {}
+flags:
+  base-knavery:
+    key: mannerisms
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

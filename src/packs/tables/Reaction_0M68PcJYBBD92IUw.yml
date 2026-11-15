@@ -76,7 +76,9 @@ results:
       - 12
     drawn: false
     flags: {}
-flags: {}
+flags:
+  base-knavery:
+    key: reaction
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

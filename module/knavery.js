@@ -33,6 +33,7 @@ import {
 import { maybeOpenWelcome, openGuide, openWelcome } from "./welcome.js";
 import { applyRules, currentRules, offerRulesSwitch, stampRules } from "./rules.js";
 import { openRulebookTablesReview } from "./rulebook-import.js";
+import { registerKeyIndexFields, stampTableKeys } from "./keys.js";
 import { bindHazardCard, endTurn, registerClockSetting } from "./hazard.js";
 import { bindMoraleCard, checkBreakingPoints, payWage, rally } from "./hirelings.js";
 
@@ -42,6 +43,7 @@ Hooks.once("init", () => {
   console.log("Base Knavery | init");
 
   CONFIG.KNAVERY = KNAVERY;
+  registerKeyIndexFields();
   CONFIG.Actor.documentClass = KnaveryActor;
   CONFIG.Item.documentClass = KnaveryItem;
   Object.assign(CONFIG.Actor.dataModels, ACTOR_DATA_MODELS);
@@ -298,4 +300,5 @@ Hooks.once("ready", async () => {
   await stampRules().catch((err) => console.error("Base Knavery | stamping the rules failed", err));
   maybeOpenWelcome();
   updateCareerIcons().catch((err) => console.error("Base Knavery | updating career art failed", err));
+  stampTableKeys().catch((err) => console.error("Base Knavery | stamping the table keys failed", err));
 });

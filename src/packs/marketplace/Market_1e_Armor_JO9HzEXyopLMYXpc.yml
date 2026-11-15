@@ -102,7 +102,11 @@ results:
       - 7
     drawn: false
     flags: {}
-flags: {}
+flags:
+  base-knavery:
+    key: market-1e-armor
+    market: 1e
+    aisle: Armor
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

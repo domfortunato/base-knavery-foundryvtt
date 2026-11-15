@@ -76,7 +76,11 @@ results:
       - 5
     drawn: false
     flags: {}
-flags: {}
+flags:
+  base-knavery:
+    key: market-1e-clothing
+    market: 1e
+    aisle: Clothing
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

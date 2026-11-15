@@ -11,6 +11,7 @@
  * the Made for Knave logo, nothing that implies approval.
  */
 import { SETTINGS_NS, SYS_PATH, SYSTEM_ID } from "./config.js";
+import { findByKey } from "./keys.js";
 import { currentRules } from "./rules.js";
 import { ART_CREDITS, BOOKS, CC_BY_URL, WELCOME_BOOKENDS } from "./welcome-data.js";
 import { canReadRulebook, hasRulebook, isClosing, openRulebook, pickLocalRulebook, renderWhenGone } from "./rulebook.js";
@@ -97,11 +98,12 @@ export const GUIDE_HOME = { gm: "Start Here (GM)", player: "Your Knave (players)
  */
 export const openGuide = async (title = null, { anchor = null } = {}) => {
   const pack = game.packs.get(`${SYSTEM_ID}.guide`);
-  const entry = pack?.index.find((e) => e.name === "Base Knavery Guide") ?? pack?.index.contents[0];
+  // By key first (keys.js): a translated Guide keeps its key and its pages' keys.
+  const entry = findByKey(pack?.index ?? [], "Base Knavery Guide") ?? pack?.index.contents[0];
   const doc = entry ? await pack.getDocument(entry._id) : null;
   if (!doc) return null;
   const name = title ?? (game.user.isGM ? GUIDE_HOME.gm : GUIDE_HOME.player);
-  const page = doc.pages.getName(name) ?? null;
+  const page = findByKey(doc.pages, name);
   return doc.sheet.render({ force: true, ...(page ? { pageId: page.id } : {}), ...(page && anchor ? { anchor } : {}) });
 };
 

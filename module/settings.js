@@ -5,6 +5,7 @@
  */
 import { ADVANTAGE_MODES, FIRST_LEVEL_HP, LEVEL_HP_RULES, MAX_LEVEL, RULEBOOK, RULES_PRESETS, SETTINGS_NS, SYS_PATH, TABLES } from "./config.js";
 import { rulesFor, usesCareers } from "./rules.js";
+import { worldTable } from "./keys.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -31,7 +32,7 @@ const BOOK_TRAITS = ["personality", "mannerism"];
  */
 export const traitShown = (key) => {
   if (BOOK_TRAITS.includes(key)) {
-    try { return usesCareers() || !!game.tables?.getName(TABLES.traits[key]); } catch { return true; }
+    try { return usesCareers() || !!worldTable(TABLES.traits[key]); } catch { return true; }
   }
   if (!KNAVE_PAGE_TRAITS.includes(key)) return true;
   try { return game.settings.get(SETTINGS_NS, `show-${key}`) === true; } catch { return true; }

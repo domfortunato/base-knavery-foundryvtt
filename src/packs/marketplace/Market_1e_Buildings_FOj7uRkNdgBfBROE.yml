@@ -187,7 +187,11 @@ results:
       base-knavery:
         price: 2500000
         service: true
-flags: {}
+flags:
+  base-knavery:
+    key: market-1e-buildings
+    market: 1e
+    aisle: Buildings
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery

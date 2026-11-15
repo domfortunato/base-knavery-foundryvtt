@@ -27,6 +27,7 @@ import { emit, onSocket } from "./socket.js";
 import { isRollable, rollCheck, rollHazard, rollMorale, rollSave } from "./rolls.js";
 import { actorFromUuid } from "./damage.js";
 import { drawFrom, findTable } from "./compendium.js";
+import { findByKey, tableLabel, worldTable } from "./keys.js";
 import { openGuide } from "./welcome.js";
 import { openTableImporter } from "./table-importer.js";
 import { bindMarketPage, MARKET_ACTIONS, marketPageContext } from "./marketplace.js";
@@ -150,8 +151,10 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       quickNpc: GmDashboard.#onQuickNpc,
       // The rail's Guide opens the dashboard's page at the open page's section.
       openGuide() {
+        // The Guide's headings carry these ids (tools/content/build-content.mjs), so a translated heading keeps its anchor.
         const anchors = { requests: "requests", damage: "combat", time: "time", party: "party", dice: "dice", xp: "xp", market: "marketplace", tools: "toggles", tables: "tables" };
-        return openGuide("The Game Master's Dashboard (GM)", { anchor: anchors[this.tabGroups?.primary] ?? null });
+        const anchor = anchors[this.tabGroups?.primary];
+        return openGuide("The Game Master's Dashboard (GM)", { anchor: anchor ? `dashboard-${anchor}` : null });
       },
       importTable: GmDashboard.#onImportTable,
       // The Marketplace page's aisle actions (marketplace.js), run with the dashboard as `this`.
@@ -223,15 +226,20 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     // Index lookups only: loading every compendium table to count its rows
     // took ten seconds on a small server. World tables are already in memory.
     const packIndex = game.packs.filter((p) => p.documentName === "RollTable").flatMap((p) => [...p.index]);
+    // `name` is the English name the buttons pass back (findTable resolves it by key); `label` is shown.
+    const listed = new Set();
     const tables = tableNames.map((name) => {
-      const world = game.tables.getName(name);
+      const world = worldTable(name);
       const page = tablePage(name);
-      if (world) return { name, world: true, exists: true, rows: world.results.size, page };
-      const shipped = packIndex.some((e) => e.name === name);
-      return { name, world: false, exists: shipped, rows: shipped ? "—" : 0, page };
+      if (world) {
+        listed.add(world.id);
+        return { name, label: tableLabel(name), world: true, exists: true, rows: world.results.size, page };
+      }
+      const shipped = !!findByKey(packIndex, name);
+      return { name, label: tableLabel(name), world: false, exists: shipped, rows: shipped ? "—" : 0, page };
     });
-    for (const t of game.tables.filter((x) => !tableNames.includes(x.name))) {
-      tables.push({ name: t.name, world: true, exists: true, rows: t.results.size, page: tablePage(t.name) });
+    for (const t of game.tables.filter((x) => !listed.has(x.id))) {
+      tables.push({ name: t.name, label: t.name, world: true, exists: true, rows: t.results.size, page: tablePage(t.name) });
     }
     const rulebook = hasRulebook();
     for (const t of tables) t.pageTip = t.page ? F("KNAVERY.Rulebook.OpenAt", { page: t.page }) : "";
@@ -255,9 +263,9 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       })(),
       wages: wageRows(),
       random: RANDOM_TABLES.reduce((out, e) => {
-        const exists = !!game.tables.getName(e.table);
+        const exists = !!worldTable(e.table);
         (out[e.section] ??= []).push({ ...e, label: L(`KNAVERY.Dashboard.Event.${e.key}`), exists,
-          tip: exists ? F("KNAVERY.Dashboard.EventFrom", { name: e.table, page: e.page }) : F("KNAVERY.Dashboard.EventMissing", { name: e.table }) });
+          tip: exists ? F("KNAVERY.Dashboard.EventFrom", { name: tableLabel(e.table), page: e.page }) : F("KNAVERY.Dashboard.EventMissing", { name: tableLabel(e.table) }) });
         return out;
       }, {}),
       railGuide: true,
@@ -798,7 +806,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
   /** An event table (the Dice page), whispered to the GM like the page's other rolls. */
   static async #onRollEvent(_e, target) {
     const table = await findTable(target.dataset.table);
-    if (!table) return ui.notifications.warn("KNAVERY.Dashboard.EventMissing", { format: { name: target.dataset.table } });
+    if (!table) return ui.notifications.warn("KNAVERY.Dashboard.EventMissing", { format: { name: tableLabel(target.dataset.table) } });
     // messageMode "gm", as #onReaction: `rollMode` and CONST.DICE_ROLL_MODES are deprecated {since: 14, until: 16}.
     await table.draw({ messageMode: "gm" });
   }

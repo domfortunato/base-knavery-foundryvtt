@@ -35,7 +35,9 @@ system:
       max: 0
       hint: ''
 effects: []
-flags: {}
+flags:
+  base-knavery:
+    key: example-career-duplicate-me
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery
