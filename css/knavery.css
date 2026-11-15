@@ -4713,7 +4713,10 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-welcome-small { display: flex; flex-direction: column; gap: 4px; }
 /* The Made for Knave logo, faint behind the licensing text at its bottom right (user, 2026-11-14);
    the file is unaltered. */
-.knavery-welcome-licensing { position: relative; isolation: isolate; min-height: 120px; }
+/* The side column stretches to the main one's height and Licensing fills what is left, so the logo sits at
+   the column's foot by the Close button, in the empty space, not behind the licence titles (user, 2026-11-15). */
+.knavery-welcome-col-side { align-self: stretch; }
+.knavery-welcome-licensing { position: relative; isolation: isolate; min-height: 120px; flex: 1 1 auto; }
 .knavery-welcome-licensing .knavery-welcome-watermark {
     position: absolute; right: 48px; bottom: 0; z-index: -1; width: 150px; height: auto; border: none;
     opacity: 0.14; pointer-events: none;

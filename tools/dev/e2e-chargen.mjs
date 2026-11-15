@@ -1911,7 +1911,7 @@ await withSettings(gm, async () => {
         knight: (() => { const shown = [...el.querySelectorAll(".knavery-welcome-bookend img")].filter((i) => i.offsetParent); const t = el.querySelector(".knavery-welcome-title")?.getBoundingClientRect(); if (shown.length !== 2 || !t || !shown.every((i) => i.complete && i.naturalWidth > 0)) return false; const [a, b] = shown.map((i) => i.getBoundingClientRect()); return a.right <= t.left && b.left >= t.right && a.top < t.bottom && b.top < t.bottom; })(),
         // The world line is one line.
         worldOneLine: (() => { const p = el.querySelector(".knavery-welcome-world"); return !!p && getComputedStyle(p).whiteSpace === "nowrap" && p.scrollWidth <= p.clientWidth + 1; })(),
-        watermark: (() => { const m = [...el.querySelectorAll(".knavery-welcome-licensing .knavery-welcome-watermark")].find((i) => i.offsetParent); return !!m && getComputedStyle(m).position === "absolute" && Number(getComputedStyle(m).opacity) < 0.3; })(),
+        watermark: (() => { const m = [...el.querySelectorAll(".knavery-welcome-licensing .knavery-welcome-watermark")].find((i) => i.offsetParent); if (!m) return false; const col = el.querySelector(".knavery-welcome-col-side").getBoundingClientRect(), r = m.getBoundingClientRect(); const last = [...el.querySelectorAll(".knavery-welcome-licensing summary")].pop().getBoundingClientRect(); return getComputedStyle(m).position === "absolute" && Number(getComputedStyle(m).opacity) < 0.3 && Math.abs(col.bottom - r.bottom) < 4 && r.top > last.bottom; })(),
         rulesHeading: el.querySelector(".knavery-welcome-col-main .knavery-welcome-heading")?.textContent.trim(),
         aiCode: el.querySelector(".knavery-welcome-aicode")?.textContent.trim(),
         booksHeading: [...el.querySelectorAll(".knavery-welcome-heading")].find((h) => /books/i.test(h.textContent))?.textContent.trim(),
@@ -1941,7 +1941,7 @@ await withSettings(gm, async () => {
       "the welcome is wide, in two columns, stops at the screen and scrolls; each edition's licence is a folded bullet, 1e first", JSON.stringify(w));
     ok(w.world === "This world plays Knave (first edition)." && w.knight && w.worldOneLine && w.watermark && w.booksHeading === "Buy the books!" && w.rulesHeading === "System Rules"
       && w.aiCode === "Base Knavery's code is written with the help of an AI coding assistant." && w.itch1e === "https://questingbeast.itch.io/knave" && w.links2e === 3 && w.smallLast && w.licensing === "Licensing",
-      "two knaves as book ends either side of the welcome's title, the logo a watermark in Licensing, says which rules the world plays, and has Buy the books! with Knave's PDF on itch", JSON.stringify(w));
+      "two knaves as book ends either side of the welcome's title, the logo a watermark at the foot of the side column, clear of the licence titles, says which rules the world plays, and has Buy the books! with Knave's PDF on itch", JSON.stringify(w));
     ok(h.lines === 7 && h.now2e && h.rules === "2e" && h.hpSame && h.again === true,
       "after the 2e book, the GM is asked to switch; yes plays Knave 2e and changes no character", JSON.stringify(h));
   });
