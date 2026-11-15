@@ -97,6 +97,6 @@ flags:
     market: 1e
     aisle: Lodging & Meals
 _stats:
-  coreVersion: '14.370'
+  coreVersion: '14.365'
   systemId: base-knavery
   systemVersion: 0.4.0

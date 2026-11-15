@@ -12,6 +12,6 @@ command: game.knavery.toggle("allow-player-marketplace");
 author: null
 flags: {}
 _stats:
-  coreVersion: '14.370'
+  coreVersion: '14.365'
   systemId: base-knavery
   systemVersion: 0.4.0

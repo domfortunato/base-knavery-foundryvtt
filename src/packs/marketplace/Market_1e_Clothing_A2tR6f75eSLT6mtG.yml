@@ -82,6 +82,6 @@ flags:
     market: 1e
     aisle: Clothing
 _stats:
-  coreVersion: '14.370'
+  coreVersion: '14.365'
   systemId: base-knavery
   systemVersion: 0.4.0

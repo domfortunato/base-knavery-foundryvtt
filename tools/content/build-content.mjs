@@ -29,7 +29,12 @@ const GI = (cat, n) => `${SYS}/art/game-icons/${cat}/${n}.svg`;
 // Read from the manifest, so a release or a newly verified core build is not
 // stamped into the packs with yesterday's numbers.
 const MANIFEST = JSON.parse(fs.readFileSync(path.join(root, "system.json"), "utf8"));
-const STATS = { coreVersion: MANIFEST.compatibility.verified, systemId: MANIFEST.id, systemVersion: MANIFEST.version };
+/**
+ * The core version the documents claim: the OLDEST build the system supports, never the newest. Foundry
+ * refuses to migrate a document stamped newer than itself, so packs stamped 14.370 filled every world
+ * launch on 14.365-14.369 with migration errors (found by the 0.4.0 install test, 2026-11-15).
+ */
+const STATS = { coreVersion: MANIFEST.compatibility.minimum, systemId: MANIFEST.id, systemVersion: MANIFEST.version };
 
 const id = (...parts) => {
   const h = crypto.createHash("sha1").update(parts.join("|")).digest();
