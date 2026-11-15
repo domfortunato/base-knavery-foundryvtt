@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.1
+
+- Fixed: on Foundry 14.365 to 14.369, every world launch logged a migration error for each compendium entry
+  (the bestiary, the macros, the Guide…). The compendia now say they were made for the oldest Foundry build the
+  system supports, so every supported build loads them cleanly.
+
 ## 0.4.0
 
 - **Ready for translation.** The interface and the Knave 1e rules the system ships can now be translated, and
