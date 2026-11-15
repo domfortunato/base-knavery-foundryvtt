@@ -60,6 +60,9 @@ await withSettings(page, async () => {
     return a.id;
   });
   const secondId = await page.evaluate(() => window.__listingSecond);
+  // Creation opens each new sheet: close them, so each shot finds one window.
+  await page.evaluate(() => { for (const app of [...foundry.applications.instances.values()]) if (app.document) app.close(); });
+  await page.waitForTimeout(500);
   const npcId = await page.evaluate(async () => (await Actor.create({ name: "Probe Goblin", type: "npc", system: { hp: { value: 4, max: 4 } } })).id);
 
   for (const scheme of ["dark", "light"]) {
