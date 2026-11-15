@@ -47,7 +47,7 @@ items:
     _stats:
       coreVersion: '14.365'
       systemId: base-knavery
-      systemVersion: 0.4.1
+      systemVersion: 0.4.2
   - _id: PcIuiuO9EwfBOjQT
     _key: '!actors.items!6Y1ANNm1cXsIOgt4.PcIuiuO9EwfBOjQT'
     name: Sting
@@ -66,10 +66,10 @@ items:
     _stats:
       coreVersion: '14.365'
       systemId: base-knavery
-      systemVersion: 0.4.1
+      systemVersion: 0.4.2
 effects: []
 flags: {}
 _stats:
   coreVersion: '14.365'
   systemId: base-knavery
-  systemVersion: 0.4.1
+  systemVersion: 0.4.2
