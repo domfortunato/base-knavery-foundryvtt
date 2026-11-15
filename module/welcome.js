@@ -86,12 +86,23 @@ export class WelcomeWindow extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 }
 
-/** Open the Base Knavery guide (the guide compendium's journal): the welcome, the dashboard's rail. */
-export const openGuide = async () => {
+/** The Guide's page each role lands on when none is named (user decision D7, 2026-11-14). */
+export const GUIDE_HOME = { gm: "Start Here (GM)", player: "Your Knave (players)" };
+
+/**
+ * Open the Base Knavery guide (the guide compendium's journal) at a page: the one whose title is
+ * given, else the GM's start page or the players' first page. Other windows call it with their
+ * own page's title (and a heading's slug as `anchor` to land on a section). The titles are the
+ * generator's (tools/content/build-content.mjs), which also derives the page ids from them.
+ */
+export const openGuide = async (title = null, { anchor = null } = {}) => {
   const pack = game.packs.get(`${SYSTEM_ID}.guide`);
-  const entry = pack?.index.contents[0];
+  const entry = pack?.index.find((e) => e.name === "Base Knavery Guide") ?? pack?.index.contents[0];
   const doc = entry ? await pack.getDocument(entry._id) : null;
-  return doc?.sheet.render({ force: true });
+  if (!doc) return null;
+  const name = title ?? (game.user.isGM ? GUIDE_HOME.gm : GUIDE_HOME.player);
+  const page = doc.pages.getName(name) ?? null;
+  return doc.sheet.render({ force: true, ...(page ? { pageId: page.id } : {}), ...(page && anchor ? { anchor } : {}) });
 };
 
 export const openWelcome = () => {
