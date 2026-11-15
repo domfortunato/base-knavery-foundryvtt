@@ -171,7 +171,6 @@ pages:
         <ul>
         <li><b>Knave 1e XP: a level every 1,000.</b> Off, Knave 2e's XP table: 2,000, 4,000, 8,000 and doubling.</li>
         <li><b>XP for treasure.</b> Knave 1e: off, XP comes from deeds; its designer's note allows XP for gold, 1 XP per 100 copper, and choosing that still plays Knave 1e. Knave 2e: 1 XP per coin of treasure brought back. Awarded on the dashboard's XP page.</li>
-        <li><b>Knave 1e random ability raises</b> (a hack, off in both): Level Up's Random rolls a d20 per ability and raises it on a roll under its defense, until three have risen.</li>
         </ul>
         <h2>Old worlds and the switch</h2>
         <p>A world made before version 0.2.0 kept the Knave 2e rules it played: at the first Game Master login, every rule it never set was written with its 2e value, and a rule added later takes the edition the others play. When you build tables from your Knave 2e book, the system asks whether to switch the world to Knave 2e rules. Switching never changes a character you already have.</p>
@@ -190,17 +189,13 @@ pages:
     text:
       format: 1
       content: |-
-        <p><i>Configure Settings → Base Knavery</i> has five buttons: <b>Configure General</b>, <b>Configure Creation</b>, <b>Configure Inventory</b>, <b>Configure Rules</b> (@UUID[Compendium.base-knavery.guide.JournalEntry.q91oGmBk2jFcOYKv.JournalEntryPage.qeERSU5UeAXONkl3]{its own page}) and <b>Configure Rulebook</b>. Each window scrolls its rows under a <b>Save</b> that stays in reach; <b>Reset Defaults</b> puts every row back. The settings are the world's: players share them.</p>
+        <p><i>Configure Settings → Base Knavery</i> has six buttons: <b>Configure General</b>, <b>Configure Creation</b>, <b>Configure Inventory</b>, <b>Configure Rules</b> (@UUID[Compendium.base-knavery.guide.JournalEntry.q91oGmBk2jFcOYKv.JournalEntryPage.qeERSU5UeAXONkl3]{its own page}), <b>Configure Rulebook</b> and <b>Configure Printing</b>. Each window scrolls its rows under a <b>Save</b> that stays in reach; <b>Reset Defaults</b> puts every row back. The settings are the world's: players share them.</p>
         <h2>Configure General</h2>
         <ul>
         <li><b>Roll damage with every attack:</b> pre-ticks <i>Roll damage at the same time</i> in the Attack window.</li>
         <li><b>Show traits:</b> the traits block on the Description page.</li>
         <li><b>Change log:</b> whispers you, and whoever else may observe the sheet, a card when someone edits it by hand: name, HP, coins, XP, level, wounds, AC, pronouns and abilities, items added, removed, counted or equipped. The system's own actions stay silent; Rest, Level Up and Heal Wound name themselves.</li>
         <li><b>Welcome window on start:</b> opens for the GM at every login and refresh. Players never see it unasked.</li>
-        <li><b>Hazard dice on the Random page:</b> off hides the hazard dice on Random and the Time page's clock; the Wages list stays.</li>
-
-        <li><b>Printing:</b> the paper (Auto, A4 or Letter), the text size, and whether career features, the backstory and the notes lines print. The sheet is one page at every setting.</li>
-
         </ul>
 
         <p><i>Advantage and disadvantage</i> lives in Configure Rules, under Combat, with an edition value.</p>
@@ -226,6 +221,13 @@ pages:
         <li><b>Page offset:</b> PDF page minus printed page. In the Knave 2e PDF, printed page 1 is PDF page 7, so 6.</li>
         <li><b>Build tables from the book</b> is here too. See @UUID[Compendium.base-knavery.guide.JournalEntry.q91oGmBk2jFcOYKv.JournalEntryPage.bmwV7CiEVwd5TPgN]{Your Rulebook and the Tables}.</li>
         </ul>
+        <h2>Configure Printing</h2>
+        <ul>
+        <li><b>Paper:</b> Auto, A4 or Letter.</li>
+        <li><b>Text size</b> of the printed sheet.</li>
+        <li>Whether <b>career features</b>, the <b>backstory</b> and the <b>notes lines</b> print.</li>
+        </ul>
+        <p>The sheet is one page at every setting.</p>
     flags: {}
     ownership:
       default: -1
@@ -252,12 +254,12 @@ pages:
         <p>Hazard presets (Knave 2e p21: falling, fire, on fire, freezing, lightning) fill the formula and Direct for you.</p>
         <h2>Time</h2>
         <p>Choose <b>Dungeon: 10-minute turns</b> or <b>Travel: 4-hour watches</b>. <b>End the turn</b> (or <b>End the watch</b>) moves the world clock on and rolls the hazard die; the line above counts the turn, or the day, its watch of six and the watches travelled today. <b>Roll the hazard die only</b> leaves the clock alone; <b>Start again</b> resets the count. Tick <b>The party is resting</b> and fatigue is ignored; untick <b>Travelling this watch</b> for a watch in camp. More than three watches of travel in a day adds the forced-march note to the card: 1 direct damage unless a CON check is passed.</p>
-        <p>The hazard card is whispered to you with the face and what it means. Three faces carry a button, and nothing on a sheet changes until you click it. <b>Deal the fatigue</b> lists the party (every character a player owns) so you can untick whoever rests, then deals 1 damage to the others. <b>Burn out the lit torches</b> uses up one torch from each lit stack and puts it out. <b>Roll for spoiled rations</b> rolls a d6 per ration and each 1 spoils. A second press asks first. Encounters, shifts and signs are yours to play out; the Random page helps.</p>
+        <p>The hazard card is whispered to you with the face and what it means. Three faces carry a button, and nothing on a sheet changes until you click it. <b>Deal the fatigue</b> lists the party (every character a player owns) so you can untick whoever rests, then deals 1 damage to the others. <b>Burn out the lit torches</b> uses up one torch from each lit stack and puts it out. <b>Roll for spoiled rations</b> rolls a d6 per ration and each 1 spoils. A second press asks first. Encounters, shifts and signs are yours to play out; the Dice page helps.</p>
         <p><b>Forage</b> (Knave 2e p8) spends a watch on a WIS check for d6 rations; the watch then ends and the hazard die rolls.</p>
         <p><b>Wages</b> lists every hireling with a wage, who employs them and when it is due: a month is 30 days of the world clock, and a Knave 1e henchman is owed by the day. <b>Pay</b> takes the coins from the employer named on the hireling's sheet and moves the due date on, settling every day owed.</p>
         <h2>Party</h2>
         <p>Every player character at a glance: HP (and whether they are unconscious or dead), wounds, slots used, coins, their lights and which are lit, and the spellbooks still ready today. Click a name to open the sheet.</p>
-        <h2>Random</h2>
+        <h2>Dice</h2>
         <p>Rolls for you, whispered. <b>Hazard dice</b>: the dungeon and travel dice alone, without moving the clock. <b>Encounters</b>: <b>Reaction (2d6)</b> on your Reaction table (Knave 1e's ships; one built from the 2e book wins), <b>Activity</b>, <b>Surprise</b> (sets up the closest PC's WIS check on Requests: tick that PC, type the closest creature's WIS as the difficulty and send; a win by 5 or more surprises), the encounter <b>Distance</b> in a dungeon or the wilderness, and <b>Morale: selected</b> for the NPC tokens you have selected. <b>Events</b>: weather, travel and delve shifts, signs, city events and disasters. <b>On the fly</b>: a <b>Monster</b>, and a quick <b>NPC</b> (a name, personality, profession and detail in one card). <b>Downtime</b>: a carousing mishap. A table's button stays off until the table exists: build it from your Knave 2e book or import it by name.</p>
 
         <p><b>Carousing</b> (Knave 2e p52) is a window: the cost by settlement size, XP equal to the coins spent, the morning's CON check and the mishap on a failure.</p>
@@ -271,7 +273,7 @@ pages:
         <h2>Toggles</h2>
         <p>Live switches, the same the macros flip: the player marketplace, player character creation, player Char Gen Mode, players changing level &amp; XP, and the change log.</p>
 
-        <p>Also here: <b>Players may read the rulebook</b> and <b>Hazard dice on the Random page</b>.</p>
+        <p>Also here: <b>Players may read the rulebook</b>.</p>
 
         <p>One switch per portrait gallery (Yours, Portraits by Aspeheim, Lydia Comer, Tlomdev, Icons): a gallery that is off leaves the portrait picker and the random portraits. <b>Random portraits from</b>: any gallery that is on, or one named gallery, with the Yours folder's path and a Rescan beside it. Random monster portraits come from Lydia Comer's monsters, Tlomdev's creatures and your folder, whichever are on.</p>
         <h2>Tables</h2>
@@ -370,10 +372,10 @@ pages:
         <p>Under Knave 1e a hit must be above the armor defense, not equal to it, and the attack tooltip says so. A Knave 2e power attack is the <b>Power attack</b> tick in the Attack window (a melee weapon): the damage dice are doubled and the weapon breaks. A ranged weapon shows the melee reminder. The dashboard's Direct box is hidden when the world plays without wounds (Knave 1e death).</p>
         <h2>Initiative</h2>
         <p>The <i>Initiative</i> rule (Configure Rules, Combat) is a choice. Knave 1e: Begin Combat rolls one d6, 1–3 the enemies act first, 4–6 the player characters (characters, players' tokens and friendly tokens); the round's result is posted, and every new round rolls again from your client, even when a player ends the last turn. Knave 2e: one CHA check between the sides' leaders decides who acts first, and a side's creatures act in any order; Begin Combat picks the leaders (the highest CHA among the PCs, the highest level among the hostiles), both yours to change on the Combat page (<b>Party's leader</b>, <b>Enemies' leader</b>). Individual: Foundry's roll per token. Under either side rule the tracker lists Player characters and Enemies as two groups, the acting side highlighted, a tick per combatant once it has acted, and a GM button <b>Next side</b>; no initiative numbers. A combatant at 0 HP (Knave 1e: Unconscious) is marked defeated once and cleared on healing; your own skull always wins.</p>
-        <p><b>Surprise</b> (Knave 2e p19): within 80', the closest PC's WIS check against the closest creature's WIS; a win by 5 or more surprises. The Random page's Surprise sets up the request; the result card's buttons <i>They are surprised</i> and <i>We are surprised</i> set round 1 and post the +5 reminder, never added silently.</p>
+        <p><b>Surprise</b> (Knave 2e p19): within 80', the closest PC's WIS check against the closest creature's WIS; a win by 5 or more surprises. The Dice page's Surprise sets up the request; the result card's buttons <i>They are surprised</i> and <i>We are surprised</i> set round 1 and post the +5 reminder, never added silently.</p>
 
         <h2>Morale</h2>
-        <p>Morale is 2d6 at or under the creature's MRL. Roll it from the creature's sheet (the die by MRL), from <b>Morale: selected</b> on the Random page for the NPC tokens you have selected, or from the breaking-point cards: in a running combat the active GM's client watches each side for its first casualty, half the side fallen, and an NPC left alone at half HP or less, each once a battle, and whispers you a card naming who tests, with a <b>Roll morale</b> button. A failed test puts <b>Leader rallies them (CHA check)</b> on its card: pick the leader, roll CHA, and a pass rerolls the morale; each side may try once a battle. Companions never test morale. A leader killed or a feared foe are your call.</p>
+        <p>Morale is 2d6 at or under the creature's MRL. Roll it from the creature's sheet (the die by MRL), from <b>Morale: selected</b> on the Dice page for the NPC tokens you have selected, or from the breaking-point cards: in a running combat the active GM's client watches each side for its first casualty, half the side fallen, and an NPC left alone at half HP or less, each once a battle, and whispers you a card naming who tests, with a <b>Roll morale</b> button. A failed test puts <b>Leader rallies them (CHA check)</b> on its card: pick the leader, roll CHA, and a pass rerolls the morale; each side may try once a battle. Companions never test morale. A leader killed or a feared foe are your call.</p>
         <p>Under Knave 1e attacks the breaking points are the first edition's: half the group fallen, the leader defeated, one left at half HP; there is no first-casualty card and no rally.</p>
         <h2>Hazards in a fight</h2>
         <p>The hazard die's fatigue, burn and depletion are applied from the Time page's cards, never by themselves, and a watch of travel past the third adds the forced-march note. See @UUID[Compendium.base-knavery.guide.JournalEntry.q91oGmBk2jFcOYKv.JournalEntryPage.F4nlBGhRwaTFmlHU]{The Game Master's Dashboard}.</p>

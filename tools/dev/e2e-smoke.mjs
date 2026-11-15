@@ -197,7 +197,7 @@ ok(rb.careers === 5 && rb.traits === null, "page map: Careers p. 5, trait tables
 // 13. Every Configure submenu renders (its template was missing until 2026-11-13).
 const menus = await page.evaluate(async () => {
   const out = {};
-  for (const id of ["general", "generation", "inventory", "hacks", "rulebook"]) {
+  for (const id of ["general", "generation", "inventory", "hacks", "rulebook", "printing"]) {
     const Menu = game.settings.menus.get(`base-knavery.${id}`)?.type;
     if (!Menu) { out[id] = "unregistered"; continue; }
     const app = new Menu();
@@ -208,7 +208,7 @@ const menus = await page.evaluate(async () => {
   }
   return out;
 });
-ok(Object.values(menus).every((m) => m.rows > 0), "the five Configure submenus render their rows", JSON.stringify(menus));
+ok(Object.values(menus).every((m) => m.rows > 0), "the six Configure submenus render their rows", JSON.stringify(menus));
 ok(menus.rulebook?.picker && menus.generation?.picker, "path settings get core's file picker", JSON.stringify(menus));
 
 // 14. Welcome window and the Settings sidebar's buttons.

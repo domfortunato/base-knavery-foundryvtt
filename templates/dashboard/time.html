@@ -1,5 +1,4 @@
 <section class="tab {{tab.cssClass}}" data-tab="time" data-group="primary">
-  {{#if showHazard}}
   <div class="dash-time-mode">
     <label><input type="radio" name="timeMode" value="dungeon" data-action="timeMode" {{checked (eq time.mode "dungeon")}} />
       <i class="fas fa-dungeon"></i> {{localize "KNAVERY.Time.Dungeon"}}</label>
@@ -20,9 +19,6 @@
     <button type="button" data-action="resetClock"><i class="fas fa-rotate-left"></i> {{localize "KNAVERY.Time.Reset"}}</button>
   </div>
   <p class="hint">{{#if time.travel}}{{localize "KNAVERY.Time.TravelHint"}}{{else}}{{localize "KNAVERY.Time.DungeonHint"}}{{/if}}</p>
-  {{else}}
-  <p class="hint">{{localize "KNAVERY.Time.Off"}}</p>
-  {{/if}}
   <h3>{{localize "KNAVERY.Wages.Title"}}</h3>
   {{#if wages.length}}
   <div class="dash-wages">

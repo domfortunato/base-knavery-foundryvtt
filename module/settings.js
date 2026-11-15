@@ -1,5 +1,5 @@
 /**
- * World settings, shown through four grouped Configure Settings submenus
+ * World settings, shown through six grouped Configure Settings submenus
  * (ported from Air Bladder's SettingsGroupMenu). Every setting is `config:
  * false`; the order a GM sees is each group's `keys`.
  */
@@ -51,8 +51,7 @@ export const SETTING_GROUPS = [
     hint: "KNAVERY.Settings.GroupGeneralHint",
     icon: "fa-solid fa-gears",
     keys: [
-      "roll-damage-default", "show-traits", "change-log", "welcome-on-start", "show-hazard-dice",
-      "#printing", "print-paper", "print-text-size", "print-career-features", "print-backstory", "print-notes-lines",
+      "roll-damage-default", "show-traits", "change-log", "welcome-on-start",
     ],
   },
   {
@@ -100,6 +99,15 @@ export const SETTING_GROUPS = [
     hint: "KNAVERY.Settings.GroupRulebookHint",
     icon: "fa-solid fa-book",
     keys: ["rulebook-pdf", "rulebook-for-players", "rulebook-page-offset"],
+  },
+  {
+    // Its own window since 2026-11-15 (user): it was a section of General.
+    id: "printing",
+    title: "KNAVERY.Settings.GroupPrinting",
+    button: "KNAVERY.Settings.GroupPrintingButton",
+    hint: "KNAVERY.Settings.GroupPrintingHint",
+    icon: "fa-solid fa-print",
+    keys: ["print-paper", "print-text-size", "print-career-features", "print-backstory", "print-notes-lines"],
   },
 ];
 
@@ -226,11 +234,6 @@ export const registerSettings = () => {
   reg("coins-per-slot", {
     label: "CoinsPerSlot", type: String, choices: choices("CoinsPerSlotChoice", ["100", "500"]),
     default: D["coins-per-slot"], onChange: () => { reprepareActors(); rerenderActorSheets(); },
-  });
-  // The Random page's top and the Toggles switch follow it on every client, not only the writer's.
-  reg("show-hazard-dice", {
-    label: "ShowHazardDice", type: Boolean, default: true,
-    onChange: () => foundry.applications.instances.get("knavery-gm-dashboard")?.render({ parts: ["tools", "dice"] }),
   });
 
   /* Rulebook: the GM's own PDF (module/rulebook.js). Only a path is stored. */

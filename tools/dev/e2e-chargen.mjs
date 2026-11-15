@@ -2479,14 +2479,14 @@ await withSettings(gm, async () => {
     await gm.screenshot({ path: `${SHOTS}/dashboard-rail.png` });
     ok(hud.there && hud.inColumn && hud.before && hud.clear && hud.size >= 48 && !aliceHud,
       "the GM has a big dashboard button atop the left toolbar, clear of the scene controls; Alice has none", JSON.stringify({ hud, aliceHud }));
-    ok(rail.tabs === "requests,damage,time,party,dice,xp,market,tools,tables" && rail.strips === 0 && rail.outside && rail.visible && rail.guide === 3 && rail.random === "Random" && rail.events === 6,
-      "the dashboard's pages are on a thumb rail off its edge, with no tab strip; Requests shows the difficulty guide; Random has the six events", JSON.stringify(rail));
-    ok(tools.active && tools.toggles === 7 && tools.manager && tools.tablesClean && tools.tablesImport,
+    ok(rail.tabs === "requests,damage,time,party,dice,xp,market,tools,tables" && rail.strips === 0 && rail.outside && rail.visible && rail.guide === 3 && rail.random === "Dice" && rail.events === 6,
+      "the dashboard's pages are on a thumb rail off its edge, with no tab strip; Requests shows the difficulty guide; Dice has the six events", JSON.stringify(rail));
+    ok(tools.active && tools.toggles === 6 && tools.manager && tools.tablesClean && tools.tablesImport,
       "Toggles holds the seven switches; the Marketplace page holds the aisles; Tables keeps the importer", JSON.stringify(tools));
     await gm.evaluate(() => foundry.applications.instances.get("knavery-gm-dashboard")?.close());
   });
 
-  await section("31. The dashboard names its page, opens the guide and grows the Random page; the reader's Show to players; linked art credits.", async () => {
+  await section("31. The dashboard names its page, opens the guide and grows the Dice page; the reader's Show to players; linked art credits.", async () => {
     const made31 = await gm.evaluate(async () => {
       const rows = (names) => names.map((name, i) => ({ type: "text", name, range: [i + 1, i + 1], weight: 1 }));
       const out = [];
@@ -2554,7 +2554,7 @@ await withSettings(gm, async () => {
     ok(d.first === "Game Master's Dashboard: Requests" && d.party === "Game Master's Dashboard: Party",
       "the dashboard's title bar names the open page", JSON.stringify(d));
     ok(Object.values(d.buttons).every(Boolean) && d.npc.flag && d.npc.whisper && d.npc.words,
-      "Random has Activity, Surprise, Monster, NPC and Carousing; a quick NPC is one whispered card from the world's tables", JSON.stringify(d));
+      "Dice has Activity, Surprise, Monster, NPC and Carousing; a quick NPC is one whispered card from the world's tables", JSON.stringify(d));
     ok(d.surprise.tab === "requests" && d.surprise.check === "ability:WIS" && d.surprise.reason && d.surprise.title === "Game Master's Dashboard: Requests",
       "Surprise sets up a WIS check on Requests", JSON.stringify(d.surprise));
     ok(d.guide, "the rail's Guide button opens the Base Knavery guide", JSON.stringify(d));
@@ -2568,7 +2568,7 @@ await withSettings(gm, async () => {
     const r = await gm.evaluate(async () => {
       const wait = (ms) => new Promise((res) => setTimeout(res, ms));
       const out = {};
-      for (const id of ["general", "generation", "inventory", "hacks", "rulebook"]) {
+      for (const id of ["general", "generation", "inventory", "hacks", "rulebook", "printing"]) {
         const Menu = game.settings.menus.get(`base-knavery.${id}`)?.type;
         const app = new Menu();
         await app.render({ force: true });
@@ -2613,6 +2613,8 @@ await withSettings(gm, async () => {
       "Rules has its seven section headings and Inventory its Hacks heading", JSON.stringify({ hacks: r.hacks.headings, inventory: r.inventory.headings }));
     ok(all.every((m) => m.knavery), "the Configure windows carry the knavery class, so the shared window rules apply", each("knavery"));
     ok(r.hacks.rows >= 20 && r.hacks.hintless >= 4 && r.inventory.rows === 4, "the Rules window lists every rule, some without a hint; Inventory has four rows", JSON.stringify({ hacks: r.hacks.rows, hintless: r.hacks.hintless, inventory: r.inventory.rows }));
+    ok(r.printing.rows === 5 && r.general.rows === 4 && r.general.headings.length === 0,
+      "Printing is its own window with its five rows; General keeps four and no Printing heading (2026-11-15)", JSON.stringify({ printing: r.printing.rows, general: r.general.rows, headings: r.general.headings }));
   });
 
   /* ------------------------------------------------------------------ */
@@ -2807,7 +2809,7 @@ await withSettings(gm, async () => {
       out.saveLine = /kn-spell-save/.test(game.messages.contents.at(-1)?.content ?? "");
       await book.delete();
       await game.settings.set(ns, "spell-rule", rule);
-      // The dashboard's Carouse (Random) and Forage (Time, travel mode) buttons.
+      // The dashboard's Carouse (Dice) and Forage (Time, travel mode) buttons.
       const { openGmDashboard } = await import(`${sys}/gm-dashboard.js`);
       await openGmDashboard("dice");
       await wait(600);
@@ -2827,7 +2829,7 @@ await withSettings(gm, async () => {
     ok(r.rationsLeft === 1 && r.ateLine, "a rest with a meal eats one ration and says so", JSON.stringify({ left: r.rationsLeft, line: r.ateLine }));
     ok(r.companion.role === "companion" && r.companion.employer === ids.a && r.companion.hp === 3, "Create NPC makes a companion of a knave", JSON.stringify(r.companion));
     ok(r.saveLine, "a cast card carries the save line", String(r.saveLine));
-    ok(r.carouse && r.forage, "Random has Carouse; Time (travel) has Forage", JSON.stringify({ carouse: r.carouse, forage: r.forage }));
+    ok(r.carouse && r.forage, "Dice has Carouse; Time (travel) has Forage", JSON.stringify({ carouse: r.carouse, forage: r.forage }));
   });
 
   /* ------------------------------------------------------------------ */
@@ -2958,7 +2960,7 @@ await withSettings(gm, async () => {
     const first = await gm.evaluate(async ([sys, pcId]) => {
       const wait = (ms) => new Promise((res) => setTimeout(res, ms));
       const ns = "base-knavery";
-      const out = { before: { rule: game.settings.get(ns, "initiative-rule"), attack: game.settings.get(ns, "attack-rule"), death: game.settings.get(ns, "death-rule"), hazard: game.settings.get(ns, "show-hazard-dice") } };
+      const out = { before: { rule: game.settings.get(ns, "initiative-rule"), attack: game.settings.get(ns, "attack-rule"), death: game.settings.get(ns, "death-rule") } };
       const pc = game.actors.get(pcId);
       await pc.update({ "system.hp.value": 4, "system.hp.max": 4, "system.wounds": 0 });
       await game.settings.set(ns, "initiative-rule", "2e-leaders");
@@ -3061,15 +3063,14 @@ await withSettings(gm, async () => {
       drop?.dispatchEvent(new DragEvent("drop", { dataTransfer: dt, bubbles: true, cancelable: true }));
       await wait(1500);
       out.drop = { zone: !!drop, rows: aisle.results.size };
-      // (g) The hazard-dice switch, flipped as a setting, redraws the Random page on its own.
+      // (g) The hazard dice always show on the Dice page and the Time page (the switch is gone, 2026-11-15).
       inst.changeTab("dice", "primary");
       await wait(300);
-      await game.settings.set(ns, "show-hazard-dice", false);
-      await wait(600);
-      out.hazard = { hidden: !app().querySelector('section[data-tab="dice"] .dash-hazard') };
-      await game.settings.set(ns, "show-hazard-dice", true);
-      await wait(600);
-      out.hazard.back = !!app().querySelector('section[data-tab="dice"] .dash-hazard');
+      out.hazard = {
+        gone: !game.settings.settings.has(`${ns}.show-hazard-dice`),
+        dice: !!app().querySelector('section[data-tab="dice"] .dash-hazard'),
+        time: !!app().querySelector('section[data-tab="time"] [data-action="endTurn"]'),
+      };
       inst.close();
       // (h) A second Generate-a-spell request joins the open window; one spell will answer both.
       const { openSpellGenerator } = await import(`${sys}/spell-generator.js`);
@@ -3091,7 +3092,6 @@ await withSettings(gm, async () => {
       await game.settings.set(ns, "initiative-rule", before.rule);
       await game.settings.set(ns, "attack-rule", before.attack);
       await game.settings.set(ns, "death-rule", before.death);
-      await game.settings.set(ns, "show-hazard-dice", before.hazard);
       return out;
     }, [SYS, ids.a, first.t0, first.before]);
     ok(/Probe Lvl Three's 14\b/.test(first.flavor), "the 2e leaders' check defends at 11 + the monster leader's level", first.flavor);
@@ -3104,7 +3104,7 @@ await withSettings(gm, async () => {
     ok(r.ideal === "2d6" && r.idealCrit === "3d6", "the card's Roll damage adds the ideal die, and the natural-20 die with it", JSON.stringify({ ideal: r.ideal, crit: r.idealCrit }));
     ok(!r.rally.rally1e && r.rally.rally2e, "a failed morale card offers Rally under Knave 2e attacks only", JSON.stringify(r.rally));
     ok(r.drop.zone && r.drop.rows === 1, "one item dropped on a world aisle after three other-page redraws makes one row", JSON.stringify(r.drop));
-    ok(r.hazard.hidden && r.hazard.back, "the hazard-dice setting redraws the Random page when flipped in Configure General", JSON.stringify(r.hazard));
+    ok(r.hazard.gone && r.hazard.dice && r.hazard.time, "the hazard dice always show on the Dice and Time pages; their switch is gone", JSON.stringify(r.hazard));
     ok(r.spell.ids.join() === "probe-r1,probe-r2" && r.spell.reason === "second", "a second spell request joins the open window and shows the latest reason", JSON.stringify(r.spell));
     ok(r.individual.e2 === "2e" && r.individual.e1 === "custom", "a Knave 2e world on Individual initiative still reads as 2e", JSON.stringify(r.individual));
     await closeDialogs();

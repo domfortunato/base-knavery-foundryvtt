@@ -4,6 +4,10 @@
 
 - Removed: the "Knave 1e random ability raises" switch under Advancement. Level Up's Random button raises
   three different abilities at random in every world.
+- The Game Master's Dashboard's Random page is now **Dice**.
+- Removed: the "Hazard dice on the Random page" switch (Configure General and the Toggles page). The hazard dice
+  and the Time page's clock always show.
+- The Printing settings have their own window, **Configure Printing**, out of Configure General.
 
 ## 0.3.0
 

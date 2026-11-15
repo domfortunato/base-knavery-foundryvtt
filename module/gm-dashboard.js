@@ -9,7 +9,7 @@
  *   Time      dungeon turns or travel watches: end one (the world clock moves on and
  *             the hazard die rolls), the party resting, the die on its own (hazard.js);
  *             hirelings' wages: when each is due, and Pay (hirelings.js).
- *   Random    reaction, encounter distance, morale; events from the GM's 2e tables (weather,
+ *   Dice      reaction, encounter distance, morale; events from the GM's 2e tables (weather,
  *             shifts, signs, city events, disasters), whispered to the GM.
  *   Party     every player character at a glance: HP, wounds, slots, coins, lights
  *             and spellbooks, each opening its sheet (user, 2026-11-14).
@@ -51,7 +51,7 @@ const { DialogV2 } = foundry.applications.api;
 /** Requests sent this session, newest first: {id, label, reason, target, entries:[{actorId,name,state,total,success}]} */
 const requestLog = [];
 
-/** The Random page's table rolls, by section: Knave 2e tables, built from the GM's book (never shipped). */
+/** The Dice page's table rolls, by section: Knave 2e tables, built from the GM's book (never shipped). */
 const RANDOM_TABLES = [
   { key: "Activity", table: "Activities", icon: "fa-person-running", page: 19, section: "encounters" },
   { key: "Weather", table: "Weather", icon: "fa-cloud-sun-rain", page: 9, section: "events" },
@@ -63,7 +63,7 @@ const RANDOM_TABLES = [
   { key: "Monster", table: "Monsters", icon: "fa-dragon", page: 61, section: "fly" },
   { key: "Carousing", table: "Carousing Mishaps", icon: "fa-beer-mug-empty", page: 52, section: "downtime" },
 ];
-/** A quick NPC (the Random page): each of these that the world has, drawn into one card (pp54-57). */
+/** A quick NPC (the Dice page): each of these that the world has, drawn into one card (pp54-57). */
 const QUICK_NPC = [
   { key: "Name", tables: ["Names", "Surnames"] }, { key: "Personality", tables: ["Personalities"] },
   { key: "Profession", tables: ["Professions"] }, { key: "Detail", tables: ["NPC Details"] },
@@ -78,9 +78,8 @@ const TOGGLES = [
   { key: "allow-player-randomization", label: "KNAVERY.Macro.CreationTools", icon: "fa-dice-d20" },
   { key: "allow-player-level-xp", label: "KNAVERY.Macro.LevelXp", icon: "fa-arrow-up-1-9" },
   { key: "change-log", label: "KNAVERY.Macro.ChangeLog", icon: "fa-clipboard-list" },
-  // Two more live switches (user, 2026-11-14, D3): the rulebook for players, the Random page's hazard dice.
+  // One more live switch (user, 2026-11-14, D3): the rulebook for players.
   { key: "rulebook-for-players", label: "KNAVERY.Macro.Rulebook", icon: "fa-book-open" },
-  { key: "show-hazard-dice", label: "KNAVERY.Macro.HazardDice", icon: "fa-dice-d6" },
 ];
 
 /** The Combat page's picture of the running fight (initiative.js). */
@@ -151,7 +150,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       quickNpc: GmDashboard.#onQuickNpc,
       // The rail's Guide opens the dashboard's page at the open page's section.
       openGuide() {
-        const anchors = { requests: "requests", damage: "combat", time: "time", party: "party", dice: "random", xp: "xp", market: "marketplace", tools: "toggles", tables: "tables" };
+        const anchors = { requests: "requests", damage: "combat", time: "time", party: "party", dice: "dice", xp: "xp", market: "marketplace", tools: "toggles", tables: "tables" };
         return openGuide("The Game Master's Dashboard (GM)", { anchor: anchors[this.tabGroups?.primary] ?? null });
       },
       importTable: GmDashboard.#onImportTable,
@@ -245,7 +244,6 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       difficulty: DEFAULT_DIFFICULTY,
       target: CHECK_BASE + DEFAULT_DIFFICULTY,
       log: requestLog.slice(0, 20),
-      showHazard: game.settings.get(SETTINGS_NS, "show-hazard-dice"),
       time: (() => {
         const c = clock();
         const travel = c.mode === "travel";
@@ -797,7 +795,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
   /*  Tables and switches                          */
   /* -------------------------------------------- */
 
-  /** An event table (the Random page), whispered to the GM like the page's other rolls. */
+  /** An event table (the Dice page), whispered to the GM like the page's other rolls. */
   static async #onRollEvent(_e, target) {
     const table = await findTable(target.dataset.table);
     if (!table) return ui.notifications.warn("KNAVERY.Dashboard.EventMissing", { format: { name: target.dataset.table } });
@@ -865,8 +863,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
   static async #onToggleSetting(_e, target) {
     const key = target.dataset.key;
     await setToggle(key, !game.settings.get(SETTINGS_NS, key));
-    // The hazard-dice switch also redraws the Random page, whose top it governs.
-    this.render({ parts: key === "show-hazard-dice" ? ["tools", "dice"] : ["tools"] });
+    this.render({ parts: ["tools"] });
   }
 
   /** Toggles: a portrait gallery on or off; one switched off stops being the random source. */

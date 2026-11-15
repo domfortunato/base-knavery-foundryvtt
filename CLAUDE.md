@@ -88,11 +88,11 @@ picker, change log and marketplace it ports.
     `KnaveryActor._preUpdate` drops the rest (client-side only)
   - `gm-dashboard.js` (its pages on the same thumb-tab rail, frame class `knavery-railed`;
     opened from the GM's big button atop the left toolbar, `#knavery-dashboard-hud`; pages: Requests, Damage,
-    Time, Party, Random, XP, Marketplace (the aisles; `marketplace.js` `MARKET_ACTIONS`), Toggles (the players'
+    Time, Party, Dice (Random before 2026-11-15), XP, Marketplace (the aisles; `marketplace.js` `MARKET_ACTIONS`), Toggles (the players'
     switches, the portrait galleries and the random-portrait source; `art.js` `GALLERIES`), Tables),
     `table-importer.js`, `art.js`, `change-log.js`,
     `print.js` (0.3.0: one fixed 186 × 261 mm page for both editions, built from the rules and
-    the slot layout; the Printing settings under Configure General; probe `e2e-print.mjs` prints four
+    the slot layout; the Printing settings in their own Configure Printing window (2026-11-15); probe `e2e-print.mjs` prints four
     knaves to PDF and asserts one page each)
   - `rulebook.js`: the GM's PDF in Foundry's bundled pdf.js viewer (an iframe
     of `scripts/pdfjs/web/viewer.html`, after Mythic-pwd), the B key, showing
@@ -245,7 +245,7 @@ picker, change log and marketplace it ports.
 - Rules found by the 0.3.0 audit (user approved 2026-11-14): a rest eats one ration; a shell Names table falls
   back to the system's own list (`names.js`, this project's writing); the 2e kit adds a quiver with a missile
   weapon; a 2e cast asks the level (1 to INT) and every cast card shows the save; the GM may add a third career;
-  companions are an NPC role made by Create NPC (`system.employer`); Carouse (Random) and Forage (Time) run the
+  companions are an NPC role made by Create NPC (`system.employer`); Carouse (Dice) and Forage (Time) run the
   book's procedures with the numbers only.
 
 

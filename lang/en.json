@@ -732,7 +732,6 @@
       "Reset": "Start again",
       "DungeonHint": "Ending a turn moves the world clock on 10 minutes and rolls the dungeon hazard die. Fatigue, burn and depletion cards carry a button: nothing changes until you click it.",
       "TravelHint": "Ending a watch moves the world clock on 4 hours and rolls the travel hazard die. A day has six watches. Fatigue and depletion cards carry a button: nothing changes until you click it.",
-      "Off": "The hazard dice are switched off in the settings.",
       "NothingToDo": "Nothing to do.",
       "NoParty": "There are no player characters.",
       "FatigueTitle": "Fatigue",
@@ -860,7 +859,7 @@
       "TabDamage": "Combat",
       "TabDamageOld": "Damage",
       "TabTime": "Time",
-      "TabDice": "Random",
+      "TabDice": "Dice",
       "TabTables": "Tables",
       "TabXp": "XP",
       "TabParty": "Party",
@@ -1071,7 +1070,6 @@
       "LevelXp": "Players change level & XP",
       "ChangeLog": "Change log",
       "Rulebook": "Players may read the rulebook",
-      "HazardDice": "Hazard dice on the Random page",
       "TurnedOn": "{what}: on.",
       "TurnedOff": "{what}: off."
     },
@@ -1134,7 +1132,7 @@
     "Settings": {
       "GroupGeneral": "General",
       "GroupGeneralButton": "Configure General",
-      "GroupGeneralHint": "Rolls, traits, the change log, the welcome window, the hazard dice and printing.",
+      "GroupGeneralHint": "Rolls, traits, the change log and the welcome window.",
       "GroupGeneration": "Character Creation",
       "GroupGenerationButton": "Configure Creation",
       "GroupGenerationHint": "Who may create characters and change level or XP; starting levels; your portraits.",
@@ -1157,8 +1155,7 @@
         "combat": "Combat",
         "money": "Money",
         "advancement": "Advancement",
-        "hacks": "Hacks",
-        "printing": "Printing"
+        "hacks": "Hacks"
       },
       "CreationAbilities": "Abilities at creation",
       "CreationAbilitiesChoice": {
@@ -1208,6 +1205,9 @@
       "GroupRulebook": "Rulebook",
       "GroupRulebookButton": "Configure Rulebook",
       "GroupRulebookHint": "Your own Knave 2e PDF, read inside Foundry.",
+      "GroupPrinting": "Printing",
+      "GroupPrintingButton": "Configure Printing",
+      "GroupPrintingHint": "The paper, the text size and what the printed sheet carries.",
       "AdvantageMode": "Advantage and disadvantage",
       "AdvantageRaw": "Knave 2e: +5 / −5",
       "Advantage2d20": "2d20: keep higher / lower",
@@ -1277,7 +1277,6 @@
       "TorchesPerSlotHint": "Torches in one slot. Knave 1e's gear table bundles 5.",
       "HardModeWounds": "Hard-mode wounds",
       "HardModeWoundsHint": "An item in a wounded slot breaks.",
-      "ShowHazardDice": "Hazard dice on the Random page",
       "PrintPaper": "Paper",
       "PrintPaperHint": "The printed sheet fits A4 and US Letter alike; Auto leaves the paper to the print dialog.",
       "PrintPaperAuto": "Auto: the print dialog decides",
