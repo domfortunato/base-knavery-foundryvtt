@@ -51,14 +51,21 @@ await withSettings(page, async () => {
       { name: "Sword", type: "weapon", system: { damage: "d6", attackType: "melee", equipped: true, slots: 1, hands: 1 } },
       { name: "Torch", type: "item", system: { slots: 1, quantity: 1, lit: true } },
     ]);
+    // A second knave, Bob's, so the Party page shows a party.
+    const bob = game.users.getName("Bob");
+    const b = await game.knavery.createCharacter({ mode: "random", level: 2, name: "Probe Tamsin Reed" });
+    await b.update({ name: "Tamsin Reed", "system.coins": 85, "system.generationEnabled": false, ...(bob ? { [`ownership.${bob.id}`]: 3 } : {}) }, { knCreation: true });
+    await b.update({ "system.hp.value": Math.max(1, b.system.hp.max - 3) });
+    window.__listingSecond = b.id;
     return a.id;
   });
+  const secondId = await page.evaluate(() => window.__listingSecond);
   const npcId = await page.evaluate(async () => (await Actor.create({ name: "Probe Goblin", type: "npc", system: { hp: { value: 4, max: 4 } } })).id);
 
   for (const scheme of ["dark", "light"]) {
     await page.evaluate((s) => game.settings.set("core", "uiConfig", foundry.utils.mergeObject(game.settings.get("core", "uiConfig"), { colorScheme: { applications: s, interface: s } })), scheme);
     // The character sheet: the Knave page, then Inventory.
-    await page.evaluate(async (x) => { const s = game.actors.get(x).sheet; await s.render(true); s.setPosition({ height: 1300 }); }, id);
+    await page.evaluate(async (x) => { const s = game.actors.get(x).sheet; await s.render(true); s.setPosition({ height: 790 }); }, id);
     await page.waitForSelector(".knavery.sheet.actor", { timeout: 15000 });
     await shot(".knavery.sheet.actor", `01-sheet-knave-${scheme}`);
     await page.locator('.knavery.sheet.actor nav.knavery-tab-rail button[data-tab="inventory"]').click();
@@ -69,7 +76,14 @@ await withSettings(page, async () => {
     await page.evaluate(() => game.knavery.openDashboard());
     await page.waitForSelector("#knavery-gm-dashboard", { timeout: 15000 });
     for (const [tab, n] of [["party", "03"], ["time", "04"]]) {
-      await page.evaluate((t) => foundry.applications.instances.get("knavery-gm-dashboard").changeTab(t, "primary"), tab);
+      // The window fits its page: the open page's height plus the title bar and padding.
+      await page.evaluate(async (t) => {
+        const app = foundry.applications.instances.get("knavery-gm-dashboard");
+        app.changeTab(t, "primary");
+        await new Promise((r) => setTimeout(r, 300));
+        const sec = app.element.querySelector("section.tab.active");
+        app.setPosition({ height: Math.min(1300, sec.scrollHeight + 90) });
+      }, tab);
       await shot("#knavery-gm-dashboard", `${n}-dashboard-${tab}-${scheme}`);
     }
     await page.evaluate(() => foundry.applications.instances.get("knavery-gm-dashboard").close());
@@ -95,7 +109,7 @@ await withSettings(page, async () => {
   await page.evaluate(async (ids) => {
     for (const x of ids) await game.actors.get(x)?.delete();
     for (const m of game.messages.filter((x) => x.timestamp > Date.now() - 600000 && x.speaker?.alias === "Mirela Ashgrove")) await m.delete();
-  }, [id, npcId]);
+  }, [id, secondId, npcId]);
 });
 
 ok(taken.length === 16, `the listing's 16 screenshots were taken (${OUT})`, `only: ${taken.join(", ")}`);
