@@ -174,8 +174,8 @@ export const bindHazardCard = (message, html) => {
     if (message.getFlag(FLAG_SCOPE, "hazardApplied") === true) {
       const again = await DialogV2.confirm({
         classes: ["knavery"],
-        window: { title: L("KNAVERY.Roll.AppliedTitle") },
-        content: `<p>${esc(L("KNAVERY.Roll.AppliedAgain"))}</p>`,
+        window: { title: L("KNAVERY.Time.AgainTitle") },
+        content: `<p>${esc(F("KNAVERY.Time.AgainBody", { action: btn.textContent.trim() }))}</p>`,
         rejectClose: false,
       });
       if (!again) return;

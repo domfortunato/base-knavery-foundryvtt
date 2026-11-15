@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **One text size.** The per-player "Text size in Base Knavery windows" setting (0.1.1) is gone; every Base
+  Knavery window has one size. For bigger text use Foundry's own Font Size (Configure Settings → Core →
+  Interface Configuration).
+- **Dashboard section headings** are small caps on a rule, sized like the item sheet's, instead of core's
+  page-sized headings.
+- **A hazard card pressed twice** asks "Roll for spoiled rations again?" (or Burn, or Fatigue) instead of
+  "Damage already applied".
+- **The welcome window's notice** (unofficial, fan-made) is set in italic; the README and the Foundry listing
+  follow.
+- Two tooltips said wounds fill slots "from the top"; they fill from the bottom up, as the sheet does.
 - **The Dungeon and Travel hazard dice** head the Random page too, as plain buttons (the Time page's End
   turn / End watch still rolls them and moves the clock).
 - **The Random page grows:** Activity and a Surprise shortcut (it sets up the closest PC's WIS check on Requests) join

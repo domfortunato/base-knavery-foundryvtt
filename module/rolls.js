@@ -12,7 +12,6 @@ import {
   ADVANTAGE_BONUS, CHECK_BASE, DEFAULT_DIFFICULTY, FLAG_SCOPE, HAZARD_DICE, MANEUVER_THRESHOLD,
   SAVE_CATEGORIES, SETTINGS_NS, SYS_PATH,
 } from "./config.js";
-import { scaledPosition } from "./settings.js";
 import { spellRule, usesQuality, usesWounds } from "./rules.js";
 import { wearItem } from "./quality.js";
 
@@ -90,8 +89,7 @@ export const promptEdge = async ({
   return DialogV2.wait({
     window: { title, icon: "fas fa-dice-d20" },
     classes: ["knavery", "knavery-roll-prompt"],
-    // Grows with the text size, so the three edges always fit on one row.
-    position: scaledPosition({ width: 440 }),
+    position: { width: 440 },
     content,
     render: (_event, dialog) => {
       const form = dialog.element.querySelector("form") ?? dialog.element;

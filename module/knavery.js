@@ -13,7 +13,7 @@ import { KnaveryItem } from "./documents/item.js";
 import { KnaveryCombat } from "./initiative.js";
 import { KnaveryActorSheet } from "./sheets/actor-sheet.js";
 import { KnaveryItemSheet } from "./sheets/item-sheet.js";
-import { applyTextScale, registerSettings } from "./settings.js";
+import { registerSettings } from "./settings.js";
 import { initSocket, onSocket } from "./socket.js";
 import { bindRollCard, handleApplyDamage } from "./damage.js";
 import { bindOfferCard, registerOfferSocket } from "./item-offer.js";
@@ -59,7 +59,6 @@ Hooks.once("init", () => {
 
   registerSettings();
   registerClockSetting();
-  applyTextScale();
   initSocket();
   onSocket("applyDamage", handleApplyDamage);
   registerOfferSocket();

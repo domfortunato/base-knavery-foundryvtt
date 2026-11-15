@@ -3,7 +3,7 @@
  * Char Gen Mode and growth: who may edit abilities, level and XP; the title-bar
  * Level Up arrow and its window; the HP rules; random creation from placed
  * ability points (one spellbook per STARTING point of INT); the GM's notes; the dashboard's XP tab; the ability
- * roll link's tooltip; the text size; the footer; traits; changing careers at level 1;
+ * roll link's tooltip; no text-size setting; the footer; traits; changing careers at level 1;
  * the Knave 1e rule hacks (1000-XP levels, d8 HP, random raises, group initiative); the narrow
  * sheet, its Attack window and raised abilities; the welcome window's licence notice; random creation rolling by
  * default; a blank sheet held to its level's ability points, with HP, coin and career dice; the Attack window's
@@ -277,24 +277,8 @@ await withSettings(gm, async () => {
   });
 
   /* ------------------------------------------------------------------ */
-  await section("10. Text size, the short footer, the fist icon, the Hacks labels.", async () => {
-    const before = await gm.evaluate(() => game.settings.get("base-knavery", "text-size"));
-    const measure = (x) => gm.evaluate(async (id) => {
-      const a = game.actors.get(id);
-      await a.sheet.render({ force: true });
-      await new Promise((r) => setTimeout(r, 500));
-      const name = a.sheet.element.querySelector(".knavery-ability-name");
-      const card = document.querySelector("#chat .chat-message .card-title h3, #chat .chat-message h3");
-      return { name: parseFloat(getComputedStyle(name).fontSize), card: card ? parseFloat(getComputedStyle(card).fontSize) : null };
-    }, x);
-    await gm.evaluate(() => game.settings.set("base-knavery", "text-size", "1"));
-    const small = await measure(ids.a);
-    await gm.evaluate(() => game.settings.set("base-knavery", "text-size", "1.4"));
-    const big = await measure(ids.a);
-    await gm.evaluate((v) => game.settings.set("base-knavery", "text-size", v), before);
-    ok(Math.abs(big.name / small.name - 1.4) < 0.05, "the ability names grow with the text size, live", JSON.stringify({ small, big }));
-    ok(small.card === null || small.card === big.card, "chat cards keep their size", JSON.stringify({ small, big }));
-    ok(before === "1.2", "the default is Large", String(before));
+  await section("10. No text-size setting; the short footer, the fist icon, the Hacks labels.", async () => {
+    ok(!(await gm.evaluate(() => game.settings.settings.has("base-knavery.text-size"))), "the text-size setting is gone (0.3.0): one size for every window");
 
     const foot = await gm.evaluate((id) => game.actors.get(id).sheet.element.querySelector(".knavery-compat-caption")?.textContent.trim(), ids.a);
     ok(foot === "Base Knavery is an unofficial fan-made Foundry system for Knave (first and second editions) and is not affiliated with Questing Beast LLC.", "the sheet footer is the short line", foot);
@@ -627,7 +611,7 @@ await withSettings(gm, async () => {
       for (const s of [...foundry.applications.instances.values()]) if (s.document?.type) await s.close();
       await pc.update({ "system.abilities.DEX.value": 1, "system.abilities.STR.value": 0 }, { knCreation: true });
       for (const i of pc.items.filter((x) => x.type === "weapon")) await i.delete();
-      const k = Number(game.settings.get("base-knavery", "text-size")) || 1;
+      const k = 1;
       await pc.sheet.render({ force: true });
       await wait(900);
       const el = pc.sheet.element;
@@ -655,8 +639,8 @@ await withSettings(gm, async () => {
       return out;
     }, ids.a);
     const exp = 440 * r.k;
-    ok(Math.abs(r.width - exp) < 30 && Math.abs(r.npcWidth - 640 * r.k) < 40, "a character sheet opens narrow (440 × text size); an NPC's stays at 640", JSON.stringify(r));
-    ok(Math.abs(r.height - 660 * r.k) < 40 || r.height >= r.vh - 80, "and just tall enough for the Knave page (660 × text size)", JSON.stringify(r));
+    ok(Math.abs(r.width - exp) < 30 && Math.abs(r.npcWidth - 640 * r.k) < 40, "a character sheet opens narrow (440px); an NPC's stays at 640", JSON.stringify(r));
+    ok(Math.abs(r.height - 660 * r.k) < 40 || r.height >= r.vh - 80, "and just tall enough for the Knave page (660px)", JSON.stringify(r));
     ok(!r.playColumn && !r.disabled && r.enabled, "no attacks column; the Attack button is always there (an improvised attack needs no weapon)", JSON.stringify(r));
     ok(r.dexRaised === true && r.strRaised === false, "a score above 0 is marked raised, a 0 is not", JSON.stringify(r));
     ok(r.footer.includes("unofficial fan-made Foundry system for Knave (first and second editions)"), "the sheet footer reads the new sentence", r.footer);

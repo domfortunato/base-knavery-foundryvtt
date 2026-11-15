@@ -10,7 +10,6 @@ import { canRepair, hasQuality, qualityOf, repairAny, repairCost, repairsByQuali
 import { pickArt } from "../art.js";
 import { enrichForSheet } from "../clean-html.js";
 
-import { scaledPosition } from "../settings.js";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ItemSheetV2 } = foundry.applications.sheets;
@@ -35,13 +34,6 @@ export class KnaveryItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
       repair: KnaveryItemSheet.#onRepair,
     },
   };
-
-  /** Opens larger with the player's text size. */
-  _initializeApplicationOptions(options) {
-    const applied = super._initializeApplicationOptions(options);
-    applied.position = scaledPosition(applied.position);
-    return applied;
-  }
 
   static PARTS = {
     form: { template: `${SYS_PATH}/templates/item/item-sheet.html`, scrollable: [""] },

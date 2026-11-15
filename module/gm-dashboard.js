@@ -32,7 +32,6 @@ import { openMarketplaceManager } from "./marketplace.js";
 import { hasRulebook, openRulebook, pickLocalRulebook, showRulebookPage, tablePage } from "./rulebook.js";
 import { clock, clockLabel, endTurn, resetClock, setClock, TRAVEL_WATCHES_FREE } from "./hazard.js";
 import { payWage, wageRows } from "./hirelings.js";
-import { scaledPosition } from "./settings.js";
 import { placeRail, placeRailSoon } from "./sheets/tab-rail.js";
 import { openSpellGenerator } from "./spell-generator.js";
 import { isLight, party } from "./hazard.js";
@@ -114,13 +113,6 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       buildTables: () => import("./rulebook-import.js").then((m) => m.openRulebookTablesReview()),
     },
   };
-
-  /** Opens larger with the player's text size. */
-  _initializeApplicationOptions(options) {
-    const applied = super._initializeApplicationOptions(options);
-    applied.position = scaledPosition(applied.position);
-    return applied;
-  }
 
   static PARTS = {
     // The pages on a thumb-tab rail off the window's edge, as on the character sheet (user, 2026-11-14).

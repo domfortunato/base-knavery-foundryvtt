@@ -13,7 +13,7 @@ import {
 import { slotsForItem } from "../documents/actor.js";
 import { levelLadder } from "../data-models.js";
 import { mayEditAbilities, mayEditCareers, mayEditLevelXp, mayUseCharGen } from "../edit-gates.js";
-import { KNAVE_PAGE_TRAITS, scaledPosition, traitShown } from "../settings.js";
+import { KNAVE_PAGE_TRAITS, traitShown } from "../settings.js";
 import { abilityHint, healingRule, usesCareers, usesQuality, usesWounds } from "../rules.js";
 import { canRepair, qualityOf, repairAny, repairCost, repairsByQuality } from "../quality.js";
 import { canSell, sellItem } from "../treasure.js";
@@ -124,7 +124,7 @@ const mayRandomize = (fn) => function (event, target) {
   return fn.call(this, event, target);
 };
 
-/** A character sheet's width before the text size scales it. NPCs keep DEFAULT_OPTIONS' 640. */
+/** A character sheet's width. NPCs keep DEFAULT_OPTIONS' 640. */
 const CHARACTER_SHEET_WIDTH = 440;
 /** Tall enough for the Knave page and no more; the longer pages scroll (user, 2026-11-14). */
 const CHARACTER_SHEET_HEIGHT = 660;
@@ -221,8 +221,6 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     if (options.document?.type === "npc") applied.classes.push("knavery-npc-sheet");
     // A character's sheet is as wide as its abilities and vitals (user, 2026-11-14); attacks are a window.
     else Object.assign(applied.position, { width: CHARACTER_SHEET_WIDTH, height: CHARACTER_SHEET_HEIGHT });
-    // Opens larger with the player's text size.
-    applied.position = scaledPosition(applied.position);
     return applied;
   }
 
@@ -906,7 +904,7 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     const choice = await foundry.applications.api.DialogV2.wait({
       window: { title: L("KNAVERY.RestTitle"), icon: "fas fa-campfire" },
       classes: ["knavery", "knavery-rest"],
-      position: scaledPosition({ width: 380 }),
+      position: { width: 380 },
       content: `<p class="hint">${L(healingRule() === "knave1e" ? "KNAVERY.RestHelp1e" : "KNAVERY.RestHelp")}</p>`
         + box("slept", "KNAVERY.RestSlept", true) + box("ate", "KNAVERY.RestAte", true) + box("haven", "KNAVERY.RestHaven", false),
       // The safe haven heals a wound only on top of the night's healing.

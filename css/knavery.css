@@ -431,7 +431,7 @@
 .container-sheet-grid .container-class {
     font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
     font-variant: small-caps;
-    font-size: calc(18px * var(--kn-text, 1));
+    font-size: 18px;
 }
 
 .container-sheet-grid .container-owner::before {
@@ -559,7 +559,7 @@
 .background-description {
     grid-column: 1 / 3;
     grid-row: 3;
-    font-size: calc(13px * var(--kn-text, 1));
+    font-size: 13px;
 }
 
 .background-description :first-child {
@@ -673,7 +673,7 @@
     border: none !important;
     color: var(--kn-on-bar) !important;
     font-family: "Alegreya", Times, "Times New Roman", Georgia, serif !important;
-    font-size: calc(23px * var(--kn-text, 1)) !important;
+    font-size: 23px !important;
     font-variant: small-caps;
     font-weight: 500;
     padding: 8px !important;
@@ -684,7 +684,7 @@
     background: none !important;
     border: none !important;
     font-family: "Alegreya", Times, "Times New Roman", Georgia, serif !important;
-    font-size: calc(17px * var(--kn-text, 1)) !important;
+    font-size: 17px !important;
     font-variant: small-caps;
     /* Fill the background line so the content-source note sits at its end. */
     flex: 1 1 auto;
@@ -708,7 +708,7 @@
     background-color: var(--kn-bar);
     color: var(--kn-on-bar);
     font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
-    font-size: calc(17px * var(--kn-text, 1));
+    font-size: 17px;
     font-weight: 500;
     line-height: 32px;
     text-align: center;
@@ -931,7 +931,7 @@
     border-top: 2px solid var(--kn-line);
     flex-grow: 1;
     font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
-    font-size: calc(17px * var(--kn-text, 1));
+    font-size: 17px;
     font-weight: bold;
     line-height: 32px;
 }
@@ -997,14 +997,14 @@
     border: 1px solid var(--kn-chip-border);
     border-radius: 3px;
     display: inline-block;
-    font-size: calc(12px * var(--kn-text, 1));
-    line-height: calc(16px * var(--kn-text, 1));
+    font-size: 12px;
+    line-height: 16px;
     padding: 0 3px;
-    height: calc(18px * var(--kn-text, 1));
+    height: 18px;
 }
 
 .knavery-item-uses i {
-    font-size: calc(10px * var(--kn-text, 1));
+    font-size: 10px;
 }
 
 .knavery-item-controls {
@@ -1146,7 +1146,7 @@
     text-align: left;
     /* Slightly smaller so "Restore Abilities" + its icon fits the 140px column
        without truncating once the label is left-aligned. */
-    font-size: calc(12px * var(--kn-text, 1));
+    font-size: 12px;
     padding-left: 6px;
     padding-right: 2px;
 }
@@ -1189,7 +1189,7 @@
    TEXT only: the sender name and the generation-rolls card set their own sizes
    below and are deliberately not dragged along by this. */
 .chat-message .message-content {
-    font-size: calc(15px * var(--kn-text, 1));
+    font-size: 15px;
 }
 
 /* The FLAVOR line is not part of .message-content and the rule above misses it
@@ -1200,7 +1200,7 @@
    with Mace" too, which is the same element. Raised globally rather than
    per-card for that reason. */
 .chat-message .flavor-text {
-    font-size: calc(15px * var(--kn-text, 1));
+    font-size: 15px;
 }
 
 .chat-message .flavor-dice-roll {
@@ -1233,7 +1233,7 @@
     justify-content: center;
     min-width: 28px;
     min-height: 28px;
-    font-size: calc(20px * var(--kn-text, 1));
+    font-size: 20px;
     line-height: 1;
     color: var(--color-level-error, #ce0707);
 }
@@ -1317,7 +1317,7 @@
    still reading teal. Constant across light and dark, so it reads on either. */
 .chat-message .knavery-scar-banner {
     font-weight: 700;
-    font-size: calc(17px * var(--kn-text, 1));
+    font-size: 17px;
     text-align: center;
     margin: 8px 0 4px;
     text-shadow: 0 0 8px var(--color-level-error, #ce0707);
@@ -1370,7 +1370,7 @@
    Colours come from the tokens, so it follows the viewer's scheme like every
    other surface. */
 .chat-message .knavery-generation-rolls {
-    font-size: calc(18px * var(--kn-text, 1));
+    font-size: 18px;
 }
 .chat-message .knavery-generation-rolls .gen-rolls-title {
     font-weight: 700;
@@ -1396,7 +1396,7 @@
 /* Speaker name on chat cards: much larger + bold so the roller reads at a glance.
    (Foundry's default .message-sender is 14px / weight 400.) */
 .chat-message .message-sender {
-    font-size: calc(18px * var(--kn-text, 1));
+    font-size: 18px;
     font-weight: 700;
 }
 
@@ -1550,7 +1550,7 @@
     display: flex;
     gap: 20px;
     font-weight: bold;
-    font-size: calc(15px * var(--kn-text, 1));
+    font-size: 15px;
     padding: 2px 4px 6px;
     border-bottom: 2px solid var(--color-border);
 }
@@ -1562,7 +1562,7 @@
 .marketplace .mkt-hint {
     font-style: italic;
     opacity: 0.75;
-    font-size: calc(12px * var(--kn-text, 1));
+    font-size: 12px;
     margin: 6px 4px 2px;
 }
 
@@ -1576,7 +1576,7 @@
 .marketplace .mkt-cat-name {
     font-variant: small-caps;
     font-weight: bold;
-    font-size: calc(15px * var(--kn-text, 1));
+    font-size: 15px;
     letter-spacing: 0.04em;
     margin: 10px 0 2px;
     padding: 2px 4px;
@@ -1615,7 +1615,7 @@
 }
 
 .marketplace .mkt-chip {
-    font-size: calc(10px * var(--kn-text, 1));
+    font-size: 10px;
     background: var(--color-data-background);
     border: 1px solid var(--color-border);
     border-radius: 3px;
@@ -1626,7 +1626,7 @@
 
 .marketplace .mkt-desc {
     padding: 2px 6px 8px 6px;
-    font-size: calc(13px * var(--kn-text, 1));
+    font-size: 13px;
     opacity: 0.9;
 }
 
@@ -1638,14 +1638,14 @@
     margin-left: auto;
     flex: 0 1 180px;
     height: 24px;
-    font-size: calc(12px * var(--kn-text, 1));
+    font-size: 12px;
 }
 
 .marketplace .mkt-slots {
     flex: 0 0 auto;
     width: 54px;
     text-align: right;
-    font-size: calc(11px * var(--kn-text, 1));
+    font-size: 11px;
     opacity: 0.7;
     white-space: nowrap;
 }
@@ -1660,7 +1660,7 @@
 
 .marketplace .mkt-cost i {
     opacity: 0.6;
-    font-size: calc(11px * var(--kn-text, 1));
+    font-size: 11px;
 }
 
 .marketplace .mkt-actions {
@@ -1673,7 +1673,7 @@
     width: 48px;
     line-height: 22px;
     padding: 0;
-    font-size: calc(12px * var(--kn-text, 1));
+    font-size: 12px;
     cursor: pointer;
 }
 
@@ -1980,7 +1980,7 @@ textarea.omen-input {
     text-overflow: ellipsis;
     white-space: nowrap;
     font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
-    font-size: calc(17px * var(--kn-text, 1));
+    font-size: 17px;
     font-variant: small-caps;
 }
 
@@ -1988,7 +1988,7 @@ textarea.omen-input {
 .background-label {
     flex: 0 0 auto;
     font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
-    font-size: calc(17px * var(--kn-text, 1));
+    font-size: 17px;
     font-variant: small-caps;
     color: var(--kn-muted);
 }
@@ -1997,7 +1997,7 @@ textarea.omen-input {
     flex: 0 0 auto;
     margin-left: auto;
     white-space: nowrap;
-    font-size: calc(12px * var(--kn-text, 1));
+    font-size: 12px;
     font-variant: small-caps;
     color: var(--kn-muted);
 }
@@ -2008,7 +2008,7 @@ textarea.omen-input {
    No small-caps — a licence code and two proper names are not decoration. */
 .background-credit {
     margin: 8px 0 0;
-    font-size: calc(11px * var(--kn-text, 1));
+    font-size: 11px;
     line-height: 1.4;
     color: var(--kn-muted);
 }
@@ -2020,7 +2020,7 @@ textarea.omen-input {
     flex: 0 0 auto;
     color: var(--kn-muted);
     cursor: pointer;
-    font-size: calc(12px * var(--kn-text, 1));
+    font-size: 12px;
 }
 
 .background-roll:hover,
@@ -2107,7 +2107,7 @@ textarea.omen-input {
 
 .bg-pick-tag {
     grid-column: 2;
-    font-size: calc(12px * var(--kn-text, 1));
+    font-size: 12px;
     color: var(--color-text-subtle);
 }
 
@@ -2133,7 +2133,7 @@ textarea.omen-input {
 /* The authoring pointer under the list — spans both picker columns. */
 .bg-pick-foot {
     grid-column: 1 / -1;
-    font-size: calc(12px * var(--kn-text, 1));
+    font-size: 12px;
     color: var(--color-text-subtle);
     border-top: 1px solid var(--color-border);
     padding-top: 4px;
@@ -2152,7 +2152,7 @@ textarea.omen-input {
 }
 
 .bg-pick-desc {
-    font-size: calc(13px * var(--kn-text, 1));
+    font-size: 13px;
     overflow-y: auto;
     max-height: 380px;
     padding-right: 4px;
@@ -2202,7 +2202,7 @@ textarea.omen-input {
 }
 
 .reroll-dialog .reroll-note {
-    font-size: calc(12px * var(--kn-text, 1));
+    font-size: 12px;
     color: var(--color-text-subtle);
     margin: 6px 0 0;
 }
@@ -2217,12 +2217,12 @@ textarea.omen-input {
     padding: 6px 10px;
     border-radius: 4px;
     margin-bottom: 6px;
-    font-size: calc(13px * var(--kn-text, 1));
+    font-size: 13px;
 }
 
 .status-banner i {
     flex: 0 0 auto;
-    font-size: calc(15px * var(--kn-text, 1));
+    font-size: 15px;
 }
 
 .status-dead { background: #1a1a1a; }
@@ -2266,7 +2266,7 @@ textarea.omen-input {
    both schemes, and the ledger should read as chat, not as a status banner. */
 .chat-message .change-log .change-log-user {
     margin: 0;
-    font-size: calc(12px * var(--kn-text, 1));
+    font-size: 12px;
     opacity: 0.8;
 }
 
@@ -2296,7 +2296,7 @@ textarea.omen-input {
     width: auto;
     background: none;
     color: var(--kn-peril);
-    font-size: calc(11px * var(--kn-text, 1));
+    font-size: 11px;
     line-height: 1;
     opacity: 0;
     cursor: pointer;
@@ -2365,7 +2365,7 @@ textarea.omen-input {
 
 /* The d20 save-roll icon at the left of the STR/DEX/WIL labels. */
 .resource-roll .roll-icon {
-    font-size: calc(11px * var(--kn-text, 1));
+    font-size: 11px;
     margin-right: 3px;
     opacity: 0.9;
 }
@@ -2398,7 +2398,7 @@ textarea.omen-input {
     justify-content: center;
     gap: 3px;
     padding: 2px 0;
-    font-size: calc(12px * var(--kn-text, 1));
+    font-size: 12px;
     line-height: 1.6;
 }
 /* ✕ is an action on the field, not a die — it never stretches like one. */
@@ -2435,7 +2435,7 @@ ol.combat-tracker .knavery-bucket-divider {
     padding: 2px 8px 0;
     font-variant: small-caps;
     letter-spacing: 0.5px;
-    font-size: calc(12px * var(--kn-text, 1));
+    font-size: 12px;
     opacity: 0.75;
 }
 ol.combat-tracker .knavery-bucket-divider::after {
@@ -2447,7 +2447,7 @@ ol.combat-tracker .knavery-bucket-divider::after {
 ol.combat-tracker .knavery-bucket-word {
     font-variant: small-caps;
     letter-spacing: 0.3px;
-    font-size: calc(13px * var(--kn-text, 1));
+    font-size: 13px;
     opacity: 0.9;
 }
 
@@ -2496,7 +2496,7 @@ ol.combat-tracker li.combatant.knavery-drop-below {
 .knavery-reorder-hint {
     display: none;
     padding: 8px 4px 2px;
-    font-size: calc(12px * var(--kn-text, 1));
+    font-size: 12px;
     font-style: italic;
     color: var(--kn-muted);
 }
@@ -2514,7 +2514,7 @@ ol.combat-tracker li.combatant.knavery-drop-below {
 .knavery-grant-hint {
     display: none;
     padding: 8px 4px 2px;
-    font-size: calc(12px * var(--kn-text, 1));
+    font-size: 12px;
     font-style: italic;
     color: var(--kn-muted);
 }
@@ -2644,7 +2644,7 @@ ol.combat-tracker li.combatant.knavery-drop-below {
 .knavery-portrait-credit {
     margin-top: 4px;
     text-align: center;
-    font-size: calc(11px * var(--kn-text, 1));
+    font-size: 11px;
     font-style: italic;
     opacity: 0.7;
 }
@@ -2687,7 +2687,7 @@ ol.combat-tracker li.combatant.knavery-drop-below {
 
 .knavery-portrait-empty {
     text-align: center;
-    font-size: calc(12px * var(--kn-text, 1));
+    font-size: 12px;
     font-style: italic;
     opacity: 0.7;
     padding: 16px 8px;
@@ -2740,7 +2740,7 @@ ol.combat-tracker li.combatant.knavery-drop-below {
     margin: 6px 2px 0;
     padding-bottom: 2px;
     border-bottom: 1px solid var(--kn-rule);
-    font-size: calc(11px * var(--kn-text, 1));
+    font-size: 11px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
     opacity: 0.7;
@@ -2771,7 +2771,7 @@ ol.combat-tracker li.combatant.knavery-drop-below {
 .knavery-icon-folder span {
     flex: 1 1 auto;
     min-width: 0;
-    font-size: calc(12px * var(--kn-text, 1));
+    font-size: 12px;
     overflow-wrap: break-word;
 }
 
@@ -2862,7 +2862,7 @@ ol.combat-tracker li.combatant.knavery-drop-below {
     gap: 6px;
     font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
     font-variant: small-caps;
-    font-size: calc(15px * var(--kn-text, 1));
+    font-size: 15px;
     color: var(--kn-ink-muted, inherit);
     cursor: pointer;
 }
@@ -2900,7 +2900,7 @@ ol.combat-tracker li.combatant.knavery-drop-below {
 .knavery-npc-sheet .day-rate-suffix {
     flex: 0 0 auto;
     opacity: 0.7;
-    font-size: calc(12px * var(--kn-text, 1));
+    font-size: 12px;
 }
 
 .knavery-npc-sheet .name-roll,
@@ -2908,7 +2908,7 @@ ol.combat-tracker li.combatant.knavery-drop-below {
     flex: 0 0 auto;
     cursor: pointer;
     opacity: 0.55;
-    font-size: calc(12px * var(--kn-text, 1));
+    font-size: 12px;
 }
 
 .knavery-npc-sheet .name-roll:hover,
@@ -2991,7 +2991,7 @@ ol.combat-tracker li.combatant.knavery-drop-below {
    child and the activated .editor-content. font-size ONLY: setting `display`
    here breaks activation (see the warning at the `.knavery prose-mirror` rule). */
 .knavery-npc-sheet .npc-description-section prose-mirror {
-    font-size: calc(16px * var(--kn-text, 1));
+    font-size: 16px;
 }
 
 
@@ -3097,13 +3097,13 @@ ol.combat-tracker li.combatant.knavery-drop-below {
 
 .hp-counter .resource-input-wrapper input[name$=".max"],
 .character-sheet-section-abilities .resource-input-wrapper input[name$=".max"] {
-    font-size: calc(12px * var(--kn-text, 1));
+    font-size: 12px;
     color: var(--kn-faint);
 }
 
 .hp-counter .resource-input-wrapper span,
 .character-sheet-section-abilities .resource-input-wrapper span {
-    font-size: calc(13px * var(--kn-text, 1));
+    font-size: 13px;
     color: var(--kn-faint);
 }
 
@@ -3594,7 +3594,7 @@ ol.combat-tracker li.combatant.knavery-drop-below {
    dresses the dialog's warning paragraph. */
 .kwi-options .kwi-hint {
     margin: 0 0 4px;
-    font-size: calc(12px * var(--kn-text, 1));
+    font-size: 12px;
     font-style: italic;
     color: var(--kn-muted);
 }
@@ -3789,7 +3789,7 @@ ol.combat-tracker li.combatant.knavery-drop-below {
 
 .knavery-shown-table .knavery-show-formula {
     margin-bottom: 4px;
-    font-size: calc(12px * var(--kn-text, 1));
+    font-size: 12px;
     color: var(--kn-muted);
 }
 
@@ -3817,7 +3817,7 @@ ol.combat-tracker li.combatant.knavery-drop-below {
     margin: 18px 0 8px;
     padding-bottom: 2px;
     border-bottom: 1px solid var(--kn-hairline);
-    font-size: calc(13px * var(--kn-text, 1));
+    font-size: 13px;
     font-weight: 600;
     color: var(--kn-muted);
 }
@@ -3834,7 +3834,7 @@ ol.combat-tracker li.combatant.knavery-drop-below {
     gap: 6px;
     align-items: center;
     margin: 4px 0 6px;
-    font-size: calc(16px * var(--kn-text, 1));
+    font-size: 16px;
     color: var(--kn-muted);
 }
 
@@ -3842,7 +3842,7 @@ ol.combat-tracker li.combatant.knavery-drop-below {
     flex: 1;
     height: auto;
     min-height: var(--input-height, 32px);
-    font-size: calc(16px * var(--kn-text, 1));
+    font-size: 16px;
 }
 
 .knavery-dashboard .knavery-dashboard-footer {
@@ -3871,7 +3871,7 @@ ol.combat-tracker li.combatant.knavery-drop-below {
     margin: 8px 0 2px;
     padding-bottom: 2px;
     border-bottom: 1px solid var(--kn-line);
-    font-size: calc(12px * var(--kn-text, 1));
+    font-size: 12px;
     font-weight: 600;
     color: var(--kn-muted);
 }
@@ -4020,7 +4020,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
     border-left: 1px solid var(--kn-rule-strong) !important;
     font-family: "Alegreya", Times, "Times New Roman", Georgia, serif !important;
     font-style: italic;
-    font-size: calc(15px * var(--kn-text, 1)) !important;
+    font-size: 15px !important;
     text-align: center;
 }
 .knavery .pronouns-input::placeholder { color: var(--kn-on-bar); opacity: 0.5; }
@@ -4028,7 +4028,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery .career-line {
     display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
     font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
-    font-size: calc(16px * var(--kn-text, 1)); font-variant: small-caps;
+    font-size: 16px; font-variant: small-caps;
 }
 .knavery .career-line .background-label { font-weight: bold; }
 .knavery .career-chip a { cursor: pointer; }
@@ -4042,12 +4042,12 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery .level-line {
     display: flex; align-items: center; gap: 6px;
     font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
-    font-size: calc(15px * var(--kn-text, 1));
+    font-size: 15px;
 }
 .knavery .level-line label { font-weight: bold; font-variant: small-caps; }
 .knavery .level-line .level-input { width: 38px; text-align: center; }
 .knavery .level-line .xp-input { width: 80px; text-align: right; }
-.knavery .level-line .level-title { font-size: calc(13px * var(--kn-text, 1)); font-style: italic; color: var(--kn-muted); margin-right: 8px; }
+.knavery .level-line .level-title { font-size: 13px; font-style: italic; color: var(--kn-muted); margin-right: 8px; }
 .knavery .level-line .xp-next { color: var(--kn-faint); }
 .knavery .level-line .attacks-text { flex: 1; }
 .knavery .level-up-button {
@@ -4077,7 +4077,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 /* ---- Abilities: two columns of three, value and defense -------------------- */
 .knavery .character-sheet-section-abilities .resource-counter > a { width: 55%; cursor: pointer; }
 .knavery .character-sheet-section-abilities .resource-input-wrapper { width: 45%; }
-.knavery .ability-defense { color: var(--kn-faint); font-size: calc(12px * var(--kn-text, 1)); padding-right: 4px; }
+.knavery .ability-defense { color: var(--kn-faint); font-size: 12px; padding-right: 4px; }
 .knavery .npc-no-abilities { display: flex; align-items: center; }
 
 /* ---- Attacks ---------------------------------------------------------------- */
@@ -4093,7 +4093,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 
 /* ---- Inventory rows: slot index, wounded and broken rows ------------------- */
 .knavery .knavery-slot-index {
-    min-width: 30px; text-align: right; color: var(--kn-faint); font-size: calc(12px * var(--kn-text, 1)); padding-right: 2px;
+    min-width: 30px; text-align: right; color: var(--kn-faint); font-size: 12px; padding-right: 2px;
 }
 .knavery .knavery-item-title { cursor: pointer; }
 .knavery .knavery-items-list-row[data-item-id] { cursor: grab; }
@@ -4104,7 +4104,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery .wound-slot-row .knavery-item-title { color: var(--kn-peril); font-style: italic; }
 .knavery .wound-slot-icon { color: var(--kn-peril); align-self: center; margin-left: 32px; }
 .knavery .gold-slot-icon { margin-left: 32px; }
-.knavery .knavery-item-description { padding: 4px 8px 8px 36px; font-size: calc(13px * var(--kn-text, 1)); }
+.knavery .knavery-item-description { padding: 4px 8px 8px 36px; font-size: 13px; }
 .knavery .spells-left { font-style: italic; color: var(--kn-muted); }
 .knavery .item-control.equipped { color: var(--kn-accent); opacity: 1; }
 
@@ -4117,18 +4117,18 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-careers > :not(.knavery-career) { grid-column: 1 / -1; }
 .knavery-careers > .knavery-career { margin: 0; min-width: 0; }
 /* A card is narrow now: the name takes its own line, tags and controls wrap under it. */
-.knavery-careers .knavery-career .career-name { flex: 1 1 120px; min-width: 0; font-size: calc(16px * var(--kn-text, 1)); line-height: 1.15; }
+.knavery-careers .knavery-career .career-name { flex: 1 1 120px; min-width: 0; font-size: 16px; line-height: 1.15; }
 /* The Description page's traits, lighter (user, 2026-11-14): regular weight and smaller. */
-.knavery .character-traits .trait-label { font-weight: 400; font-size: calc(13px * var(--kn-text, 1)); }
-.knavery .character-traits .trait-input { font-weight: 400; font-size: calc(13px * var(--kn-text, 1)); height: calc(26px * var(--kn-text, 1)); }
+.knavery .character-traits .trait-label { font-weight: 400; font-size: 13px; }
+.knavery .character-traits .trait-input { font-weight: 400; font-size: 13px; height: 26px; }
 .knavery-career { border: 1px solid var(--kn-rule-strong); border-radius: 4px; padding: 6px 8px; margin: 6px 0; }
 .knavery-career .career-head { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .knavery-career .career-head img { width: 28px; height: 28px; border: none; }
 .knavery-career .career-name {
-    font-family: "Alegreya", Times, serif; font-size: calc(18px * var(--kn-text, 1)); font-variant: small-caps; font-weight: bold; cursor: pointer;
+    font-family: "Alegreya", Times, serif; font-size: 18px; font-variant: small-caps; font-weight: bold; cursor: pointer;
 }
 .knavery-career .career-remove { margin-left: auto; cursor: pointer; color: var(--kn-muted); }
-.knavery-career .career-description { font-size: calc(13px * var(--kn-text, 1)); }
+.knavery-career .career-description { font-size: 13px; }
 .knavery-career .career-features {
     display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 4px 12px; margin-top: 4px;
 }
@@ -4151,7 +4151,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
     background: var(--kn-accent-wash); border-left: 3px solid var(--kn-accent);
     padding: 4px 8px; margin: 4px 0; font-style: italic;
 }
-.knavery-roll-prompt .roll-mode-hint { font-size: calc(12px * var(--kn-text, 1)); color: var(--kn-muted); }
+.knavery-roll-prompt .roll-mode-hint { font-size: 12px; color: var(--kn-muted); }
 /* Roll Straight is the default: bold, with the accent border and wash. */
 .knavery-roll-prompt footer.form-footer button[data-action="normal"] {
     font-weight: bold; border-color: var(--kn-accent); background: var(--kn-accent-wash); box-shadow: 0 0 6px var(--kn-accent);
@@ -4166,9 +4166,9 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-roll-prompt .form-group > label { line-height: 1.3; }
 /* Other modifier and the checkboxes hug their labels instead of spanning the window. */
 .knavery-roll-prompt .form-group { justify-content: flex-start; }
-.knavery-roll-prompt .form-group > label { flex: 0 0 auto; min-width: calc(150px * var(--kn-text, 1)); }
+.knavery-roll-prompt .form-group > label { flex: 0 0 auto; min-width: 150px; }
 .knavery-roll-prompt .form-group > .form-fields { flex: 0 0 auto; width: auto; }
-.knavery-roll-prompt .form-group input[name="modifier"], .knavery-roll-prompt .form-group input[name="difficulty"] { width: calc(70px * var(--kn-text, 1)); text-align: center; }
+.knavery-roll-prompt .form-group input[name="modifier"], .knavery-roll-prompt .form-group input[name="difficulty"] { width: 70px; text-align: center; }
 /* A checkbox row: the label shares its line with the box at the right; a hint takes the next line. */
 .knavery-roll-prompt .form-group:has(> .form-fields > input[type="checkbox"]) { flex-wrap: wrap; column-gap: 8px; }
 .knavery-roll-prompt .form-group:has(> .form-fields > input[type="checkbox"]) > label { flex: 0 0 auto; }
@@ -4188,33 +4188,33 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-roll-prompt .kn-attack-weapon.improvised strong { font-style: italic; }
 
 .knavery-roll-card .card-title { display: flex; align-items: baseline; gap: 6px; }
-.knavery-roll-card .card-title h3 { margin: 0; border: none; font-size: calc(16px * var(--kn-text, 1)); }
+.knavery-roll-card .card-title h3 { margin: 0; border: none; font-size: 16px; }
 .knavery-roll-card .card-edge {
-    font-size: calc(11px * var(--kn-text, 1)); text-transform: uppercase; letter-spacing: 0.05em;
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;
     border: 1px solid currentColor; border-radius: 3px; padding: 0 4px;
 }
 .knavery-roll-card .card-result {
-    text-align: center; font-weight: bold; font-size: calc(16px * var(--kn-text, 1)); padding: 3px; margin: 4px 0;
+    text-align: center; font-weight: bold; font-size: 16px; padding: 3px; margin: 4px 0;
     border: 1px solid; border-radius: 4px;
 }
 .knavery-roll-card .card-result.success { color: var(--kn-save-pass-chat); border-color: var(--kn-save-pass-chat); }
 .knavery-roll-card .card-result.failure { color: var(--kn-save-fail-chat); border-color: var(--kn-save-fail-chat); }
-.knavery-roll-card .card-target { font-weight: normal; font-size: calc(12px * var(--kn-text, 1)); }
+.knavery-roll-card .card-target { font-weight: normal; font-size: 12px; }
 .knavery-roll-card .card-targets { list-style: none; margin: 4px 0; padding: 0; }
 .knavery-roll-card .card-targets li { display: flex; gap: 6px; align-items: center; padding: 2px 0; }
 .knavery-roll-card .card-targets li .target-name { flex: 1; }
 /* Hit and Miss as a badge (user, 2026-11-14: "need to be bigger"). */
 .knavery-roll-card .card-targets li strong {
-    font-size: calc(15px * var(--kn-text, 1)); text-transform: uppercase; letter-spacing: 0.04em;
+    font-size: 15px; text-transform: uppercase; letter-spacing: 0.04em;
     border: 2px solid currentColor; border-radius: 4px; padding: 0 6px; line-height: 1.4;
 }
 .knavery-roll-card .card-targets li.success strong { color: var(--kn-save-pass-chat); }
 .knavery-roll-card .card-targets li.failure strong { color: var(--kn-save-fail-chat); }
-.knavery-roll-card .target-ac { font-size: calc(11px * var(--kn-text, 1)); color: var(--kn-muted); }
-.knavery-roll-card .card-note { margin: 2px 0; font-size: calc(13px * var(--kn-text, 1)); }
+.knavery-roll-card .target-ac { font-size: 11px; color: var(--kn-muted); }
+.knavery-roll-card .card-note { margin: 2px 0; font-size: 13px; }
 /* The free maneuver and power-attack notes: dark teal and bold, readable on the card's pale paper. */
 .knavery-roll-card .card-note.maneuver, .knavery-roll-card .card-note.power {
-    color: var(--kn-chat-accent); font-weight: bold; font-size: calc(14px * var(--kn-text, 1));
+    color: var(--kn-chat-accent); font-weight: bold; font-size: 14px;
 }
 .knavery-roll-card .card-note.fumble, .knavery-roll-card .card-note.broke { color: var(--kn-save-fail-chat); }
 /* Compact cards (user, 2026-11-14): each roll is one row, formula left and total right;
@@ -4226,25 +4226,25 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-roll-card .dice-roll .dice-formula,
 .knavery-roll-card .dice-roll .dice-total { background: none; border: none; box-shadow: none; margin: 0; }
 .knavery-roll-card .dice-roll .dice-formula {
-    grid-column: 1; grid-row: 1; text-align: left; color: var(--kn-chat-muted); font-size: calc(13px * var(--kn-text, 1));
+    grid-column: 1; grid-row: 1; text-align: left; color: var(--kn-chat-muted); font-size: 13px;
 }
-.knavery-roll-card .dice-roll .dice-total { grid-column: 2; grid-row: 1; font-size: calc(18px * var(--kn-text, 1)); line-height: 28px; }
+.knavery-roll-card .dice-roll .dice-total { grid-column: 2; grid-row: 1; font-size: 18px; line-height: 28px; }
 .knavery-roll-card .dice-roll .dice-tooltip { grid-column: 1 / -1; grid-row: 2; }
 /* Damage is a small label on its roll's row, not a heading. */
 .knavery-roll-card .card-damage { margin-top: 4px; }
 .knavery-roll-card .card-damage-row { display: flex; align-items: center; gap: 8px; }
-.knavery-roll-card .card-damage-label { flex: 0 0 auto; font-weight: bold; font-variant: small-caps; font-size: calc(14px * var(--kn-text, 1)); }
+.knavery-roll-card .card-damage-label { flex: 0 0 auto; font-weight: bold; font-variant: small-caps; font-size: 14px; }
 .knavery-roll-card .card-damage-row .dice-roll { flex: 1 1 auto; min-width: 0; }
 .knavery-roll-card .card-apply { display: flex; gap: 4px; margin-top: 4px; }
 /* Apply's splat in red, like the sheet's Attack button. */
 .knavery-roll-card .card-apply button[data-kn-apply="normal"] { font-weight: bold; }
 .knavery-roll-card .card-apply button[data-kn-apply="normal"] i { color: var(--kn-chat-red); }
 .knavery-roll-card button { line-height: 24px; }
-.knavery-damage-card h3 { font-size: calc(15px * var(--kn-text, 1)); margin: 0 0 4px; }
+.knavery-damage-card h3 { font-size: 15px; margin: 0 0 4px; }
 .knavery-damage-card .dmg-drop { color: var(--kn-save-fail-chat); font-style: italic; }
 .knavery-damage-card .status-banner { margin-top: 4px; }
 .change-log ul { margin: 2px 0 0 16px; padding: 0; }
-.change-log .change-log-user { font-size: calc(12px * var(--kn-text, 1)); color: var(--kn-muted); margin: 0; }
+.change-log .change-log-user { font-size: 12px; color: var(--kn-muted); margin: 0; }
 
 /* ---- Pickers ------------------------------------------------------------- */
 .kn-picker { display: flex; flex-direction: column; gap: 6px; height: 100%; }
@@ -4252,11 +4252,11 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .kn-pick-row { display: flex; align-items: center; gap: 6px; padding: 2px 4px; border-bottom: 1px solid var(--kn-hairline); cursor: pointer; }
 .kn-pick-row:hover { background: var(--kn-wash); }
 .kn-pick-row img { width: 24px; height: 24px; border: none; }
-.kn-pick-prefix { min-width: 34px; color: var(--kn-faint); font-size: calc(12px * var(--kn-text, 1)); text-align: right; }
+.kn-pick-prefix { min-width: 34px; color: var(--kn-faint); font-size: 12px; text-align: right; }
 .knavery-offer-group { margin: 6px 0 2px; border-bottom: 1px solid var(--kn-rule); }
 .knavery-offer-body { display: flex; gap: 6px; align-items: center; }
 .knavery-offer-body img { width: 32px; height: 32px; border: none; }
-.knavery-offer-state { font-style: italic; font-size: calc(12px * var(--kn-text, 1)); margin: 3px 0; }
+.knavery-offer-state { font-style: italic; font-size: 12px; margin: 3px 0; }
 .knavery-offer-actions { display: flex; gap: 4px; }
 
 .kn-levelup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; margin: 6px 0; }
@@ -4272,14 +4272,14 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-create-npc .kn-npc-hp label { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
 .knavery-create .form-footer button {
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
-    min-height: calc(120px * var(--kn-text, 1)); height: auto; padding: 10px 12px; white-space: normal;
-    font-size: calc(17px * var(--kn-text, 1)); font-weight: bold; line-height: 1.2;
+    min-height: 120px; height: auto; padding: 10px 12px; white-space: normal;
+    font-size: 17px; font-weight: bold; line-height: 1.2;
 }
-.knavery-create .form-footer button > i { font-size: calc(30px * var(--kn-text, 1)); margin: 0; }
-.knavery-create .form-footer button .kn-create-sub { font-size: calc(12px * var(--kn-text, 1)); font-weight: normal; color: var(--kn-muted); }
+.knavery-create .form-footer button > i { font-size: 30px; margin: 0; }
+.knavery-create .form-footer button .kn-create-sub { font-size: 12px; font-weight: normal; color: var(--kn-muted); }
 .knavery-create .form-footer button:hover,
 .knavery-create .form-footer button:focus-visible { box-shadow: 0 0 8px var(--kn-accent); }
-.knavery-importer textarea { width: 100%; font-family: var(--font-monospace, monospace); font-size: calc(12px * var(--kn-text, 1)); }
+.knavery-importer textarea { width: 100%; font-family: var(--font-monospace, monospace); font-size: 12px; }
 
 /* ---- Marketplace ---------------------------------------------------------- */
 .knavery-marketplace .mkt-img { width: 22px; height: 22px; border: none; vertical-align: middle; margin-right: 4px; }
@@ -4289,14 +4289,14 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-market-manager .mm-aisle a[data-action="selectAisle"] { flex: 1; cursor: pointer; }
 .knavery-market-manager .mm-aisle.active { background: var(--kn-accent-wash); font-weight: bold; }
 .knavery-market-manager .mm-aisle.hidden-aisle a[data-action="selectAisle"] { text-decoration: line-through; opacity: 0.6; }
-.knavery-market-manager .mm-count { font-size: calc(11px * var(--kn-text, 1)); color: var(--kn-faint); }
-.knavery-market-manager .mm-badge { font-size: calc(10px * var(--kn-text, 1)); border: 1px solid var(--kn-chip-border); border-radius: 3px; padding: 0 3px; }
+.knavery-market-manager .mm-count { font-size: 11px; color: var(--kn-faint); }
+.knavery-market-manager .mm-badge { font-size: 10px; border: 1px solid var(--kn-chip-border); border-radius: 3px; padding: 0 3px; }
 .knavery-market-manager .mm-head { display: flex; align-items: center; gap: 8px; }
 .knavery-market-manager .mm-head h3 { flex: 1; margin: 0; }
 .knavery-market-manager .mm-rows { overflow-y: auto; max-height: 460px; }
 .knavery-market-manager .mm-row { display: grid; grid-template-columns: 26px 1fr 60px 80px 20px; gap: 6px; align-items: center; padding: 2px 0; border-bottom: 1px solid var(--kn-hairline); }
 .knavery-market-manager .mm-row img { width: 24px; height: 24px; border: none; }
-.knavery-market-manager .mm-row-head { font-weight: bold; font-size: calc(12px * var(--kn-text, 1)); }
+.knavery-market-manager .mm-row-head { font-weight: bold; font-size: 12px; }
 .knavery-market-manager .mm-drop { border: 2px dashed var(--kn-rule-strong); border-radius: 6px; padding: 12px; text-align: center; margin: 8px 0; color: var(--kn-muted); }
 
 /* ---- Game Master's Dashboard --------------------------------------------- */
@@ -4305,7 +4305,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-gm-dashboard .dash-pcs { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 10px; }
 .knavery-gm-dashboard .dash-pc { display: flex; align-items: center; gap: 6px; }
 .knavery-gm-dashboard .dash-pc img { width: 26px; height: 26px; border: none; border-radius: 50%; }
-.knavery-gm-dashboard .dash-pc em { font-size: calc(11px * var(--kn-text, 1)); color: var(--kn-faint); }
+.knavery-gm-dashboard .dash-pc em { font-size: 11px; color: var(--kn-faint); }
 .knavery-gm-dashboard .dash-pc.offline span { opacity: 0.6; }
 .knavery-gm-dashboard .request-log { max-height: 280px; overflow-y: auto; }
 .knavery-gm-dashboard .request { border-bottom: 1px solid var(--kn-rule); padding: 4px 0; }
@@ -4321,7 +4321,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-gm-dashboard .table-list { max-height: 360px; overflow-y: auto; }
 .knavery-gm-dashboard .dash-table { display: flex; align-items: center; gap: 6px; border-bottom: 1px solid var(--kn-hairline); padding: 2px 0; }
 .knavery-gm-dashboard .dash-table-name { flex: 1; }
-.knavery-gm-dashboard .dash-table-rows { font-size: calc(11px * var(--kn-text, 1)); color: var(--kn-faint); min-width: 30px; text-align: right; }
+.knavery-gm-dashboard .dash-table-rows { font-size: 11px; color: var(--kn-faint); min-width: 30px; text-align: right; }
 .knavery-gm-dashboard .dash-table a { cursor: pointer; }
 
 /* ---- Item sheet ------------------------------------------------------------ */
@@ -4335,7 +4335,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-item-sheet .item-stats .form-group { margin: 0; }
 .knavery-item-sheet input.short { width: 60px; flex: 0 0 60px; }
 .knavery-item-sheet h3 { display: flex; align-items: center; gap: 6px; margin: 8px 0 4px; }
-.knavery-item-sheet h3 a { cursor: pointer; font-size: calc(13px * var(--kn-text, 1)); }
+.knavery-item-sheet h3 a { cursor: pointer; font-size: 13px; }
 .knavery-item-sheet .starting-items { border: 1px dashed var(--kn-rule-strong); border-radius: 4px; padding: 4px; min-height: 36px; }
 .knavery-item-sheet .starting-item { display: flex; justify-content: space-between; padding: 1px 4px; border-bottom: 1px solid var(--kn-hairline); }
 .knavery-item-sheet .feature-editor-row { display: flex; gap: 4px; align-items: center; margin-bottom: 3px; }
@@ -4351,11 +4351,11 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-counter-row > .resource-counter { grid-row: auto; grid-column: auto; }
 .knavery-counter-row { grid-template-columns: 1.25fr 0.85fr 1.35fr 1fr; }
 .knavery-counter-row .resource-counter > label,
-.knavery-counter-row .resource-counter > a { font-size: calc(15px * var(--kn-text, 1)); }
+.knavery-counter-row .resource-counter > a { font-size: 15px; }
 .knavery-counter-row .wounds-counter > label { width: 56%; }
 .knavery-counter-row .wounds-counter .resource-input-wrapper { width: 44%; }
 .knavery-item-sheet h3 {
-    font-family: "Alegreya", Times, serif; font-size: calc(17px * var(--kn-text, 1)); font-variant: small-caps;
+    font-family: "Alegreya", Times, serif; font-size: 17px; font-variant: small-caps;
     border-bottom: 1px solid var(--kn-rule); padding-bottom: 2px;
 }
 
@@ -4413,7 +4413,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
     background: transparent;
     box-shadow: none;
     color: var(--kn-ink);
-    font-size: calc(16px * var(--kn-text, 1));
+    font-size: 16px;
     cursor: pointer;
     transition: background-color 0.12s, color 0.12s;
 }
@@ -4449,7 +4449,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
         height: auto; min-height: 36px; line-height: 1.25; padding: 4px 0;
         flex-wrap: wrap; align-items: center; gap: 2px 12px;
     }
-    .knavery-items-list-header > div:first-child i { display: block; font-weight: normal; font-size: calc(12px * var(--kn-text, 1)); color: var(--kn-muted); }
+    .knavery-items-list-header > div:first-child i { display: block; font-weight: normal; font-size: 12px; color: var(--kn-muted); }
     .items-header-controls { white-space: nowrap; margin-left: auto; }
     .knavery-item-name-and-tags { flex-wrap: wrap; height: auto; min-height: 26px; }
 }
@@ -4462,7 +4462,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-identity .career-line, .knavery-identity .level-line, .knavery-identity .npc-role-line { flex: 0 0 auto; }
 .knavery .npc-role-line {
     display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
-    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif; font-size: calc(15px * var(--kn-text, 1));
+    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif; font-size: 15px;
 }
 .knavery .npc-role-line label { font-weight: bold; font-variant: small-caps; }
 .knavery .npc-role-line select { width: auto; flex: 0 1 140px; }
@@ -4477,7 +4477,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery .pronouns-line .pronouns-input {
     flex: 1 1 auto; height: 24px !important; background: none !important; color: var(--kn-ink) !important;
     border: none !important; border-bottom: 1px solid var(--kn-rule) !important; border-radius: 0;
-    font-size: calc(14px * var(--kn-text, 1)) !important; text-align: left; padding: 0 2px;
+    font-size: 14px !important; text-align: left; padding: 0 2px;
 }
 .knavery .pronouns-line .pronouns-input::placeholder { color: var(--kn-faint); opacity: 1; }
 .knavery .slots-counter.peril { border-color: var(--kn-peril); }
@@ -4503,31 +4503,31 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery .knavery-ability-circle input {
     width: 40px; height: 40px !important; padding: 0;
     background: none !important; border: none !important;
-    text-align: center !important; font-size: calc(18px * var(--kn-text, 1)); font-weight: bold;
+    text-align: center !important; font-size: 18px; font-weight: bold;
 }
 .knavery .knavery-ability-circle input:focus { box-shadow: none; }
 .knavery-ability-words { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; line-height: 1.15; }
 .knavery .knavery-ability-name {
     font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
-    font-size: calc(18px * var(--kn-text, 1)); font-weight: bold; font-variant: small-caps; cursor: pointer; color: var(--kn-ink);
+    font-size: 18px; font-weight: bold; font-variant: small-caps; cursor: pointer; color: var(--kn-ink);
 }
 /* The roll link: a large d20 and the ability's name, one link; hovering either
    lights both (the icon is inert, so the link owns the hover and the tooltip). */
 .knavery .knavery-ability-name { display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; }
-.knavery .knavery-ability-name .roll-icon { font-size: calc(18px * var(--kn-text, 1)); margin: 0; opacity: 0.85; transition: text-shadow 0.15s, opacity 0.15s; }
+.knavery .knavery-ability-name .roll-icon { font-size: 18px; margin: 0; opacity: 0.85; transition: text-shadow 0.15s, opacity 0.15s; }
 .knavery .knavery-ability-name:hover,
 .knavery .knavery-ability-name:focus-visible { text-shadow: 0 0 6px var(--kn-accent), 0 0 14px var(--kn-accent); }
 .knavery .knavery-ability-name:hover .roll-icon,
 .knavery .knavery-ability-name:focus-visible .roll-icon { opacity: 1; text-shadow: 0 0 6px var(--kn-accent), 0 0 16px var(--kn-accent); }
-.knavery-ability-hint { font-size: calc(13px * var(--kn-text, 1)); font-style: italic; color: var(--kn-muted); }
-.knavery .knavery-ability .ability-defense { flex: 0 0 auto; font-size: calc(15px * var(--kn-text, 1)); color: var(--kn-faint); padding-right: 2px; }
+.knavery-ability-hint { font-size: 13px; font-style: italic; color: var(--kn-muted); }
+.knavery .knavery-ability .ability-defense { flex: 0 0 auto; font-size: 15px; color: var(--kn-faint); padding-right: 2px; }
 /* A score above 0 stands out: a gold ring and number, its defense in ink. A 0 sits back. */
 .knavery-ability:not(.raised) .knavery-ability-circle { border: 1px solid var(--kn-rule); }
 .knavery .knavery-ability:not(.raised) .knavery-ability-circle input { color: var(--kn-muted); font-weight: normal; }
 .knavery-ability.raised .knavery-ability-circle { border: 2px solid var(--kn-gold); }
 .knavery .knavery-ability.raised .knavery-ability-circle input { color: var(--kn-gold); font-weight: bold; }
 .knavery .knavery-ability.raised .ability-defense { color: var(--kn-ink); }
-.knavery .npc-no-abilities .hint { font-size: calc(13px * var(--kn-text, 1)); font-style: italic; color: var(--kn-muted); margin: 0; }
+.knavery .npc-no-abilities .hint { font-size: 13px; font-style: italic; color: var(--kn-muted); margin: 0; }
 
 .knavery-vitals { display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .knavery-shield {
@@ -4538,20 +4538,20 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 }
 .knavery-shield label {
     font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
-    font-size: calc(11px * var(--kn-text, 1)); font-weight: bold; font-variant: small-caps; line-height: 1; margin-top: 4px;
+    font-size: 11px; font-weight: bold; font-variant: small-caps; line-height: 1; margin-top: 4px;
 }
 .knavery .knavery-shield input.ac-input {
     width: 44px; height: 26px !important; padding: 0;
     background: none !important; border: none !important;
-    text-align: center; font-size: calc(18px * var(--kn-text, 1)); font-weight: bold;
+    text-align: center; font-size: 18px; font-weight: bold;
 }
 .knavery .knavery-shield .armor-reset { position: absolute; right: -18px; top: 4px; }
-.knavery-ap { font-size: calc(12px * var(--kn-text, 1)); font-variant: small-caps; color: var(--kn-muted); margin-top: -2px; }
+.knavery-ap { font-size: 12px; font-variant: small-caps; color: var(--kn-muted); margin-top: -2px; }
 .knavery-bars { display: flex; gap: 10px; align-items: flex-end; margin-top: 4px; }
 .knavery-bar-block { display: flex; flex-direction: column; align-items: center; gap: 2px; width: 62px; }
-.knavery-bar-block > label { font-size: calc(10px * var(--kn-text, 1)); font-weight: bold; font-variant: small-caps; white-space: nowrap; }
-.knavery .knavery-bar-block .bar-max { width: 46px; height: 24px !important; text-align: center; font-size: calc(13px * var(--kn-text, 1)); }
-.knavery-bar-block .readout { height: 24px; line-height: 24px; font-size: calc(13px * var(--kn-text, 1)); }
+.knavery-bar-block > label { font-size: 10px; font-weight: bold; font-variant: small-caps; white-space: nowrap; }
+.knavery .knavery-bar-block .bar-max { width: 46px; height: 24px !important; text-align: center; font-size: 13px; }
+.knavery-bar-block .readout { height: 24px; line-height: 24px; font-size: 13px; }
 .knavery-bar {
     position: relative; width: 50px; height: 150px; box-sizing: border-box;
     border: 2px solid var(--kn-line); border-radius: 4px; overflow: hidden; background: var(--kn-wash);
@@ -4561,42 +4561,42 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery .knavery-bar input.bar-value {
     position: absolute; inset: 0; width: 100%; height: 100% !important; padding: 0;
     background: none !important; border: none !important;
-    text-align: center !important; font-size: calc(18px * var(--kn-text, 1)); font-weight: bold;
+    text-align: center !important; font-size: 18px; font-weight: bold;
 }
 .knavery .knavery-bar input.bar-value:focus { box-shadow: none; }
-.knavery-bar-name { font-family: "Alegreya", Times, "Times New Roman", Georgia, serif; font-size: calc(13px * var(--kn-text, 1)); font-weight: bold; font-variant: small-caps; }
+.knavery-bar-name { font-family: "Alegreya", Times, "Times New Roman", Georgia, serif; font-size: 13px; font-weight: bold; font-variant: small-caps; }
 .hp-bar.peril .knavery-bar, .wounds-bar.peril .knavery-bar { border-color: var(--kn-peril); }
 .knavery .hp-bar.peril input.bar-value, .knavery .wounds-bar.peril input.bar-value { color: var(--kn-peril); }
 .knavery .hp-bar.low:not(.peril) input.bar-value { color: var(--kn-amber); }
 .knavery-vital-buttons { display: flex; flex-direction: column; gap: 3px; width: 100%; margin-top: 4px; }
 .knavery-vital-buttons button { height: 28px; }
 .knavery-vital-buttons .strict-size-button:disabled { opacity: 0.45; }
-.knavery .knavery-vital-buttons .use-abilities-toggle { font-size: calc(12px * var(--kn-text, 1)); display: flex; align-items: center; gap: 4px; }
+.knavery .knavery-vital-buttons .use-abilities-toggle { font-size: 12px; display: flex; align-items: center; gap: 4px; }
 
 /* A character's Knave page: abilities | vitals. Attacks are the Attack button's window. */
 .knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-body { grid-template-columns: minmax(0, 1fr) 172px; }
 /* A character's vitals read large: AC, armor points, max HP and wounds, the bars and the buttons. */
 .knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-shield { width: 66px; height: 72px; }
-.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-shield label { font-size: calc(13px * var(--kn-text, 1)); }
-.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-shield input.ac-input { font-size: calc(24px * var(--kn-text, 1)); height: 30px !important; }
-.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-ap { font-size: calc(14px * var(--kn-text, 1)); }
+.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-shield label { font-size: 13px; }
+.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-shield input.ac-input { font-size: 24px; height: 30px !important; }
+.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-ap { font-size: 14px; }
 .knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-bar-block { width: 78px; }
-.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-bar-block > label { font-size: calc(14px * var(--kn-text, 1)); }
-.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-bar-block .bar-max { width: 54px; height: 28px !important; font-size: calc(17px * var(--kn-text, 1)); }
-.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-bar-block .readout { height: 28px; line-height: 28px; font-size: calc(17px * var(--kn-text, 1)); }
+.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-bar-block > label { font-size: 14px; }
+.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-bar-block .bar-max { width: 54px; height: 28px !important; font-size: 17px; }
+.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-bar-block .readout { height: 28px; line-height: 28px; font-size: 17px; }
 .knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-bar { width: 58px; }
-.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-bar input.bar-value { font-size: calc(26px * var(--kn-text, 1)); }
-.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-bar-name { font-size: calc(17px * var(--kn-text, 1)); }
-.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-vital-buttons button { height: 34px; font-size: calc(16px * var(--kn-text, 1)); }
+.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-bar input.bar-value { font-size: 26px; }
+.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-bar-name { font-size: 17px; }
+.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-vital-buttons button { height: 34px; font-size: 16px; }
 .knavery-vital-buttons .attack-button { font-weight: bold; }
 /* The Attack button's splat in red (user, 2026-11-14: the mark, not the whole button). */
 .knavery .knavery-vital-buttons .attack-button i.fa-burst { color: var(--kn-attack); }
 /* The bars' current values: read-only numbers, changed by the + and − under each bar. */
 .knavery .knavery-bar .bar-readout {
     position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-    font-size: calc(18px * var(--kn-text, 1)); font-weight: bold; color: var(--kn-ink);
+    font-size: 18px; font-weight: bold; color: var(--kn-ink);
 }
-.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-bar .bar-readout { font-size: calc(26px * var(--kn-text, 1)); }
+.knavery.sheet.actor:not(.knavery-npc-sheet) .knavery-bar .bar-readout { font-size: 26px; }
 .knavery .hp-bar.peril .bar-readout, .knavery .wounds-bar.peril .bar-readout { color: var(--kn-peril); }
 /* The number keeps the ink colour over the gold fill, so it never washes out. */
 .knavery .hp-bar.low:not(.peril) .bar-readout { color: var(--kn-ink); }
@@ -4605,7 +4605,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery .bar-steps { display: flex; gap: 4px; justify-content: center; margin-top: 2px; }
 .knavery .bar-steps button {
     --button-size: 26px; width: 28px; height: 26px; min-height: 26px; padding: 0; margin: 0;
-    display: flex; align-items: center; justify-content: center; font-size: calc(13px * var(--kn-text, 1));
+    display: flex; align-items: center; justify-content: center; font-size: 13px;
 }
 .knavery .bar-steps button i { margin: 0; }
 .knavery .bar-steps button:disabled { opacity: 0.35; }
@@ -4613,7 +4613,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 /* Slots under the vitals' bars (max wounds is the slot count). */
 .knavery-slots-line {
     display: flex; justify-content: center; align-items: baseline; gap: 6px; width: 100%; margin-top: 2px;
-    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif; font-size: calc(16px * var(--kn-text, 1));
+    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif; font-size: 16px;
 }
 .knavery-slots-line .slots-label { font-weight: bold; font-variant: small-caps; }
 .knavery-slots-line .slots-value { font-weight: bold; }
@@ -4624,19 +4624,19 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-band {
     margin-top: 10px; padding-top: 8px; border-top: 2px solid var(--kn-line);
     display: flex; flex-direction: column; gap: 6px;
-    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif; font-size: calc(16px * var(--kn-text, 1));
+    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif; font-size: 16px;
 }
 .knavery-page-knave .knavery-body { margin-bottom: 12px; }
 .knavery-band .band-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .knavery-band .band-label { flex: 0 0 56px; font-weight: bold; font-variant: small-caps; }
-.knavery-band .band-value { font-weight: bold; font-size: calc(18px * var(--kn-text, 1)); }
+.knavery-band .band-value { font-weight: bold; font-size: 18px; }
 .knavery-band .level-title { font-style: italic; color: var(--kn-muted); }
 .knavery-band .level-up-button { margin-left: auto; width: auto; }
 .knavery-band .level-input { width: 48px; text-align: center; }
 .knavery-band .xp-input { width: 84px; text-align: right; }
 /* Half the column: the bar needn't span it (user, 2026-11-14). */
 .knavery-band .knavery-xp-bar { flex: 0 1 50%; max-width: 50%; margin: 0; }
-.knavery-band .coins-input { width: 110px; text-align: right; font-size: calc(16px * var(--kn-text, 1)); }
+.knavery-band .coins-input { width: 110px; text-align: right; font-size: 16px; }
 .knavery .level-line input:disabled, .knavery-band input:disabled { background: none !important; border-color: transparent !important; opacity: 1; color: var(--kn-ink); }
 /* The rail's Attack button: not a page, so set apart by a rule and the splat in the peril colour. */
 .knavery.knavery-railed > .window-content > nav.knavery-tab-rail .knavery-rail-divider { display: block; height: 1px; margin: 2px 4px; background: var(--kn-rule-strong); }
@@ -4644,13 +4644,13 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery.knavery-railed > .window-content > nav.knavery-tab-rail button.knavery-rail-attack:disabled { opacity: 0.4; cursor: default; }
 .knavery-play { min-width: 0; }
 .knavery-play .knavery-items-list-header { height: 30px; line-height: 30px; }
-.knavery-empty { font-size: calc(12px * var(--kn-text, 1)); font-style: italic; color: var(--kn-muted); margin: 4px 0; }
+.knavery-empty { font-size: 12px; font-style: italic; color: var(--kn-muted); margin: 4px 0; }
 
 /* ---- Inventory: the slots strip -------------------------------------------- */
 .knavery-summary-strip {
     display: flex; flex-wrap: wrap; gap: 4px 14px; padding: 2px 2px 6px; margin-bottom: 4px;
     border-bottom: 2px solid var(--kn-line);
-    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif; font-size: calc(14px * var(--kn-text, 1)); font-variant: small-caps;
+    font-family: "Alegreya", Times, "Times New Roman", Georgia, serif; font-size: 14px; font-variant: small-caps;
 }
 .knavery-summary-strip .summary-item i { margin-right: 5px; color: var(--kn-muted); }
 .knavery-summary-strip .summary-item.peril { color: var(--kn-peril); }
@@ -4662,16 +4662,16 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
     border: 2px solid var(--kn-line); border-radius: 4px; overflow: hidden; background: var(--kn-wash);
 }
 .knavery-xp-fill { position: absolute; top: 0; bottom: 0; left: 0; background: var(--kn-xp-fill); }
-.knavery-xp-bar span { position: relative; display: block; text-align: center; line-height: 20px; font-size: calc(13px * var(--kn-text, 1)); font-weight: bold; }
+.knavery-xp-bar span { position: relative; display: block; text-align: center; line-height: 20px; font-size: 13px; font-weight: bold; }
 .knavery-level-ladder { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 2px 16px; }
 .knavery-level-ladder li {
     display: flex; gap: 8px; align-items: baseline; padding: 1px 4px;
-    border-bottom: 1px solid var(--kn-hairline); color: var(--kn-faint); font-size: calc(12px * var(--kn-text, 1));
+    border-bottom: 1px solid var(--kn-hairline); color: var(--kn-faint); font-size: 12px;
 }
 .knavery-level-ladder li.reached { color: var(--kn-ink); }
 .knavery-level-ladder li.current { background: var(--kn-accent-wash); font-weight: bold; border-radius: 3px; }
 .knavery-level-ladder .ladder-level { flex: 0 0 18px; text-align: right; }
-.knavery-level-ladder .ladder-title { flex: 1; font-family: "Alegreya", Times, "Times New Roman", Georgia, serif; font-variant: small-caps; font-size: calc(15px * var(--kn-text, 1)); }
+.knavery-level-ladder .ladder-title { flex: 1; font-family: "Alegreya", Times, "Times New Roman", Georgia, serif; font-variant: small-caps; font-size: 15px; }
 
 /* ---- Description: biography over notes ------------------------------------- */
 .knavery-notes { margin-top: 12px; }
@@ -4719,14 +4719,14 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-welcome.theme-dark .knavery-logo-dark { display: block; }
 .knavery-welcome-title {
     margin: 0; border: none; font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
-    font-variant: small-caps; font-weight: bold; font-size: calc(30px * var(--kn-text, 1)); color: var(--kn-ink);
+    font-variant: small-caps; font-weight: bold; font-size: 30px; color: var(--kn-ink);
 }
-.knavery-welcome-byline { margin: 0; color: var(--kn-muted); font-size: calc(13px * var(--kn-text, 1)); }
+.knavery-welcome-byline { margin: 0; color: var(--kn-muted); font-size: 13px; }
 .knavery-welcome-byline a { color: inherit; }
 /* The intro: what Base Knavery is, the window's lead line: larger, centred, in the light weight (user 2026-11-14). */
 .knavery-welcome-unofficial > span { display: block; }
 .knavery-welcome-unofficial {
-    margin: 0; text-align: center; font-weight: 300; font-size: calc(16px * var(--kn-text, 1)); line-height: 1.4; color: var(--kn-ink);
+    margin: 0; text-align: center; font-style: italic; font-weight: 400; font-size: 14px; line-height: 1.4; color: var(--kn-muted);
 }
 
 /* The two columns: the rules and what to do; the books, the AI disclosure and the licences. */
@@ -4736,16 +4736,16 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-welcome-heading {
     margin: 8px 0 0; padding-bottom: 2px; border-bottom: 1px solid var(--kn-rule);
     font-family: "Alegreya", Times, "Times New Roman", Georgia, serif; font-variant: small-caps;
-    font-size: calc(17px * var(--kn-text, 1)); color: var(--kn-ink);
+    font-size: 17px; color: var(--kn-ink);
 }
 .knavery-welcome-col > .knavery-welcome-heading:first-child { margin-top: 0; }
 .knavery-welcome-subheading {
     margin: 2px 0 0; border: none; font-family: "Alegreya", Times, "Times New Roman", Georgia, serif;
-    font-variant: small-caps; font-weight: bold; font-size: calc(14px * var(--kn-text, 1)); color: var(--kn-ink);
+    font-variant: small-caps; font-weight: bold; font-size: 14px; color: var(--kn-ink);
 }
 
 /* Rules: the three lines, then which rules this world plays. */
-.knavery-welcome-rules { margin: 0; padding-left: 18px; font-size: calc(13px * var(--kn-text, 1)); line-height: 1.45; }
+.knavery-welcome-rules { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.45; }
 .knavery-welcome-rules li { margin: 2px 0; }
 .knavery-welcome-world {
     margin: 0; padding: 4px 10px; border: 1px solid var(--kn-accent); border-radius: 4px; background: var(--kn-accent-wash);
@@ -4754,7 +4754,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-welcome-rulebook {
     display: flex; flex-direction: column; align-items: stretch; gap: 6px; padding: 8px 10px;
     border: 1px solid var(--kn-accent); border-radius: 4px; background: var(--kn-accent-wash);
-    font-size: calc(13px * var(--kn-text, 1));
+    font-size: 13px;
 }
 .knavery-welcome-rulebook p { margin: 0; }
 .knavery-welcome-rulebook button { width: auto; }
@@ -4762,21 +4762,21 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-welcome-actions button { flex: 1 1 auto; width: auto; }
 
 /* Get the books: the author, then each book's name in a narrow column, its links and note beside it. */
-.knavery-welcome-author { margin: 0; font-size: calc(13px * var(--kn-text, 1)); }
+.knavery-welcome-author { margin: 0; font-size: 13px; }
 .knavery-welcome-book { display: grid; grid-template-columns: max-content 1fr; align-items: center; gap: 4px 10px; }
-.knavery-welcome-book-name { grid-column: 1; min-width: 60px; font-weight: bold; font-variant: small-caps; font-size: calc(13px * var(--kn-text, 1)); }
+.knavery-welcome-book-name { grid-column: 1; min-width: 60px; font-weight: bold; font-variant: small-caps; font-size: 13px; }
 .knavery-welcome-book .knavery-welcome-links { grid-column: 2; }
-.knavery-welcome-book-note { grid-column: 2; margin: 0; color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
+.knavery-welcome-book-note { grid-column: 2; margin: 0; color: var(--kn-muted); font-size: 12px; }
 .knavery-welcome-links { display: flex; flex-wrap: wrap; gap: 6px; }
 .knavery-welcome-link {
-    display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; font-size: calc(13px * var(--kn-text, 1));
+    display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; font-size: 13px;
     border: 1px solid var(--kn-rule-strong); border-radius: 4px; color: var(--kn-ink); text-decoration: none;
 }
 .knavery-welcome-link:hover, .knavery-welcome-link:focus-visible { background: var(--kn-wash-strong); text-shadow: none; }
 
 /* The AI disclosure: no AI art, then no AI game text, then the code note. */
 .knavery-welcome-ai { display: flex; flex-direction: column; gap: 4px; }
-.knavery-welcome-noai { margin: 0; font-size: calc(13px * var(--kn-text, 1)); line-height: 1.4; }
+.knavery-welcome-noai { margin: 0; font-size: 13px; line-height: 1.4; }
 .knavery-welcome-noai i { color: var(--kn-accent); }
 
 
@@ -4789,7 +4789,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
     position: absolute; right: 48px; bottom: 0; z-index: -1; width: 150px; height: auto; border: none;
     opacity: 0.14; pointer-events: none;
 }
-.knavery-welcome-disclaimer { margin: 0; font-size: calc(12px * var(--kn-text, 1)); }
+.knavery-welcome-disclaimer { margin: 0; font-size: 12px; }
 
 /* Folds as bullets (user, 2026-11-14): each fold's arrow is its bullet; open, the arrow turns and the
    text sits indented under the title. Art licensing, Knave 2e and Knave 1e all look the same. */
@@ -4798,7 +4798,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-welcome-fold > summary {
     display: flex; align-items: baseline; gap: 6px; list-style: none; cursor: pointer;
     font-family: "Alegreya", Times, "Times New Roman", Georgia, serif; font-variant: small-caps; font-weight: bold;
-    font-size: calc(14px * var(--kn-text, 1)); color: var(--kn-ink);
+    font-size: 14px; color: var(--kn-ink);
 }
 .knavery-welcome-fold > summary::-webkit-details-marker { display: none; }
 .knavery-welcome-fold > summary::before {
@@ -4806,7 +4806,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 }
 .knavery-welcome-fold[open] > summary::before { transform: rotate(90deg); }
 .knavery-welcome-fold > summary:hover, .knavery-welcome-fold > summary:focus-visible { color: var(--kn-accent); }
-.knavery-welcome-fold > :not(summary) { margin: 2px 0 4px 16px; color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); line-height: 1.4; }
+.knavery-welcome-fold > :not(summary) { margin: 2px 0 4px 16px; color: var(--kn-muted); font-size: 12px; line-height: 1.4; }
 .knavery-welcome-fold ul { padding-left: 16px; }
 .knavery-welcome-fold a { color: var(--kn-ink); text-decoration: underline; }
 
@@ -4814,7 +4814,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
     display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 4px;
     padding-top: 8px; border-top: 1px solid var(--kn-rule);
 }
-.knavery-welcome-onstart { display: flex; align-items: center; gap: 4px; color: var(--kn-muted); font-size: calc(13px * var(--kn-text, 1)); }
+.knavery-welcome-onstart { display: flex; align-items: center; gap: 4px; color: var(--kn-muted); font-size: 13px; }
 .knavery-welcome-foot button { flex: 0 0 auto; width: auto; margin-left: auto; }
 
 /* ---- Dashboard: the Rulebook row and each table's book icon ------------------- */
@@ -4844,11 +4844,11 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-rulebook-tables .rt-table summary { display: flex; align-items: center; gap: 8px; padding: 3px 2px; cursor: pointer; }
 .knavery-rulebook-tables .rt-table summary input { flex: 0 0 auto; margin: 0; }
 .knavery-rulebook-tables .rt-name { flex: 1; font-weight: bold; }
-.knavery-rulebook-tables .rt-page, .knavery-rulebook-tables .rt-status { color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
-.knavery-rulebook-tables .rt-count { font-size: calc(12px * var(--kn-text, 1)); font-variant-numeric: tabular-nums; }
+.knavery-rulebook-tables .rt-page, .knavery-rulebook-tables .rt-status { color: var(--kn-muted); font-size: 12px; }
+.knavery-rulebook-tables .rt-count { font-size: 12px; font-variant-numeric: tabular-nums; }
 .knavery-rulebook-tables .rt-count.rt-short { color: var(--kn-peril); font-weight: bold; }
 .knavery-rulebook-tables .rt-keep .rt-status { color: var(--kn-amber); }
-.knavery-rulebook-tables .rt-table textarea { width: 100%; margin: 2px 0 6px; font-family: monospace; font-size: calc(12px * var(--kn-text, 1)); resize: vertical; }
+.knavery-rulebook-tables .rt-table textarea { width: 100%; margin: 2px 0 6px; font-family: monospace; font-size: 12px; resize: vertical; }
 .knavery-rulebook-tables .rt-foot { display: flex; justify-content: flex-end; }
 .knavery-rulebook-tables .rt-foot button { width: auto; }
 
@@ -4863,7 +4863,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 
 /* ---- A damage card already applied (damage.js) --------------------------------- */
 .knavery-roll-card .card-apply.applied button { opacity: 0.6; }
-.knavery-roll-card .card-applied { display: block; margin-bottom: 2px; color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
+.knavery-roll-card .card-applied { display: block; margin-bottom: 2px; color: var(--kn-muted); font-size: 12px; }
 .knavery.knavery-railed > .window-content > nav.knavery-tab-rail[hidden] { display: none; }
 
 /* ---- Char Gen Mode, Level Up, Growth ----------------------------------------- */
@@ -4878,7 +4878,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery.sheet .window-header button.knavery-levelup-arrow:hover { text-shadow: 0 0 12px var(--kn-accent); }
 
 /* Growth: what a new level brings, and the GM's notes. */
-.knavery .knavery-level-rule { margin: 6px 0 2px; font-size: calc(13px * var(--kn-text, 1)); font-style: italic; color: var(--kn-muted); }
+.knavery .knavery-level-rule { margin: 6px 0 2px; font-size: 13px; font-style: italic; color: var(--kn-muted); }
 .knavery .knavery-level-rule i { color: var(--kn-accent); font-style: normal; margin-right: 4px; }
 .knavery .knavery-gm-notes { margin-top: 12px; }
 .knavery .knavery-gm-notes prose-mirror { min-height: 140px; height: auto; }
@@ -4886,14 +4886,14 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 
 /* The traits' two groups: Knave 2e's (from the GM's PDF), then Knave 1e's (shipped). */
 .character-traits .trait-group-heading {
-    grid-column: 1 / -1; margin-top: 6px; font-size: calc(12px * var(--kn-text, 1));
+    grid-column: 1 / -1; margin-top: 6px; font-size: 12px;
     font-variant: small-caps; letter-spacing: 0.05em; color: var(--kn-muted); border-bottom: 1px solid var(--kn-line);
 }
 
 /* The ability-points window of random creation. */
 .knavery-points .kn-points-row { display: flex; align-items: center; gap: 6px; padding: 3px 0; border-bottom: 1px dotted var(--kn-line); }
 .knavery-points .kn-points-name { flex: 1 1 auto; min-width: 0; }
-.knavery-points .kn-points-hint { display: block; font-size: calc(11px * var(--kn-text, 1)); font-style: italic; color: var(--kn-muted); }
+.knavery-points .kn-points-hint { display: block; font-size: 11px; font-style: italic; color: var(--kn-muted); }
 .knavery-points .kn-points-step { flex: 0 0 28px; width: 28px; height: 28px; line-height: 1; padding: 0; }
 .knavery-points .kn-points-row input { flex: 0 0 36px; width: 36px; text-align: center; font-weight: bold; }
 .knavery-points .kn-points-left { margin: 8px 0 0; font-weight: bold; text-align: right; }
@@ -4902,19 +4902,13 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-gm-dashboard .dash-xp-rows { display: flex; flex-direction: column; gap: 2px; }
 .knavery-gm-dashboard .dash-xp-row { display: flex; align-items: center; gap: 10px; }
 .knavery-gm-dashboard .dash-xp-row .dash-pc { flex: 1 1 auto; min-width: 0; }
-.knavery-gm-dashboard .dash-xp-now { flex: 0 0 auto; font-size: calc(12px * var(--kn-text, 1)); color: var(--kn-faint); }
+.knavery-gm-dashboard .dash-xp-now { flex: 0 0 auto; font-size: 12px; color: var(--kn-faint); }
 .knavery-gm-dashboard .dash-xp-each { flex: 0 0 80px; width: 80px; }
 .knavery-gm-dashboard [hidden] { display: none !important; }
 
-/* ---- Text size (setting `text-size`, per player) ------------------------------ */
-/* knavery.js sets --kn-text on the page (1 = the old sizes, 1.2 by default); every
-   px font size above is multiplied by it, and text that sets no size of its own
-   follows the window's. The footer caption keeps its small fixed size; chat cards
-   keep theirs, so the narrow chat sidebar does not overflow. */
+/* ---- Every Base Knavery window: the base font size is core's 14px token ---------- */
 .application.knavery,
-.application.knavery-settings-menu { font-size: calc(var(--font-size-14, 14px) * var(--kn-text, 1)); }
-.chat-message,
-.chat-popout { --kn-text: 1; }
+.application.knavery-settings-menu { font-size: var(--font-size-14, 14px); }
 
 /* ---- Every Base Knavery window: labels that fit (2026-11-14) ------------------- */
 /* Core gives a form label one input's height per line (foundry2.css .standard-form
@@ -4949,7 +4943,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery .career-slot { display: inline-flex; align-items: center; gap: 6px; padding: 0 6px; border: 1px dashed var(--kn-muted); border-radius: 4px; }
 
 /* Char Gen Mode's ability points: gold while some are left to place, red when over. */
-.knavery-ability-points { margin: 2px 4px 4px 0; text-align: right; font-size: calc(13px * var(--kn-text, 1)); font-weight: bold; color: var(--kn-muted); }
+.knavery-ability-points { margin: 2px 4px 4px 0; text-align: right; font-size: 13px; font-weight: bold; color: var(--kn-muted); }
 .knavery-ability-points.left { color: var(--kn-gold); }
 .knavery-ability-points.over { color: var(--kn-peril); }
 
@@ -4965,8 +4959,8 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-gm-dashboard .dash-time-mode label,
 .knavery-gm-dashboard .dash-time-options label { display: flex; align-items: center; gap: 6px; line-height: 1.3; }
 .knavery-gm-dashboard .dash-time-options { display: flex; flex-direction: column; gap: 4px; margin: 6px 0; }
-.knavery-gm-dashboard .dash-time-now { font-size: calc(16px * var(--kn-text, 1)); font-weight: bold; margin: 4px 0; }
-.knavery-gm-dashboard .dash-time-now .hint { font-weight: normal; font-size: calc(12px * var(--kn-text, 1)); }
+.knavery-gm-dashboard .dash-time-now { font-size: 16px; font-weight: bold; margin: 4px 0; }
+.knavery-gm-dashboard .dash-time-now .hint { font-weight: normal; font-size: 12px; }
 .knavery-gm-dashboard .dash-end-turn i { color: var(--kn-accent); }
 /* A lit light: the flame glows amber on the row and in its tag. */
 .knavery .item-toggle-lit.lit i, .knavery .knavery-item-tag.lit-tag i { color: var(--kn-amber); }
@@ -4977,8 +4971,8 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-gm-dashboard .dash-wages { display: flex; flex-direction: column; gap: 4px; }
 .knavery-gm-dashboard .dash-wage { display: grid; grid-template-columns: 28px 1fr auto auto auto; align-items: center; gap: 8px; }
 .knavery-gm-dashboard .dash-wage img { width: 26px; height: 26px; border: none; border-radius: 50%; }
-.knavery-gm-dashboard .dash-wage-name em { font-size: calc(11px * var(--kn-text, 1)); color: var(--kn-faint); margin-left: 4px; }
-.knavery-gm-dashboard .dash-wage-status { font-size: calc(12px * var(--kn-text, 1)); color: var(--kn-muted); }
+.knavery-gm-dashboard .dash-wage-name em { font-size: 11px; color: var(--kn-faint); margin-left: 4px; }
+.knavery-gm-dashboard .dash-wage-status { font-size: 12px; color: var(--kn-muted); }
 .knavery-gm-dashboard .dash-wage.overdue .dash-wage-status { color: var(--kn-warn); font-weight: bold; }
 .knavery-gm-dashboard .dash-wage button { flex: none; width: auto; padding: 0 10px; }
 .knavery .npc-role-line .employer-select { flex: 0 1 140px; width: auto; }
@@ -4987,25 +4981,25 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 /* Alignment and Background, each behind its Knave 1e switch: one line each under the pronouns. */
 .knavery .knave-trait-line { display: flex; align-items: center; gap: 6px; flex: 0 0 auto; min-width: 0; }
 .knavery .knave-trait-line .knave-trait-label {
-    flex: 0 0 auto; font-weight: bold; font-variant: small-caps; font-size: calc(13px * var(--kn-text, 1)); line-height: 1.3;
+    flex: 0 0 auto; font-weight: bold; font-variant: small-caps; font-size: 13px; line-height: 1.3;
 }
 .knavery .knave-trait-line .trait-input {
     flex: 1 1 auto; min-width: 0; height: 24px; background: none; color: var(--kn-ink);
     border: none; border-bottom: 1px solid var(--kn-rule); border-radius: 0;
-    font-size: calc(14px * var(--kn-text, 1)); padding: 0 2px;
+    font-size: 14px; padding: 0 2px;
 }
 .knavery .knave-trait-line a { flex: 0 0 auto; }
 /* The backstory's word guide: small and muted, amber past 35. */
 .knavery .knavery-bio .knavery-word-count {
-    display: block; text-align: right; margin-top: 2px; font-size: calc(11px * var(--kn-text, 1)); color: var(--kn-faint);
+    display: block; text-align: right; margin-top: 2px; font-size: 11px; color: var(--kn-faint);
 }
 .knavery .knavery-bio .knavery-word-count.over { color: var(--kn-warn); font-weight: bold; }
 
 /* ---- Item badges (2026-11-14): a chit before the name for special items ---------- */
 .knavery .knavery-item-badge {
     flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
-    width: calc(20px * var(--kn-text, 1)); height: calc(20px * var(--kn-text, 1)); margin-right: 4px;
-    border-radius: 50%; border: 1px solid var(--kn-chip-border); font-size: calc(10px * var(--kn-text, 1));
+    width: 20px; height: 20px; margin-right: 4px;
+    border-radius: 50%; border: 1px solid var(--kn-chip-border); font-size: 10px;
     color: var(--kn-muted); background: var(--kn-wash);
 }
 .knavery .knavery-item-badge.empty { border-color: transparent; background: none; }
@@ -5028,14 +5022,14 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-lowest .kn-lowest { list-style: none; margin: 4px 0 8px; padding: 0; }
 .knavery-lowest .kn-lowest-row { display: flex; align-items: baseline; gap: 8px; padding: 2px 0; border-bottom: 1px dotted var(--kn-line); }
 .knavery-lowest .kn-lowest-row strong { flex: 1 1 auto; }
-.knavery-lowest .kn-lowest-score { font-weight: bold; font-size: calc(15px * var(--kn-text, 1)); }
-.knavery-lowest .kn-lowest-dice { color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
+.knavery-lowest .kn-lowest-score { font-weight: bold; font-size: 15px; }
+.knavery-lowest .kn-lowest-dice { color: var(--kn-muted); font-size: 12px; }
 .knavery-lowest .form-fields { align-items: center; gap: 6px; }
 
 /* Knave 1e quality and wear (module/quality.js): the card's Wear armor button, the wear window,
    the item sheet's Quality line, a hireling's wage period. */
-.knavery-roll-card .card-targets li .kn-wear-armor { flex: 0 0 auto; width: auto; line-height: 1.4; padding: 0 6px; font-size: calc(12px * var(--kn-text, 1)); }
-.knavery-roll-card .card-targets li .kn-wear-done { color: var(--kn-muted); font-size: calc(12px * var(--kn-text, 1)); }
+.knavery-roll-card .card-targets li .kn-wear-armor { flex: 0 0 auto; width: auto; line-height: 1.4; padding: 0 6px; font-size: 12px; }
+.knavery-roll-card .card-targets li .kn-wear-done { color: var(--kn-muted); font-size: 12px; }
 .knavery-roll-card .card-note.crit { color: var(--kn-accent); }
 .knavery-wear .kn-wear-list { display: flex; flex-direction: column; gap: 4px; margin: 6px 0; }
 .knavery-wear .kn-wear-row { display: flex; align-items: center; gap: 8px; padding: 2px 0; border-bottom: 1px dotted var(--kn-line); }
@@ -5054,7 +5048,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-gm-dashboard .dash-party-name { display: flex; align-items: center; gap: 6px; font-weight: bold; min-width: 0; }
 .knavery-gm-dashboard .dash-party-name img { width: 30px; height: 30px; border: none; border-radius: 50%; flex: none; }
 .knavery-gm-dashboard .dash-party-name span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.knavery-gm-dashboard .dash-party-players { font-size: calc(11px * var(--kn-text, 1)); color: var(--kn-faint); text-align: right; }
+.knavery-gm-dashboard .dash-party-players { font-size: 11px; color: var(--kn-faint); text-align: right; }
 .knavery-gm-dashboard .dash-party-stats { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 4px 14px; padding-left: 36px; }
 .knavery-gm-dashboard .dash-party-stat { white-space: nowrap; }
 .knavery-gm-dashboard .dash-party-stat i { color: var(--kn-muted); margin-right: 2px; }
@@ -5062,14 +5056,14 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-gm-dashboard .dash-party-stat.wounds.hurt, .knavery-gm-dashboard .dash-party-stat.slots.over { color: var(--kn-peril); font-weight: bold; }
 .knavery-gm-dashboard .dash-party-stat.coins i { color: var(--kn-gold); }
 .knavery-gm-dashboard .dash-party-row.dead .dash-party-name { color: var(--kn-peril); text-decoration: line-through; }
-.knavery-gm-dashboard .dash-party-lights { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 4px 10px; padding-left: 36px; font-size: calc(12px * var(--kn-text, 1)); color: var(--kn-faint); }
+.knavery-gm-dashboard .dash-party-lights { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 4px 10px; padding-left: 36px; font-size: 12px; color: var(--kn-faint); }
 .knavery-gm-dashboard .dash-party-light.lit { color: inherit; }
 .knavery-gm-dashboard .dash-party-light.lit i { color: var(--kn-amber); }
 /* The XP tab's treasure mode. */
 .knavery-gm-dashboard .dash-xp-treasure-items { display: flex; flex-direction: column; gap: 2px; margin: 4px 0; }
 .knavery-gm-dashboard .dash-xp-treasure-item { display: flex; align-items: center; gap: 6px; }
 .knavery-gm-dashboard .dash-xp-treasure-item img { width: 22px; height: 22px; border: none; }
-.knavery-gm-dashboard .dash-xp-treasure-item em { font-size: calc(11px * var(--kn-text, 1)); color: var(--kn-faint); }
+.knavery-gm-dashboard .dash-xp-treasure-item em { font-size: 11px; color: var(--kn-faint); }
 .knavery-gm-dashboard .dash-xp-treasure-value { margin-left: auto; }
 .knavery-gm-dashboard .dash-xp-treasure-total { font-weight: bold; }
 /* Treasure on the Inventory, and the free repair beside Broken. */
@@ -5079,15 +5073,15 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-spell-gen .kn-spell-gen { display: flex; flex-direction: column; gap: 8px; padding: 4px; }
 .knavery-spell-gen .kn-spell-gen-words { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
 .knavery-spell-gen .kn-spell-gen-words li { display: grid; grid-template-columns: 7.5em minmax(0, 1fr) auto; align-items: center; gap: 8px; }
-.knavery-spell-gen .kn-spell-gen-slot { font-size: calc(12px * var(--kn-text, 1)); color: var(--kn-muted); text-transform: capitalize; }
+.knavery-spell-gen .kn-spell-gen-slot { font-size: 12px; color: var(--kn-muted); text-transform: capitalize; }
 .knavery-spell-gen .kn-spell-gen-word { font-weight: bold; }
 .knavery-spell-gen .kn-spell-gen-reroll { flex: none; width: auto; padding: 0 8px; }
 .knavery-spell-gen .kn-spell-gen-missing { color: var(--kn-peril); }
-.knavery .kn-spell-gen-name { font-size: calc(16px * var(--kn-text, 1)); text-align: center; margin: 4px 0; }
+.knavery .kn-spell-gen-name { font-size: 16px; text-align: center; margin: 4px 0; }
 /* A GM request's set edge, and Requests' All. */
 .knavery-roll-prompt .roll-locked-edge { margin: 0 0 6px; font-weight: bold; color: var(--kn-muted); }
 .knavery-roll-prompt .roll-locked-edge i { color: var(--kn-accent); margin-right: 4px; }
-.knavery-gm-dashboard .dash-select-all { font-size: calc(12px * var(--kn-text, 1)); margin-left: 6px; }
+.knavery-gm-dashboard .dash-select-all { font-size: 12px; margin-left: 6px; }
 /* The GM's dashboard button, atop the left toolbar (knavery.js renderSceneControls): in the
    column's flow, so the controls move down for it rather than being covered. */
 #ui-left-column-1 > #knavery-dashboard-hud {
@@ -5108,7 +5102,7 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 #ui-left-column-1 > #knavery-dashboard-hud:hover,
 #ui-left-column-1 > #knavery-dashboard-hud:focus-visible { filter: brightness(1.15); outline: none; }
 #ui-left-column-1 > #knavery-dashboard-hud i { margin: 0; pointer-events: none; }
-.knavery-gm-dashboard .dash-difficulty-guide { margin: -2px 0 8px; padding-left: 1.2em; font-size: calc(12px * var(--kn-text, 1)); }
+.knavery-gm-dashboard .dash-difficulty-guide { margin: -2px 0 8px; padding-left: 1.2em; font-size: 12px; }
 .knavery-gm-dashboard .dash-difficulty-guide li { margin: 0; }
 /* The dashboard's Damage page: the splat in the peril red, as the sheet's Attack button. */
 .knavery-gm-dashboard > .window-content > nav.knavery-tab-rail button[data-tab="damage"] i { color: var(--kn-peril); }
@@ -5116,3 +5110,12 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
    see-through background turns solid, as Foundry does for reduced transparency. */
 .theme-dark .knavery.knavery-railed,
 .knavery.knavery-railed.theme-dark { --background: var(--color-cool-5); }
+
+/* ---- Dashboard section headings (user, 2026-11-14: far too big): the item sheet's look --- */
+/* Core gives an h3 its 28px heading with 2rem above and 1rem below; the dashboard's pages
+   are lists of buttons, so their headings are small caps on a rule, with little air. */
+.knavery-gm-dashboard h3 {
+    font-family: "Alegreya", Times, serif; font-size: 15px; font-variant: small-caps; font-weight: bold;
+    margin: 10px 0 4px; padding-bottom: 1px; border-bottom: 1px solid var(--kn-rule);
+}
+.knavery-gm-dashboard .tab > h3:first-child { margin-top: 0; }

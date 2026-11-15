@@ -67,7 +67,7 @@ picker, change log and marketplace it ports.
   `tab-rail.js` hangs the pages' thumb-tab rail off the window's edge (DB
   Mythic's mechanism; the rail is a render PART, `templates/parts/tab-rail.html`).
   The Knave page carries the head; Inventory, Growth and Description follow.
-  A character's sheet is narrow (440px × text size: abilities | vitals; user
+  A character's sheet is narrow (440px: abilities | vitals; user
   ruling 2026-11-14); its Attack button opens one window to choose an equipped
   weapon and the edge (`rolls.js` `openAttack`). NPC sheets keep 640px and their
   attacks column.

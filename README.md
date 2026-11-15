@@ -2,7 +2,7 @@
 <h1 align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="art/welcome/portraits/femme-white.png"><img src="art/welcome/portraits/femme.png" alt="A knave, drawn by Lydia Comer" height="100" align="middle"></picture> Base Knavery™ <picture><source media="(prefers-color-scheme: dark)" srcset="art/welcome/portraits/knight-white.png"><img src="art/welcome/portraits/knight.png" alt="A knave, drawn by Lydia Comer" height="100" align="middle"></picture></h1>
 <p align="center">by <a href="https://github.com/domfortunato">Dom Bosco</a></p>
 
-<p align="center">Base Knavery is an unofficial, fan-made Foundry VTT system for Knave, first and second editions.<br>Questing Beast LLC did not make it and has not endorsed it.</p>
+<p align="center"><em>Base Knavery is an unofficial, fan-made Foundry VTT system for Knave, first and second editions.<br>Questing Beast LLC did not make it and has not endorsed it.</em></p>
 
 ## System Rules
 
