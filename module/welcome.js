@@ -67,12 +67,14 @@ export class WelcomeWindow extends HandlebarsApplicationMixin(ApplicationV2) {
       })),
       rules: currentRules(),
       thisWorld: F("KNAVERY.Welcome.ThisWorld", {
-        // The first edition's title is just "Knave" (user, 2026-11-14).
+        // "Knave (first edition)" here (user, 2026-11-15; elsewhere its title is just "Knave").
         rules: L({ "1e": "KNAVERY.Welcome.ThisWorld1e", "2e": "KNAVERY.Welcome.ThisWorld2e" }[currentRules()] ?? "KNAVERY.Welcome.ThisWorldCustom"),
       }),
       // The "show after each update" box writes a world setting.
       isGM: game.user.isGM && game.user.can("SETTINGS_MODIFY"),
       hasRulebook: hasRulebook(),
+      // A 1e world is told the PDF moves it up to 2e (user, 2026-11-15); a 2e or mixed world keeps the plain prompt.
+      noRulebook: L(currentRules() === "1e" ? "KNAVERY.Welcome.NoRulebook1e" : "KNAVERY.Welcome.NoRulebook"),
       canReadRulebook: canReadRulebook(),
       showOnStart: game.settings.get(SETTINGS_NS, "welcome-on-start"),
     };

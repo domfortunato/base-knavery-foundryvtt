@@ -1939,7 +1939,7 @@ await withSettings(gm, async () => {
     ok(w.author === "Both editions of Knave were written by Ben Milton.", "the welcome credits Ben Milton for both editions, in one line", w.author);
     ok(w.fits && w.scrolls === "auto" && w.licences === 2 && w.twoCols && w.licenceOrder === "Knave: CC BY 4.0 | Knave: Second Edition Third Party License",
       "the welcome is wide, in two columns, stops at the screen and scrolls; each edition's licence is a folded bullet, 1e first", JSON.stringify(w));
-    ok(w.world === "This world plays Knave." && w.knight && w.worldOneLine && w.watermark && w.booksHeading === "Buy the books!" && w.rulesHeading === "System Rules"
+    ok(w.world === "This world plays Knave (first edition)." && w.knight && w.worldOneLine && w.watermark && w.booksHeading === "Buy the books!" && w.rulesHeading === "System Rules"
       && w.aiCode === "Base Knavery's code is written with the help of an AI coding assistant." && w.itch1e === "https://questingbeast.itch.io/knave" && w.links2e === 3 && w.smallLast && w.licensing === "Licensing",
       "two knaves as book ends either side of the welcome's title, the logo a watermark in Licensing, says which rules the world plays, and has Buy the books! with Knave's PDF on itch", JSON.stringify(w));
     ok(h.lines === 7 && h.now2e && h.rules === "2e" && h.hpSame && h.again === true,

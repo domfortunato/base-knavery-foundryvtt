@@ -2,7 +2,7 @@
 /**
  * The three screenshots on the Foundry package listing (docs/listing/, 2026-11-15), dark scheme:
  *   welcome.png          the welcome window in a world that plays Knave 1e with no PDF chosen, so it shows
- *                        "This world plays Knave." and the box to upload the Knave 2e book (user, 2026-11-15:
+ *                        "This world plays Knave (first edition)." and the box to upload the Knave 2e book (user, 2026-11-15:
  *                        the listing's welcome must show a 1e world that can move up to 2e)
  *   character-sheet.png  the character sheet's Knave page, one prepared knave
  *   attack-window.png    the Attack window the player sees
@@ -79,7 +79,9 @@ await withSettings(page, async () => {
   });
   await page.waitForSelector("#knavery-welcome .knavery-welcome-rulebook", { timeout: 15000 });
   const world = await page.locator("#knavery-welcome .knavery-welcome-world").innerText();
-  ok(/Knave\.$/.test(world.trim()), `the welcome says the world plays Knave 1e ("${world.trim()}")`);
+  ok(/first edition\)\.$/.test(world.trim()), `the welcome says the world plays Knave 1e ("${world.trim()}")`);
+  const box = await page.locator("#knavery-welcome .knavery-welcome-rulebook p").innerText();
+  ok(/switch this world to 2e rules/.test(box), `the upload box offers the move to 2e ("${box.trim()}")`);
   await shot("#knavery-welcome", "welcome");
   await page.evaluate(() => foundry.applications.instances.get("knavery-welcome")?.close());
 

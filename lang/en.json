@@ -1428,7 +1428,7 @@
       "RulesMixTitle": "Mix them.",
       "RulesMixBody": "Each rule has its own switch in Game Settings, under Configure Rules.",
       "ThisWorld": "This world plays {rules}.",
-      "ThisWorld1e": "Knave",
+      "ThisWorld1e": "Knave (first edition)",
       "ThisWorld2e": "Knave 2e",
       "ThisWorldCustom": "a mix of both editions",
       "Author": "Both editions of Knave were written by Ben Milton.",
@@ -1458,6 +1458,7 @@
       "ChooseRulebook": "Choose your rulebook PDF from this computer",
       "OpenRulebook": "Open the rulebook",
       "NoRulebook": "Playing Knave 2e? Upload your Knave 2e PDF to read it in Foundry and build its tables. It is uploaded to this server only.",
+      "NoRulebook1e": "Want to play Knave 2e? Upload your Knave 2e PDF to read it in Foundry, build its tables and switch this world to 2e rules. It is uploaded to this server only.",
       "ShowOnStart": "Show each time a Game Master loads the world",
       "Close": "Close",
       "Sidebar": "Welcome & credits"
