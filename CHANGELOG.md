@@ -5,6 +5,8 @@
 - The welcome window says which edition a world plays more plainly: "This world plays Knave (first edition)."
   In a Knave 1e world, the box for the rulebook PDF now says that uploading your Knave 2e PDF builds its tables
   and switches the world to 2e rules.
+- The welcome window's Made for Knave logo sits at the foot of its column, by the Close button, no longer behind
+  the licence titles.
 
 ## 0.4.1
 
