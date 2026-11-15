@@ -90,7 +90,7 @@ export const SETTING_GROUPS = [
       "#spells", "spell-rule", "spell-list",
       "#combat", "advantage-mode", "attack-rule", "weapon-breaks-on-1", "initiative-rule",
       "#money", "price-list", "coins-per-slot",
-      "#advancement", "knave1e-xp", "treasure-xp", "knave1e-random-raises",
+      "#advancement", "knave1e-xp", "treasure-xp",
     ],
   },
   {
@@ -208,7 +208,6 @@ export const registerSettings = () => {
     label: "TreasureXp", type: String, choices: choices("TreasureXpChoice", ["off", "gold", "coin"]),
     default: D["treasure-xp"], onChange: () => foundry.applications.instances.get("knavery-gm-dashboard")?.render({ parts: ["xp"] }),
   });
-  reg("knave1e-random-raises", { label: "Knave1eRandomRaises", type: Boolean, default: false });
   // Initiative by side, each edition's way, or Foundry's own (initiative.js, combat-tracker.js; 0.3.0).
   reg("initiative-rule", {
     label: "InitiativeRule", type: String, choices: choices("InitiativeChoice", ["1e-d6", "2e-leaders", "individual"]),

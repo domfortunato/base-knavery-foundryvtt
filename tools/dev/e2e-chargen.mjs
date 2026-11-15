@@ -4,7 +4,7 @@
  * Level Up arrow and its window; the HP rules; random creation from placed
  * ability points (one spellbook per STARTING point of INT); the GM's notes; the dashboard's XP tab; the ability
  * roll link's tooltip; no text-size setting; the footer; traits; changing careers at level 1;
- * the Knave 1e rule hacks (1000-XP levels, d8 HP, random raises, group initiative); the narrow
+ * the Knave 1e rule hacks (1000-XP levels, d8 HP, group initiative); the narrow
  * sheet, its Attack window and raised abilities; the welcome window's licence notice; random creation rolling by
  * default; a blank sheet held to its level's ability points, with HP, coin and career dice; the Attack window's
  * Target list; the narrow header; Rest by the book; red splats; compact attack cards; labels that fit; Create NPC;
@@ -515,7 +515,7 @@ await withSettings(gm, async () => {
   });
 
   /* ------------------------------------------------------------------ */
-  await section("15. Knave 1e rule hacks: 1000-XP levels, d8 HP, random raises, group initiative.", async () => {
+  await section("15. Knave 1e rule hacks: 1000-XP levels, d8 HP, group initiative.", async () => {
     const r = await gm.evaluate(async ([sys, pcId]) => {
       const lu = await import(`${sys}/level-up.js`);
       const { buildCharacter } = await import(`${sys}/character-generator.js`);
@@ -548,15 +548,8 @@ await withSettings(gm, async () => {
       await set("level-hp-rule", "reroll");
       await set("first-level-hp", "1d6");
 
-      // Random raises: a d20 under defense favours strong abilities.
-      const strong = { STR: 9, DEX: 0, CON: 0, INT: 0, WIS: 0, CHA: 0 };
-      const rate = () => { let n = 0; for (let i = 0; i < 400; i++) if (lu.randomAbilityPicks(strong).includes("STR")) n++; return n / 400; };
-      out.rateOff = rate();
-      await set("knave1e-random-raises", true);
-      out.rateOn = rate();
-      const sets = Array.from({ length: 50 }, () => lu.randomAbilityPicks({ STR: 10, DEX: 10, CON: 10, INT: 2, WIS: 2, CHA: 2 }));
-      out.picksOk = sets.every((p) => p.length === 3 && new Set(p).size === 3 && p.every((k) => ["INT", "WIS", "CHA"].includes(k)));
-      await set("knave1e-random-raises", false);
+      // Random raises (removed 2026-11-15): the switch is gone and Random picks at random.
+      out.raisesGone = !game.settings.settings.has("base-knavery.knave1e-random-raises");
 
       // Group initiative: one d6 a round orders the sides.
       await set("initiative-rule", "1e-d6");
@@ -592,9 +585,7 @@ await withSettings(gm, async () => {
       "the Growth ladder and random creation follow the 1000-XP levels", JSON.stringify({ ladder: r.ladder, built3: r.built3 }));
     ok(r.first === "1d8" && r.formula4 === "4d8" && r.low === 31 && r.up.max === r.up.rolled && r.hint.includes("4d8"),
       "Knave 1e HP: 1d8 at first level, then a d8 per level, below the old max +1", JSON.stringify({ first: r.first, f: r.formula4, low: r.low, up: r.up, hint: r.hint }));
-    // STR 9 among five 0s: about 83% under 1e (a weak ability can rise first), 50% at random.
-    ok(r.rateOn > 0.72 && r.rateOff < 0.62 && r.picksOk, "Knave 1e random raises favour strong abilities and skip maxed ones",
-      JSON.stringify({ on: r.rateOn, off: r.rateOff, picksOk: r.picksOk }));
+    ok(r.raisesGone, "the Knave 1e random-raises switch is gone (user ruling 2026-11-15)", JSON.stringify({ gone: r.raisesGone }));
     ok(r.preRoll.flag?.round === 0 && r.preRoll.inits.join() === "1,2" && r.preRoll.msgs === 1 && r.started.round === 1 && r.started.msgs === 1,
       "group initiative: one d6 lines up both sides, and Begin Combat keeps a roll made before it", JSON.stringify({ pre: r.preRoll, started: r.started }));
     const rounds = r.rounds ?? [];

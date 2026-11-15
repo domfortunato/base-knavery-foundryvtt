@@ -1248,8 +1248,6 @@
         "gold": "Knave 1e, XP for gold: 1 per 100c",
         "coin": "Knave 2e: 1 XP per coin"
       },
-      "Knave1eRandomRaises": "Knave 1e random ability raises",
-      "Knave1eRandomRaisesHint": "Level Up's Random rolls a d20 per ability and raises it on a roll under its defense, until three have risen.",
       "InitiativeRule": "Initiative",
       "InitiativeChoice": {
         "1e-d6": "Knave 1e: one d6 a round, by side",

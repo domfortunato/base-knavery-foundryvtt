@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Removed: the "Knave 1e random ability raises" switch under Advancement. Level Up's Random button raises
+  three different abilities at random in every world.
+
 ## 0.3.0
 
 - For the probe fleet: `dev:fresh`, a story in a world no Game Master has opened: it plays Knave 1e as written,

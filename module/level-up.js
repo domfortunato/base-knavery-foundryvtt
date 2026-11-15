@@ -8,9 +8,7 @@
  * Under the two d6 reroll rules the first die is the first-level formula
  * (setting `first-level-hp`: 1d6, 1d4+2 or 1d8).
  *
- * The Random button raises three different abilities at random, or, under the
- * GM's hack `knave1e-random-raises`, by Knave 1e's method: a d20 against each
- * ability's defense in turn until three have risen.
+ * The Random button raises three different abilities at random.
  *
  * The sheet offers Level Up (the title-bar arrow and the Growth button) only
  * while Char Gen Mode is on AND the character's XP has reached the next level.
@@ -24,53 +22,24 @@ const L = (k) => game.i18n.localize(k);
 const F = (k, d) => game.i18n.format(k, d);
 
 /**
- * Knave 1e's random raises: roll a d20 for each ability, raising it when the
- * roll is under its defense (11 + score); keep cycling, skipping abilities that
- * are maxed or already raised, until three have risen. Strong abilities rise faster.
- */
-const knave1eRaises = (values) => {
-  const open = ABILITIES.filter((k) => (values[k] ?? 0) < ABILITY_MAX);
-  // "In any order": one shuffle, then the same cycle each pass.
-  for (let i = open.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [open[i], open[j]] = [open[j], open[i]];
-  }
-  const picks = [];
-  const want = Math.min(LEVEL_UP_ABILITIES, open.length);
-  // Every open ability's defense is at least 11, so each roll succeeds at least half the time.
-  while (picks.length < want) {
-    for (const k of open) {
-      if (picks.length >= want) break;
-      if (picks.includes(k)) continue;
-      if (Math.ceil(Math.random() * 20) < 11 + (values[k] ?? 0)) picks.push(k);
-    }
-  }
-  return picks;
-};
-
-const knave1eRaisesOn = () => game.settings.get(SETTINGS_NS, "knave1e-random-raises") === true;
-
-/** Three different abilities still under the cap: at random, or by Knave 1e's d20 against defense. */
-/**
  * What a character of `level` may have in its abilities by the rules (Char
  * Gen Mode holds every sheet to it, GM's too; user ruling 2026-11-14): 3
  * points at level 1 and +1 to three different abilities a level, so no score
- * above level + 2. Under Knave 1e's random raises a level's raises vary, so
- * only the per-score cap holds (`total` null). Knave 1e's creation rolls each score as the
- * lowest of 3d6 (p1), so no total holds either, and a score is at most 6 + a point a level.
+ * above level + 2. Knave 1e's creation rolls each score as the
+ * lowest of 3d6 (p1), so no total holds there, and a score is at most 6 + a point a level.
  */
 export const abilityBudget = (level) => {
   const l = Math.max(1, Math.min(MAX_LEVEL, Number(level) || 1));
   if (creationAbilities() === "lowest") return { level: l, total: null, cap: Math.min(ABILITY_MAX, LOWEST_DIE_MAX + l - 1) };
   return {
     level: l,
-    total: knave1eRaisesOn() ? null : CREATION_POINTS + LEVEL_UP_ABILITIES * (l - 1),
+    total: CREATION_POINTS + LEVEL_UP_ABILITIES * (l - 1),
     cap: Math.min(ABILITY_MAX, CREATION_POINTS + l - 1),
   };
 };
 
+/** Three different abilities still under the cap, at random. */
 export const randomAbilityPicks = (values) => {
-  if (knave1eRaisesOn()) return knave1eRaises(values);
   const open = ABILITIES.filter((k) => (values[k] ?? 0) < ABILITY_MAX);
   const picks = [];
   while (picks.length < LEVEL_UP_ABILITIES && open.length) {
