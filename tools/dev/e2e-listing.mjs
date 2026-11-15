@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * The screenshots for the Foundry package listing (2026-11-15), in both colour schemes: the character
- * sheet's Knave and Inventory pages, the Game Master's Dashboard (Party and Dice), the Attack window and
+ * sheet's Knave and Inventory pages, the Game Master's Dashboard (Party and Time), the Attack window and
  * its chat card, the welcome window and Create Character. One prepared knave with a portrait and gear;
  * the shots land in <MB_SHOTS>/listing/ with names fit to upload. Its checks only say each shot was taken.
  *
@@ -22,12 +22,13 @@ const ok = (cond, label, extra = "") => {
 
 const browser = await chromium.launch();
 watchdog(300000, "listing", () => browser.close());
-const page = await browser.newPage({ viewport: VIEWPORT, deviceScaleFactor: 2 });
+const page = await browser.newPage({ viewport: { width: VIEWPORT.width, height: 1400 }, deviceScaleFactor: 2 });
 const errors = watchErrors(page);
 await joinAsGM(page);
 
 const taken = [];
 const shot = async (selector, name) => {
+  await page.mouse.move(2, 2);
   await page.waitForTimeout(700);
   const loc = page.locator(selector).last();
   if (!(await loc.count())) return;
@@ -42,7 +43,14 @@ await withSettings(page, async () => {
   const id = await page.evaluate(async () => {
     for (const a of game.actors.filter((x) => x.name.startsWith("Probe"))) await a.delete();
     const a = await game.knavery.createCharacter({ mode: "random", level: 3, name: "Probe Mirela Ashgrove" });
-    await a.update({ name: "Mirela Ashgrove", "system.coins": 340, "system.xp": 2600, "system.pronouns": "she/her" });
+    // Played, not being made: Char Gen Mode off; Alice owns her, so the Party page lists her.
+    const alice = game.users.getName("Alice");
+    await a.update({ name: "Mirela Ashgrove", "system.coins": 340, "system.xp": 2600, "system.pronouns": "she/her",
+      "system.generationEnabled": false, ...(alice ? { [`ownership.${alice.id}`]: 3 } : {}) }, { knCreation: true });
+    await a.createEmbeddedDocuments("Item", [
+      { name: "Sword", type: "weapon", system: { damage: "d6", attackType: "melee", equipped: true, slots: 1, hands: 1 } },
+      { name: "Torch", type: "item", system: { slots: 1, quantity: 1, lit: true } },
+    ]);
     return a.id;
   });
   const npcId = await page.evaluate(async () => (await Actor.create({ name: "Probe Goblin", type: "npc", system: { hp: { value: 4, max: 4 } } })).id);
@@ -50,7 +58,7 @@ await withSettings(page, async () => {
   for (const scheme of ["dark", "light"]) {
     await page.evaluate((s) => game.settings.set("core", "uiConfig", foundry.utils.mergeObject(game.settings.get("core", "uiConfig"), { colorScheme: { applications: s, interface: s } })), scheme);
     // The character sheet: the Knave page, then Inventory.
-    await page.evaluate((x) => game.actors.get(x).sheet.render(true), id);
+    await page.evaluate(async (x) => { const s = game.actors.get(x).sheet; await s.render(true); s.setPosition({ height: 1300 }); }, id);
     await page.waitForSelector(".knavery.sheet.actor", { timeout: 15000 });
     await shot(".knavery.sheet.actor", `01-sheet-knave-${scheme}`);
     await page.locator('.knavery.sheet.actor nav.knavery-tab-rail button[data-tab="inventory"]').click();
@@ -60,7 +68,7 @@ await withSettings(page, async () => {
     // The dashboard: Party, then Dice.
     await page.evaluate(() => game.knavery.openDashboard());
     await page.waitForSelector("#knavery-gm-dashboard", { timeout: 15000 });
-    for (const [tab, n] of [["party", "03"], ["dice", "04"]]) {
+    for (const [tab, n] of [["party", "03"], ["time", "04"]]) {
       await page.evaluate((t) => foundry.applications.instances.get("knavery-gm-dashboard").changeTab(t, "primary"), tab);
       await shot("#knavery-gm-dashboard", `${n}-dashboard-${tab}-${scheme}`);
     }
@@ -70,6 +78,7 @@ await withSettings(page, async () => {
     await page.waitForSelector(".knavery-roll-prompt", { timeout: 15000 });
     await shot(".knavery-roll-prompt", `05-attack-window-${scheme}`);
     await page.locator('.knavery-roll-prompt button[data-action="normal"]').click();
+    await page.evaluate(() => { ui.sidebar.expand?.(); ui.sidebar.changeTab("chat", "primary"); });
     await page.waitForTimeout(1500);
     await shot("#chat .chat-message", `06-attack-card-${scheme}`);
     // The welcome window and Create Character.
