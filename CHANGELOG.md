@@ -1,24 +1,25 @@
 # Changelog
 
-## Unreleased
+## 0.4.0
 
-- Removed: the "Knave 1e random ability raises" switch under Advancement. Level Up's Random button raises
-  three different abilities at random in every world.
-- The Game Master's Dashboard's Random page is now **Dice**.
-- Removed: the "Hazard dice on the Random page" switch (Configure General and the Toggles page). The hazard dice
-  and the Time page's clock always show.
+- **Ready for translation.** The interface and the Knave 1e rules the system ships can now be translated, and
+  translators are welcome: `TRANSLATING.md` explains how to send a translation or publish one as a module.
+  - Plurals follow each language's rules (Polish has three forms, for example), lists read the language's way
+    ("Alice, Bob and Carol"), coins and XP use the language's thousands separator ("1,234 coins"), and a label and
+    its number sit in one translatable phrase ("Slots 3 / 10").
+  - The system finds its tables, items, market aisles and Guide pages by a hidden key as well as by name, so a
+    table or compendium entry in another language still works, and a translated Knave 1e starting-gear table still
+    gives the right items.
+  - The table importer has **Use as**: a pasted table under any name can stand in for one of the system's (a
+    Careers table in your language, for example).
+  - `babele-template/` lists every translatable compendium entry (the Guide, gear, bestiary and the Knave 1e tables
+    and spells) for a Babele translation module.
+- The Game Master's Dashboard's Random page is now **Dice**. Its hazard dice, and the Time page's clock, always
+  show: the "Hazard dice on the Random page" switch is gone (Configure General and the Toggles page).
 - The Printing settings have their own window, **Configure Printing**, out of Configure General.
-- Ready for translations, step one: the system finds its tables, items, market aisles and Guide pages by a
-  hidden key as well as by name, so a table or compendium entry in another language still works. The table
-  importer has **Use as**: a pasted table under any name can stand in for one of the system's (a Careers table
-  in your language, for example).
-- Ready for translations, step two: plurals follow each language's rules (Polish has three forms, for example),
-  lists of names read the language's way ("Alice, Bob and Carol"), coins and XP get the language's thousands
-  separator ("1,234 coins"), and a label and its number sit in one translatable phrase ("Slots 3 / 10").
-  `TRANSLATING.md` explains how to send a translation or publish one as a module.
-- Ready for translations, step three: `babele-template/` lists every translatable compendium entry (the Guide,
-  gear, bestiary and the Knave 1e tables and spells) for a Babele translation module, and a translated Knave 1e
-  starting-gear table still gives the right items.
+- Removed: the "Knave 1e random ability raises" switch under Advancement. Level Up's Random button raises three
+  different abilities at random in every world.
+- Wording: "Game Master" in titles and at the first mention, "GM" in hints and tooltips.
 
 ## 0.3.0
 
