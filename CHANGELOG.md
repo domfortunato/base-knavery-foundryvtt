@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.2
+
+- The welcome window says which edition a world plays more plainly: "This world plays Knave (first edition)."
+  In a Knave 1e world, the box for the rulebook PDF now says that uploading your Knave 2e PDF builds its tables
+  and switches the world to 2e rules.
+
 ## 0.4.1
 
 - Fixed: on Foundry 14.365 to 14.369, every world launch logged a migration error for each compendium entry
