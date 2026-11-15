@@ -559,7 +559,7 @@ await withSettings(gm, async () => {
       await set("knave1e-random-raises", false);
 
       // Group initiative: one d6 a round orders the sides.
-      await set("knave1e-initiative", true);
+      await set("initiative-rule", "1e-d6");
       const npc = await Actor.create({ name: "Probe Goblin", type: "npc" });
       const combat = await Combat.create({});
       await combat.createEmbeddedDocuments("Combatant", [{ actorId: pc.id }, { actorId: npc.id }]);
@@ -577,7 +577,7 @@ await withSettings(gm, async () => {
       }
       out.rounds = rounds;
       out.roundMsgs = msgs();
-      await set("knave1e-initiative", false);
+      await set("initiative-rule", "individual");
       await combat.resetAll();
       await combat.rollAll();
       out.offFlag = combat.getFlag("base-knavery", "groupInitiative") ?? null;
@@ -1271,7 +1271,7 @@ await withSettings(gm, async () => {
     // its turn goes to the first combatant who is not defeated (core's Skip Defeated on), and is stored.
     const ini = await gm.evaluate(async (pcId) => {
       const settle = () => new Promise((res) => setTimeout(res, 600));
-      await game.settings.set("base-knavery", "knave1e-initiative", true);
+      await game.settings.set("base-knavery", "initiative-rule", "1e-d6");
       const trackerBefore = foundry.utils.deepClone(game.settings.get("core", "combatTrackerConfig"));
       const foes = [];
       for (const n of ["Probe Foe A", "Probe Foe B", "Probe Foe C"]) foes.push(await Actor.create({ name: n, type: "npc", system: { role: "monster" } }));
@@ -1314,7 +1314,7 @@ await withSettings(gm, async () => {
       await combat.delete();
       for (const f of foes) await f.delete();
       await game.settings.set("core", "combatTrackerConfig", trackerBefore);
-      await game.settings.set("base-knavery", "knave1e-initiative", false);
+      await game.settings.set("base-knavery", "initiative-rule", "individual");
       return { gmRounds, playerRounds };
     }, ids.a);
     ok(ini.gmRounds.every((r) => r.ok) && ini.gmRounds.some((r) => r.flipped),
@@ -2477,7 +2477,7 @@ await withSettings(gm, async () => {
       const app = document.getElementById("knavery-gm-dashboard");
       return {
         active: !!app.querySelector('section[data-tab="tools"].active .dash-toggles'),
-        toggles: app.querySelectorAll('section[data-tab="tools"] .dash-toggle').length,
+        toggles: app.querySelectorAll('section[data-tab="tools"] [data-action="toggleSetting"]').length,
         manager: !!app.querySelector('section[data-tab="market"] .mm-aisles') && !app.querySelector('section[data-tab="tools"] [data-action="marketManager"]'),
         tablesClean: !app.querySelector('section[data-tab="tables"] .dash-toggles, section[data-tab="tables"] [data-action="marketManager"]'),
         tablesImport: !!app.querySelector('section[data-tab="tables"] [data-action="importTable"]'),
@@ -2673,6 +2673,109 @@ await withSettings(gm, async () => {
     ok(r.allShipped, "a named source gives every random portrait from that gallery", JSON.stringify(r));
     ok(r.fallback, "an empty Yours folder as the source still gives a portrait (from the rest, with a warning)", JSON.stringify(r));
     ok(r.market >= 1, "the Marketplace page lists the aisles", JSON.stringify(r));
+  });
+
+  /* ------------------------------------------------------------------ */
+  await section("34. Combat by side (0.3.0): the 2e leaders' check, kept rounds, Next side, the tracker's side headers and acted ticks, auto-defeated, surprise, the Combat page.", async () => {
+    const r = await gm.evaluate(async ([sys, pcId]) => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const ns = "base-knavery";
+      const before = { rule: game.settings.get(ns, "initiative-rule"), attack: game.settings.get(ns, "attack-rule") };
+      const out = {};
+      const pc = game.actors.get(pcId);
+      await game.settings.set(ns, "initiative-rule", "2e-leaders");
+      await game.settings.set(ns, "attack-rule", "knave2e");
+      const foes = [];
+      for (const n of ["Probe Side A", "Probe Side B"]) foes.push(await Actor.create({ name: n, type: "npc", system: { role: "monster", level: 2, hp: { value: 4, max: 4 } } }));
+      const combat = await Combat.create({});
+      await combat.createEmbeddedDocuments("Combatant", [{ actorId: pc.id }, ...foes.map((f) => ({ actorId: f.id }))]);
+      const t0 = Date.now() - 1000;
+      const msgs = () => game.messages.filter((m) => m.getFlag(ns, "groupInitiative") !== undefined && m.timestamp >= t0);
+      await combat.startCombat();
+      const g1 = combat.getFlag(ns, "groupInitiative");
+      out.start = { how: g1?.how, round: g1?.round, msgs: msgs().length, flavor: msgs().at(-1)?.flavor ?? "", inits: combat.combatants.map((c) => c.initiative).sort() };
+      const leaders = combat.pickLeaders();
+      out.leaders = { pc: leaders.pc?.actor?.id === pc.id, enemyLevel: leaders.enemy?.actor?.system.level };
+      await combat.nextRound();
+      const g2 = combat.getFlag(ns, "groupInitiative");
+      out.kept = { how: g2?.how, round: g2?.round, same: g2?.pcsFirst === g1?.pcsFirst, msgs: msgs().length };
+      // Next side: from the first combatant, the turn jumps to the other side's first.
+      await combat.update({ turn: 0 });
+      const firstSide = combat.combatant?.actor?.type;
+      await combat.nextSide();
+      out.nextSide = { from: firstSide, to: combat.combatant?.actor?.type, turn: combat.turn };
+      // The tracker: two side headers, the acting one lit, the Next side button, an acted tick.
+      await ui.combat.render({ force: true });
+      await wait(600);
+      const el = ui.combat.element;
+      out.tracker = {
+        headers: [...el.querySelectorAll(".knavery-side")].map((h) => h.dataset.side + (h.classList.contains("acting") ? "*" : "")),
+        nextSide: !!el.querySelector(".knavery-next-side"),
+        noNumbers: !el.querySelector(".token-initiative"),
+        ticks: el.querySelectorAll(".knavery-acted").length,
+      };
+      const first = combat.combatants.get(el.querySelector("li.combatant")?.dataset.combatantId);
+      await first.setFlag(ns, "acted", true);
+      await wait(500);
+      out.acted = !!ui.combat.element.querySelector(`li.combatant[data-combatant-id="${first.id}"].acted`);
+      await combat.nextRound();
+      out.actedCleared = first.getFlag(ns, "acted") === undefined;
+      // Auto-defeated: a foe at 0 HP is marked defeated and dead; healed, it stands again.
+      const foe = foes[0];
+      await foe.applyDamage(10, { source: "probe" });
+      await wait(400);
+      const fc = combat.combatants.find((c) => c.actor === foe);
+      out.down = { defeated: fc?.isDefeated === true, dead: foe.statuses.has(CONFIG.specialStatusEffects.DEFEATED) };
+      await foe.update({ "system.hp.value": 3 });
+      await wait(600);
+      out.up = { defeated: fc?.isDefeated === true, dead: foe.statuses.has(CONFIG.specialStatusEffects.DEFEATED) };
+      // Surprise sets the round without a roll.
+      await combat.setSurprise(false);
+      const g3 = combat.getFlag(ns, "groupInitiative");
+      out.surprise = { how: g3?.how, pcsFirst: g3?.pcsFirst };
+      // The Combat page.
+      const { openGmDashboard } = await import(`${sys}/gm-dashboard.js`);
+      await openGmDashboard("damage");
+      await wait(700);
+      const app = document.getElementById("knavery-gm-dashboard");
+      const q = (s) => !!app.querySelector(`section[data-tab="damage"] ${s}`);
+      out.page = {
+        roll: q('[data-action="rollInitiativeNow"]'), next: q('[data-action="nextSide"]'), they: q('[data-action="surpriseSide"][data-side="they"]'),
+        defeated: q('[data-action="markDefeated"]'), rally: q('[data-action="rallySelected"]'), leaders: q('select[name="leaderPc"]') && q('select[name="leaderEnemy"]'),
+        presets: app.querySelectorAll('section[data-tab="damage"] select[name="dmgPreset"] option').length,
+        state: app.querySelector('section[data-tab="damage"] .dash-combat-state')?.textContent ?? "",
+      };
+      const preset = app.querySelector('select[name="dmgPreset"]');
+      preset.value = "lightning";
+      preset.dispatchEvent(new Event("change", { bubbles: true }));
+      out.page.formula = app.querySelector('[name="dmgFormula"]').value;
+      // Under Knave 1e: no Rally, no Direct box, the 1e d6 rule shows no leaders.
+      await game.settings.set(ns, "attack-rule", "knave1e");
+      await game.settings.set(ns, "initiative-rule", "1e-d6");
+      await openGmDashboard("damage");
+      await wait(700);
+      out.page1e = { rally: q('[data-action="rallySelected"]'), direct: q('[name="dmgDirect"]'), leaders: q('select[name="leaderPc"]') };
+      foundry.applications.instances.get("knavery-gm-dashboard")?.close();
+      await combat.delete();
+      for (const f of foes) await f.delete();
+      for (const m of msgs()) await m.delete();
+      await game.settings.set(ns, "initiative-rule", before.rule);
+      await game.settings.set(ns, "attack-rule", before.attack);
+      return out;
+    }, [SYS, ids.a]);
+    ok(r.start.how === "leaders" && r.start.round === 1 && r.start.msgs === 1 && /Round 1/.test(r.start.flavor) && r.start.inits.join() === "1,1,2" || r.start.inits.join() === "1,2,2",
+      "Begin Combat under Knave 2e rolls the leaders' CHA check once and lines up the sides", JSON.stringify(r.start));
+    ok(r.leaders.pc && r.leaders.enemyLevel === 2, "the leaders are the party's highest CHA and the enemies' highest level", JSON.stringify(r.leaders));
+    ok(r.kept.how === "kept" && r.kept.round === 2 && r.kept.same && r.kept.msgs === 1, "round 2 keeps the order with no new roll", JSON.stringify(r.kept));
+    ok(r.nextSide.from !== r.nextSide.to && r.nextSide.turn > 0, "Next side jumps the turn to the other side", JSON.stringify(r.nextSide));
+    ok(r.tracker.headers.length === 2 && r.tracker.headers.some((h) => h.endsWith("*")) && r.tracker.nextSide && r.tracker.noNumbers && r.tracker.ticks >= 3,
+      "the tracker shows two side headers (the acting one lit), no side numbers, acted ticks and Next side", JSON.stringify(r.tracker));
+    ok(r.acted && r.actedCleared, "an acted tick marks the row and clears at the next round", JSON.stringify({ acted: r.acted, cleared: r.actedCleared }));
+    ok(r.down.defeated && r.down.dead && !r.up.defeated && !r.up.dead, "a foe at 0 HP is marked defeated and dead; healed, both come off", JSON.stringify({ down: r.down, up: r.up }));
+    ok(r.surprise.how === "surprise" && r.surprise.pcsFirst === false, "We are surprised puts the enemies first without a roll", JSON.stringify(r.surprise));
+    ok(r.page.roll && r.page.next && r.page.they && r.page.defeated && r.page.rally && r.page.leaders && r.page.presets === 6 && r.page.formula === "3d6" && /Round/.test(r.page.state),
+      "the Combat page has the fight's state, initiative, Next side, surprise, Mark defeated, Rally, the leaders and the hazard presets", JSON.stringify(r.page));
+    ok(!r.page1e.rally && !r.page1e.direct && !r.page1e.leaders, "under Knave 1e the page hides Rally, Direct damage and the leaders", JSON.stringify(r.page1e));
   });
 
   // Cleanup.

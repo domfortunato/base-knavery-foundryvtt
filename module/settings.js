@@ -50,7 +50,7 @@ export const SETTING_GROUPS = [
     button: "KNAVERY.Settings.GroupGeneralButton",
     hint: "KNAVERY.Settings.GroupGeneralHint",
     icon: "fa-solid fa-gears",
-    keys: ["advantage-mode", "roll-damage-default", "show-traits", "change-log", "welcome-on-start", "show-hazard-dice"],
+    keys: ["roll-damage-default", "show-traits", "change-log", "welcome-on-start", "show-hazard-dice"],
   },
   {
     id: "generation",
@@ -85,7 +85,7 @@ export const SETTING_GROUPS = [
       "#hp", "first-level-hp", "level-hp-rule",
       "#death", "death-rule", "hard-mode-wounds", "healing-rule",
       "#spells", "spell-rule", "spell-list",
-      "#combat", "attack-rule", "weapon-breaks-on-1", "knave1e-initiative",
+      "#combat", "advantage-mode", "attack-rule", "weapon-breaks-on-1", "initiative-rule",
       "#money", "price-list", "coins-per-slot",
       "#advancement", "knave1e-xp", "treasure-xp", "knave1e-random-raises",
     ],
@@ -110,7 +110,8 @@ export const registerSettings = () => {
   });
 
   /* General */
-  reg("advantage-mode", { label: "AdvantageMode", type: String, choices: ADVANTAGE_MODES, default: "raw" });
+  // Advantage follows the edition (1e p4: 2d20; 2e p7: ±5), so it sits with the Rules (0.3.0).
+  reg("advantage-mode", { label: "AdvantageMode", type: String, choices: ADVANTAGE_MODES, default: RULES_PRESETS["1e"]["advantage-mode"] });
   reg("roll-damage-default", { label: "RollDamageDefault", type: Boolean, default: true });
   reg("weapon-breaks-on-1", { label: "WeaponBreaks", type: Boolean, default: true });
   reg("show-traits", { label: "ShowTraits", type: Boolean, default: true, onChange: rerenderActorSheets });
@@ -192,7 +193,11 @@ export const registerSettings = () => {
     default: D["treasure-xp"], onChange: () => foundry.applications.instances.get("knavery-gm-dashboard")?.render({ parts: ["xp"] }),
   });
   reg("knave1e-random-raises", { label: "Knave1eRandomRaises", type: Boolean, default: false });
-  reg("knave1e-initiative", { label: "Knave1eInitiative", type: Boolean, default: D["knave1e-initiative"], onChange: () => ui.combat?.render() });
+  // Initiative by side, each edition's way, or Foundry's own (initiative.js, combat-tracker.js; 0.3.0).
+  reg("initiative-rule", {
+    label: "InitiativeRule", type: String, choices: choices("InitiativeChoice", ["1e-d6", "2e-leaders", "individual"]),
+    default: D["initiative-rule"], onChange: () => ui.combat?.render(),
+  });
   reg("hard-mode-wounds", { label: "HardModeWounds", type: Boolean, default: false });
   // Knave 1e's attacks, prices and coin slots (p2-p4); 2e's under the 2e preset.
   reg("attack-rule", {

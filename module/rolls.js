@@ -67,6 +67,7 @@ export const promptEdge = async ({
     defaultDifficulty,
     target: CHECK_BASE + defaultDifficulty,
     rollDamage: game.settings.get(SETTINGS_NS, "roll-damage-default"),
+    quality: attack && usesQuality(),
     weapons,
     targets: targetList,
     targetsCurrent: targetList && current.length > 1 ? current.map((t) => tokenName(t)).join(", ") : null,
@@ -82,6 +83,7 @@ export const promptEdge = async ({
       difficulty: difficulty ? Math.max(0, Number(f.difficulty?.value) || 0) : defaultDifficulty,
       rollDamage: attack ? !!f.rollDamage?.checked : false,
       power: melee ? !!f.power?.checked : false,
+      ideal: attack ? !!f.ideal?.checked : false,
       weaponId: weapons ? (f.weapon?.value ?? null) : null,
       targetId: targetList ? (f.target?.value ?? "") : null,
     };
@@ -117,13 +119,15 @@ export const promptEdge = async ({
         syncPcs();
       }
       // The Attack window: Power attack shows only while a melee weapon is chosen.
-      if (!weapons || !melee) return;
+      if (!weapons) return;
       const power = form.querySelector(".power-group");
+      const ranged = form.querySelector(".kn-ranged-hint");
       const sync = () => {
         const chosen = form.querySelector('input[name="weapon"]:checked');
         const isMelee = chosen?.closest(".kn-attack-weapon")?.dataset.melee === "1";
         if (power) power.hidden = !isMelee;
         if (!isMelee && power) power.querySelector("input").checked = false;
+        if (ranged) ranged.hidden = isMelee || !chosen;
       };
       form.querySelectorAll('input[name="weapon"]').forEach((r) => r.addEventListener("change", sync));
       sync();
@@ -385,14 +389,17 @@ const attackWith = async (actor, weapon, choice, { reason = "" } = {}) => {
   const formula = d20Formula(bonus, choice.edge, choice.modifier);
   const roll = await new Roll(formula).evaluate();
   const natural = naturalOf(roll);
+  // Knave 1e (p4) hits only above the armor defense; Knave 2e (p7) on equalling the AC.
+  const quality = usesQuality();
   const targets = chosenTargets(choice.targetId).map((t) => ({
-    ...t, hit: t.ac === null ? null : roll.total >= t.ac,
+    ...t, hit: t.ac === null ? null : (quality ? roll.total > t.ac : roll.total >= t.ac),
   }));
   const anyHit = targets.length ? targets.some((t) => t.hit) : true;
   const fumble = natural === 1;
   // Knave 1e (p4): a natural 20 adds a die and wears the target's armor; no free maneuver at 21+.
-  const quality = usesQuality();
   const crit = quality && natural === 20;
+  // Knave 1e (p5): the ideal weapon for the foe adds a damage die too, at the GM's word (the window's tick).
+  const ideal = quality && !!choice.ideal;
   const maneuver = !quality && roll.total >= MANEUVER_THRESHOLD;
 
   const rolls = [roll];
@@ -402,7 +409,7 @@ const attackWith = async (actor, weapon, choice, { reason = "" } = {}) => {
   const rollableDamage = isRollable(normalizeDice(weapon.system.damage));
   if (choice.rollDamage && anyHit && rollableDamage) {
     const base = power ? doubleDice(weapon.system.damage) : normalizeDice(weapon.system.damage);
-    const dmgFormula = crit ? addDie(base) : base;
+    const dmgFormula = crit && ideal ? addDie(addDie(base)) : (crit || ideal ? addDie(base) : base);
     const dmgRoll = await new Roll(dmgFormula).evaluate();
     rolls.push(dmgRoll);
     damage = { total: dmgRoll.total, html: await dmgRoll.render() };

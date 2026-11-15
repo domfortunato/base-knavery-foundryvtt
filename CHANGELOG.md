@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+- **Combat by side, both editions.** *Initiative* in Configure Rules is a choice: Knave 1e (one d6 a round, by
+  side), Knave 2e (one CHA check between the sides' leaders decides who acts first, and the order holds for the
+  fight) or Individual (Foundry's roll per token). Under a side rule the Combat Tracker lists Player characters
+  and Enemies under two headers, the acting side lit, with a tick per row for who has acted (cleared each
+  round) and a **Next side** button; no side numbers show. The leaders are the party's highest CHA and the
+  enemies' highest level unless you pick them. The old "Knave 1e group initiative" switch is gone.
+- **The Damage page is now Combat:** the running round and acting side, Roll initiative by the rule, Next side,
+  *They are surprised* / *We are surprised* (round 1 without a roll, with the +5 reminder), Mark selected
+  defeated, Morale and Rally for the selection, the leaders, and **hazard presets** (falling, fire, on fire,
+  freezing, lightning) that fill the damage box. Direct damage hides under Knave 1e.
+- **A fall marks the tracker.** Dead marks the combatant defeated with the overlay; a Knave 1e character at 0 HP
+  is Unconscious; healing takes both off again. Your own skull always wins.
+- **Knave 1e attacks hit only above the defense** (an equal total misses), and the Attack window offers an
+  **Ideal weapon** tick (+1 damage die, at the GM's word). A ranged weapon shows the melee reminder.
+- **Advantage follows the edition:** 2d20 under Knave 1e, ±5 under Knave 2e, now in Configure Rules.
+- **Morale by edition:** no first-casualty card and no Rally under Knave 1e; a side's leader falling is a breaking
+  point in both.
 - **The dashboard's Player Tools page is Toggles,** and it gains two switches (Players may read the rulebook,
   Hazard dice on the Random page), one switch per **portrait gallery** (Yours, Portraits, Lydia Comer, Tlomdev,
   Icons: a gallery that is off leaves the portrait picker and the random portraits) and **Random portraits

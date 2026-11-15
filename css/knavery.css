@@ -5067,3 +5067,16 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-gm-dashboard .dash-random-source > label { flex: 0 0 auto; }
 .knavery-gm-dashboard .dash-yours-folder a { color: var(--kn-accent); cursor: pointer; margin-left: 4px; }
 .knavery-gm-dashboard .dash-yours-folder a.disabled { opacity: 0.5; pointer-events: none; }
+
+/* ---- Combat Tracker by side (module/combat-tracker.js, 0.3.0) --------------------- */
+#combat .combat-tracker .knavery-side { display: flex; align-items: center; justify-content: space-between; padding: 2px 8px;
+    font-variant: small-caps; font-weight: bold; letter-spacing: 0.02em; color: var(--color-text-secondary);
+    background: rgba(255, 255, 255, 0.06); border-bottom: 1px solid var(--color-border, #444); list-style: none; }
+#combat .combat-tracker .knavery-side.acting { color: var(--color-text-primary); background: rgba(228, 170, 70, 0.22); border-left: 3px solid #e4aa46; }
+#combat .combat-tracker .knavery-side-acting { font-size: var(--font-size-11); font-variant: normal; font-weight: normal; opacity: 0.85; }
+#combat .combat-tracker.knavery-sides .combatant.acted { opacity: 0.55; }
+#combat .combat-tracker.knavery-sides .combatant.acted .knavery-acted { opacity: 1; }
+/* The Combat page: the fight's state line and the leaders' selects. */
+.knavery-gm-dashboard .dash-combat-state { margin: 2px 0 6px; font-weight: bold; }
+.knavery-gm-dashboard .dash-leaders { display: flex; flex-direction: column; gap: 4px; margin: 6px 0; }
+.knavery-gm-dashboard .dash-leaders .form-group > label { flex: 0 0 120px; }

@@ -77,9 +77,12 @@ picker, change log and marketplace it ports.
   - `rolls.js`: the edge prompt, checks, attacks, spells, dice
   - `damage.js`: chat-card buttons and the GM relay
   - `item-offer.js`, `marketplace.js`, `character-generator.js`, `level-up.js`
-  - `initiative.js`: `KnaveryCombat`, core's Combat unless the GM's hack
-    `knave1e-initiative` is on: then one d6 a round orders the sides (the GM
-    rolls; a round a player advances is rolled by the active GM's client)
+  - `initiative.js`: `KnaveryCombat`; the rule `initiative-rule` (0.3.0): `1e-d6` one d6 a round
+    orders the sides (the GM rolls; a round a player advances is rolled by the active GM's client),
+    `2e-leaders` one CHA check between the sides' leaders (`pickLeaders`, flag `leaders`) once a
+    fight, `individual` core's. `setSides`, `setSurprise`, `nextSide`, acted ticks (Combatant flag
+    `acted`). `combat-tracker.js`: `KnaveryCombatTracker` (`CONFIG.ui.combat`) groups the rows under
+    side headers with a Next side button
   - `edit-gates.js`: who may change abilities, level, XP and the GM's notes
     (Char Gen Mode and the GM's level & XP switch); the sheet disables, and
     `KnaveryActor._preUpdate` drops the rest (client-side only)
@@ -176,7 +179,9 @@ picker, change log and marketplace it ports.
   2e (the stamp); building tables from the 2e book asks before switching; a switch never
   changes an existing character. Rule settings: `creation-abilities`, `starting-kit`,
   `death-rule`, `healing-rule`, `spell-rule`, plus `first-level-hp`, `level-hp-rule`,
-  `knave1e-xp`, `knave1e-initiative`, `show-alignment`, `show-background`, `spell-list`.
+  `knave1e-xp`, `initiative-rule` (0.3.0: `1e-d6` / `2e-leaders` / `individual`; the 0.2.0 switch
+  `knave1e-initiative` is gone, no migration: user ruling 2026-11-14), `advantage-mode` (0.3.0: in the presets, 1e
+  2d20, 2e ±5), `show-alignment`, `show-background`, `spell-list`.
   Bundle 2 (user rulings 2026-11-14): `attack-rule` (1e quality and crits, `quality.js`;
   2e breakage, power attacks, 21+ maneuver), `price-list` (1e: pack `gear-1e`, aisles
   "Market 1e: ", henchmen paid by the day), `coins-per-slot` ("100"/"500"). A stamped
@@ -226,6 +231,13 @@ picker, change log and marketplace it ports.
   `_prepareSubmitData`; user ruling 2026-11-14). With Char Gen Mode off the GM sets any score.
 - Random creation rolls 3d6 for the abilities unless the player ticks "Place the 3 ability points
   myself" (user, 2026-11-14).
+
+- Combat (0.3.0, user rulings 2026-11-14): a power attack is declared in the Attack window (the tick stays;
+  no card button); Knave 1e hits only above the defense; the Damage page is the Combat page; a fall marks
+  the combatant defeated (and 1e 0 HP unconscious) only when crossing the line, cleared on healing, the
+  GM's own skull always wins; no first-casualty morale card and no Rally under 1e attacks; the leader's fall
+  is a breaking point in both editions.
+
 
 ## Foundry v14 gotchas met so far
 - An AppV2 window with `height: "auto"` is capped at the screen by core's `.application` max-height, and its

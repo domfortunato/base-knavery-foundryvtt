@@ -207,7 +207,46 @@ export class KnaveryActor extends Actor {
       if (out.wounds && game.settings.get(SETTINGS_NS, "hard-mode-wounds")) await this.#breakWoundedItems();
     }
     await this.#postDamageCard(out, source);
+    await this.#syncDefeated(out);
     return out;
+  }
+
+  /**
+   * The tracker follows a fall (0.3.0): dead marks the combatant defeated with core's overlay, Knave 1e's
+   * 0 HP puts the character unconscious. Only on the way down, and only what this set is cleared again on
+   * healing (`#clearDefeated`), so the GM's own skull always wins. GM clients only: a player's damage
+   * arrives through the relay.
+   */
+  async #syncDefeated(out) {
+    if (!game.user.isGM) return;
+    const combatant = game.combat?.combatants.find((c) => c.actor === this);
+    if (out.dead) {
+      if (combatant && !combatant.isDefeated) await combatant.update({ defeated: true, [`flags.${FLAG_SCOPE}.autoDefeated`]: true });
+      if (!this.statuses.has(CONFIG.specialStatusEffects.DEFEATED)) {
+        await this.toggleStatusEffect(CONFIG.specialStatusEffects.DEFEATED, { active: true, overlay: true });
+        await this.setFlag(FLAG_SCOPE, "autoDead", true);
+      }
+    } else if (out.unconscious && !this.statuses.has("unconscious")) {
+      await this.toggleStatusEffect("unconscious", { active: true });
+    }
+  }
+
+  /** Healed back over the line: what `#syncDefeated` set comes off again. Active GM only. */
+  async #clearDefeated() {
+    const s = this.system;
+    const alive = this.type === "npc" ? s.hp.value > 0 : (usesWounds() ? s.wounds < s.slotsMax : s.hp.value >= 0);
+    if (!alive) return;
+    if (this.type === "character" && s.hp.value > 0 && this.statuses.has("unconscious")) {
+      await this.toggleStatusEffect("unconscious", { active: false });
+    }
+    if (this.getFlag(FLAG_SCOPE, "autoDead")) {
+      if (this.statuses.has(CONFIG.specialStatusEffects.DEFEATED)) await this.toggleStatusEffect(CONFIG.specialStatusEffects.DEFEATED, { active: false });
+      await this.unsetFlag(FLAG_SCOPE, "autoDead");
+    }
+    const combatant = game.combat?.combatants.find((c) => c.actor === this);
+    if (combatant?.isDefeated && combatant.getFlag(FLAG_SCOPE, "autoDefeated")) {
+      await combatant.update({ defeated: false, [`flags.${FLAG_SCOPE}.-=autoDefeated`]: null });
+    }
   }
 
   /** Hard mode: whatever sits in a wounded slot breaks. */
@@ -311,6 +350,9 @@ export class KnaveryActor extends Actor {
   _onUpdate(changed, options, userId) {
     super._onUpdate(changed, options, userId);
     postActorChanges(this, options.knavery?.[this.id]?.audit, options, userId);
+    if (game.user.isActiveGM && (foundry.utils.hasProperty(changed, "system.hp.value") || foundry.utils.hasProperty(changed, "system.wounds"))) {
+      this.#clearDefeated();
+    }
   }
 
   _onCreateDescendantDocuments(parent, collection, documents, data, options, userId) {

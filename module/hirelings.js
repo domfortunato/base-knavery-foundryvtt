@@ -15,6 +15,7 @@
  * owed since the last payment, at least one (user ruling 2026-11-14).
  */
 import { FLAG_SCOPE } from "./config.js";
+import { usesQuality } from "./rules.js";
 import { onPcSide } from "./initiative.js";
 
 const { DialogV2 } = foundry.applications.api;
@@ -95,15 +96,22 @@ export const checkBreakingPoints = async (actor) => {
     await promptMorale(combat, reason, who);
   };
 
-  // The side's first casualty, then half the side fallen (both at once on a side of two: one card).
+  // The side's first casualty (Knave 2e only, p20; 1e p5 names none), then half the side fallen
+  // (both at once on a side of two: one card).
   if (down.length >= 1 && members.length > 1) {
     const half = down.length * 2 >= members.length;
-    if (!state.has(`first:${side}`)) {
+    if (!usesQuality() && !state.has(`first:${side}`)) {
       if (half) state.add(`half:${side}`);
       await fire(`first:${side}`, F("KNAVERY.MoraleTest.FirstCasualty", { side: sideName }), testers);
     } else if (half) {
       await fire(`half:${side}`, F("KNAVERY.MoraleTest.HalfFallen", { side: sideName }), testers);
     }
+  }
+  // The side's leader down (both editions): the one the GM set or the tracker picks (initiative.js).
+  if (fallen(mine) && typeof combat.pickLeaders === "function") {
+    const leaders = combat.pickLeaders();
+    const leader = side === "pcs" ? leaders.pc : leaders.enemy;
+    if (leader && leader.id === mine.id) await fire(`leader:${side}`, F("KNAVERY.MoraleTest.LeaderDown", { name: actor.name }), testers);
   }
   // An NPC alone on its side at half HP or less.
   if (testers.length === 1 && standing.length === 1 && testsMorale(actor) && standing[0] === mine) {
@@ -132,6 +140,8 @@ const combatSide = (actor) => {
  * itself or a player character).
  */
 export const rally = async (actor) => {
+  // Knave 1e (p5) has no rally: a failed morale test stands.
+  if (usesQuality()) return ui.notifications.warn("KNAVERY.MoraleTest.NoRally1e", { localize: true });
   const where = combatSide(actor);
   if (where) {
     const used = where.combat.getFlag(FLAG_SCOPE, "rallied") ?? [];

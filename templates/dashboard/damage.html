@@ -1,5 +1,60 @@
+{{!-- The Combat page (the Damage page before 0.3.0; user ruling D10): the running fight by side, then
+      damage rolled and applied, with the book's hazard presets (numbers only). --}}
 <section class="tab {{tab.cssClass}}" data-tab="damage" data-group="primary">
+  <h3>{{localize "KNAVERY.Dashboard.FightHeading"}}</h3>
+  {{#if combat.active}}
+  <p class="dash-combat-state">{{combat.state}}</p>
+  {{else}}
+  <p class="hint">{{localize "KNAVERY.Dashboard.CombatNotStarted"}}</p>
+  {{/if}}
+  <div class="dash-buttons dash-combat-buttons">
+    <button type="button" data-action="rollInitiativeNow" data-tooltip="KNAVERY.Dashboard.RollInitiativeTip"><i class="fas fa-dice"></i> {{localize "KNAVERY.Dashboard.RollInitiative"}}</button>
+    {{#if combat.sides}}
+    <button type="button" data-action="nextSide" {{#unless combat.active}}disabled{{/unless}}><i class="fas fa-people-arrows"></i> {{localize "KNAVERY.Initiative.NextSide"}}</button>
+    <button type="button" data-action="surpriseSide" data-side="they" data-tooltip="KNAVERY.Dashboard.SurpriseTip2"><i class="fas fa-eye"></i> {{localize "KNAVERY.Dashboard.TheySurprised"}}</button>
+    <button type="button" data-action="surpriseSide" data-side="we" data-tooltip="KNAVERY.Dashboard.SurpriseTip2"><i class="fas fa-eye-low-vision"></i> {{localize "KNAVERY.Dashboard.WeSurprised"}}</button>
+    {{/if}}
+    <button type="button" data-action="markDefeated"><i class="fas fa-skull"></i> {{localize "KNAVERY.Dashboard.MarkDefeated"}}</button>
+    <button type="button" data-action="morale"><i class="fas fa-flag"></i> {{localize "KNAVERY.Dashboard.MoraleSelected"}}</button>
+    {{#if combat.rally}}
+    <button type="button" data-action="rallySelected"><i class="fas fa-bullhorn"></i> {{localize "KNAVERY.Dashboard.Rally"}}</button>
+    {{/if}}
+  </div>
+  {{#if combat.leaders}}
+  <div class="dash-leaders">
+    <div class="form-group">
+      <label for="kn-leader-pc">{{localize "KNAVERY.Dashboard.LeaderPc"}}</label>
+      <div class="form-fields">
+        <select name="leaderPc" id="kn-leader-pc">
+          <option value="">{{localize "KNAVERY.Dashboard.LeaderAuto"}}</option>
+          {{#each combat.pcs}}<option value="{{this.id}}"{{#if this.selected}} selected{{/if}}>{{this.name}}</option>{{/each}}
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="kn-leader-enemy">{{localize "KNAVERY.Dashboard.LeaderEnemy"}}</label>
+      <div class="form-fields">
+        <select name="leaderEnemy" id="kn-leader-enemy">
+          <option value="">{{localize "KNAVERY.Dashboard.LeaderAuto"}}</option>
+          {{#each combat.foes}}<option value="{{this.id}}"{{#if this.selected}} selected{{/if}}>{{this.name}}</option>{{/each}}
+        </select>
+      </div>
+    </div>
+    <p class="hint">{{localize "KNAVERY.Dashboard.LeadersHint"}}</p>
+  </div>
+  {{/if}}
+
+  <h3>{{localize "KNAVERY.Dashboard.TabDamageOld"}}</h3>
   <p class="hint">{{localize "KNAVERY.Dashboard.DamageHint"}}</p>
+  <div class="form-group">
+    <label for="kn-dmg-preset">{{localize "KNAVERY.Dashboard.HazardPreset"}}</label>
+    <div class="form-fields">
+      <select name="dmgPreset" id="kn-dmg-preset">
+        <option value="">{{localize "KNAVERY.Dashboard.HazardPresetNone"}}</option>
+        {{#each hazardPresets}}<option value="{{this.id}}" data-formula="{{this.formula}}" data-direct="{{this.direct}}">{{this.label}}</option>{{/each}}
+      </select>
+    </div>
+  </div>
   <div class="form-group">
     <label>{{localize "KNAVERY.Dashboard.Formula"}}</label>
     <input type="text" name="dmgFormula" value="1d6" />
@@ -8,11 +63,13 @@
     <label>{{localize "KNAVERY.Dashboard.Source"}}</label>
     <input type="text" name="dmgSource" maxlength="200" placeholder="{{localize 'KNAVERY.Dashboard.SourceHint'}}" />
   </div>
+  {{#if usesWounds}}
   <div class="form-group">
     <label>{{localize "KNAVERY.Roll.ApplyDirect"}}</label>
     <input type="checkbox" name="dmgDirect" />
     <span class="hint">{{localize "KNAVERY.Roll.ApplyDirectHint"}}</span>
   </div>
+  {{/if}}
   <div class="form-group">
     <label>{{localize "KNAVERY.Dashboard.ApplyTo"}}</label>
     <select name="dmgTargets">

@@ -65,6 +65,18 @@
       <input type="checkbox" id="kn-roll-damage-{{idp}}" name="rollDamage" {{checked rollDamage}} />
     </div>
   </div>
+  {{#if quality}}
+  <div class="form-group ideal-group">
+    <label for="kn-roll-ideal-{{idp}}">{{localize "KNAVERY.Roll.IdealWeapon"}}</label>
+    <div class="form-fields">
+      <input type="checkbox" id="kn-roll-ideal-{{idp}}" name="ideal" />
+    </div>
+    <p class="hint">{{localize "KNAVERY.Roll.IdealWeaponHint"}}</p>
+  </div>
+  {{/if}}
+  {{#if weapons}}
+  <p class="hint kn-ranged-hint" hidden>{{localize "KNAVERY.Roll.RangedHint"}}</p>
+  {{/if}}
   {{#if melee}}
   <div class="form-group power-group">
     <label for="kn-roll-power-{{idp}}">{{localize "KNAVERY.Roll.PowerAttack"}}</label>

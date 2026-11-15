@@ -31,12 +31,13 @@ import { openTableImporter } from "./table-importer.js";
 import { bindMarketPage, MARKET_ACTIONS, marketPageContext } from "./marketplace.js";
 import { hasRulebook, openRulebook, pickLocalRulebook, showRulebookPage, tablePage } from "./rulebook.js";
 import { clock, clockLabel, endTurn, resetClock, setClock, TRAVEL_WATCHES_FREE } from "./hazard.js";
-import { payWage, wageRows } from "./hirelings.js";
+import { payWage, rally, wageRows } from "./hirelings.js";
+import { initiativeRule, onPcSide, sidesOn } from "./initiative.js";
 import { placeRail, placeRailSoon } from "./sheets/tab-rail.js";
 import { openSpellGenerator } from "./spell-generator.js";
 import { isLight, party } from "./hazard.js";
 import { customPortraitFolder, GALLERIES, galleryOn, getCustomPortraitPaths, randomPortraitSource, refreshCustomPortraits } from "./art.js";
-import { spellRule, usesWounds } from "./rules.js";
+import { spellRule, usesQuality, usesWounds } from "./rules.js";
 import { companionsOf, treasureCarried, treasureSplit, treasureXpOn, treasureXpRule, xpForTreasure } from "./treasure.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -78,6 +79,35 @@ const TOGGLES = [
   { key: "show-hazard-dice", label: "KNAVERY.Macro.HazardDice", icon: "fa-dice-d6" },
 ];
 
+/** The Combat page's picture of the running fight (initiative.js). */
+const combatContext = () => {
+  const combat = game.combat;
+  const rule = initiativeRule();
+  const sides = sidesOn();
+  const out = { active: !!combat?.started, sides, rule, leaders: rule === "2e-leaders" && !!combat, rally: !usesQuality(), pcs: [], foes: [] };
+  if (!combat) return out;
+  const group = combat.groupInitiative;
+  const actingPcs = combat.combatant ? onPcSide(combat.combatant) : group?.pcsFirst;
+  out.state = combat.started
+    ? F("KNAVERY.Dashboard.CombatRound", { round: combat.round, side: L(actingPcs ? "KNAVERY.Initiative.SidePcs" : "KNAVERY.Initiative.SideFoes") })
+    : "";
+  const set = combat.leaders;
+  for (const c of combat.combatants) {
+    if (!c.actor) continue;
+    (onPcSide(c) ? out.pcs : out.foes).push({ id: c.id, name: c.name, selected: c.id === (onPcSide(c) ? set.pc : set.enemy) });
+  }
+  return out;
+};
+
+/** Knave 2e's hazards (p21), numbers only; under Knave 1e, with no direct damage, they land on HP. */
+const hazardPresets = () => {
+  const direct = usesWounds();
+  return [
+    { id: "falling", formula: "1d6", direct }, { id: "fire", formula: "1d6", direct }, { id: "onfire", formula: "2d6", direct },
+    { id: "freezing", formula: "1", direct }, { id: "lightning", formula: "3d6", direct },
+  ].map((p) => ({ ...p, label: L(`KNAVERY.Dashboard.Hazards.${p.id}`) }));
+};
+
 export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
   /** The aisle open on the Marketplace page (marketplace.js marketPageContext). */
   marketSelected = null;
@@ -94,6 +124,11 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       rollForThem: GmDashboard.#onRollForThem,
       clearLog: GmDashboard.#onClearLog,
       applyDamage: GmDashboard.#onApplyDamage,
+      rollInitiativeNow: GmDashboard.#onRollInitiativeNow,
+      nextSide: () => game.combat?.nextSide(),
+      surpriseSide: GmDashboard.#onSurpriseSide,
+      markDefeated: GmDashboard.#onMarkDefeated,
+      rallySelected: GmDashboard.#onRallySelected,
       awardXp: GmDashboard.#onAwardXp,
       hazard: GmDashboard.#onHazard,
       endTurn: GmDashboard.#onEndTurn,
@@ -142,7 +177,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     primary: {
       tabs: [
         { id: "requests", icon: "fas fa-bullhorn", label: "KNAVERY.Dashboard.TabRequests" },
-        { id: "damage", icon: "fas fa-burst", label: "KNAVERY.Dashboard.TabDamage" },
+        { id: "damage", icon: "fas fa-hand-fist", label: "KNAVERY.Dashboard.TabDamage" },
         { id: "time", icon: "fas fa-hourglass-half", label: "KNAVERY.Dashboard.TabTime" },
         { id: "party", icon: "fas fa-users", label: "KNAVERY.Dashboard.TabParty" },
         { id: "dice", icon: "fas fa-dice", label: "KNAVERY.Dashboard.TabDice" },
@@ -159,6 +194,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     context = await super._preparePartContext(partId, context, options);
     context.tab = context.tabs?.[partId];
     if (partId === "market") Object.assign(context, await marketPageContext(this));
+    if (partId === "damage") Object.assign(context, { combat: combatContext(), hazardPresets: hazardPresets() });
     return context;
   }
 
@@ -257,6 +293,26 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     bindMarketPage(this);
     this.element.querySelector('select[name="randomPortraitSource"]')?.addEventListener("change", (e) => {
       game.settings.set(SETTINGS_NS, "random-portrait-source", e.target.value);
+    });
+    // Combat: the leaders' selects write the combat's flag; a hazard preset fills the damage box.
+    for (const name of ["leaderPc", "leaderEnemy"]) {
+      this.element.querySelector(`select[name="${name}"]`)?.addEventListener("change", async () => {
+        const combat = game.combat;
+        if (!combat) return;
+        const pc = this.element.querySelector('select[name="leaderPc"]')?.value || null;
+        const enemy = this.element.querySelector('select[name="leaderEnemy"]')?.value || null;
+        await combat.setFlag(FLAG_SCOPE, "leaders", { pc, enemy });
+      });
+    }
+    this.element.querySelector('select[name="dmgPreset"]')?.addEventListener("change", (e) => {
+      const o = e.target.selectedOptions[0];
+      if (!o?.value) return;
+      const formula = this.element.querySelector('[name="dmgFormula"]');
+      const direct = this.element.querySelector('[name="dmgDirect"]');
+      const source = this.element.querySelector('[name="dmgSource"]');
+      if (formula) formula.value = o.dataset.formula;
+      if (direct) direct.checked = o.dataset.direct === "true";
+      if (source && !source.value) source.value = o.textContent.replace(/\s*\(.*$/, "").trim();
     });
     if (this.window?.title) this.window.title.textContent = this.title;
     const diff = this.element.querySelector('[name="difficulty"]');
@@ -577,6 +633,42 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       flavor: F("KNAVERY.Dashboard.DistanceFlavor", { where: L(wild ? "KNAVERY.Dashboard.Wilderness" : "KNAVERY.Dashboard.Dungeon") }),
       speaker: { alias: L("KNAVERY.GameMaster") },
     }, { messageMode: "gm" });
+  }
+
+  /** Combat: the round's order by the world's rule (1e d6, 2e leaders' check, or everyone's roll). */
+  static async #onRollInitiativeNow() {
+    const combat = game.combat;
+    if (!combat) return ui.notifications.warn("KNAVERY.Dashboard.CombatNotStarted", { localize: true });
+    if (sidesOn()) await combat.rollGroupInitiative(Math.max(1, combat.round));
+    else await combat.rollAll();
+    this.render({ parts: ["damage"] });
+  }
+
+  /** Combat: surprise decides round 1 (2e p19); "they" = the PCs caught them. */
+  static async #onSurpriseSide(_e, target) {
+    const combat = game.combat;
+    if (!combat) return ui.notifications.warn("KNAVERY.Dashboard.CombatNotStarted", { localize: true });
+    await combat.setSurprise(target.dataset.side === "they");
+    this.render({ parts: ["damage"] });
+  }
+
+  /** Combat: the selected tokens' combatants are marked defeated, with the overlay. */
+  static async #onMarkDefeated() {
+    const combat = game.combat;
+    const tokens = canvas.tokens?.controlled ?? [];
+    if (!combat || !tokens.length) return ui.notifications.warn("KNAVERY.Notify.NoTargets", { localize: true });
+    for (const t of tokens) {
+      const c = combat.combatants.find((x) => x.tokenId === t.id);
+      if (c && !c.isDefeated) await c.update({ defeated: true });
+      await t.actor?.toggleStatusEffect(CONFIG.specialStatusEffects.DEFEATED, { active: true, overlay: true });
+    }
+  }
+
+  /** Combat (2e): the leader rallies the selected NPC after a failed morale test. */
+  static async #onRallySelected() {
+    const actor = (canvas.tokens?.controlled ?? []).map((t) => t.actor).find((a) => a?.type === "npc");
+    if (!actor) return ui.notifications.warn("KNAVERY.Dashboard.SelectNpcs", { localize: true });
+    await rally(actor);
   }
 
   static async #onMorale() {

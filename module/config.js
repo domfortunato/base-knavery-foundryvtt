@@ -196,14 +196,16 @@ export const RULES_PRESETS = {
   "1e": {
     "creation-abilities": "lowest", "starting-kit": "knave1e", "show-alignment": true, "show-background": true,
     "first-level-hp": "1d8", "level-hp-rule": "knave1e", "death-rule": "knave1e", "healing-rule": "knave1e",
-    "spell-rule": "book-per-day", "spell-list": "1e", "knave1e-xp": true, "knave1e-initiative": true,
+    "spell-rule": "book-per-day", "spell-list": "1e", "knave1e-xp": true, "initiative-rule": "1e-d6",
     "attack-rule": "knave1e", "price-list": "knave1e", "coins-per-slot": "100", "treasure-xp": "off",
+    "advantage-mode": "2d20",
   },
   "2e": {
     "creation-abilities": "points", "starting-kit": "careers", "show-alignment": false, "show-background": false,
     "first-level-hp": "1d6", "level-hp-rule": "reroll", "death-rule": "wounds", "healing-rule": "knave2e",
-    "spell-rule": "int-per-day", "spell-list": "auto", "knave1e-xp": false, "knave1e-initiative": false,
+    "spell-rule": "int-per-day", "spell-list": "auto", "knave1e-xp": false, "initiative-rule": "2e-leaders",
     "attack-rule": "knave2e", "price-list": "knave2e", "coins-per-slot": "500", "treasure-xp": "coin",
+    "advantage-mode": "raw",
   },
 };
 /**
@@ -220,7 +222,7 @@ export const SELL_RATE = 0.5;
 /** The rules of 0.2.0's first build; a world stamped then learns the later ones from its own edition (rules.js). */
 export const CORE_RULE_KEYS = [
   "creation-abilities", "starting-kit", "show-alignment", "show-background", "first-level-hp", "level-hp-rule",
-  "death-rule", "healing-rule", "spell-rule", "spell-list", "knave1e-xp", "knave1e-initiative",
+  "death-rule", "healing-rule", "spell-rule", "spell-list", "knave1e-xp",
 ];
 
 /**
