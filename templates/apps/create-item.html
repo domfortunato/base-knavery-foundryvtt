@@ -1,0 +1,99 @@
+{{!-- Create Item (module/create-item.js): the kind, its pre-filled fields, a Roll beside the name and
+      the effect on the GM's built tables, and where the item goes. The window is a form; Create submits it.
+      A Roll held by a missing table keeps its tooltip on the wrapping span, which a disabled button may not show. --}}
+<div class="kn-ci">
+  <div class="kn-ci-kinds">
+    {{#each kinds}}
+    <label class="kn-ci-kind{{#if this.selected}} active{{/if}}" data-tooltip="{{this.hint}}">
+      <input type="radio" name="kind" value="{{this.key}}" {{#if this.selected}}checked{{/if}} />
+      <i class="fas {{this.icon}}"></i><span>{{this.label}}</span>
+    </label>
+    {{/each}}
+  </div>
+
+  <div class="form-group">
+    <label for="kn-ci-name-{{idp}}">{{localize "KNAVERY.Name"}}</label>
+    <div class="form-fields">
+      <input type="text" id="kn-ci-name-{{idp}}" name="name" value="{{data.name}}" placeholder="{{namePlaceholder}}" maxlength="120" />
+      {{#if is.gear}}<select name="source" class="kn-ci-source" data-tooltip="KNAVERY.ItemMaker.Source">{{#each sources}}<option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>{{/each}}</select>{{/if}}
+      {{#if nameRoll}}<span class="kn-ci-roll-wrap" data-tooltip="{{nameRoll.tip}}"><button type="button" class="kn-ci-roll" data-action="rollName" data-tooltip="{{nameRoll.tip}}" aria-label="{{nameRoll.tip}}" {{#if nameRoll.disabled}}disabled{{/if}}><i class="fas fa-dice"></i></button></span>{{/if}}
+    </div>
+  </div>
+  {{#if is.spellbook}}{{#if data.formula}}<p class="hint kn-ci-formula">{{localize "KNAVERY.SpellGen.Formula"}} {{data.formula}}</p>{{/if}}{{/if}}
+
+  <div class="kn-ci-stats">
+    {{#if is.weapon}}
+    <div class="form-group"><label for="kn-ci-damage-{{idp}}">{{localize "KNAVERY.DamageDie"}}</label>
+      <div class="form-fields"><input type="text" id="kn-ci-damage-{{idp}}" name="damage" value="{{data.damage}}" /></div></div>
+    <div class="form-group"><label for="kn-ci-attack-{{idp}}">{{localize "KNAVERY.AttackType"}}</label>
+      <div class="form-fields"><select id="kn-ci-attack-{{idp}}" name="attackType">
+        <option value="melee" {{#if (eq data.attackType "melee")}}selected{{/if}}>{{localize "KNAVERY.Melee"}} ({{localize "KNAVERY.AbilityShort.STR"}})</option>
+        <option value="ranged" {{#if (eq data.attackType "ranged")}}selected{{/if}}>{{localize "KNAVERY.Ranged"}} ({{localize "KNAVERY.AbilityShort.WIS"}})</option>
+      </select></div></div>
+    <div class="form-group"><label for="kn-ci-hands-{{idp}}">{{localize "KNAVERY.Hands"}}</label>
+      <div class="form-fields"><select id="kn-ci-hands-{{idp}}" name="hands" data-dtype="Number">{{#each hands}}<option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{this.value}}</option>{{/each}}</select></div></div>
+    <div class="form-group"><label for="kn-ci-range-{{idp}}">{{localize "KNAVERY.Range"}}</label>
+      <div class="form-fields"><input type="text" id="kn-ci-range-{{idp}}" name="range" value="{{data.range}}" /></div></div>
+    {{/if}}
+    {{#if is.armor}}
+    <div class="form-group"><label for="kn-ci-armortype-{{idp}}">{{localize "KNAVERY.ArmorTypeLabel"}}</label>
+      <div class="form-fields"><select id="kn-ci-armortype-{{idp}}" name="armorType">{{#each armorTypes}}<option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>{{/each}}</select></div></div>
+    <div class="form-group"><label for="kn-ci-points-{{idp}}">{{localize "KNAVERY.ArmorPoints"}}</label>
+      <div class="form-fields"><input type="number" id="kn-ci-points-{{idp}}" name="points" value="{{data.points}}" min="0" max="7" step="1" data-dtype="Number" /></div></div>
+    {{/if}}
+    <div class="form-group"><label for="kn-ci-slots-{{idp}}">{{localize "KNAVERY.Slots"}}</label>
+      <div class="form-fields"><input type="number" id="kn-ci-slots-{{idp}}" name="slots" value="{{data.slots}}" min="0" step="0.5" data-dtype="Number" /></div></div>
+    {{#if is.item}}
+    <div class="form-group"><label for="kn-ci-quantity-{{idp}}">{{localize "KNAVERY.Quantity"}}</label>
+      <div class="form-fields"><input type="number" id="kn-ci-quantity-{{idp}}" name="quantity" value="{{data.quantity}}" min="1" step="1" data-dtype="Number" /></div></div>
+    <div class="form-group"><label for="kn-ci-uses-{{idp}}">{{localize "KNAVERY.Uses"}}</label>
+      <div class="form-fields"><input type="number" id="kn-ci-uses-{{idp}}" name="uses" value="{{data.uses}}" min="0" step="1" data-dtype="Number" /></div></div>
+    {{/if}}
+    <div class="form-group kn-ci-price"><label for="kn-ci-cost-{{idp}}">{{localize "KNAVERY.Price"}}</label>
+      <div class="form-fields">
+        <input type="number" id="kn-ci-cost-{{idp}}" name="cost" value="{{data.cost}}" min="0" data-dtype="Number" />
+        <select name="band" class="kn-ci-band" data-tooltip="KNAVERY.ItemMaker.BandTip">
+          <option value="" {{#if bandNone}}selected{{/if}}>{{localize "KNAVERY.ItemMaker.BandNone"}}</option>
+          {{#each bands}}<option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>{{/each}}
+        </select>
+      </div></div>
+    {{#if quality}}
+    <div class="form-group" data-tooltip="KNAVERY.Quality.Tip"><label for="kn-ci-quality-{{idp}}">{{localize "KNAVERY.Quality.Label"}}</label>
+      <div class="form-fields"><input type="number" id="kn-ci-quality-{{idp}}" name="qualityMax" value="{{quality.value}}" placeholder="{{quality.fallback}}" min="1" step="1" data-dtype="Number" /></div></div>
+    {{/if}}
+    <div class="form-group" data-tooltip="KNAVERY.KindTip"><label for="kn-ci-badge-{{idp}}">{{localize "KNAVERY.Kind"}}</label>
+      <div class="form-fields"><select id="kn-ci-badge-{{idp}}" name="badge">{{#each badges}}<option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>{{/each}}</select></div></div>
+    {{#unless is.spellbook}}
+    <div class="form-group" data-tooltip="KNAVERY.TreasureTip"><label for="kn-ci-treasure-{{idp}}">{{localize "KNAVERY.Treasure"}}</label>
+      <div class="form-fields"><input type="checkbox" id="kn-ci-treasure-{{idp}}" name="treasure" {{checked data.treasure}} /></div></div>
+    {{/unless}}
+  </div>
+  {{#if is.chaos}}<p class="hint kn-ci-chaos">{{localize "KNAVERY.ItemMaker.ChaosNote"}}</p>{{/if}}
+
+  <div class="form-group kn-ci-effect">
+    <label for="kn-ci-effect-{{idp}}">{{localize "KNAVERY.ItemMaker.Effect"}}</label>
+    <div class="form-fields">
+      <textarea id="kn-ci-effect-{{idp}}" name="description" rows="3">{{data.description}}</textarea>
+      {{#if effectRoll}}<span class="kn-ci-roll-wrap" data-tooltip="{{effectRoll.tip}}"><button type="button" class="kn-ci-roll" data-action="rollEffect" data-tooltip="{{effectRoll.tip}}" aria-label="{{effectRoll.tip}}" {{#if effectRoll.disabled}}disabled{{/if}}><i class="fas fa-dice"></i></button></span>{{/if}}
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="kn-ci-where-{{idp}}">{{localize "KNAVERY.ItemMaker.Where"}}</label>
+    <div class="form-fields">
+      <select id="kn-ci-where-{{idp}}" name="where">
+        <option value="world" {{#if where.world}}selected{{/if}}>{{localize "KNAVERY.ItemMaker.WhereWorld"}}</option>
+        {{#each where.groups}}
+        <optgroup label="{{this.label}}">
+          {{#each this.options}}<option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>{{/each}}
+          {{#if this.empty}}<option value="" disabled>{{this.empty}}</option>{{/if}}
+        </optgroup>
+        {{/each}}
+      </select>
+    </div>
+  </div>
+
+  <footer class="form-footer">
+    <button type="submit" class="kn-ci-create"><i class="fas fa-plus"></i> {{localize "KNAVERY.ItemMaker.Create"}}</button>
+  </footer>
+</div>

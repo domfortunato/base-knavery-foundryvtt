@@ -763,6 +763,47 @@
       "DropHint": "Drop items here to stock them.",
       "AddTextRow": "Add a row by name"
     },
+    "ItemMaker": {
+      "Title": "Create Item",
+      "Kind": {
+        "weapon": "Weapon", "armor": "Armor", "gear": "Gear or tool", "potion": "Potion",
+        "relic": "Relic", "spellbook": "Spellbook", "chaos": "Chaos spellbook"
+      },
+      "Hint": {
+        "weapon": "A die by its hands and reach; under Knave 1e attacks, its quality.",
+        "armor": "A piece of armor: its type and points.",
+        "gear": "An ordinary item: one slot, a price band.",
+        "potion": "One dose, with the potion badge.",
+        "relic": "A singular thing, with the relic badge.",
+        "spellbook": "A spellbook; Roll names its spell from your spell tables.",
+        "chaos": "A spellbook whose spell changes at the dawn after a casting."
+      },
+      "Source": "Which table names it",
+      "BandTip": "Price band",
+      "BandNone": "Price band…",
+      "BandLabel": "{band} ({cost}c)",
+      "Band": { "trifle": "Trifle", "cheap": "Cheap", "common": "Common", "costly": "Costly", "dear": "Dear", "precious": "Precious" },
+      "Effect": "Effect or description",
+      "ChaosNote": "Chaos: its spell changes at the dawn after it is cast. The swap is yours to make.",
+      "Where": "Create into",
+      "WhereWorld": "The Items directory",
+      "WhereCharacters": "A character’s inventory",
+      "WhereNpcs": "An NPC’s inventory",
+      "WhereAisles": "A marketplace aisle (the item also goes in the Items directory)",
+      "NoAisles": "No world aisle yet: Customize or add one in the Marketplace Manager",
+      "Create": "Create",
+      "RollTip": "Roll on {tables}",
+      "RollMissing": "Needs {tables}: build it from your book on the dashboard’s Tables tab, or import it.",
+      "RelicName": "{symbol} of {domain}",
+      "Line": {
+        "trait": "Trait", "material": "Material", "texture": "Texture", "taste": "Taste", "color": "Color", "ingredient": "Ingredient"
+      },
+      "LineText": "{label}: {text}",
+      "MadeWorld": "{name} is in the Items directory.",
+      "MadeActor": "{name} is in {where}’s inventory.",
+      "MadeAisle": "{name} is on the {where} aisle, and in the Items directory.",
+      "NoTarget": "That actor or aisle is gone. Choose again."
+    },
 
     "Dashboard": {
       "Title": "Game Master's Dashboard",

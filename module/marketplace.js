@@ -27,7 +27,7 @@ export const playerMarketClosed = () => !game.user.isGM && !game.settings.get(SE
 
 /** The aisle tables' prefix for the world's price list. */
 export const marketPrefix = () => (usesPrices1e() ? MARKET_1E_PREFIX : MARKET_PREFIX);
-const aisleName = (table) => table.name.slice((table.name.startsWith(MARKET_1E_PREFIX) ? MARKET_1E_PREFIX : MARKET_PREFIX).length).trim();
+export const aisleName = (table) => table.name.slice((table.name.startsWith(MARKET_1E_PREFIX) ? MARKET_1E_PREFIX : MARKET_PREFIX).length).trim();
 /** Each price list hides its own aisles (both have a "Weapons"); 1e's services ship hidden. */
 const hiddenKey = () => (usesPrices1e() ? "market-hidden-aisles-1e" : "market-hidden-aisles");
 const hiddenAisles = () => new Set(game.settings.get(SETTINGS_NS, hiddenKey()) ?? []);
@@ -442,13 +442,13 @@ export class MarketplaceManager extends HandlebarsApplicationMixin(ApplicationV2
 }
 
 /** The face after an aisle's highest row. */
-const nextRow = (table) => Math.max(0, ...table.results.map((r) => r.range?.[1] ?? 0)) + 1;
+export const nextRow = (table) => Math.max(0, ...table.results.map((r) => r.range?.[1] ?? 0)) + 1;
 
 /**
  * Number an aisle's rows 1…n in shelf order, one face each, and set its die to
  * match, so a removed row leaves no gap and an added one shares no face.
  */
-const renumberAisle = async (table) => {
+export const renumberAisle = async (table) => {
   const rows = [...table.results].sort((a, b) => (a.range?.[0] ?? 0) - (b.range?.[0] ?? 0));
   const updates = rows.map((r, i) => ({ _id: r.id, range: [i + 1, i + 1], weight: 1 }))
     .filter((u, i) => rows[i].range?.[0] !== u.range[0] || rows[i].range?.[1] !== u.range[1] || rows[i].weight !== 1);
