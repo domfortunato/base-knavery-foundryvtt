@@ -214,7 +214,9 @@ picker, change log and marketplace it ports.
 - Item badges: `system.kind` (Ordinary, Magic, Relic, Potion; any item type) and the item type give
   each Inventory row a chit (`actor-sheet.js` `itemBadge`); magic gear keeps its type icon, glowing
   (user, 2026-11-14).
-- Rations per slot is the GM's setting `rations-per-slot` (default 1: both editions).
+- Rations and torches per slot are the GM's settings `rations-per-slot` and `torches-per-slot` (Configure Inventory,
+  Hacks; default 1 in both editions). Candles and arrows keep the shipped items' own bundles: 10 candles, 20 arrows
+  a slot (user, 2026-11-14: no settings for them).
 - Rest follows p12: HP back to max only after two watches of sleep and a meal; a safe haven
   also heals one wound; spellbooks reset either way (the sheet's Rest window, `KnaveryActor.rest`).
 - Char Gen Mode holds every sheet's abilities, the GM's too, to the level's points: 3 + 3 per level
@@ -224,6 +226,10 @@ picker, change log and marketplace it ports.
   myself" (user, 2026-11-14).
 
 ## Foundry v14 gotchas met so far
+- An AppV2 window with `height: "auto"` is capped at the screen by core's `.application` max-height, and its
+  `.window-content` hides overflow: a long window clipped its rows and its Save footer. Give the long part
+  `flex: 1 1 auto; min-height: 0; overflow: auto` (settings menus, 0.3.0). A `#name` key in a settings group
+  is a section heading; a setting whose hint key is missing shows no hint (`settings.js`).
 - Re-preparing actors after a setting changes: `reset()` (settings.js `reprepareActors`), never
   `prepareData()` alone, which applies Active Effects again on top (review #2).
 - Dialog content ids carry the window's own `idp` (`foundry.utils.randomID()`): two dialogs can be

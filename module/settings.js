@@ -50,7 +50,7 @@ export const SETTING_GROUPS = [
     button: "KNAVERY.Settings.GroupGeneralButton",
     hint: "KNAVERY.Settings.GroupGeneralHint",
     icon: "fa-solid fa-gears",
-    keys: ["advantage-mode", "roll-damage-default", "show-traits", "change-log", "welcome-on-start"],
+    keys: ["advantage-mode", "roll-damage-default", "show-traits", "change-log", "welcome-on-start", "show-hazard-dice"],
   },
   {
     id: "generation",
@@ -69,7 +69,8 @@ export const SETTING_GROUPS = [
     button: "KNAVERY.Settings.GroupInventoryButton",
     hint: "KNAVERY.Settings.GroupInventoryHint",
     icon: "fa-solid fa-weight-hanging",
-    keys: ["allow-player-marketplace", "coins-take-slots", "rations-per-slot"],
+    // A "#name" key is a section heading (its label is Settings.Section.<name> in the language file), not a setting (0.3.0).
+    keys: ["allow-player-marketplace", "coins-take-slots", "#hacks", "rations-per-slot", "torches-per-slot"],
   },
   {
     id: "hacks",
@@ -80,9 +81,13 @@ export const SETTING_GROUPS = [
     // The Rules choice heads this window: it sets every rule below to one edition (rules.js).
     preset: true,
     keys: [
-      "creation-abilities", "starting-kit", "show-alignment", "show-background", "first-level-hp", "level-hp-rule",
-      "death-rule", "hard-mode-wounds", "healing-rule", "spell-rule", "spell-list", "attack-rule", "weapon-breaks-on-1",
-      "price-list", "coins-per-slot", "knave1e-xp", "treasure-xp", "knave1e-random-raises", "knave1e-initiative", "show-hazard-dice",
+      "#creation", "creation-abilities", "starting-kit", "show-alignment", "show-background",
+      "#hp", "first-level-hp", "level-hp-rule",
+      "#death", "death-rule", "hard-mode-wounds", "healing-rule",
+      "#spells", "spell-rule", "spell-list",
+      "#combat", "attack-rule", "weapon-breaks-on-1", "knave1e-initiative",
+      "#money", "price-list", "coins-per-slot",
+      "#advancement", "knave1e-xp", "treasure-xp", "knave1e-random-raises",
     ],
   },
   {
@@ -143,11 +148,11 @@ export const registerSettings = () => {
     label: "AllowPlayerMarketplace", type: Boolean, default: true, onChange: rerenderActorSheets,
   });
   reg("coins-take-slots", { label: "CoinsTakeSlots", type: Boolean, default: true, onChange: rerenderActorSheets });
-  // Both books count a day's rations as one slot; a GM may bundle them (user, 2026-11-14).
-  reg("rations-per-slot", {
-    label: "RationsPerSlot", type: Number, default: 1, choices: { 1: "1", 2: "2", 3: "3", 5: "5" },
-    onChange: () => { reprepareActors(); rerenderActorSheets(); },
-  });
+  // Both books count a day's rations as one slot; a GM may bundle them (user, 2026-11-14). Torches
+  // likewise (user, 2026-11-14: Inventory's Hacks; candles and arrows keep the books' own bundles).
+  const bundles = () => { reprepareActors(); rerenderActorSheets(); };
+  reg("rations-per-slot", { label: "RationsPerSlot", type: Number, default: 1, range: { min: 1, max: 10, step: 1 }, onChange: bundles });
+  reg("torches-per-slot", { label: "TorchesPerSlot", type: Number, default: 1, range: { min: 1, max: 5, step: 1 }, onChange: bundles });
 
   /* Rules */
   const choices = (prefix, keys) => Object.fromEntries(keys.map((k) => [k, `KNAVERY.Settings.${prefix}.${k}`]));
@@ -199,7 +204,7 @@ export const registerSettings = () => {
     default: D["price-list"], onChange: rerenderActorSheets,
   });
   reg("coins-per-slot", {
-    label: "CoinsPerSlot", type: String, choices: { 100: "100", 500: "500" },
+    label: "CoinsPerSlot", type: String, choices: choices("CoinsPerSlotChoice", ["100", "500"]),
     default: D["coins-per-slot"], onChange: () => { reprepareActors(); rerenderActorSheets(); },
   });
   reg("show-hazard-dice", { label: "ShowHazardDice", type: Boolean, default: true });
@@ -248,7 +253,8 @@ export class SettingsGroupMenu extends HandlebarsApplicationMixin(ApplicationV2)
 
   static DEFAULT_OPTIONS = {
     tag: "form",
-    classes: ["knavery-settings-menu"],
+    // `knavery` too, so every system window's shared rules apply (a lone checkbox on its label's line).
+    classes: ["knavery", "knavery-settings-menu"],
     window: { contentClasses: ["standard-form"], title: "", icon: "fa-solid fa-gears" },
     position: { width: 600, height: "auto" },
     form: { closeOnSubmit: true, handler: SettingsGroupMenu.#onSubmit },
@@ -256,7 +262,8 @@ export class SettingsGroupMenu extends HandlebarsApplicationMixin(ApplicationV2)
   };
 
   static PARTS = {
-    body: { template: `${SYS_PATH}/templates/apps/settings-group.html` },
+    // The rows scroll under the pinned footer (css .knavery-settings-rows); core keeps their scroll position.
+    body: { template: `${SYS_PATH}/templates/apps/settings-group.html`, scrollable: [""] },
     footer: { template: "templates/generic/form-footer.hbs" },
   };
 
@@ -265,6 +272,7 @@ export class SettingsGroupMenu extends HandlebarsApplicationMixin(ApplicationV2)
     const fields = foundry.data.fields;
     const entries = [];
     for (const key of this.constructor.GROUP.keys) {
+      if (key.startsWith("#")) { entries.push({ key, heading: game.i18n.localize(`KNAVERY.Settings.Section.${key.slice(1)}`) }); continue; }
       const id = `${ns}.${key}`;
       const setting = game.settings.settings.get(id);
       if (!setting) continue;
@@ -285,7 +293,8 @@ export class SettingsGroupMenu extends HandlebarsApplicationMixin(ApplicationV2)
       } else field = new fields.StringField({ required: true, choices: setting.choices });
       field.name = id;
       field.label ||= game.i18n.localize(setting.name ?? "");
-      field.hint ||= game.i18n.localize(setting.hint ?? "");
+      // A hint only where the language file has one: a row whose label and choices say it all has none.
+      field.hint ||= setting.hint && game.i18n.has(setting.hint) ? game.i18n.localize(setting.hint) : "";
       entries.push({ key, field, input, value: game.settings.get(ns, key) });
     }
     const group = this.constructor.GROUP;

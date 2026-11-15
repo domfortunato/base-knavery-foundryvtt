@@ -12,10 +12,17 @@ import { healingRule, usesWounds } from "../rules.js";
 /** Food: an item named Ration(s). */
 export const RATIONS_RE = /\brations?\b/i;
 export const isRations = (item) => item?.type === "item" && RATIONS_RE.test(String(item.name ?? ""));
-/** The GM's rations-per-slot setting, 1 when it cannot be read yet. */
-export const rationsPerSlot = () => {
-  try { return Math.max(1, Number(game.settings.get(SETTINGS_NS, "rations-per-slot")) || 1); } catch { return 1; }
+/** Torches: an item named Torch(es); hazard.js burns them, the Inventory Hacks bundle them. */
+export const TORCH_RE = /\btorch(es)?\b/i;
+export const isTorch = (item) => item?.type === "item" && TORCH_RE.test(String(item.name ?? ""));
+/** The GM's per-slot bundles (Configure Inventory, Hacks), 1 when they cannot be read yet. */
+const perSlot = (key) => {
+  try { return Math.max(1, Number(game.settings.get(SETTINGS_NS, key)) || 1); } catch { return 1; }
 };
+export const rationsPerSlot = () => perSlot("rations-per-slot");
+export const torchesPerSlot = () => perSlot("torches-per-slot");
+/** The bundle the GM's Hacks give an item by its name, or null when the item keeps its own. */
+export const hackBundle = (item) => (isRations(item) ? rationsPerSlot() : isTorch(item) ? torchesPerSlot() : null);
 
 /** How many inventory slots one owned item fills. */
 export const slotsForItem = (item) => {
@@ -23,8 +30,8 @@ export const slotsForItem = (item) => {
   if (item.type === "career") return 0;
   if (s.weightless) return 0;
   const qty = Math.max(0, s.quantity ?? 1);
-  // Rations share a slot by the GM's setting (default 1, as both books read).
-  const bundle = isRations(item) ? rationsPerSlot() : Math.max(1, s.bundle ?? 1);
+  // Rations and torches share a slot by the GM's settings (default 1, as both books read).
+  const bundle = hackBundle(item) ?? Math.max(1, s.bundle ?? 1);
   return Math.ceil(qty / bundle) * (s.slots ?? 1);
 };
 

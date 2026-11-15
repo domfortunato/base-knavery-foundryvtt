@@ -264,7 +264,7 @@ await withSettings(gm, async () => {
       const icon = game.actors.get(x).sheet.element.querySelector(".knavery-ability-name .roll-icon");
       return icon ? parseFloat(getComputedStyle(icon).fontSize) : 0;
     }, ids.a);
-    ok(size >= 20, "the d20 is large", String(size));
+    ok(size >= 17, "the d20 is large (18px at the one text size)", String(size));
     await alice.locator(`${sheet}[id$="${ids.a}"] .knavery-ability.STR-ability .roll-icon`).hover();
     const tip = await alice.waitForFunction(() => {
       const t = document.querySelector("#tooltip");
@@ -280,6 +280,7 @@ await withSettings(gm, async () => {
   await section("10. No text-size setting; the short footer, the fist icon, the Hacks labels.", async () => {
     ok(!(await gm.evaluate(() => game.settings.settings.has("base-knavery.text-size"))), "the text-size setting is gone (0.3.0): one size for every window");
 
+    await gm.evaluate(async (id) => { await game.actors.get(id).sheet.render({ force: true }); await new Promise((r) => setTimeout(r, 600)); }, ids.a);
     const foot = await gm.evaluate((id) => game.actors.get(id).sheet.element.querySelector(".knavery-compat-caption")?.textContent.trim(), ids.a);
     ok(foot === "Base Knavery is an unofficial fan-made Foundry system for Knave (first and second editions) and is not affiliated with Questing Beast LLC.", "the sheet footer is the short line", foot);
     const welcome = await gm.evaluate(async () => {
@@ -678,6 +679,7 @@ await withSettings(gm, async () => {
         // Knave 1e's notice, in Licensing (the art's licences fold in the AI disclosure above it).
         link: el?.querySelector(".knavery-welcome-small .knavery-welcome-license a")?.href ?? "",
         weight: el ? getComputedStyle(el.querySelector(".knavery-welcome-unofficial")).fontWeight : "",
+        style: el ? getComputedStyle(el.querySelector(".knavery-welcome-unofficial")).fontStyle : "",
         align: el ? getComputedStyle(el.querySelector(".knavery-welcome-unofficial")).textAlign : "",
         // Two sentences, two lines: the second starts below the first.
         twoLines: (() => { const s = el?.querySelectorAll(".knavery-welcome-unofficial > span") ?? []; return s.length === 2 && s[1].getBoundingClientRect().top >= s[0].getBoundingClientRect().bottom - 1; })(),
@@ -686,8 +688,8 @@ await withSettings(gm, async () => {
       await foundry.applications.instances.get("knavery-welcome")?.close();
       return out;
     });
-    ok(w.link.includes("creativecommons.org/licenses/by/4.0") && w.weight === "300" && w.align === "center" && w.twoLines && !/rulebook/i.test(w.box),
-      "the welcome window carries the Knave 1e licence, a centred light-weight intro and the new checkbox text", JSON.stringify(w));
+    ok(w.link.includes("creativecommons.org/licenses/by/4.0") && w.weight === "400" && w.style === "italic" && w.align === "center" && w.twoLines && !/rulebook/i.test(w.box),
+      "the welcome window carries the Knave 1e licence, a centred italic notice and the new checkbox text", JSON.stringify(w));
   });
 
   /* ------------------------------------------------------------------ */
@@ -2566,6 +2568,58 @@ await withSettings(gm, async () => {
     ok(d.reader === "none" || d.show === "Show to players", "the open rulebook shows Show to players in words on its title bar", JSON.stringify(d));
     ok(/jonaspeheim\.itch\.io/.test(d.links) && /game-icons\.net/.test(d.links), "the portrait picker's credits link to each gallery's page", d.links);
     await gm.evaluate(() => foundry.applications.instances.get("knavery-gm-dashboard")?.close());
+  });
+
+  /* ------------------------------------------------------------------ */
+  await section("32. Configure windows (0.3.0): Save stays on the screen, rows scroll, a checkbox sits on its label's line, choice text fits, section headings.", async () => {
+    const r = await gm.evaluate(async () => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const out = {};
+      for (const id of ["general", "generation", "inventory", "hacks", "rulebook"]) {
+        const Menu = game.settings.menus.get(`base-knavery.${id}`)?.type;
+        const app = new Menu();
+        await app.render({ force: true });
+        await wait(500);
+        const el = app.element;
+        const rows = el.querySelector(".knavery-settings-rows");
+        const save = el.querySelector('button[type="submit"]');
+        const sb = save?.getBoundingClientRect() ?? { bottom: Infinity, height: 0 };
+        const wraps = [...rows.querySelectorAll(".form-group")].filter((g) => {
+          const box = g.querySelector(':scope > .form-fields > input[type="checkbox"]:only-child');
+          const label = g.querySelector(":scope > label");
+          if (!box || !label) return false;
+          return box.getBoundingClientRect().top >= label.getBoundingClientRect().bottom - 2;
+        }).map((g) => g.querySelector("label")?.textContent.trim());
+        const ctx = document.createElement("canvas").getContext("2d");
+        const overflow = [...rows.querySelectorAll("select")].filter((s) => {
+          const cs = getComputedStyle(s);
+          ctx.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+          return ctx.measureText(s.selectedOptions[0]?.textContent ?? "").width > s.clientWidth - 30;
+        }).map((s) => s.selectedOptions[0]?.textContent);
+        out[id] = {
+          saveOnScreen: sb.height > 0 && sb.bottom <= window.innerHeight,
+          windowOnScreen: el.getBoundingClientRect().bottom <= window.innerHeight + 1,
+          rowsScroll: getComputedStyle(rows).overflowY !== "hidden" && getComputedStyle(rows).overflowY !== "visible",
+          headings: [...rows.querySelectorAll(".knavery-settings-section")].map((h) => h.textContent.trim()),
+          wraps, overflow,
+          rows: rows.querySelectorAll(".form-group").length,
+          hintless: [...rows.querySelectorAll(".form-group")].filter((g) => !g.querySelector(".hint")).length,
+          knavery: el.classList.contains("knavery"),
+        };
+        await app.close();
+      }
+      return out;
+    });
+    const each = (k) => JSON.stringify(Object.fromEntries(Object.entries(r).map(([id, v]) => [id, v[k]])));
+    const all = Object.values(r);
+    ok(all.every((m) => m.saveOnScreen && m.windowOnScreen), "every Configure window stays on the screen with its Save button in reach", each("saveOnScreen") + each("windowOnScreen"));
+    ok(all.every((m) => m.rowsScroll), "the rows part of every Configure window scrolls when long", each("rowsScroll"));
+    ok(all.every((m) => m.wraps.length === 0), "no checkbox falls under its label", each("wraps"));
+    ok(all.every((m) => m.overflow.length === 0), "every selected choice fits its box", each("overflow"));
+    ok(r.hacks.headings.length === 7 && r.hacks.headings[0] === "Creation" && r.inventory.headings.join() === "Hacks",
+      "Rules has its seven section headings and Inventory its Hacks heading", JSON.stringify({ hacks: r.hacks.headings, inventory: r.inventory.headings }));
+    ok(all.every((m) => m.knavery), "the Configure windows carry the knavery class, so the shared window rules apply", each("knavery"));
+    ok(r.hacks.rows >= 20 && r.hacks.hintless >= 4 && r.inventory.rows === 4, "the Rules window lists every rule, some without a hint; Inventory has four rows", JSON.stringify({ hacks: r.hacks.rows, hintless: r.hacks.hintless, inventory: r.inventory.rows }));
   });
 
   // Cleanup.

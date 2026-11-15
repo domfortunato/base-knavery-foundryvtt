@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- **Configure windows that scroll, align and say less.** Every Base Knavery Configure window scrolls its rows
+  under a Save button that stays in reach; a checkbox sits on its label's line; a thin rule separates the
+  rows; every choice fits its box ("Knave 1e: …" / "Knave 2e: …"); a hint is one short sentence or absent.
+  The Rules window has section headings: Creation, Hit points, Death and healing, Spells, Combat, Money,
+  Advancement. *Hazard dice on the Random page* moved to Configure General (it is not a rule).
+- **Configure Inventory has a Hacks section:** Rations per slot (now any number up to 10) and the new
+  **Torches per slot** (1 to 5). Candles and arrows keep the books' own bundles: 10 candles and 20 arrows
+  to a slot.
 - **One text size.** The per-player "Text size in Base Knavery windows" setting (0.1.1) is gone; every Base
   Knavery window has one size. For bigger text use Foundry's own Font Size (Configure Settings → Core →
   Interface Configuration).

@@ -2,7 +2,7 @@
  * The Item document: default art per type and a few derived display flags.
  */
 import { SYS_PATH } from "../config.js";
-import { INVENTORY_TYPES, isRations, rationsPerSlot } from "./actor.js";
+import { hackBundle, INVENTORY_TYPES } from "./actor.js";
 
 /**
  * Where an arriving item goes on a character's list (user, 2026-11-14, on every
@@ -91,7 +91,7 @@ export class KnaveryItem extends Item {
     s.isAttack = this.type === "weapon";
     s.canCast = this.type === "spellbook";
     s.hasPlusMinus = ["item", "weapon"].includes(this.type)
-      && ((s.quantity ?? 1) > 1 || (s.bundle ?? 1) > 1 || (isRations(this) && rationsPerSlot() > 1));
+      && ((s.quantity ?? 1) > 1 || (s.bundle ?? 1) > 1 || (hackBundle(this) ?? 1) > 1);
     s.canGive = this.isEmbedded && this.type !== "career";
   }
 

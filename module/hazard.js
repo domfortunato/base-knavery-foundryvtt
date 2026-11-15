@@ -15,7 +15,7 @@
  * and lanterns carry a lit toggle on the Inventory row; burn only touches torches.
  */
 import { FLAG_SCOPE, SETTINGS_NS } from "./config.js";
-import { isRations } from "./documents/actor.js";
+import { isRations, isTorch } from "./documents/actor.js";
 
 const { DialogV2 } = foundry.applications.api;
 const L = (k) => game.i18n.localize(k);
@@ -28,11 +28,9 @@ export const WATCHES_PER_DAY = 6;
 /** Watches of travel a day before forced marching hurts (p86). */
 export const TRAVEL_WATCHES_FREE = 3;
 
-/** Light sources: an item named torch, candle or lantern. Only torches burn out on a 3. */
+/** Light sources: an item named torch, candle or lantern. Only torches (documents/actor.js isTorch) burn out on a 3. */
 export const LIGHT_RE = /\b(torch(es)?|candles?|lanterns?)\b/i;
-export const TORCH_RE = /\btorch(es)?\b/i;
 export const isLight = (item) => item?.type === "item" && LIGHT_RE.test(String(item.name ?? ""));
-export const isTorch = (item) => item?.type === "item" && TORCH_RE.test(String(item.name ?? ""));
 
 /** The party: every character a player owns. */
 export const party = () => game.actors.filter((a) => a.type === "character" && a.hasPlayerOwner);

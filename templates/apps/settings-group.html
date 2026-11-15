@@ -1,12 +1,17 @@
 {{!-- One Configure Settings submenu (settings.js SettingsGroupMenu): the rows of
      one SETTING_GROUPS group through core's formGroup helper, so they look like
-     the main settings window's rows. One wrapper element: a Handlebars part
-     must render a single top-level element. Ported from Air Bladder. --}}
+     the main settings window's rows; a "#name" key renders as a section heading.
+     One wrapper element: a Handlebars part must render a single top-level
+     element; it is the part that scrolls under the footer. Ported from Air Bladder. --}}
 <div class="knavery-settings-rows">
 {{#if preset}}
 <div class="knavery-rules-choice">{{formGroup preset.field value=preset.value rootId=@root.rootId localize=true}}</div>
 {{/if}}
 {{#each entries as |entry|}}
+{{#if entry.heading}}
+<h4 class="knavery-settings-section">{{entry.heading}}</h4>
+{{else}}
 {{formGroup entry.field value=entry.value input=entry.input rootId=@root.rootId localize=true}}
+{{/if}}
 {{/each}}
 </div>

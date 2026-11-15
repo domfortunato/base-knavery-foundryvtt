@@ -3008,77 +3008,6 @@ ol.combat-tracker li.combatant.knavery-drop-below {
 }
 
 /******************************************************************************
- * Configure Settings submenus (settings-menus.js).                           *
- ******************************************************************************/
-
-/* The four submenu apps render core's own standard-form rows — label,
-   control, hint beneath — so they need almost nothing of ours. The positional
-   headers and compact rows that used to live here (knavery-settings-header,
-   knavery-setting-compact, knavery-setting-text; 2026-07 to 2026-08-22) went with
-   the flat-list grouping: the submenus made them obsolete, hidden hints and
-   hover tooltips included. */
-
-/* Core's standard-form row gives the label a narrow column and a 32px line
-   height (sized for core's two-word labels) and the control the wider one.
-   Ours are the other way round: the label is a self-describing sentence — it
-   was the whole description while the compact rows hid the hints, and the
-   translations carry the same length — and the control is a checkbox or a
-   short box. So the label takes the row, tight-leaded; the control sits at
-   the right at its natural width; the hint keeps core's own line beneath. */
-.ab-settings-menu .form-group > label {
-    flex: 1 1 auto;
-    line-height: 1.35;
-    font-weight: 600;
-}
-
-.ab-settings-menu .form-group > .form-fields {
-    flex: 0 0 auto;
-    width: auto;
-    min-width: 0;
-}
-
-.ab-settings-menu .form-group > .form-fields input[type="number"] {
-    width: 64px;
-    text-align: center;
-}
-
-.ab-settings-menu .form-group > .form-fields input[type="text"] {
-    width: 240px;
-}
-
-/* AppV2 clamps a height:auto window to the viewport, and its .window-content
-   is a flex column that gives its children no flex and no scrolling (see the
-   restore block at the top of this file) — so a ten-row group on a short
-   screen clipped its own Save footer. The rows part scrolls; the footer stays
-   put at the bottom of the window. */
-.ab-settings-menu .ab-settings-rows {
-    flex: 1 1 auto;
-    min-height: 0;
-    overflow-y: auto;
-}
-
-/* A rule beneath every row but the last (user ask, 2026-08-22). With hints
-   rendering under some rows and not others, a nine-row group read as one run
-   of text — the rule is what tells a row's hint from the next row's label.
-   --kn-rule is the item-list row separator, which is what these rows are;
-   it resolves on the app element (.application carries the dark palette).
-   `dev:settings` reads the computed border off every row. */
-.ab-settings-menu .ab-settings-rows > .form-group {
-    padding-block: 6px 8px;
-    border-bottom: 1px solid var(--kn-rule);
-}
-
-.ab-settings-menu .ab-settings-rows > .form-group:last-child {
-    border-bottom: none;
-}
-
-/* A sub-option greyed out because its master toggle is off (the Barebones
-   failed-career row while Barebones sheets are not offered). */
-.ab-settings-menu .form-group.knavery-setting-disabled {
-    opacity: 0.45;
-}
-
-/******************************************************************************
  * Counter value vs. max, container-tab states, fatigue rows, tab padding.    *
  ******************************************************************************/
 
@@ -4856,7 +4785,6 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 #settings .knavery-sidebar-tools { gap: 4px; }
 
 /* ---- Configure submenus (settings.js): one column of core form groups --------- */
-.knavery-settings-menu .knavery-settings-rows { display: flex; flex-direction: column; gap: 4px; }
 
 /* ---- Inputs an Active Effect changes (actor-sheet.js effectAttrs) ------------- */
 .knavery input[data-kn-modified] { outline: 1px dashed var(--kn-accent); outline-offset: -2px; color: var(--kn-accent); }
@@ -4927,8 +4855,6 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
    (foundry2.css .standard-form .form-group > label), so a long label wrapped into
    lines with a blank-looking gap between them. Core's own settings window sets
    1.25; a lone checkbox takes only its own width, so its label needs no wrap. */
-.knavery-settings-menu .form-group > label { line-height: 1.25; }
-.knavery-settings-menu .form-group:has(input[type="checkbox"]) > .form-fields { flex: 0 0 auto; }
 
 /* ---- Narrow sheet header, Char Gen rollers, Target list (2026-11-14) ------------ */
 /* The header's buttons never shrink; the title gives way first, so ⋮ and close stay in the window. */
@@ -5119,3 +5045,19 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
     margin: 10px 0 4px; padding-bottom: 1px; border-bottom: 1px solid var(--kn-rule);
 }
 .knavery-gm-dashboard .tab > h3:first-child { margin-top: 0; }
+
+/* ---- Configure windows (0.3.0): rows that scroll, align and breathe ------------------ */
+/* The menus are auto-height; core caps a window at the screen and hides its content's
+   overflow, so a long window clipped its rows and its own Save footer (Air Bladder met the
+   same). The rows part takes the room and scrolls with a gutter; the footer stays put. */
+.knavery-settings-menu .knavery-settings-rows { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; overflow: hidden auto; margin-right: -0.75rem; padding-right: 0.75rem; }
+/* A hairline under every row but the last tells a row's hint from the next row's label. */
+.knavery-settings-menu .knavery-settings-rows > .form-group { padding: 6px 0 7px; border-bottom: 1px solid var(--kn-rule); }
+.knavery-settings-menu .knavery-settings-rows > .form-group:last-child { border-bottom: none; }
+.knavery-settings-menu .form-group > .hint { margin-top: -2px; line-height: 1.3; }
+/* Section headings: small caps on a rule, like the dashboard's pages. */
+.knavery-settings-menu .knavery-settings-section {
+    margin: 14px 0 0; font-family: "Alegreya", Times, serif; font-size: 15px; font-variant: small-caps; font-weight: bold;
+    color: var(--kn-ink); border-bottom: 1px solid var(--kn-rule); padding-bottom: 1px;
+}
+.knavery-settings-menu .knavery-settings-rows > .knavery-settings-section:first-child { margin-top: 0; }
