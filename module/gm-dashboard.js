@@ -43,6 +43,8 @@ import { companionsOf, treasureCarried, treasureSplit, treasureXpOn, treasureXpR
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 const L = (k) => game.i18n.localize(k);
 const F = (k, d) => game.i18n.format(k, d);
+const esc = (s) => foundry.utils.escapeHTML(String(s ?? ""));
+const { DialogV2 } = foundry.applications.api;
 
 /** Requests sent this session, newest first: {id, label, reason, target, entries:[{actorId,name,state,total,success}]} */
 const requestLog = [];
@@ -137,6 +139,8 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       resetClock: () => resetClock(),
       payWage: GmDashboard.#onPayWage,
       reaction: GmDashboard.#onReaction,
+      carouse: GmDashboard.#onCarouse,
+      forage: GmDashboard.#onForage,
       encounterDistance: GmDashboard.#onEncounterDistance,
       morale: GmDashboard.#onMorale,
       rollTable: GmDashboard.#onRollTable,
@@ -669,6 +673,89 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     const actor = (canvas.tokens?.controlled ?? []).map((t) => t.actor).find((a) => a?.type === "npc");
     if (!actor) return ui.notifications.warn("KNAVERY.Dashboard.SelectNpcs", { localize: true });
     await rally(actor);
+  }
+
+  /**
+   * Carousing (Knave 2e p52): a whole night and d10 × 50c in a village, 100c in a town, 200c in a city,
+   * XP equal to the coins spent; a CON check in the morning, or a mishap from the GM's table.
+   */
+  static async #onCarouse() {
+    const pcs = party();
+    if (!pcs.length) return ui.notifications.warn("KNAVERY.Time.NoParty", { localize: true });
+    const idp = foundry.utils.randomID();
+    const options = pcs.map((a) => `<option value="${a.id}">${esc(a.name)} (${a.system.coins ?? 0}c)</option>`).join("");
+    const where = ["village", "town", "city"].map((w, i) =>
+      `<label><input type="radio" name="where" value="${w}"${i === 1 ? " checked" : ""} /> ${esc(L(`KNAVERY.Carousing.${w}`))}</label>`).join(" ");
+    const choice = await DialogV2.prompt({
+      classes: ["knavery"],
+      window: { title: L("KNAVERY.Carousing.Title"), icon: "fas fa-wine-bottle" },
+      content: `<p class="hint">${esc(L("KNAVERY.Carousing.Help"))}</p>`
+        + `<div class="form-group"><label for="kn-carouse-${idp}">${esc(L("KNAVERY.Carousing.Who"))}</label><div class="form-fields"><select name="pc" id="kn-carouse-${idp}">${options}</select></div></div>`
+        + `<div class="form-group"><label>${esc(L("KNAVERY.Carousing.Where"))}</label><div class="form-fields kn-carouse-where">${where}</div></div>`,
+      ok: {
+        label: "KNAVERY.Carousing.Go", icon: "fas fa-wine-bottle",
+        callback: (_e, b) => ({ pc: b.form.elements.pc.value, where: b.form.querySelector('input[name="where"]:checked')?.value ?? "town" }),
+      },
+      rejectClose: false,
+    });
+    const actor = choice ? game.actors.get(choice.pc) : null;
+    if (!actor) return;
+    const mult = { village: 50, town: 100, city: 200 }[choice.where] ?? 100;
+    const roll = await new Roll(`1d10 * ${mult}`).evaluate();
+    const coins = actor.system.coins ?? 0;
+    const spent = Math.min(roll.total, coins);
+    await actor.update({ "system.coins": coins - spent, "system.xp": (actor.system.xp ?? 0) + spent }, { knLogAction: "KNAVERY.Carousing.Title" });
+    const check = await rollCheck(actor, "CON", { reason: L("KNAVERY.Carousing.MorningReason") });
+    const lines = [F("KNAVERY.Carousing.Spent", { name: actor.name, where: L(`KNAVERY.Carousing.${choice.where}`), rolled: roll.total, spent })];
+    if (spent < roll.total) lines.push(F("KNAVERY.Carousing.Short", { short: roll.total - spent }));
+    if (check === null) lines.push(L("KNAVERY.Carousing.NoCheck"));
+    else if (check?.success) lines.push(L("KNAVERY.Carousing.Passed"));
+    else {
+      lines.push(L("KNAVERY.Carousing.Failed"));
+      const table = await findTable("Carousing Mishaps");
+      if (table?.results.some((r) => !r.getFlag(FLAG_SCOPE, "placeholder"))) await table.draw({ messageMode: "gm" });
+      else lines.push(L("KNAVERY.Carousing.NoTable"));
+    }
+    await ChatMessage.create({
+      speaker: { alias: L("KNAVERY.GameMaster") },
+      whisper: game.users.filter((u) => u.isGM).map((u) => u.id),
+      content: `<div class="knavery-roll-card kind-carousing"><header class="card-title"><h3><i class="fas fa-wine-bottle"></i> ${esc(L("KNAVERY.Carousing.Title"))}</h3></header>`
+        + `<ul>${lines.map((l) => `<li>${esc(l)}</li>`).join("")}</ul></div>`,
+    });
+  }
+
+  /** Foraging (Knave 2e p8): a watch and a WIS check for d6 rations; the watch then ends. */
+  static async #onForage() {
+    const pcs = party();
+    if (!pcs.length) return ui.notifications.warn("KNAVERY.Time.NoParty", { localize: true });
+    const idp = foundry.utils.randomID();
+    const options = pcs.map((a) => `<option value="${a.id}">${esc(a.name)}</option>`).join("");
+    const id = await DialogV2.prompt({
+      classes: ["knavery"],
+      window: { title: L("KNAVERY.Time.ForageTitle"), icon: "fas fa-seedling" },
+      content: `<p class="hint">${esc(L("KNAVERY.Time.ForageHelp"))}</p>`
+        + `<div class="form-group"><label for="kn-forage-${idp}">${esc(L("KNAVERY.Time.ForageWho"))}</label><div class="form-fields"><select name="pc" id="kn-forage-${idp}">${options}</select></div></div>`,
+      ok: { label: "KNAVERY.Time.ForageGo", icon: "fas fa-dice-d20", callback: (_e, b) => b.form.elements.pc.value },
+      rejectClose: false,
+    });
+    const actor = id ? game.actors.get(id) : null;
+    if (!actor) return;
+    const check = await rollCheck(actor, "WIS", { reason: L("KNAVERY.Time.ForageReason") });
+    if (check === null) return;
+    let line;
+    if (check.success) {
+      const n = (await new Roll("1d6").evaluate()).total;
+      const { findItemByName } = await import("./character-generator.js");
+      const doc = await findItemByName("Rations");
+      const data = doc ? doc.toObject() : { name: "Rations", type: "item", system: { slots: 1 } };
+      for (const k of ["_id", "folder", "ownership", "sort", "_stats"]) delete data[k];
+      data.system = { ...data.system, quantity: n };
+      await actor.addItems([data], { knNoLog: true });
+      line = F("KNAVERY.Time.ForageFound", { name: actor.name, n });
+    } else line = F("KNAVERY.Time.ForageNothing", { name: actor.name });
+    await ChatMessage.create({ speaker: { alias: L("KNAVERY.GameMaster") }, content: `<div class="knavery-roll-card kind-forage"><p>${esc(line)}</p></div>` });
+    // The watch is spent: the clock moves and the travel hazard die rolls; no ground covered.
+    await endTurn({ travelling: false });
   }
 
   static async #onMorale() {

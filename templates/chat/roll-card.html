@@ -72,6 +72,7 @@
 
   {{#if (eq kind "spell")}}
   <p class="card-note">{{localize "KNAVERY.Spell.CastAtLevel" level=level}}</p>
+  {{#if saveLine}}<p class="card-note kn-spell-save">{{saveLine}}</p>{{/if}}
   {{#if scroll}}<p class="card-note">{{localize "KNAVERY.Spell.ScrollUsed"}}</p>{{/if}}
   {{#if chaos}}<p class="card-note">{{localize "KNAVERY.Spell.ChaosNote"}}</p>{{/if}}
   <div class="card-spell-text">{{{description}}}</div>

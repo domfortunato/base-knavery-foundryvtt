@@ -71,7 +71,7 @@ const dressPerson = async (actor, name) => {
  * @param {string} [o.hireling]  a key of hirelingChoices()
  * @returns {Promise<Actor|null>}
  */
-export const createNpc = async ({ kind = "monster", name = "", monster = "", hp = "roll", hireling = "hireling" } = {}) => {
+export const createNpc = async ({ kind = "monster", name = "", monster = "", hp = "roll", hireling = "hireling", employer = "" } = {}) => {
   if (!game.user.isGM) return null;
   let actor = null;
   if (kind === "monster") {
@@ -97,12 +97,14 @@ export const createNpc = async ({ kind = "monster", name = "", monster = "", hp 
   } else {
     const choices = hirelingChoices();
     const line = kind === "hireling" ? (choices[hireling] ?? Object.values(choices)[0])
-      : { armorClass: 11, morale: 7, wage: 0, weapon: "punch", period: "month", label: "KNAVERY.Npc.Kind.person" };
+      : { armorClass: 11, morale: 7, wage: 0, weapon: "punch", period: "month", label: kind === "companion" ? "KNAVERY.Npc.Kind.companion" : "KNAVERY.Npc.Kind.person" };
     actor = await Actor.create({
       name: L(line.label),
       type: "npc",
       system: {
-        role: kind === "hireling" ? "hireling" : "npc",
+        // A companion (Knave 2e p53, p59) travels with a knave: a half share of XP, no morale tests.
+        role: kind === "hireling" ? "hireling" : (kind === "companion" ? "companion" : "npc"),
+        ...(kind === "companion" && employer ? { employer } : {}),
         level: 1, hp: { value: 3, max: 3 }, armorClass: line.armorClass, morale: line.morale, wage: line.wage, wagePeriod: line.period,
         movement: "40'",
       },
@@ -128,10 +130,11 @@ export const createNpcInteractive = async () => {
     hirelings: Object.entries(hirelingChoices()).map(([key, h]) => ({
       key, label: F(h.period === "day" ? "KNAVERY.Npc.HirelingWageDay" : "KNAVERY.Npc.HirelingWage", { kind: L(h.label), wage: h.wage }),
     })),
+    party: game.actors.filter((a) => a.type === "character").map((a) => ({ id: a.id, name: a.name })),
   });
   const read = (kind) => (_e, b) => {
     const f = b.form.elements;
-    return { kind, name: f.name.value.trim(), monster: f.monster?.value ?? "", hp: f.hp?.value ?? "roll", hireling: f.hireling?.value ?? "" };
+    return { kind, name: f.name.value.trim(), monster: f.monster?.value ?? "", hp: f.hp?.value ?? "roll", hireling: f.hireling?.value ?? "", employer: f.employer?.value ?? "" };
   };
   const choice = await foundry.applications.api.DialogV2.wait({
     window: { title: L("KNAVERY.CreateNpc"), icon: "fas fa-users" },
@@ -140,7 +143,7 @@ export const createNpcInteractive = async () => {
     content,
     // Each tile carries its own line (core escapes labels, so it goes in here).
     render: (_e, dialog) => {
-      for (const kind of ["monster", "person", "hireling"]) {
+      for (const kind of ["monster", "person", "hireling", "companion"]) {
         const button = dialog.element.querySelector(`.form-footer button[data-action="${kind}"]`);
         if (!button || button.querySelector(".kn-create-sub")) continue;
         const sub = document.createElement("span");
@@ -153,6 +156,7 @@ export const createNpcInteractive = async () => {
       { action: "monster", label: "KNAVERY.Npc.Kind.monster", icon: "fas fa-dragon", default: true, callback: read("monster") },
       { action: "person", label: "KNAVERY.Npc.Kind.person", icon: "fas fa-user", callback: read("person") },
       { action: "hireling", label: "KNAVERY.Npc.Kind.hireling", icon: "fas fa-coins", callback: read("hireling") },
+      { action: "companion", label: "KNAVERY.Npc.Kind.companion", icon: "fas fa-user-group", callback: read("companion") },
     ],
     rejectClose: false,
   });

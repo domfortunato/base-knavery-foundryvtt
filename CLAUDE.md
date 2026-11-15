@@ -239,6 +239,13 @@ picker, change log and marketplace it ports.
   is a breaking point in both editions.
 
 
+- Rules found by the 0.3.0 audit (user approved 2026-11-14): a rest eats one ration; a shell Names table falls
+  back to the system's own list (`names.js`, this project's writing); the 2e kit adds a quiver with a missile
+  weapon; a 2e cast asks the level (1 to INT) and every cast card shows the save; the GM may add a third career;
+  companions are an NPC role made by Create NPC (`system.employer`); Carouse (Random) and Forage (Time) run the
+  book's procedures with the numbers only.
+
+
 ## Foundry v14 gotchas met so far
 - An AppV2 window with `height: "auto"` is capped at the screen by core's `.application` max-height, and its
   `.window-content` hides overflow: a long window clipped its rows and its Save footer. Give the long part

@@ -1547,7 +1547,8 @@ await withSettings(gm, async () => {
       await wait(1000);
       const all = cards();
       const out = {
-        firstCard: first.length === 1 && first[0].includes("first casualty") && first[0].includes("Probe Rout B") && !first[0].includes("Probe Rout A,"),
+        // 0.3.0: the first fallen foe is also the side's leader (highest level), so a leader-down card comes with it.
+        firstCard: first.length <= 2 && first.some((c) => c.includes("first casualty") && c.includes("Probe Rout B") && !c.includes("Probe Rout A,")),
         reasons: all.map((m) => m.getFlag("base-knavery", "breaking").reason),
         whispered: all.every((m) => m.whisper.length > 0),
       };
@@ -1590,8 +1591,9 @@ await withSettings(gm, async () => {
       return out;
     });
     ok(b.firstCard && b.whispered, "the first casualty whispers the GM a breaking-point card naming the NPCs who still stand", JSON.stringify(b));
-    ok(b.reasons.length === 3 && /half of them/.test(b.reasons[1]) && /alone/.test(b.reasons[2]),
-      "half the side fallen, and the last one alone at half HP, each prompt once", JSON.stringify(b.reasons));
+    const steps = b.reasons.filter((r) => !/the leader, has fallen/.test(r));
+    ok(steps.length === 3 && /half of them/.test(steps[1]) && /alone/.test(steps[2]) && b.reasons.length === 4,
+      "half the side fallen, the leader's fall, and the last one alone at half HP, each prompt once", JSON.stringify(b.reasons));
     ok(b.moraleRolled === 1, "the card's Roll morale button rolls for the NPCs it names who still stand (one of two has fallen since)", JSON.stringify(b));
     ok(b.companion === null, "a companion never tests morale", JSON.stringify(b));
     ok(b.rallyButton && b.rallied.includes("foes") && b.secondRefused,
@@ -2680,7 +2682,7 @@ await withSettings(gm, async () => {
     const r = await gm.evaluate(async ([sys, pcId]) => {
       const wait = (ms) => new Promise((res) => setTimeout(res, ms));
       const ns = "base-knavery";
-      const before = { rule: game.settings.get(ns, "initiative-rule"), attack: game.settings.get(ns, "attack-rule") };
+      const before = { rule: game.settings.get(ns, "initiative-rule"), attack: game.settings.get(ns, "attack-rule"), death: game.settings.get(ns, "death-rule") };
       const out = {};
       const pc = game.actors.get(pcId);
       await game.settings.set(ns, "initiative-rule", "2e-leaders");
@@ -2749,8 +2751,9 @@ await withSettings(gm, async () => {
       preset.value = "lightning";
       preset.dispatchEvent(new Event("change", { bubbles: true }));
       out.page.formula = app.querySelector('[name="dmgFormula"]').value;
-      // Under Knave 1e: no Rally, no Direct box, the 1e d6 rule shows no leaders.
+      // Under Knave 1e: no Rally (1e attacks), no Direct box (1e death: no wounds), the 1e d6 rule shows no leaders.
       await game.settings.set(ns, "attack-rule", "knave1e");
+      await game.settings.set(ns, "death-rule", "knave1e");
       await game.settings.set(ns, "initiative-rule", "1e-d6");
       await openGmDashboard("damage");
       await wait(700);
@@ -2761,6 +2764,7 @@ await withSettings(gm, async () => {
       for (const m of msgs()) await m.delete();
       await game.settings.set(ns, "initiative-rule", before.rule);
       await game.settings.set(ns, "attack-rule", before.attack);
+      await game.settings.set(ns, "death-rule", before.death);
       return out;
     }, [SYS, ids.a]);
     ok(r.start.how === "leaders" && r.start.round === 1 && r.start.msgs === 1 && /Round 1/.test(r.start.flavor) && r.start.inits.join() === "1,1,2" || r.start.inits.join() === "1,2,2",
@@ -2776,6 +2780,63 @@ await withSettings(gm, async () => {
     ok(r.page.roll && r.page.next && r.page.they && r.page.defeated && r.page.rally && r.page.leaders && r.page.presets === 6 && r.page.formula === "3d6" && /Round/.test(r.page.state),
       "the Combat page has the fight's state, initiative, Next side, surprise, Mark defeated, Rally, the leaders and the hazard presets", JSON.stringify(r.page));
     ok(!r.page1e.rally && !r.page1e.direct && !r.page1e.leaders, "under Knave 1e the page hides Rally, Direct damage and the leaders", JSON.stringify(r.page1e));
+  });
+
+  /* ------------------------------------------------------------------ */
+  await section("35. Rules found by the audit (0.3.0): a rest eats a ration, a built-in name when the Names table is a shell, companions from Create NPC, the GM's third career, the spell save line, Carouse and Forage.", async () => {
+    const r = await gm.evaluate(async ([sys, pcId]) => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const ns = "base-knavery";
+      const out = {};
+      const pc = game.actors.get(pcId);
+      const cg = await import(`${sys}/character-generator.js`);
+      const { builtInName } = await import(`${sys}/names.js`);
+      out.builtIn = builtInName();
+      out.rolledName = await cg.rollFullName();
+      // A rest eats a ration.
+      for (const i of pc.items.filter((x) => /\brations?\b/i.test(x.name))) await i.delete();
+      await pc.createEmbeddedDocuments("Item", [{ name: "Rations", type: "item", system: { quantity: 2, slots: 1 } }]);
+      await pc.rest({ slept: true, ate: true, haven: false });
+      out.rationsLeft = pc.items.find((x) => /\brations?\b/i.test(x.name))?.system.quantity ?? 0;
+      const restCard = game.messages.contents.at(-1)?.content ?? "";
+      out.ateLine = /Ate a ration/.test(restCard);
+      // Companions from Create NPC.
+      const { createNpc } = await import(`${sys}/npc-generator.js`);
+      const comp = await createNpc({ kind: "companion", name: "Probe Companion", employer: pc.id });
+      out.companion = { role: comp?.system.role, employer: comp?.system.employer, hp: comp?.system.hp.max };
+      comp?.sheet.close();
+      await comp?.delete();
+      // The spell save line on a cast card (Knave 1e: no level prompt).
+      const rule = game.settings.get(ns, "spell-rule");
+      await game.settings.set(ns, "spell-rule", "book-per-day");
+      const [book] = await pc.createEmbeddedDocuments("Item", [{ name: "Probe Spell", type: "spellbook", system: { slots: 1, description: "<p>x</p>" } }]);
+      const { castSpell } = await import(`${sys}/rolls.js`);
+      await castSpell(pc, book);
+      await wait(300);
+      out.saveLine = /kn-spell-save/.test(game.messages.contents.at(-1)?.content ?? "");
+      await book.delete();
+      await game.settings.set(ns, "spell-rule", rule);
+      // The dashboard's Carouse (Random) and Forage (Time, travel mode) buttons.
+      const { openGmDashboard } = await import(`${sys}/gm-dashboard.js`);
+      await openGmDashboard("dice");
+      await wait(600);
+      const app = document.getElementById("knavery-gm-dashboard");
+      out.carouse = !!app.querySelector('section[data-tab="dice"] [data-action="carouse"]');
+      const { setClock, clock } = await import(`${sys}/hazard.js`);
+      const mode = clock().mode;
+      await setClock({ mode: "travel" });
+      await openGmDashboard("time");
+      await wait(600);
+      out.forage = !!app.querySelector('section[data-tab="time"] [data-action="forage"]');
+      await setClock({ mode });
+      foundry.applications.instances.get("knavery-gm-dashboard")?.close();
+      return out;
+    }, [SYS, ids.a]);
+    ok(/^\S+ \S+$/.test(r.builtIn) && typeof r.rolledName === "string" && r.rolledName.length > 3, "a new knave always gets a name: the table's, else the system's own list", JSON.stringify({ builtIn: r.builtIn, rolled: r.rolledName }));
+    ok(r.rationsLeft === 1 && r.ateLine, "a rest with a meal eats one ration and says so", JSON.stringify({ left: r.rationsLeft, line: r.ateLine }));
+    ok(r.companion.role === "companion" && r.companion.employer === ids.a && r.companion.hp === 3, "Create NPC makes a companion of a knave", JSON.stringify(r.companion));
+    ok(r.saveLine, "a cast card carries the save line", String(r.saveLine));
+    ok(r.carouse && r.forage, "Random has Carouse; Time (travel) has Forage", JSON.stringify({ carouse: r.carouse, forage: r.forage }));
   });
 
   // Cleanup.

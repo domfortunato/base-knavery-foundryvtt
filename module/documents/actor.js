@@ -314,8 +314,21 @@ export class KnaveryActor extends Actor {
     const books = this.items.filter((i) => i.type === "spellbook" && i.system.castToday)
       .map((i) => ({ _id: i.id, "system.castToday": false }));
     if (books.length) await this.updateEmbeddedDocuments("Item", books, { knNoLog: true });
+    // A meal eats a ration (0.3.0): the stack with the fewest left; an empty pack is said so.
+    let ateLine = null;
+    if (ate && this.type === "character") {
+      const food = this.items.filter((i) => isRations(i) && (i.system.quantity ?? 1) > 0)
+        .sort((a, b) => (a.system.quantity ?? 1) - (b.system.quantity ?? 1))[0];
+      if (food) {
+        const q = food.system.quantity ?? 1;
+        if (q > 1) await food.update({ "system.quantity": q - 1 }, { knNoLog: true });
+        else await food.delete({ knNoLog: true });
+        ateLine = F("KNAVERY.RestCard.Ate", { item: food.name, left: q - 1 });
+      } else ateLine = game.i18n.localize("KNAVERY.RestCard.NoRations");
+    }
     const lines = [
       hpLine,
+      ...(ateLine ? [ateLine] : []),
       ...(healWound ? [game.i18n.localize("KNAVERY.RestCard.Wound")] : []),
       game.i18n.localize("KNAVERY.RestCard.Spells"),
     ];

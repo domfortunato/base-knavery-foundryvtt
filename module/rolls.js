@@ -499,13 +499,31 @@ export const castSpell = async (actor, book) => {
       return ui.notifications.warn(int === 1 ? "KNAVERY.Spell.DailyLimitOne" : "KNAVERY.Spell.DailyLimit", { format: { n: int } });
     }
   }
+  let level = spellRule() === "book-per-day" && actor.type === "character" ? actor.system.level : int;
+  // Knave 2e (p21): a book may be cast below INT; the level sets the spell's power and its save.
+  if (spellRule() === "int-per-day" && actor.type === "character" && !s.scroll && int > 1) {
+    const chosen = await DialogV2.prompt({
+      classes: ["knavery"],
+      window: { title: F("KNAVERY.Spell.LevelTitle", { name: book.name }), icon: "fas fa-wand-sparkles" },
+      content: `<div class="form-group"><label>${L("KNAVERY.Spell.LevelLabel")}</label><div class="form-fields">`
+        + `<input type="number" name="level" min="1" max="${int}" value="${int}" autofocus /></div></div>`
+        + `<p class="hint">${L("KNAVERY.Spell.LevelHint")}</p>`,
+      ok: { label: "KNAVERY.Spell.CastButton", icon: "fas fa-wand-sparkles", callback: (_e, b) => Number(b.form.elements.level.value) },
+      rejectClose: false,
+    });
+    if (chosen === null || chosen === undefined) return false;
+    level = Math.min(int, Math.max(1, chosen || int));
+  }
+  // The save: Knave 2e p21 (a check against 11 + level; halved, or ended by 10 over); Knave 1e p6 (INT vs the level).
+  const saveLine = spellRule() === "book-per-day" ? F("KNAVERY.Spell.Save1e", { level }) : F("KNAVERY.Spell.Save2e", { target: 11 + level });
   const description = await foundry.applications.ux.TextEditor.implementation.enrichHTML(s.description ?? "", {
     relativeTo: book, secrets: false,
   });
   const content = await renderCard({
     kind: "spell",
     title: F("KNAVERY.Spell.CastTitle", { name: book.name }),
-    level: spellRule() === "book-per-day" && actor.type === "character" ? actor.system.level : int,
+    level,
+    saveLine,
     description,
     chaos: s.chaos,
     scroll: s.scroll,

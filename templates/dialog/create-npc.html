@@ -35,4 +35,16 @@
       </div>
     </div>
   </fieldset>
+  <fieldset class="kn-npc-options">
+    <legend>{{localize "KNAVERY.Npc.Kind.companion"}}</legend>
+    <div class="form-group">
+      <label for="kn-npc-employer-{{idp}}">{{localize "KNAVERY.Npc.CompanionOf"}}</label>
+      <div class="form-fields">
+        <select id="kn-npc-employer-{{idp}}" name="employer">
+          <option value="">{{localize "KNAVERY.Npc.NoOne"}}</option>
+          {{#each party}}<option value="{{this.id}}">{{this.name}}</option>{{/each}}
+        </select>
+      </div>
+    </div>
+  </fieldset>
 </div>

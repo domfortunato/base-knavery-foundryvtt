@@ -18,6 +18,7 @@
  * Every table is a shell until the GM fills it. A step whose table is empty is
  * skipped and listed on the summary card, never faked.
  */
+import { builtInName } from "./names.js";
 import {
   ABILITIES, ABILITY_MAX, CREATION_POINTS, FLAG_SCOPE, GEAR_1E_PACK, LEVELS, LOWEST_DIE_MAX, SETTINGS_NS, STARTING_COINS, SYS_PATH, TABLES,
 } from "./config.js";
@@ -270,11 +271,11 @@ export const chooseCareer = async () => {
  * A first name and a surname. The book builds a surname from two halves
  * ("Adder-" + "bald"): a Surnames draw ending in "-" is joined to one from
  * Surname Endings, or loses its hyphen when the world has no such table.
- * Null when the Names table is still an empty shell.
+ * The system's own list (names.js) while the Names table is still an empty shell.
  */
 export const rollFullName = async ({ warn = false } = {}) => {
   const first = await drawFrom(TABLES.namesA, { warn });
-  if (!first) return null;
+  if (!first) return builtInName();
   let last = (await drawFrom(TABLES.surnames, { warn: false }))?.text ?? null;
   if (last?.endsWith("-")) {
     const end = (await drawFrom(TABLES.surnameEndings, { warn: false }))?.text;
@@ -478,8 +479,7 @@ export const buildCharacter = async ({ level = 1, abilities = null, rolled = nul
 
   // A Knave 1e kit is rolled, not bought: no coins.
   const coins = kit === "knave1e" ? 0 : (await new Roll(STARTING_COINS).evaluate()).total;
-  const name = (await rollFullName()) ?? L("KNAVERY.DefaultCharacterName");
-  if (name === L("KNAVERY.DefaultCharacterName")) notes.push(L("KNAVERY.Gen.NoNameTable"));
+  const name = await rollFullName();
 
   const traits = await rollTraits();
   const art = await randomPortraitPair("person");
@@ -522,6 +522,12 @@ const applyBuilt = async (actor, built) => {
   }, { knNoLog: true, knCreation: true });
   for (const c of built.careers) await addCareer(actor, c, { grantItems: true, knNoLog: true });
   if (built.items.length) await actor.addItems(built.items, { knNoLog: true });
+  // Knave 2e (p4): a quiver of 20 arrows comes with a missile weapon.
+  if (usesCareers() && actor.items.some((i) => i.type === "weapon" && i.system.attackType === "ranged")
+    && !actor.items.some((i) => /\barrows?\b/i.test(i.name))) {
+    const arrows = await findItemByName("Arrows");
+    if (arrows) await actor.addItems([itemData(arrows, { system: { quantity: 20 } })], { knNoLog: true });
+  }
   await postGenerationCard(actor, F("KNAVERY.Gen.Summary", { name: built.name, level: built.system.level }), built.notes);
 };
 

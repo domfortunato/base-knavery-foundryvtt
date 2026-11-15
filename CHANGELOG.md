@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- **A rest eats a ration** (the stack with the fewest left), and says so; an empty pack is said too.
+- **A new knave always has a name:** when the Names table is still a shell (a Knave 1e world, or a 2e world before
+  its book is built) the system's own list of names steps in. No more "Nameless Knave".
+- **A quiver of 20 arrows** comes with a missile weapon in the Knave 2e starting kit.
+- **Spells:** under Knave 2e a book may be cast below INT (a level prompt), and every cast card carries the
+  save line: 2e a check against 11 + level (halved, or ended by 10 over); 1e INT against the level.
+- **The GM may give a third career** (Knave 2e career training); players stay at two.
+- **Companions:** Create NPC makes a companion of a knave (half share of XP, no morale tests).
+- **Carouse** (Random page, Downtime): a knave, a village / town / city, the night's cost and XP, the morning's
+  CON check and the mishap from your table. **Forage** (Time page, travelling): a WIS check for d6 rations, and
+  the watch ends.
 - **Combat by side, both editions.** *Initiative* in Configure Rules is a choice: Knave 1e (one d6 a round, by
   side), Knave 2e (one CHA check between the sides' leaders decides who acts first, and the order holds for the
   fight) or Individual (Foundry's roll per token). Under a side rule the Combat Tracker lists Player characters

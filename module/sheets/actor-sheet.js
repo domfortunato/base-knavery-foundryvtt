@@ -770,7 +770,8 @@ export class KnaveryActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
   /** The careers already on the sheet, or null (with a warning) when both are there. */
   #careersRoom() {
     const have = this.actor.items.filter((i) => i.type === "career");
-    if (have.length < 2) return have;
+    // Two for a player; the GM may always add one (Knave 2e p52: career training; 0.3.0).
+    if (have.length < 2 || game.user.isGM) return have;
     ui.notifications.warn("KNAVERY.Notify.TwoCareers", { localize: true });
     return null;
   }

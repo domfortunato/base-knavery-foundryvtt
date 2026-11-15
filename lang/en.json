@@ -190,7 +190,9 @@
       "Dead": "Dead: no healing.",
       "Healed1e": "Healed {n} HP (d8 {die} + CON {con}): {hp} / {max}.",
       "Haven1e": "A safe haven: HP back to {max}.",
-      "NoHp1e": "No full night's rest after a meal: HP stays at {hp}."
+      "NoHp1e": "No full night's rest after a meal: HP stays at {hp}.",
+      "Ate": "Ate a ration: {item}, {left} left.",
+      "NoRations": "No rations in the pack: the meal came from elsewhere, or there was none."
     },
     "RulesSwitch": {
       "Title": "Knave 2e rules?",
@@ -334,12 +336,15 @@
     "CreateCharacter": "Create Character",
     "CreateNpc": "Create NPC",
     "Npc": {
-      "Kind": { "monster": "Monster", "person": "Person", "hireling": "Hireling" },
+      "Kind": { "monster": "Monster", "person": "Person", "hireling": "Hireling", "companion": "Companion" },
       "Hint": {
         "monster": "From the bestiary, with its HP rolled.",
         "person": "Someone met on the road: a random name, traits and portrait.",
-        "hireling": "A hireling, mercenary or expert, with their wage."
+        "hireling": "A hireling, mercenary or expert, with their wage.",
+        "companion": "Travels with a knave: a half share of XP, no morale tests."
       },
+      "CompanionOf": "Companion of",
+      "NoOne": "No one yet",
       "FromBestiary": "From the bestiary",
       "Random": "Random",
       "Hp": "Hit points",
@@ -602,7 +607,31 @@
       "ChaosNote": "A chaos spellbook: it becomes a different spell at the next dawn.",
       "AlreadyCast": "{name} has already been used today.",
       "DailyLimit": "You can only use {n} spellbooks per day.",
-      "DailyLimitOne": "You can only use {n} spellbook per day."
+      "DailyLimitOne": "You can only use {n} spellbook per day.",
+      "LevelTitle": "Cast {name} at what level?",
+      "LevelLabel": "Level",
+      "LevelHint": "Up to your INT. The level sets the spell's power and its save.",
+      "CastButton": "Cast",
+      "Save2e": "A target of higher level may check against {target}: a success halves the effect, 10 over ends it.",
+      "Save1e": "An unwilling target may save: INT against level {level}."
+    },
+
+    "Carousing": {
+      "Title": "Carousing",
+      "Help": "A whole night: d10 × 50c in a village, 100c in a town, 200c in a city, and XP equal to the coins spent. In the morning a CON check, or a mishap.",
+      "Who": "Who",
+      "Where": "Where",
+      "village": "Village (d10 × 50c)",
+      "town": "Town (d10 × 100c)",
+      "city": "City (d10 × 200c)",
+      "Go": "Carouse",
+      "MorningReason": "The morning after carousing",
+      "Spent": "{name} caroused in a {where}: {rolled}c called for, {spent}c spent, {spent} XP gained.",
+      "Short": "{short}c short: the night ended early.",
+      "Passed": "CON check passed: no mishap.",
+      "Failed": "CON check failed: a mishap.",
+      "NoCheck": "No CON check was made.",
+      "NoTable": "No Carousing Mishaps table yet: build it from your book on the Tables page."
     },
 
     "Hazard": {
@@ -691,6 +720,14 @@
       "EndTurn": "End the turn",
       "EndWatch": "End the watch",
       "RollOnly": "Roll the hazard die only",
+      "Forage": "Forage (a watch)",
+      "ForageTitle": "Foraging",
+      "ForageHelp": "A watch spent looking for food: a WIS check for d6 rations. The watch then ends and the hazard die rolls.",
+      "ForageWho": "Who forages",
+      "ForageGo": "Roll WIS",
+      "ForageReason": "Foraging",
+      "ForageFound": "{name} forages: {n} rations found.",
+      "ForageNothing": "{name} forages and finds nothing.",
       "Reset": "Start again",
       "DungeonHint": "Ending a turn moves the world clock on 10 minutes and rolls the dungeon hazard die. Fatigue, burn and depletion cards carry a button: nothing changes until you click it.",
       "TravelHint": "Ending a watch moves the world clock on 4 hours and rolls the travel hazard die. A day has six watches. Fatigue and depletion cards carry a button: nothing changes until you click it.",
@@ -880,6 +917,7 @@
       "HazardDice": "Hazard dice",
       "HazardDiceHint": "Rolls the die only. The Time page's End turn / End watch also moves the clock on.",
       "Downtime": "Downtime",
+      "Carouse": "Carouse",
       "Surprise": "Surprise",
       "SurpriseTip": "An encounter within 80': sets up the check on the Requests page. The closest PC rolls WIS against the closest creature's WIS (p19); winning by 5 or more surprises the other side. Tick that PC, type the creature's WIS as the difficulty, and send.",
       "SurpriseReason": "Surprise! The closest PC: WIS against the closest creature's WIS. Win by 5 or more to surprise them; lose by 5 or more and you are surprised.",

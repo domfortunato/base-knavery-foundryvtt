@@ -30,6 +30,7 @@
   </div>
   <h3>{{localize "KNAVERY.Dashboard.Downtime"}}</h3>
   <div class="dash-buttons dash-downtime">
+    <button type="button" data-action="carouse" data-tooltip="KNAVERY.Carousing.Help"><i class="fas fa-wine-bottle"></i> {{localize "KNAVERY.Dashboard.Carouse"}}</button>
     {{#each random.downtime}}<button type="button" data-action="rollEvent" data-table="{{this.table}}"{{#unless this.exists}} disabled{{/unless}} data-tooltip-text="{{this.tip}}"><i class="fas {{this.icon}}"></i> {{this.label}}</button>{{/each}}
   </div>
   <p class="hint">{{localize "KNAVERY.Dashboard.EventsHint"}}</p>
