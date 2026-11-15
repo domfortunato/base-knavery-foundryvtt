@@ -42,7 +42,7 @@ https://github.com/domfortunato/base-knavery-foundryvtt/releases/latest/download
 - A random spell generator.
 - A bestiary, and more than 2,900 pieces of human-made art (portraits, tokens and icons).
 - A Game Master's Dashboard: requests, damage, time and hazards, the party, XP.
-- A fully customizable marketplace, backgrounds, weapons, gear, spells, magic items and potions.
+- Fully customizable marketplace, backgrounds, weapons, gear, spells, magic items and potions.
 - GM macros for importing additional tables, quickly turning features on and off, and more.
 - A complete guide, in the compendium, that explains every feature.
 
