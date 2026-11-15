@@ -20,6 +20,7 @@
     "dev:fixes": "node tools/dev/e2e-fixes.mjs",
     "dev:chargen": "node tools/dev/e2e-chargen.mjs",
     "dev:print": "node tools/dev/e2e-print.mjs",
+    "dev:fresh": "node tools/dev/e2e-fresh.mjs",
     "release": "node tools/release.mjs"
   },
   "author": "Dom Bosco (https://github.com/domfortunato)",

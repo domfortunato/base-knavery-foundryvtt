@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- For the probe fleet: `dev:fresh`, a story in a world no Game Master has opened: it plays Knave 1e as written,
+  gets the GM's own book, builds its tables, takes the offer and switches to Knave 2e, and checks what the switch
+  leaves alone.
 - **The Guide, rewritten.** Ten pages, each titled with its reader: Start Here (GM); Your Knave and Rolling and
   Fighting (players); then the GM's Rules, Settings, the Game Master's Dashboard, Your Rulebook and the Tables,
   Characters, NPCs and Monsters, Combat, Damage and Morale, and Items, Careers and the Marketplace. Every page
