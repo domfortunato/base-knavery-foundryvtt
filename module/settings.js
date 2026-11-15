@@ -50,7 +50,10 @@ export const SETTING_GROUPS = [
     button: "KNAVERY.Settings.GroupGeneralButton",
     hint: "KNAVERY.Settings.GroupGeneralHint",
     icon: "fa-solid fa-gears",
-    keys: ["roll-damage-default", "show-traits", "change-log", "welcome-on-start", "show-hazard-dice"],
+    keys: [
+      "roll-damage-default", "show-traits", "change-log", "welcome-on-start", "show-hazard-dice",
+      "#printing", "print-paper", "print-text-size", "print-career-features", "print-backstory", "print-notes-lines",
+    ],
   },
   {
     id: "generation",
@@ -117,6 +120,19 @@ export const registerSettings = () => {
   reg("show-traits", { label: "ShowTraits", type: Boolean, default: true, onChange: rerenderActorSheets });
   reg("change-log", { label: "ChangeLog", type: Boolean, default: true });
   reg("welcome-on-start", { label: "WelcomeOnStart", type: Boolean, default: true });
+  // Printing (user decision D12, 2026-11-14): the paper, the type size and what the printed sheet carries
+  // (print.js). The sheet is one page at every choice here; these never change that.
+  reg("print-paper", {
+    label: "PrintPaper", type: String, default: "auto",
+    choices: { auto: "KNAVERY.Settings.PrintPaperAuto", a4: "KNAVERY.Settings.PrintPaperA4", letter: "KNAVERY.Settings.PrintPaperLetter" },
+  });
+  reg("print-text-size", {
+    label: "PrintTextSize", type: String, default: "9.5pt",
+    choices: { "9.5pt": "KNAVERY.Settings.PrintTextSize95", "10pt": "KNAVERY.Settings.PrintTextSize10" },
+  });
+  reg("print-career-features", { label: "PrintCareerFeatures", type: Boolean, default: true });
+  reg("print-backstory", { label: "PrintBackstory", type: Boolean, default: true });
+  reg("print-notes-lines", { label: "PrintNotesLines", type: Boolean, default: true });
 
   /* Character creation */
   reg("allow-player-generate", {

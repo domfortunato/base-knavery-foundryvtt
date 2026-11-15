@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **The printed sheet is one page**, on A4 and US Letter alike, in both editions: the head (portrait, name, level,
+  title and XP, then careers under Knave 2e or alignment and background under Knave 1e), the six abilities with
+  their defenses, a vitals strip (AC, HP, wounds, coins, spells cast today as tick boxes), one numbered row per
+  slot with coins after the gear, empty slots as pencil lines and wounds marked from the bottom (an item in a
+  wounded slot is struck through as Unusable), the traits as a compact grid, career features without their
+  descriptions, a Spells list with a box per book or scroll, the backstory (six lines at most) and Notes ruled to
+  the foot. Knave 1e weapons and armor print their quality as boxes to pencil in wear. The footer carries the
+  short disclaimer and the Knave 1e CC BY credit. The old Saves block is gone.
+- **Printing settings** under Configure General: paper (Auto, A4, US Letter), text size (9.5 or 10 pt), and
+  whether career features, the backstory and the ruled lines print. The sheet stays one page at every choice.
 - **Create Item** (Game Master): in the Items directory and on the dashboard's Marketplace page. Pick a kind,
   weapon, armor, gear or tool, potion, relic, spellbook or chaos spellbook, and its fields come filled in for
   your price list: the die by hands and reach, armor points by type, slots, a price band, the magic, relic or

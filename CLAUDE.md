@@ -91,7 +91,9 @@ picker, change log and marketplace it ports.
     Time, Party, Random, XP, Marketplace (the aisles; `marketplace.js` `MARKET_ACTIONS`), Toggles (the players'
     switches, the portrait galleries and the random-portrait source; `art.js` `GALLERIES`), Tables),
     `table-importer.js`, `art.js`, `change-log.js`,
-    `print.js`
+    `print.js` (0.3.0: one fixed 186 × 261 mm page for both editions, built from the rules and
+    the slot layout; the Printing settings under Configure General; probe `e2e-print.mjs` prints four
+    knaves to PDF and asserts one page each)
   - `rulebook.js`: the GM's PDF in Foundry's bundled pdf.js viewer (an iframe
     of `scripts/pdfjs/web/viewer.html`, after Mythic-pwd), the B key, showing
     a page to players; page map in `config.js` `RULEBOOK`
