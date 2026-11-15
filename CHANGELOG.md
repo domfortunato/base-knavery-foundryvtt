@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.3.0
 
 - For the probe fleet: `dev:fresh`, a story in a world no Game Master has opened: it plays Knave 1e as written,
   gets the GM's own book, builds its tables, takes the offer and switches to Knave 2e, and checks what the switch
