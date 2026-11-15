@@ -57,7 +57,7 @@
 - **Advantage follows the edition:** 2d20 under Knave 1e, ±5 under Knave 2e, now in Configure Rules.
 - **Morale by edition:** no first-casualty card and no Rally under Knave 1e; a side's leader falling is a breaking
   point in both.
-- **The dashboard's Player Tools page is Toggles,** and it gains two switches (Players may read the rulebook,
+- **The dashboard's Toggles page** holds the players' switches and gains two (Players may read the rulebook,
   Hazard dice on the Random page), one switch per **portrait gallery** (Yours, Portraits, Lydia Comer, Tlomdev,
   Icons: a gallery that is off leaves the portrait picker and the random portraits) and **Random portraits
   from:** any gallery that is on, or one named gallery, with your own folder's path and a Rescan. Your folder no
@@ -98,8 +98,8 @@
   its ability score or level; the situation sets the edge (Knave 2e p7, Knave 1e p2, in our words).
 - **The Game Master's Dashboard** opens from a big button at the top of the left toolbar (the GM's
   only; the toolbar moves down for it). Its pages are on a thumb-tab rail off the window's edge, as on
-  the character sheet, in place of the tab strip, and the player-tool switches and the Marketplace
-  Manager have a **Player Tools** page of their own, apart from Tables.
+  the character sheet, in place of the tab strip, and the players' switches have a page of their own
+  (**Toggles**), apart from Tables.
 - **Requests set the edge:** the dashboard's Requests tab has an Edge choice (the player chooses,
   Disadvantage, Normal or Advantage). A set edge leaves the player one button, "The GM set this roll";
   the card and the results list say which. **All** beside Who ticks every character (or none).

@@ -22,7 +22,7 @@ import { rebuildChangeLogCard } from "./change-log.js";
 import { createCharacter, createCharacterInteractive, registerCreationSocket, updateCareerIcons } from "./character-generator.js";
 import { createNpc, createNpcInteractive } from "./npc-generator.js";
 import { openSpellGenerator } from "./spell-generator.js";
-import { GmDashboard, openGmDashboard, openMarketplaceManager, registerPartyRefresh, registerRequestSocket, setToggle } from "./gm-dashboard.js";
+import { GmDashboard, openGmDashboard, openMarketplaceManager, registerCombatRefresh, registerPartyRefresh, registerRequestSocket, setToggle } from "./gm-dashboard.js";
 import { openCreateItem } from "./create-item.js";
 import { openMarketplace } from "./marketplace.js";
 import { openTableImporter, importRows, parseRows } from "./table-importer.js";
@@ -68,6 +68,7 @@ Hooks.once("init", () => {
   registerCreationSocket();
   registerRequestSocket();
   registerPartyRefresh();
+  registerCombatRefresh();
   registerRulebook();
 
   game.keybindings.register(SETTINGS_NS, "openRulebook", {

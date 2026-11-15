@@ -26,6 +26,6 @@
       </select>
     </div>
   </div>
-  <p class="hint dash-yours-folder">{{localize "KNAVERY.Dashboard.YoursFolder" folder=customFolder.path count=customFolder.count}}
+  <p class="hint dash-yours-folder">{{#if (eq customFolder.count 1)}}{{localize "KNAVERY.Dashboard.YoursFolderOne" folder=customFolder.path}}{{else}}{{localize "KNAVERY.Dashboard.YoursFolder" folder=customFolder.path count=customFolder.count}}{{/if}}
     <a data-action="rescanPortraits"><i class="fas fa-rotate"></i> {{localize "KNAVERY.Art.Refresh"}}</a></p>
 </section>

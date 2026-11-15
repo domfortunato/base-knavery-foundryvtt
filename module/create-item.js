@@ -118,7 +118,7 @@ const rollState = async (tables, mode = "all") => {
   const named = disabled ? (mode === "any" ? tables : missing) : (mode === "first" ? tables : present);
   return {
     tables, missing, present, disabled,
-    tip: F(disabled ? "KNAVERY.ItemMaker.RollMissing" : "KNAVERY.ItemMaker.RollTip", { tables: named.join(", ") }),
+    tip: F(disabled ? "KNAVERY.ItemMaker.RollMissing" : "KNAVERY.ItemMaker.RollTip", { tables: game.i18n.getListFormatter().format(named) }),
   };
 };
 
@@ -360,7 +360,7 @@ export class CreateItemWindow extends HandlebarsApplicationMixin(ApplicationV2) 
       const r = await fn(this.data);
       if (!r) return;
       if (r.missing?.length) {
-        ui.notifications.warn("KNAVERY.ItemMaker.RollMissing", { format: { tables: r.missing.join(", ") } });
+        ui.notifications.warn("KNAVERY.ItemMaker.RollMissing", { format: { tables: game.i18n.getListFormatter().format(r.missing) } });
         return;
       }
       apply(r);

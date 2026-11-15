@@ -21,7 +21,7 @@ import { slotsForItem } from "./documents/actor.js";
 import { nextLevelXp } from "./data-models.js";
 import { isLight } from "./hazard.js";
 import { qualityOf } from "./quality.js";
-import { coinsPerSlot, spellRule, usesCareers, usesQuality, usesWounds } from "./rules.js";
+import { coinsPerSlot, currentRules, spellRule, startingKit, usesCareers, usesQuality, usesWounds } from "./rules.js";
 import { KNAVE_PAGE_TRAITS, traitShown } from "./settings.js";
 
 const L = (k) => game.i18n.localize(k);
@@ -171,10 +171,11 @@ export const printContext = async (actor) => {
 
   /* The head: level, title, XP and pronouns; then careers (2e) or alignment and background (1e). */
   const next = isChar ? nextLevelXp(s.level) : null;
-  const xpText = next !== null ? `${F("KNAVERY.XpShort", { xp: num(s.xp), next: num(next) })} ${L("KNAVERY.XP")}` : F("KNAVERY.XpTop", { xp: num(s.xp) });
+  const xpText = next !== null ? F("KNAVERY.PrintSheet.XpLine", { xp: num(s.xp), next: num(next) }) : F("KNAVERY.XpTop", { xp: num(s.xp) });
+  const levelText = F("KNAVERY.PrintSheet.LevelLine", { level: s.level });
   const levelLine = (isChar
-    ? [`${L("KNAVERY.Level")} ${s.level}`, L(`KNAVERY.LevelTitle.${s.level}`), xpText, s.pronouns]
-    : [L(`KNAVERY.Role.${s.role}`), `${L("KNAVERY.Level")} ${s.level}`, s.pronouns]).filter(Boolean).join(" · ");
+    ? [levelText, L(`KNAVERY.LevelTitle.${s.level}`), xpText, s.pronouns]
+    : [L(`KNAVERY.Role.${s.role}`), levelText, s.pronouns]).filter(Boolean).join(" · ");
   const careerItems = isChar ? actor.items.filter((i) => i.type === "career").sort(bySort) : [];
   const showCareers = isChar && (usesCareers() || careerItems.length > 0);
   const headTraits = isChar ? KNAVE_PAGE_TRAITS.filter(traitShown) : [];
@@ -211,9 +212,11 @@ export const printContext = async (actor) => {
       if (right[i]) traits.push(traitCell(right[i]));
     }
   }
-  // The CC BY 4.0 credit goes on the paper whenever a value from a Knave 1e table prints.
+  // The CC BY 4.0 credit goes on the paper whenever Knave 1e's text can be on it: a value from a 1e table, the 1e
+  // starting gear (its kit), the 1e spells (its spell list), or a world playing Knave 1e at all.
   const printed = [...headTraits, ...(traits.length ? [...left, ...right] : [])].filter((k) => !TRAITS_2E.includes(k));
-  const credit1e = printed.some((k) => String(s.traits?.[k] ?? "").trim());
+  const credit1e = printed.some((k) => String(s.traits?.[k] ?? "").trim())
+    || currentRules() === "1e" || startingKit() === "knave1e" || setting("spell-list", "auto") === "1e";
 
   /* Careers: names are in the head; here only their features, never the description (D12). */
   const careers = setting("print-career-features", true) === false ? [] : careerItems.map((c) => {
@@ -253,7 +256,7 @@ export const printContext = async (actor) => {
     slotCount: F("KNAVERY.PrintSheet.SlotCount", { used: actor.calcSlotsUsed(), max: slotsMax }),
     slots,
     more: more ? F("KNAVERY.PrintSheet.More", { n: more }) : "",
-    weightless: weightless.length ? F("KNAVERY.PrintSheet.Weightless", { names: weightless.join(", ") }) : "",
+    weightless: weightless.length ? F("KNAVERY.PrintSheet.Weightless", { names: game.i18n.getListFormatter().format(weightless) }) : "",
     traits,
     careers,
     spells,

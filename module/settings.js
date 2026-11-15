@@ -228,7 +228,11 @@ export const registerSettings = () => {
     label: "CoinsPerSlot", type: String, choices: choices("CoinsPerSlotChoice", ["100", "500"]),
     default: D["coins-per-slot"], onChange: () => { reprepareActors(); rerenderActorSheets(); },
   });
-  reg("show-hazard-dice", { label: "ShowHazardDice", type: Boolean, default: true });
+  // The Random page's top and the Toggles switch follow it on every client, not only the writer's.
+  reg("show-hazard-dice", {
+    label: "ShowHazardDice", type: Boolean, default: true,
+    onChange: () => foundry.applications.instances.get("knavery-gm-dashboard")?.render({ parts: ["tools", "dice"] }),
+  });
 
   /* Rulebook: the GM's own PDF (module/rulebook.js). Only a path is stored. */
   reg("rulebook-pdf", { label: "RulebookPdf", type: String, filePicker: "text", default: "", onChange: rulebookChanged });

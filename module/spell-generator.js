@@ -104,7 +104,8 @@ export class SpellGenerator extends HandlebarsApplicationMixin(ApplicationV2) {
   constructor({ actor, requestId = "", reason = "", ...options } = {}) {
     super({ id: `knavery-spell-gen-${actor?.id ?? foundry.utils.randomID()}`, ...options });
     this.actor = actor;
-    this.requestId = requestId;
+    /** The GM's requests this window answers: one spell completes them all (a re-send before Add joins the list). */
+    this.requestIds = requestId ? [requestId] : [];
     this.reason = reason;
     this.spell = null;
     this.rerolled = false;
@@ -119,7 +120,7 @@ export class SpellGenerator extends HandlebarsApplicationMixin(ApplicationV2) {
     const s = this.spell;
     return Object.assign(context, {
       reason: this.reason,
-      missing: s.missing?.length ? F("KNAVERY.SpellGen.Missing", { names: s.missing.join(", ") }) : "",
+      missing: s.missing?.length ? F("KNAVERY.SpellGen.Missing", { names: game.i18n.getListFormatter().format(s.missing) }) : "",
       formula: s.formula ?? "",
       words: (s.parts ?? []).map((p, i) => (p.slot ? { index: i, slot: p.slot, word: p.word, rerolled: p.rerolled } : null)).filter(Boolean),
       rerolled: this.rerolled,
@@ -160,17 +161,24 @@ export class SpellGenerator extends HandlebarsApplicationMixin(ApplicationV2) {
         + `<p class="kn-spell-gen-name"><strong>${esc(name)}</strong></p>`
         + `<p class="card-note">${esc(F("KNAVERY.SpellGen.CardBody", { name: this.actor.name }))}</p>`
         + (this.reason ? `<p class="roll-reason"><i class="fas fa-bullhorn"></i> ${esc(this.reason)}</p>` : "") + "</div>",
-      flags: { [FLAG_SCOPE]: { spellGen: { requestId: this.requestId, name } } },
+      flags: { [FLAG_SCOPE]: { spellGen: { requestId: this.requestIds[0] ?? "", requestIds: this.requestIds, name } } },
     });
     await this.close();
   }
 }
 
-/** Open the generator for a character (the player's answer to the GM's request, or the GM standing in). */
+/**
+ * Open the generator for a character (the player's answer to the GM's request, or the GM standing in). A window
+ * already open gathers the new request too, and shows the latest reason.
+ */
 export const openSpellGenerator = (actor, { requestId = "", reason = "" } = {}) => {
   if (!actor?.isOwner) return null;
   const id = `knavery-spell-gen-${actor.id}`;
   const open = foundry.applications.instances.get(id);
-  if (open) { open.requestId ||= requestId; open.reason ||= reason; return open.render({ force: true }); }
+  if (open) {
+    if (requestId && !open.requestIds.includes(requestId)) open.requestIds.push(requestId);
+    open.reason = reason || open.reason;
+    return open.render({ force: true });
+  }
   return new SpellGenerator({ actor, requestId, reason }).render({ force: true });
 };

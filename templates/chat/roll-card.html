@@ -52,7 +52,7 @@
   {{#if broke}}<p class="card-note broke"><i class="fas fa-link-slash"></i> {{localize "KNAVERY.Roll.WeaponBroken"}}</p>{{/if}}
   {{#if canRollDamage}}
   <button type="button" class="kn-roll-damage" data-kn-roll-damage data-weapon="{{weaponUuid}}" data-actor="{{actorUuid}}" data-formula="{{weaponDamage}}" data-label="{{weaponName}}"
-    data-power="{{powerFlag}}" data-crit="{{critFlag}}" data-targets='{{applyTargets}}'><i class="fas fa-dice-d6"></i> {{localize "KNAVERY.Roll.RollDamage"}}</button>
+    data-power="{{powerFlag}}" data-crit="{{critFlag}}" data-ideal="{{idealFlag}}" data-targets='{{applyTargets}}'><i class="fas fa-dice-d6"></i> {{localize "KNAVERY.Roll.RollDamage"}}</button>
   {{/if}}
   {{/if}}
 

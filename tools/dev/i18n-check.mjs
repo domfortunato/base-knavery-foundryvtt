@@ -81,10 +81,11 @@ for (const [doc, types] of Object.entries(manifest.documentTypes ?? {})) {
   for (const type of Object.keys(types)) if (!has(`TYPES.${doc}.${type}`)) missing.set(`TYPES.${doc}.${type}`, "system.json");
 }
 
-/* Settings: every registered label needs name + hint. */
+/* Settings: every registered label needs a name; its hint key is optional (settings.js shows no hint when it is absent). */
 const settings = fs.readFileSync(path.join(root, "module/settings.js"), "utf8");
 for (const m of settings.matchAll(/label: "(\w+)"/g)) {
-  for (const k of [`KNAVERY.Settings.${m[1]}`, `KNAVERY.Settings.${m[1]}Hint`]) if (!has(k)) missing.set(k, "settings.js");
+  const k = `KNAVERY.Settings.${m[1]}`;
+  if (!has(k)) missing.set(k, "settings.js");
 }
 
 /* Placeholders passed where a static key is formatted */

@@ -51,7 +51,7 @@
     <div class="form-fields">
       <select name="dmgPreset" id="kn-dmg-preset">
         <option value="">{{localize "KNAVERY.Dashboard.HazardPresetNone"}}</option>
-        {{#each hazardPresets}}<option value="{{this.id}}" data-formula="{{this.formula}}" data-direct="{{this.direct}}">{{this.label}}</option>{{/each}}
+        {{#each hazardPresets}}<option value="{{this.id}}" data-formula="{{this.formula}}" data-direct="{{this.direct}}" data-name="{{this.name}}">{{this.label}}</option>{{/each}}
       </select>
     </div>
   </div>

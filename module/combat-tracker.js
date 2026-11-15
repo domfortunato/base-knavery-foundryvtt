@@ -53,8 +53,8 @@ export class KnaveryCombatTracker extends CoreTracker {
   }
 
   /** Next side sits in the GM's footer beside Next Round while a fight by side is running. */
-  _onRender(context, options) {
-    super._onRender(context, options);
+  async _onRender(context, options) {
+    await super._onRender(context, options); // core's is async (it scrolls the active row into view)
     const footer = this.element.querySelector("nav.combat-controls");
     const combat = this.viewed;
     if (!footer || !game.user.isGM || !sidesOn() || !combat?.started || footer.querySelector(".knavery-next-side")) return;

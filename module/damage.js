@@ -147,6 +147,7 @@ export const bindRollCard = (message, html) => {
       label: weapon?.name ?? rollBtn.dataset.label ?? "",
       power: rollBtn.dataset.power === "1",
       crit: rollBtn.dataset.crit === "1",
+      ideal: rollBtn.dataset.ideal === "1",
       targets,
     });
   });

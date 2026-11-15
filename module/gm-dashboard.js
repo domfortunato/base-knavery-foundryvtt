@@ -16,7 +16,8 @@
  *   XP        award XP: the same amount to each chosen character, a different
  *             amount to each, a total split evenly, or treasure brought back
  *             (treasure.js: Knave 2e p12, companions a half share p59).
- *   Tools     the live switches for the players' tools, and the Marketplace Manager.
+ *   Market    the marketplace's aisles, their rows and prices; Create Item (marketplace.js, create-item.js).
+ *   Toggles   the live switches for the players' tools, the portrait galleries and the random-portrait source.
  *   Tables    roll any table, import rows, the rulebook.
  */
 import {
@@ -108,7 +109,7 @@ const hazardPresets = () => {
   return [
     { id: "falling", formula: "1d6", direct }, { id: "fire", formula: "1d6", direct }, { id: "onfire", formula: "2d6", direct },
     { id: "freezing", formula: "1", direct }, { id: "lightning", formula: "3d6", direct },
-  ].map((p) => ({ ...p, label: L(`KNAVERY.Dashboard.Hazards.${p.id}`) }));
+  ].map((p) => ({ ...p, label: L(`KNAVERY.Dashboard.Hazards.${p.id}`), name: L(`KNAVERY.Dashboard.HazardNames.${p.id}`) }));
 };
 
 export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
@@ -297,46 +298,64 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     }
   }
 
+  /**
+   * A page's listeners are bound once per drawing of its part: `_onRender` runs on every render, and a
+   * render of another part (the Party tab on every HP change, Requests on every result) keeps this section
+   * and its listeners. Returns the section when it is freshly drawn, else null.
+   */
+  #freshPage(tab) {
+    const el = this.element.querySelector(`section[data-tab="${tab}"]`);
+    if (!el || el.dataset.knBound) return null;
+    el.dataset.knBound = "1";
+    return el;
+  }
+
   _onRender(context, options) {
     super._onRender(context, options);
     placeRailSoon(this);
     bindMarketPage(this);
-    this.element.querySelector('select[name="randomPortraitSource"]')?.addEventListener("change", (e) => {
-      game.settings.set(SETTINGS_NS, "random-portrait-source", e.target.value);
-    });
-    // Combat: the leaders' selects write the combat's flag; a hazard preset fills the damage box.
-    for (const name of ["leaderPc", "leaderEnemy"]) {
-      this.element.querySelector(`select[name="${name}"]`)?.addEventListener("change", async () => {
-        const combat = game.combat;
-        if (!combat) return;
-        const pc = this.element.querySelector('select[name="leaderPc"]')?.value || null;
-        const enemy = this.element.querySelector('select[name="leaderEnemy"]')?.value || null;
-        await combat.setFlag(FLAG_SCOPE, "leaders", { pc, enemy });
+    if (this.#freshPage("tools")) {
+      this.element.querySelector('select[name="randomPortraitSource"]')?.addEventListener("change", (e) => {
+        setWorldSetting("random-portrait-source", e.target.value).then((done) => { if (!done) this.render({ parts: ["tools"] }); });
       });
     }
-    this.element.querySelector('select[name="dmgPreset"]')?.addEventListener("change", (e) => {
-      const o = e.target.selectedOptions[0];
-      if (!o?.value) return;
-      const formula = this.element.querySelector('[name="dmgFormula"]');
-      const direct = this.element.querySelector('[name="dmgDirect"]');
-      const source = this.element.querySelector('[name="dmgSource"]');
-      if (formula) formula.value = o.dataset.formula;
-      if (direct) direct.checked = o.dataset.direct === "true";
-      if (source && !source.value) source.value = o.textContent.replace(/\s*\(.*$/, "").trim();
-    });
+    // Combat: the leaders' selects write the combat's flag; a hazard preset fills the damage box.
+    if (this.#freshPage("damage")) {
+      for (const name of ["leaderPc", "leaderEnemy"]) {
+        this.element.querySelector(`select[name="${name}"]`)?.addEventListener("change", async () => {
+          const combat = game.combat;
+          if (!combat) return;
+          const pc = this.element.querySelector('select[name="leaderPc"]')?.value || null;
+          const enemy = this.element.querySelector('select[name="leaderEnemy"]')?.value || null;
+          await combat.setFlag(FLAG_SCOPE, "leaders", { pc, enemy });
+        });
+      }
+      this.element.querySelector('select[name="dmgPreset"]')?.addEventListener("change", (e) => {
+        const o = e.target.selectedOptions[0];
+        if (!o?.value) return;
+        const formula = this.element.querySelector('[name="dmgFormula"]');
+        const direct = this.element.querySelector('[name="dmgDirect"]');
+        const source = this.element.querySelector('[name="dmgSource"]');
+        if (formula) formula.value = o.dataset.formula;
+        if (direct) direct.checked = o.dataset.direct === "true";
+        if (source && !source.value) source.value = o.dataset.name ?? "";
+      });
+    }
     if (this.window?.title) this.window.title.textContent = this.title;
     const diff = this.element.querySelector('[name="difficulty"]');
     const out = this.element.querySelector(".request-target");
     const showTarget = () => { if (diff && out) out.textContent = CHECK_BASE + (Number(diff.value) || 0); };
     showTarget();
-    diff?.addEventListener("input", showTarget);
     // A spell request has no difficulty.
     const what = this.element.querySelector('[name="check"]');
     const showDifficulty = () => {
       for (const el of this.element.querySelectorAll(".dash-request-difficulty, .dash-request-edge")) el.toggleAttribute("hidden", what?.value === "spell:generate");
     };
     showDifficulty();
-    what?.addEventListener("change", showDifficulty);
+    if (this.#freshPage("requests")) {
+      diff?.addEventListener("input", showTarget);
+      what?.addEventListener("change", showDifficulty);
+    }
     // XP: one amount for "same to each" and "split", a box per character for "different to each".
     const mode = this.element.querySelector('[name="xpMode"]');
     const showMode = () => {
@@ -363,10 +382,8 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     };
     const showAll = () => { showMode(); showTreasure(); };
     showAll();
-    // Once per drawing of the XP part: a render of another part keeps this section and its listeners.
-    const xpTab = this.element.querySelector('section[data-tab="xp"]');
-    if (xpTab && !xpTab.dataset.knBound) {
-      xpTab.dataset.knBound = "1";
+    const xpTab = this.#freshPage("xp");
+    if (xpTab) {
       mode?.addEventListener("change", showAll);
       xpTab.addEventListener("change", showTreasure);
       xpTab.addEventListener("input", showTreasure);
@@ -525,7 +542,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     await ChatMessage.create({
       speaker: { alias: L("KNAVERY.GameMaster") },
       content: `<div class="knavery-roll-card kind-request"><header class="card-title"><h3><i class="fas fa-wand-sparkles"></i> ${esc(label)}</h3></header>`
-        + `<p>${esc(entry.entries.map((e) => e.name).join(", "))}</p>`
+        + `<p>${esc(game.i18n.getListFormatter().format(entry.entries.map((e) => e.name)))}</p>`
         + (reason ? `<p class="roll-reason"><i class="fas fa-bullhorn"></i> ${esc(reason)}</p>` : "") + "</div>",
     });
     this.render({ parts: ["requests"] });
@@ -550,11 +567,17 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
   /** Called from the createChatMessage hook: a requested roll came back. */
   static noteResult(message) {
     const spell = message.getFlag?.(FLAG_SCOPE, "spellGen");
-    if (spell?.requestId) {
-      const e = requestLog.find((r) => r.id === spell.requestId)?.entries.find((x) => x.actorId === message.speaker?.actor);
-      if (!e) return;
-      Object.assign(e, { state: "done", total: String(spell.name ?? "") });
-      foundry.applications.instances.get("knavery-gm-dashboard")?.render({ parts: ["requests"] });
+    if (spell) {
+      // One spell answers every request the player's window gathered (a re-send before they added the book).
+      const ids = spell.requestIds ?? (spell.requestId ? [spell.requestId] : []);
+      let found = false;
+      for (const id of ids) {
+        const e = requestLog.find((r) => r.id === id)?.entries.find((x) => x.actorId === message.speaker?.actor);
+        if (!e) continue;
+        Object.assign(e, { state: "done", total: String(spell.name ?? "") });
+        found = true;
+      }
+      if (found) foundry.applications.instances.get("knavery-gm-dashboard")?.render({ parts: ["requests"] });
       return;
     }
     const check = message.getFlag?.(FLAG_SCOPE, "check");
@@ -757,7 +780,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       for (const k of ["_id", "folder", "ownership", "sort", "_stats"]) delete data[k];
       data.system = { ...data.system, quantity: n };
       await actor.addItems([data], { knNoLog: true });
-      line = F("KNAVERY.Time.ForageFound", { name: actor.name, n });
+      line = F(n === 1 ? "KNAVERY.Time.ForageFoundOne" : "KNAVERY.Time.ForageFound", { name: actor.name, n });
     } else line = F("KNAVERY.Time.ForageNothing", { name: actor.name });
     await ChatMessage.create({ speaker: { alias: L("KNAVERY.GameMaster") }, content: `<div class="knavery-roll-card kind-forage"><p>${esc(line)}</p></div>` });
     // The watch is spent: the clock moves and the travel hazard die rolls; no ground covered.
@@ -778,7 +801,8 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
   static async #onRollEvent(_e, target) {
     const table = await findTable(target.dataset.table);
     if (!table) return ui.notifications.warn("KNAVERY.Dashboard.EventMissing", { format: { name: target.dataset.table } });
-    await table.draw({ rollMode: CONST.DICE_ROLL_MODES.PRIVATE });
+    // messageMode "gm", as #onReaction: `rollMode` and CONST.DICE_ROLL_MODES are deprecated {since: 14, until: 16}.
+    await table.draw({ messageMode: "gm" });
   }
 
   /**
@@ -850,13 +874,14 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     const id = target.dataset.id;
     const now = { ...game.settings.get(SETTINGS_NS, "portrait-galleries") };
     now[id] = !galleryOn(id);
-    await game.settings.set(SETTINGS_NS, "portrait-galleries", now);
-    if (!now[id] && randomPortraitSource() === id) await game.settings.set(SETTINGS_NS, "random-portrait-source", "any");
+    if (!(await setWorldSetting("portrait-galleries", now))) return;
+    if (!now[id] && randomPortraitSource() === id) await setWorldSetting("random-portrait-source", "any");
     this.render({ parts: ["tools"] });
   }
 
-  /** Toggles: walk the GM's portrait folder again. */
+  /** Toggles: walk the GM's portrait folder again (it writes the list as a world setting). */
   static async #onRescanPortraits(_e, target) {
+    if (!canModifySettings()) return;
     target.classList.add("disabled");
     await refreshCustomPortraits();
     this.render({ parts: ["tools"] });
@@ -940,15 +965,35 @@ export const registerPartyRefresh = () => {
   Hooks.on("deleteItem", onItem);
 };
 
+/** Whether this GM may write a world setting: an Assistant GM may have had "Modify Configuration Settings" taken away. */
+const canModifySettings = () => {
+  if (game.user.can("SETTINGS_MODIFY")) return true;
+  ui.notifications.warn("KNAVERY.Notify.NoSettingsPermission", { localize: true });
+  return false;
+};
+
+/** Write a world setting from the dashboard, or warn and write nothing. Resolves to whether it was written. */
+const setWorldSetting = async (key, value) => {
+  if (!canModifySettings()) return false;
+  await game.settings.set(SETTINGS_NS, key, value);
+  return true;
+};
+
 /** Flip a player-tool switch and announce it (shared with the macros). */
 export const setToggle = async (key, value) => {
-  // An Assistant GM may have had "Modify Configuration Settings" taken away.
-  if (!game.user.can("SETTINGS_MODIFY")) {
-    return ui.notifications.warn("KNAVERY.Notify.NoSettingsPermission", { localize: true });
-  }
-  await game.settings.set(SETTINGS_NS, key, value);
+  if (!(await setWorldSetting(key, value))) return;
   const t = TOGGLES.find((x) => x.key === key);
   ui.notifications.info(value ? "KNAVERY.Macro.TurnedOn" : "KNAVERY.Macro.TurnedOff", { format: { what: L(t?.label ?? key) } });
+};
+
+/** Redraw the Combat page when the fight changes: a start or end, a turn or round, a combatant joining, falling or leaving. */
+export const registerCombatRefresh = () => {
+  const redraw = foundry.utils.debounce(() => {
+    const app = foundry.applications.instances.get("knavery-gm-dashboard");
+    if (app?.rendered) app.render({ parts: ["damage"] });
+  }, 150);
+  const onChange = () => { if (game.user.isGM) redraw(); };
+  for (const hook of ["createCombat", "updateCombat", "deleteCombat", "createCombatant", "updateCombatant", "deleteCombatant"]) Hooks.on(hook, onChange);
 };
 
 /** Open the dashboard, on a page when one is named (a tab id: "market", "tools"...). */

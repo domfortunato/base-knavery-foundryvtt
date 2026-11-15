@@ -243,7 +243,7 @@
       "EnemiesFirst": "the enemies act first",
       "GmRolls": "Initiative runs by side: the Game Master rolls for both sides.",
       "LeadersFlavor": "Round {round}: {pc} (CHA {pcCha}) against {enemy}'s {target}: {side}",
-      "SurpriseFlavor": "{surprised} are surprised: {acting} act first this round and have +5 on their combat checks (add it to the roll).",
+      "SurpriseFlavor": "{surprised} are surprised. {acting} go first, with +5 to their combat checks for the round (add it yourself).",
       "SidePcs": "Player characters",
       "SideFoes": "Enemies",
       "Acting": "acting",
@@ -618,7 +618,7 @@
 
     "Carousing": {
       "Title": "Carousing",
-      "Help": "A whole night: d10 × 50c in a village, 100c in a town, 200c in a city, and XP equal to the coins spent. In the morning a CON check, or a mishap.",
+      "Help": "The night costs d10 × 50c (village), × 100c (town) or × 200c (city) and earns as many XP as it cost. Next morning: a CON check, with a mishap on a failure.",
       "Who": "Who",
       "Where": "Where",
       "village": "Village (d10 × 50c)",
@@ -727,6 +727,7 @@
       "ForageGo": "Roll WIS",
       "ForageReason": "Foraging",
       "ForageFound": "{name} forages: {n} rations found.",
+      "ForageFoundOne": "{name} forages: one ration found.",
       "ForageNothing": "{name} forages and finds nothing.",
       "Reset": "Start again",
       "DungeonHint": "Ending a turn moves the world clock on 10 minutes and rolls the dungeon hazard die. Fatigue, burn and depletion cards carry a button: nothing changes until you click it.",
@@ -788,8 +789,7 @@
       "TakeHint": "Take it without paying (the Game Master, or Char Gen Mode).",
       "Bought": "Bought {name} for {cost} coins.",
       "Service": "service",
-      "ManagerTitle": "Marketplace Manager",
-      "ManagerHint": "Aisles are roll tables named \"Market: …\". Shipped aisles are read-only: Customize makes a world copy that replaces them.",
+      "ManagerHint": "Aisles are roll tables named \"Market: …\" (Knave 2e prices) or \"Market 1e: …\" (Knave 1e prices); the page shows the world's price list. Shipped aisles are read-only: Customize makes a world copy that replaces them.",
       "Aisles": "Aisles",
       "NoAisles": "No aisles yet.",
       "NewAisle": "New aisle",
@@ -839,10 +839,10 @@
       "WhereCharacters": "A character’s inventory",
       "WhereNpcs": "An NPC’s inventory",
       "WhereAisles": "A marketplace aisle (the item also goes in the Items directory)",
-      "NoAisles": "No world aisle yet: Customize or add one in the Marketplace Manager",
+      "NoAisles": "No world aisle yet: Customize a shipped aisle, or add one, on the dashboard’s Marketplace page",
       "Create": "Create",
       "RollTip": "Roll on {tables}",
-      "RollMissing": "Needs {tables}: build it from your book on the dashboard’s Tables tab, or import it.",
+      "RollMissing": "Needs {tables}: build from your book on the dashboard’s Tables tab, or import.",
       "RelicName": "{symbol} of {domain}",
       "Line": {
         "trait": "Trait", "material": "Material", "texture": "Texture", "taste": "Taste", "color": "Color", "ingredient": "Ingredient"
@@ -870,6 +870,7 @@
       "RandomFrom": "Random portraits from",
       "AnyGallery": "Any gallery that is on",
       "YoursFolder": "Yours is the folder {folder} in your user data ({count} images).",
+      "YoursFolderOne": "Yours is the folder {folder} in your user data (one image).",
       "Other": "Other",
       "XpHint": "Award XP to the players' characters: the same to each, a different amount to each, a total split evenly, or (when the Rules give XP for treasure) the treasure they brought back.",
       "XpMode": "How",
@@ -895,7 +896,6 @@
       "XpNothing": "Nothing to award: choose characters and an amount.",
       "XpCardTitle": "XP awarded",
       "XpCardLine": "{name}: +{xp} XP",
-      "SelectAll": "Tick all or none",
       "Who": "Who",
       "AllPcs": "All",
       "Edge": "Edge",
@@ -926,7 +926,7 @@
       "RollInitiativeTip": "Knave 1e: one d6 for the round. Knave 2e: the leaders' CHA check. Individual: everyone rolls.",
       "TheySurprised": "They are surprised",
       "WeSurprised": "We are surprised",
-      "SurpriseTip2": "The surprising side acts first in round 1 and gets +5 on its combat checks this round.",
+      "SurpriseTip2": "Round 1 goes to the side that surprised, with +5 to its combat checks for the round.",
       "MarkDefeated": "Mark selected defeated",
       "Rally": "Rally the selected NPC",
       "LeaderPc": "Party's leader",
@@ -942,6 +942,13 @@
         "freezing": "Freezing (1 a turn, direct; a CON check avoids it)",
         "lightning": "Lightning (3d6, direct)"
       },
+      "HazardNames": {
+        "falling": "Falling",
+        "fire": "Fire",
+        "onfire": "On fire",
+        "freezing": "Freezing",
+        "lightning": "Lightning"
+      },
       "Formula": "Damage",
       "Source": "Source",
       "SourceHint": "e.g. Spiked pit",
@@ -952,7 +959,6 @@
       "RollAndApply": "Roll and apply",
       "DamageFlavor": "Damage from: {source}",
       "DirectDamageFlavor": "Direct damage from: {source}",
-      "HazardDice": "Hazard dice",
       "Encounters": "Encounters",
       "OnTheFly": "On the fly",
       "HazardDice": "Hazard dice",
@@ -960,7 +966,7 @@
       "Downtime": "Downtime",
       "Carouse": "Carouse",
       "Surprise": "Surprise",
-      "SurpriseTip": "An encounter within 80': sets up the check on the Requests page. The closest PC rolls WIS against the closest creature's WIS (p19); winning by 5 or more surprises the other side. Tick that PC, type the creature's WIS as the difficulty, and send.",
+      "SurpriseTip": "For a meeting within 80' (Knave 2e p19). Sets up the check on the Requests page: the nearest PC's WIS, with the nearest creature's WIS as the difficulty; a margin of 5 or more means surprise. Tick that PC, type the creature's WIS, and send.",
       "SurpriseReason": "Surprise! The closest PC: WIS against the closest creature's WIS. Win by 5 or more to surprise them; lose by 5 or more and you are surprised.",
       "QuickNpc": "NPC",
       "QuickNpcTip": "A name, a personality, a profession and a detail, from the tables your world has (pp54-57). Create NPC makes a full one.",
@@ -1045,8 +1051,7 @@
       "PointsLess": "One less in {name}",
       "PointsMore": "One more in {name}",
       "NoCareerTable": "The Careers table is empty; pick careers by hand.",
-      "NoSpellTable": "The Spells table is empty; no spellbooks rolled.",
-      "NoNameTable": "The Names table is empty; the knave is nameless for now."
+      "NoSpellTable": "The Spells table is empty; no spellbooks rolled."
     },
 
     "ChangeLog": {
@@ -1156,20 +1161,17 @@
         "printing": "Printing"
       },
       "CreationAbilities": "Abilities at creation",
-      "CreationAbilitiesHint": "",
       "CreationAbilitiesChoice": {
         "lowest": "Knave 1e: lowest of 3d6 each, swap two",
         "points": "Knave 2e: 3 points, rolled or placed"
       },
       "StartingKit": "Starting kit",
-      "StartingKitHint": "",
       "StartingKitChoice": {
         "knave1e": "Knave 1e: rolled gear and a weapon of choice",
         "careers": "Knave 2e: two careers and coins",
         "careers-1e-gear": "Knave 2e careers + Knave 1e gear"
       },
       "DeathRule": "Death",
-      "DeathRuleHint": "",
       "DeathRuleChoice": {
         "knave1e": "Knave 1e: unconscious at 0, dead at −1",
         "wounds": "Knave 2e: wounds fill slots"
@@ -1181,7 +1183,6 @@
         "knave2e": "Knave 2e: all HP after sleep and a meal"
       },
       "SpellRule": "Spells per day",
-      "SpellRuleHint": "",
       "SpellRuleChoice": {
         "book-per-day": "Knave 1e: each book once a day",
         "int-per-day": "Knave 2e: INT casts, each book once"
@@ -1208,7 +1209,6 @@
       "GroupRulebookButton": "Configure Rulebook",
       "GroupRulebookHint": "Your own Knave 2e PDF, read inside Foundry.",
       "AdvantageMode": "Advantage and disadvantage",
-      "AdvantageModeHint": "",
       "AdvantageRaw": "Knave 2e: +5 / −5",
       "Advantage2d20": "2d20: keep higher / lower",
       "RollDamageDefault": "Roll damage with every attack",
@@ -1251,7 +1251,6 @@
       "Knave1eRandomRaises": "Knave 1e random ability raises",
       "Knave1eRandomRaisesHint": "Level Up's Random rolls a d20 per ability and raises it on a roll under its defense, until three have risen.",
       "InitiativeRule": "Initiative",
-      "InitiativeRuleHint": "",
       "InitiativeChoice": {
         "1e-d6": "Knave 1e: one d6 a round, by side",
         "2e-leaders": "Knave 2e: the leaders' CHA check, by side",
@@ -1267,9 +1266,7 @@
       "SpellListAuto": "Your Spells table, else Knave 1e",
       "SpellList1e": "Knave 1e's 100 spells, always",
       "MinCreationLevel": "Lowest starting level",
-      "MinCreationLevelHint": "",
       "MaxCreationLevel": "Highest starting level",
-      "MaxCreationLevelHint": "",
       "CustomPortraitFolder": "Your portrait folder",
       "CustomPortraitFolderHint": "Its images come first in the portrait picker and in random portraits.",
       "AllowPlayerMarketplace": "Players may use the marketplace",
@@ -1283,7 +1280,6 @@
       "HardModeWounds": "Hard-mode wounds",
       "HardModeWoundsHint": "An item in a wounded slot breaks.",
       "ShowHazardDice": "Hazard dice on the Random page",
-      "ShowHazardDiceHint": "",
       "PrintPaper": "Paper",
       "PrintPaperHint": "The printed sheet fits A4 and US Letter alike; Auto leaves the paper to the print dialog.",
       "PrintPaperAuto": "Auto: the print dialog decides",
@@ -1335,6 +1331,8 @@
       "Def": "def",
       "Spells": "Spells",
       "SlotCount": "{used} / {max} slots",
+      "LevelLine": "Level {level}",
+      "XpLine": "{xp} / {next} XP",
       "PerSlot": "{n} a slot",
       "OfInt": "of INT {n}",
       "SpellsPerDay": "{n} a day (INT)",

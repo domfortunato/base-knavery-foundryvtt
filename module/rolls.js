@@ -451,6 +451,7 @@ const attackWith = async (actor, weapon, choice, { reason = "" } = {}) => {
     actorUuid: actor.uuid,
     powerFlag: power ? 1 : 0,
     critFlag: crit ? 1 : 0,
+    idealFlag: ideal ? 1 : 0,
   });
   await postRolls(actor, rolls, content, {
     attack: { weapon: weapon.name, total: roll.total, natural, crit, damage: damage?.total ?? null },
@@ -459,9 +460,10 @@ const attackWith = async (actor, weapon, choice, { reason = "" } = {}) => {
 };
 
 /** Roll a weapon's (or any) damage formula alone and post an apply card. */
-export const rollDamage = async (actor, { formula, label = "", power = false, crit = false, targets = null, direct = false } = {}) => {
+export const rollDamage = async (actor, { formula, label = "", power = false, crit = false, ideal = false, targets = null, direct = false } = {}) => {
   const base = power ? doubleDice(formula) : normalizeDice(formula);
-  const f = crit ? addDie(base) : base;
+  // Knave 1e: a natural 20 and the ideal weapon each add a die, as when damage rolls with the attack.
+  const f = crit && ideal ? addDie(addDie(base)) : (crit || ideal ? addDie(base) : base);
   if (!isRollable(f)) {
     ui.notifications.warn("KNAVERY.Notify.NotADamageFormula", { format: { formula: String(formula ?? "") } });
     return null;
@@ -571,8 +573,9 @@ export const rollMorale = async (actor, { rallied = false } = {}) => {
     rollHtml: await roll.render(),
     success: holds,
     resultLabel: L(holds ? "KNAVERY.Roll.MoraleHolds" : "KNAVERY.Roll.MoraleBreaks"),
-    // A failed test may be rerolled once if the leader passes CHA (p26); not a reroll's reroll.
-    moraleRally: !holds && !rallied ? actor.uuid : null,
+    // A failed test may be rerolled once if the leader passes CHA (2e p26); not a reroll's reroll, and never
+    // under Knave 1e's attacks (p5 has no rally; the dashboard hides Rally the same way).
+    moraleRally: !holds && !rallied && !usesQuality() ? actor.uuid : null,
   });
   return postRolls(actor, [roll], content, { morale: { total: roll.total, holds } });
 };

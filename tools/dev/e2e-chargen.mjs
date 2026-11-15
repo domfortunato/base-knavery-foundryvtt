@@ -2962,6 +2962,163 @@ await withSettings(gm, async () => {
     await closeDialogs();
   });
 
+  /* ------------------------------------------------------------------ */
+  await section("37. Review #3 fixes (0.3.0): the leaders' check reads a monster's level, a player-advanced round clears the ticks, a hand-applied Unconscious survives damage, the ideal die on the card's Roll damage, one row per drop after other pages redrew, the Combat page follows the fight, a second spell request joins the window, no Rally card under 1e, a 2e world on Individual reads as 2e, the hazard preset's Source.", async () => {
+    const first = await gm.evaluate(async ([sys, pcId]) => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const ns = "base-knavery";
+      const out = { before: { rule: game.settings.get(ns, "initiative-rule"), attack: game.settings.get(ns, "attack-rule"), death: game.settings.get(ns, "death-rule"), hazard: game.settings.get(ns, "show-hazard-dice") } };
+      const pc = game.actors.get(pcId);
+      await pc.update({ "system.hp.value": 4, "system.hp.max": 4, "system.wounds": 0 });
+      await game.settings.set(ns, "initiative-rule", "2e-leaders");
+      await game.settings.set(ns, "attack-rule", "knave2e");
+      await game.settings.set(ns, "death-rule", "knave2e");
+      const foe = await Actor.create({ name: "Probe Lvl Three", type: "npc", system: { role: "monster", level: 3, hp: { value: 6, max: 6 } } });
+      const combat = await Combat.create({});
+      await combat.createEmbeddedDocuments("Combatant", [{ actorId: pc.id }, { actorId: foe.id }]);
+      out.t0 = Date.now() - 1000;
+      await combat.startCombat();
+      await wait(400);
+      // (a) The monster leader defends at 11 + its level: its schema holds a CHA of 0, which the old code read.
+      out.flavor = game.messages.filter((m) => m.getFlag(ns, "groupInitiative") !== undefined && m.timestamp >= out.t0).at(-1)?.flavor ?? "";
+      // (f) The Combat page follows the fight: Next side from anywhere redraws its state line.
+      const { openGmDashboard } = await import(`${sys}/gm-dashboard.js`);
+      await openGmDashboard("damage");
+      await wait(700);
+      const app = () => document.getElementById("knavery-gm-dashboard");
+      const state = () => app()?.querySelector('section[data-tab="damage"] .dash-combat-state')?.textContent ?? "";
+      const s1 = state();
+      await combat.nextSide();
+      await wait(800);
+      out.page = { before: s1, after: state() };
+      // (j) The hazard preset's Source is the hazard's name from its own key, not parsed out of the label.
+      const preset = app().querySelector('select[name="dmgPreset"]');
+      const source = app().querySelector('[name="dmgSource"]');
+      source.value = "";
+      preset.value = "onfire";
+      preset.dispatchEvent(new Event("change", { bubbles: true }));
+      out.presetSource = source.value;
+      foundry.applications.instances.get("knavery-gm-dashboard")?.close();
+      // (b) A tick for Alice's row; Alice advances the round next.
+      await combat.combatants.find((c) => c.actor === pc).setFlag(ns, "acted", true);
+      out.round = combat.round;
+      return out;
+    }, [SYS, ids.a]);
+    // Alice ends the round: a player may write `round`; the active GM's client clears the ticks and rolls.
+    const advanced = await alice.evaluate(async () => {
+      const c = game.combat;
+      if (!c) return { round: null };
+      await c.update({ round: c.round + 1 });
+      return { round: c.round };
+    });
+    const r = await gm.evaluate(async ([sys, pcId, t0, before]) => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const ns = "base-knavery";
+      const out = {};
+      const pc = game.actors.get(pcId);
+      const combat = game.combat;
+      const foe = game.actors.getName("Probe Lvl Three");
+      await wait(1200);
+      const pcc = combat.combatants.find((c) => c.actor === pc);
+      out.playerRound = { round: combat.round, tick: pcc.getFlag(ns, "acted"), rolled: combat.getFlag(ns, "groupInitiative")?.round };
+      // (c) An Unconscious the GM applied by hand survives damage and healing (2e: the system never sets it).
+      await pc.toggleStatusEffect("unconscious", { active: true });
+      await pc.applyDamage(1, { source: "probe" });
+      await wait(700);
+      out.manualKept = pc.statuses.has("unconscious") && !pc.getFlag(ns, "autoUnconscious");
+      await pc.toggleStatusEffect("unconscious", { active: false });
+      // Under Knave 1e's death rule the system's own Unconscious comes and goes with HP.
+      await game.settings.set(ns, "death-rule", "knave1e");
+      await pc.update({ "system.hp.value": 1 });
+      await pc.applyDamage(1, { source: "probe" });
+      await wait(700);
+      out.auto = { down: pc.statuses.has("unconscious"), flag: pc.getFlag(ns, "autoUnconscious") === true };
+      await pc.update({ "system.hp.value": 3 });
+      await wait(700);
+      out.auto.up = !pc.statuses.has("unconscious") && pc.getFlag(ns, "autoUnconscious") === undefined;
+      await game.settings.set(ns, "death-rule", "knave2e");
+      // (d) The card's Roll damage honours the Ideal weapon tick (and the natural 20 with it).
+      const { rollDamage, rollMorale } = await import(`${sys}/rolls.js`);
+      out.ideal = (await rollDamage(pc, { formula: "1d6", ideal: true, targets: [] }))?.formula;
+      out.idealCrit = (await rollDamage(pc, { formula: "1d6", ideal: true, crit: true, targets: [] }))?.formula;
+      // (i) No Rally button on a failed morale card under Knave 1e attacks; one under 2e.
+      await foe.update({ "system.morale": 1 });
+      await game.settings.set(ns, "attack-rule", "knave1e");
+      await rollMorale(foe);
+      await wait(300);
+      const card1e = game.messages.contents.at(-1)?.content ?? "";
+      await game.settings.set(ns, "attack-rule", "knave2e");
+      await rollMorale(foe);
+      await wait(300);
+      const card2e = game.messages.contents.at(-1)?.content ?? "";
+      out.rally = { breaks1e: /MoraleBreaks|breaks/i.test(card1e) || card1e.includes("failure"), rally1e: card1e.includes("data-kn-rally"), rally2e: card2e.includes("data-kn-rally") };
+      // (e) One row per drop on a world aisle after other pages redrew (each redraw used to add a drop handler).
+      const { marketPrefix } = await import(`${sys}/marketplace.js`);
+      const { openGmDashboard } = await import(`${sys}/gm-dashboard.js`);
+      const aisle = await RollTable.create({ name: `${marketPrefix()}Probe Drop Aisle`, formula: "1d1", replacement: true });
+      const lamp = await Item.create({ name: "Probe Drop Lamp", type: "item" });
+      await openGmDashboard("market");
+      await wait(700);
+      const inst = foundry.applications.instances.get("knavery-gm-dashboard");
+      const app = () => document.getElementById("knavery-gm-dashboard");
+      app().querySelector(`[data-action="selectAisle"][data-uuid="${aisle.uuid}"]`)?.click();
+      await wait(600);
+      for (let i = 0; i < 3; i++) { await inst.render({ parts: ["party", "xp"] }); await wait(250); }
+      const drop = app().querySelector('section[data-tab="market"] .mm-drop');
+      const dt = new DataTransfer();
+      dt.setData("text/plain", JSON.stringify({ type: "Item", uuid: lamp.uuid }));
+      drop?.dispatchEvent(new DragEvent("drop", { dataTransfer: dt, bubbles: true, cancelable: true }));
+      await wait(1500);
+      out.drop = { zone: !!drop, rows: aisle.results.size };
+      // (g) The hazard-dice switch, flipped as a setting, redraws the Random page on its own.
+      inst.changeTab("dice", "primary");
+      await wait(300);
+      await game.settings.set(ns, "show-hazard-dice", false);
+      await wait(600);
+      out.hazard = { hidden: !app().querySelector('section[data-tab="dice"] .dash-hazard') };
+      await game.settings.set(ns, "show-hazard-dice", true);
+      await wait(600);
+      out.hazard.back = !!app().querySelector('section[data-tab="dice"] .dash-hazard');
+      inst.close();
+      // (h) A second Generate-a-spell request joins the open window; one spell will answer both.
+      const { openSpellGenerator } = await import(`${sys}/spell-generator.js`);
+      await openSpellGenerator(pc, { requestId: "probe-r1", reason: "first" });
+      await openSpellGenerator(pc, { requestId: "probe-r2", reason: "second" });
+      const win = foundry.applications.instances.get(`knavery-spell-gen-${pc.id}`);
+      out.spell = { ids: [...(win?.requestIds ?? [])], reason: win?.reason };
+      await win?.close();
+      // (k) A Knave 2e world on Foundry's own initiative still reads as 2e; a 1e one does not.
+      const { rulesFor } = await import(`${sys}/rules.js`);
+      const { RULES_PRESETS } = await import(`${sys}/config.js`);
+      out.individual = { e2: rulesFor({ ...RULES_PRESETS["2e"], "initiative-rule": "individual" }), e1: rulesFor({ ...RULES_PRESETS["1e"], "initiative-rule": "individual" }) };
+      // Cleanup.
+      await combat.delete();
+      await foe.delete();
+      await lamp.delete();
+      await aisle.delete();
+      for (const m of game.messages.filter((x) => x.timestamp >= t0)) await m.delete();
+      await game.settings.set(ns, "initiative-rule", before.rule);
+      await game.settings.set(ns, "attack-rule", before.attack);
+      await game.settings.set(ns, "death-rule", before.death);
+      await game.settings.set(ns, "show-hazard-dice", before.hazard);
+      return out;
+    }, [SYS, ids.a, first.t0, first.before]);
+    ok(/Probe Lvl Three's 14\b/.test(first.flavor), "the 2e leaders' check defends at 11 + the monster leader's level", first.flavor);
+    ok(/Round/.test(first.page.before) && first.page.after !== first.page.before, "the Combat page's state line follows Next side without a click on the page", JSON.stringify(first.page));
+    ok(first.presetSource === "On fire", "a hazard preset fills Source with the hazard's name", first.presetSource);
+    ok(advanced.round === first.round + 1 && r.playerRound.round === first.round + 1 && r.playerRound.tick === undefined && r.playerRound.rolled === first.round + 1,
+      "a round a player ends clears the acted ticks and rolls the new round on the GM's client", JSON.stringify({ advanced, ...r.playerRound }));
+    ok(r.manualKept, "an Unconscious the GM applied by hand survives damage under Knave 2e", String(r.manualKept));
+    ok(r.auto.down && r.auto.flag && r.auto.up, "under Knave 1e death the system's own Unconscious comes at 0 HP and goes on healing", JSON.stringify(r.auto));
+    ok(r.ideal === "2d6" && r.idealCrit === "3d6", "the card's Roll damage adds the ideal die, and the natural-20 die with it", JSON.stringify({ ideal: r.ideal, crit: r.idealCrit }));
+    ok(!r.rally.rally1e && r.rally.rally2e, "a failed morale card offers Rally under Knave 2e attacks only", JSON.stringify(r.rally));
+    ok(r.drop.zone && r.drop.rows === 1, "one item dropped on a world aisle after three other-page redraws makes one row", JSON.stringify(r.drop));
+    ok(r.hazard.hidden && r.hazard.back, "the hazard-dice setting redraws the Random page when flipped in Configure General", JSON.stringify(r.hazard));
+    ok(r.spell.ids.join() === "probe-r1,probe-r2" && r.spell.reason === "second", "a second spell request joins the open window and shows the latest reason", JSON.stringify(r.spell));
+    ok(r.individual.e2 === "2e" && r.individual.e1 === "custom", "a Knave 2e world on Individual initiative still reads as 2e", JSON.stringify(r.individual));
+    await closeDialogs();
+  });
+
   // Cleanup.
   await gm.evaluate(async (tables) => {
     for (const app of [...foundry.applications.instances.values()]) if (app.id !== "sidebar") app.close?.();

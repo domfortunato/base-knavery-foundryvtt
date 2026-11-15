@@ -210,9 +210,10 @@ export const RULES_PRESETS = {
 };
 /**
  * Other values that still play an edition as written: Knave 1e's designer's note allows XP for
- * gold (Knave 1.0 p5), so a 1e world that turns treasure XP on still plays Knave 1e.
+ * gold (Knave 1.0 p5), so a 1e world that turns treasure XP on still plays Knave 1e; a Knave 2e
+ * world on Foundry's own initiative (a roll per token) still reads as 2e (0.3.0 plan, D11).
  */
-export const RULES_ALSO = { "1e": { "treasure-xp": ["gold"] } };
+export const RULES_ALSO = { "1e": { "treasure-xp": ["gold"] }, "2e": { "initiative-rule": ["individual"] } };
 /** Coins of treasure per XP: Knave 2e p12 (1 a coin); Knave 1e's XP for gold (100 copper). */
 export const TREASURE_COINS_PER_XP = { coin: 1, gold: 100 };
 /** A companion's share of treasure and XP (Knave 2e p59). */

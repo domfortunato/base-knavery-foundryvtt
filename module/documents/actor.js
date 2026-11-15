@@ -213,31 +213,35 @@ export class KnaveryActor extends Actor {
 
   /**
    * The tracker follows a fall (0.3.0): dead marks the combatant defeated with core's overlay, Knave 1e's
-   * 0 HP puts the character unconscious. Only on the way down, and only what this set is cleared again on
-   * healing (`#clearDefeated`), so the GM's own skull always wins. GM clients only: a player's damage
-   * arrives through the relay.
+   * 0 HP puts the character unconscious. Only on the way down, and only what this set (the `auto*` flags)
+   * is cleared again on healing (`#clearDefeated`), so the GM's own skull, and a condition the GM applied
+   * by hand, always win. Runs where the damage was applied: a GM's client, or the owner's own (a player
+   * applying their card to their own knave; an owner may write a Combatant's `defeated` and flags); a
+   * player's damage to anyone else arrives through the relay, on the GM's client.
    */
   async #syncDefeated(out) {
-    if (!game.user.isGM) return;
+    if (!game.user.isGM && !this.isOwner) return;
     const combatant = game.combat?.combatants.find((c) => c.actor === this);
     if (out.dead) {
-      if (combatant && !combatant.isDefeated) await combatant.update({ defeated: true, [`flags.${FLAG_SCOPE}.autoDefeated`]: true });
+      if (combatant && !combatant.isDefeated) await combatant.update({ defeated: true, flags: { [FLAG_SCOPE]: { autoDefeated: true } } });
       if (!this.statuses.has(CONFIG.specialStatusEffects.DEFEATED)) {
         await this.toggleStatusEffect(CONFIG.specialStatusEffects.DEFEATED, { active: true, overlay: true });
         await this.setFlag(FLAG_SCOPE, "autoDead", true);
       }
     } else if (out.unconscious && !this.statuses.has("unconscious")) {
       await this.toggleStatusEffect("unconscious", { active: true });
+      await this.setFlag(FLAG_SCOPE, "autoUnconscious", true);
     }
   }
 
-  /** Healed back over the line: what `#syncDefeated` set comes off again. Active GM only. */
+  /** Healed back over the line: what `#syncDefeated` set comes off again (never a hand-applied condition). Active GM only. */
   async #clearDefeated() {
     const s = this.system;
     const alive = this.type === "npc" ? s.hp.value > 0 : (usesWounds() ? s.wounds < s.slotsMax : s.hp.value >= 0);
     if (!alive) return;
-    if (this.type === "character" && s.hp.value > 0 && this.statuses.has("unconscious")) {
-      await this.toggleStatusEffect("unconscious", { active: false });
+    if (this.type === "character" && s.hp.value > 0 && this.getFlag(FLAG_SCOPE, "autoUnconscious")) {
+      if (this.statuses.has("unconscious")) await this.toggleStatusEffect("unconscious", { active: false });
+      await this.unsetFlag(FLAG_SCOPE, "autoUnconscious");
     }
     if (this.getFlag(FLAG_SCOPE, "autoDead")) {
       if (this.statuses.has(CONFIG.specialStatusEffects.DEFEATED)) await this.toggleStatusEffect(CONFIG.specialStatusEffects.DEFEATED, { active: false });
@@ -245,7 +249,8 @@ export class KnaveryActor extends Actor {
     }
     const combatant = game.combat?.combatants.find((c) => c.actor === this);
     if (combatant?.isDefeated && combatant.getFlag(FLAG_SCOPE, "autoDefeated")) {
-      await combatant.update({ defeated: false, [`flags.${FLAG_SCOPE}.-=autoDefeated`]: null });
+      // The ForcedDeletion operator: `-=key` is deprecated {since: 14, until: 16}.
+      await combatant.update({ defeated: false, flags: { [FLAG_SCOPE]: { autoDefeated: new foundry.data.operators.ForcedDeletion() } } });
     }
   }
 

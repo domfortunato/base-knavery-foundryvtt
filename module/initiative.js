@@ -42,8 +42,11 @@ export const onPcSide = (c) => c.actor?.type === "character" || c.hasPlayerOwner
 const sideValue = (c, pcsFirst) => (onPcSide(c) === pcsFirst ? 2 : 1);
 const sideName = (pcsFirst) => L(pcsFirst ? "KNAVERY.Initiative.PcsFirst" : "KNAVERY.Initiative.EnemiesFirst");
 const signed = (n) => (n >= 0 ? `+${n}` : String(n));
-/** A combatant's CHA for the leaders' check: a character's CHA; an NPC's level stands in, as for its checks. */
-const chaBonus = (c) => Number(c?.actor?.system?.abilities?.CHA?.value ?? c?.actor?.system?.level ?? 0) || 0;
+/**
+ * A combatant's CHA for the leaders' check: a character's CHA; an NPC's level stands in, as for its checks
+ * (KnaveryActor.abilityBonus: a monster's schema holds a 0 for every ability, so the level is read there).
+ */
+const chaBonus = (c) => Number(c?.actor?.abilityBonus?.("CHA") ?? 0) || 0;
 
 export class KnaveryCombat extends foundry.documents.Combat {
   /** This combat's last side roll, {round, pcsFirst, how}, or null. */
@@ -167,7 +170,7 @@ export class KnaveryCombat extends foundry.documents.Combat {
     return this;
   }
 
-  /** Reset Initiative also forgets the side roll and the leaders, so the next roll is a fresh one. */
+  /** Reset Initiative also forgets the side roll and the acted ticks, so the next roll is a fresh one; the GM's chosen leaders stand. */
   async resetAll(options) {
     if (game.user.isGM) {
       if (this.groupInitiative) await this.unsetFlag(FLAG_SCOPE, "groupInitiative");
@@ -196,19 +199,31 @@ export class KnaveryCombat extends foundry.documents.Combat {
     return super.nextRound();
   }
 
-  /** The "has acted" ticks of the tracker's rows (flag `acted`), cleared every round. */
+  /**
+   * The "has acted" ticks of the tracker's rows (flag `acted`), cleared every round. One batch, with the
+   * ForcedDeletion operator: the `-=key` syntax is deprecated {since: 14, until: 16}.
+   */
   async #clearActed() {
-    const updates = this.combatants.filter((c) => c.getFlag(FLAG_SCOPE, "acted")).map((c) => ({ _id: c.id, [`flags.${FLAG_SCOPE}.-=acted`]: null }));
+    const gone = new foundry.data.operators.ForcedDeletion();
+    const updates = this.combatants.filter((c) => c.getFlag(FLAG_SCOPE, "acted")).map((c) => ({ _id: c.id, flags: { [FLAG_SCOPE]: { acted: gone } } }));
     if (updates.length) await this.updateEmbeddedDocuments("Combatant", updates, { turnEvents: false });
   }
 
-  /** A round a player advanced: the active GM rolls it once it has changed. Going back never rerolls. */
+  /**
+   * A round a player advanced (by ending the last turn): the active GM clears the ticks and rolls it once it
+   * has changed, as the GM's own Next Round does before the change. Going back never rerolls.
+   */
   _onUpdate(changed, options, userId) {
     super._onUpdate(changed, options, userId);
     if (!("round" in changed) || options.direction === -1 || !(this.round > 0)) return;
     if (!game.user.isActiveGM || !sidesOn() || this.groupInitiative?.round === this.round) return;
     if (!this.combatants.size) return;
-    this.rollGroupInitiative(this.round, { firstTurn: true });
+    this.#advanceRound();
+  }
+
+  async #advanceRound() {
+    await this.#clearActed();
+    await this.rollGroupInitiative(this.round, { firstTurn: true });
   }
 
   /** A combatant added after the round's roll takes its side's place. */

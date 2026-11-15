@@ -296,10 +296,15 @@ export const marketPageContext = async (app) => {
 
 const rerender = (app) => app.render({ parts: ["market"] });
 
-/** Wire the page after a render: a price override on change, items dropped onto the aisle. */
+/**
+ * Wire the page after a render: a price override on change, items dropped onto the aisle. Once per drawing of
+ * the market part: `_onRender` runs on every render, and a render of another part keeps this section and its
+ * listeners (a second drop handler would add a second row).
+ */
 export const bindMarketPage = (app) => {
   const root = app.element?.querySelector('section[data-tab="market"]');
-  if (!root) return;
+  if (!root || root.dataset.knBound) return;
+  root.dataset.knBound = "1";
   root.querySelectorAll("input.mm-price").forEach((input) => input.addEventListener("change", async () => {
     const table = await fromUuid(app.marketSelected);
     if (!table || table.pack) return;

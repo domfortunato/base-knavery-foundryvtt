@@ -196,7 +196,8 @@ picker, change log and marketplace it ports.
   an item sells for half its price, treasure (`system.treasure`) at full value (`treasure.js`);
   rule `treasure-xp`: 2e "coin" (p12, 1 XP a coin, companions a half share p59), 1e "off",
   or 1e's designer's-note "gold" (1 XP per 100c), which still reads as Knave 1e
-  (`config.js` `RULES_ALSO`); an awarded item is `treasureCounted`. Repair under 2e attacks
+  (`config.js` `RULES_ALSO`; likewise a 2e world on Individual initiative reads as 2e, plan D11);
+  an awarded item is `treasureCounted`. Repair under 2e attacks
   (and for gear without quality) is free (`quality.js` `repairBroken`).
 - Knave 1e death: 0 HP unconscious, -1 dead (character `hp.value` min -1); no direct
   damage, so the Direct button is hidden. 1e healing: d8 + CON after a meal; a safe
