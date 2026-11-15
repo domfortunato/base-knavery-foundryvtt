@@ -87,7 +87,7 @@ export const promptOfferTarget = async (item) => {
   // anything else only when this user can see it.
   const targets = game.actors.filter((a) => canReceiveOffer(a, giver)
     && (a.visible || (a.type === "character" && a.hasPlayerOwner)))
-    .sort((a, b) => a.name.localeCompare(b.name));
+    .sort((a, b) => a.name.localeCompare(b.name, game.i18n.lang));
   if (!targets.length) return ui.notifications.warn("KNAVERY.Offer.NoTargets", { localize: true });
   const groups = [
     ["KNAVERY.Offer.GroupCharacters", (a) => a.type === "character"],

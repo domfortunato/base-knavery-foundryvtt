@@ -94,7 +94,7 @@
             <label data-tooltip="KNAVERY.NpcACTip">{{localize "KNAVERY.AC"}}</label>
             <input type="number" min="0" step="1" class="ac-input" name="system.armorClass" value="{{source.armorClass}}" data-dtype="Number" />
           </div>
-          {{#if (ne system.ac source.armorClass)}}<div class="knavery-ap" data-tooltip="KNAVERY.NpcACTip">{{localize "KNAVERY.AC"}} {{system.ac}}</div>{{/if}}
+          {{#if (ne system.ac source.armorClass)}}<div class="knavery-ap" data-tooltip="KNAVERY.NpcACTip">{{localize "KNAVERY.ACValue" ac=system.ac}}</div>{{/if}}
 
           <div class="knavery-bars">
             <div class="knavery-bar-block hp-bar {{#if hpLow}}low{{/if}} {{#if hpPeril}}peril{{/if}}">
@@ -136,7 +136,7 @@
     <div class="tab knavery-page knavery-page-inventory {{tabs.inventory.cssClass}}" data-group="primary" data-tab="inventory">
       {{#if slotsMax}}
       <div class="knavery-summary-strip">
-        <span class="summary-item {{#if overburdened}}peril{{/if}}" data-tooltip="KNAVERY.SlotsTip"><i class="fas fa-weight-hanging"></i>{{localize "KNAVERY.Slots"}} {{slotsUsed}} / {{slotsMax}}</span>
+        <span class="summary-item {{#if overburdened}}peril{{/if}}" data-tooltip="KNAVERY.SlotsTip"><i class="fas fa-weight-hanging"></i>{{localize "KNAVERY.SlotsUsed" used=slotsUsed max=slotsMax}}</span>
       </div>
       {{/if}}
       {{> "systems/base-knavery/templates/parts/items-list.html"}}

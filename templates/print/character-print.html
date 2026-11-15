@@ -75,7 +75,7 @@
   .slot .name.coins { color: #333; }
   .slot.unusable .name { text-decoration: line-through; }
   .slot .tags { flex: none; display: flex; align-items: center; gap: 6px; margin-left: 8px; font-size: 8.5pt; color: #333; }
-  .slot .tags .lower, .kv .lower { text-transform: lowercase; }
+  :lang(en) .slot .tags .lower, :lang(en) .kv .lower { text-transform: lowercase; }
   .slot .tags .q { font-size: 7pt; color: #444; letter-spacing: 0.04em; }
   .weightless { height: 22px; line-height: 22px; font-size: 8.5pt; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .more { height: 16px; line-height: 16px; font-size: 8.5pt; color: #333; }
@@ -128,7 +128,7 @@
   <section class="col-l" data-zone="left">
     {{#if abilities.length}}
     <div class="strip abilities">
-      {{#each abilities}}<div class="cell"><div class="lbl">{{this.label}}</div><div class="val">+{{this.value}}</div><div class="sub">{{localize "KNAVERY.PrintSheet.Def"}} {{this.defense}}</div></div>{{/each}}
+      {{#each abilities}}<div class="cell"><div class="lbl">{{this.label}}</div><div class="val">+{{this.value}}</div><div class="sub">{{localize "KNAVERY.PrintSheet.DefValue" n=this.defense}}</div></div>{{/each}}
     </div>
     {{/if}}
     <div class="strip vitals">

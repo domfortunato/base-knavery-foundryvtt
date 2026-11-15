@@ -54,7 +54,7 @@ export const findTablesByPrefix = async (prefix) => {
   for (const t of game.tables) if (inTableGroup(t, prefix)) out.set(id(t), () => t);
   const docs = [];
   for (const [, get] of out) docs.push(await get());
-  return docs.filter(Boolean).sort((a, b) => a.name.localeCompare(b.name));
+  return docs.filter(Boolean).sort((a, b) => a.name.localeCompare(b.name, game.i18n.lang));
 };
 
 export const isPlaceholder = (result) => result?.getFlag?.(FLAG_SCOPE, "placeholder") === true

@@ -34,7 +34,7 @@
       {{#each characters}}
       <div class="dash-xp-row">
         <label class="dash-pc"><input type="checkbox" name="xpPc" value="{{this.id}}" /><img src="{{this.img}}" alt="" /><span>{{this.name}}</span></label>
-        <span class="dash-xp-now">{{localize "KNAVERY.Dashboard.XpNow" level=this.level xp=this.xp}}</span>
+        <span class="dash-xp-now">{{localize "KNAVERY.Dashboard.XpNow" level=this.level xp=(knNum this.xp)}}</span>
         <input type="number" class="dash-xp-each" name="xpFor.{{this.id}}" min="0" step="1" placeholder="0" aria-label="{{localize 'KNAVERY.Dashboard.XpFor' name=this.name}}" />
       </div>
       {{else}}

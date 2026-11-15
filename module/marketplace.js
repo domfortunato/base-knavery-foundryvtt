@@ -47,7 +47,7 @@ export const marketTables = async ({ includeHidden = false } = {}) => {
     const i = AISLE_ORDER.indexOf(aisleId(t));
     return i === -1 ? AISLE_ORDER.length : i;
   };
-  return tables.sort((a, b) => order(a) - order(b) || a.name.localeCompare(b.name));
+  return tables.sort((a, b) => order(a) - order(b) || a.name.localeCompare(b.name, game.i18n.lang));
 };
 
 /**

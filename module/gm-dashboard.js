@@ -249,7 +249,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     return Object.assign(context, {
       characters,
       abilities: ABILITIES.map((k) => ({ value: `ability:${k}`, label: L(`KNAVERY.Ability.${k}`) })),
-      saves: Object.entries(SAVE_CATEGORIES).map(([k, a]) => ({ value: `save:${k}`, label: `${L(`KNAVERY.Save.${k}`)} (${L(`KNAVERY.AbilityShort.${a}`)})` })),
+      saves: Object.entries(SAVE_CATEGORIES).map(([k, a]) => ({ value: `save:${k}`, label: F("KNAVERY.WithAbility", { name: L(`KNAVERY.Save.${k}`), ability: L(`KNAVERY.AbilityShort.${a}`) }) })),
       difficulty: DEFAULT_DIFFICULTY,
       target: CHECK_BASE + DEFAULT_DIFFICULTY,
       log: requestLog.slice(0, 20),

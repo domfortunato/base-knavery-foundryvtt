@@ -22,7 +22,7 @@
           <span class="rt-count {{#unless this.complete}}rt-short{{/unless}}">{{this.count}} / {{this.expected}}</span>
           <span class="rt-status">{{this.statusLabel}}</span>
         </summary>
-        {{#if this.missing}}<p class="rt-warning">{{localize "KNAVERY.RulebookTables.Missing"}} {{this.missing}}</p>{{/if}}
+        {{#if this.missing}}<p class="rt-warning">{{localize "KNAVERY.RulebookTables.MissingLine" rows=this.missing}}</p>{{/if}}
         <textarea data-index="{{this.index}}" rows="{{this.lines}}" spellcheck="false">{{this.text}}</textarea>
       </details>
     </li>

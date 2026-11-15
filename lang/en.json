@@ -137,7 +137,6 @@
     "MaxHP": "Max HP",
     "MaxWounds": "Max wounds",
     "AC": "AC",
-    "ACShort": "AC",
     "ACTip": "Armor class: 11 + armor points ({ap}). Type a value to override it.",
     "ACAuto": "AC = 11 plus 1 point for each piece of equipped armor.",
     "ACOverrideActive": "Overridden by hand. Use the arrow to go back to the worn armor.",
@@ -415,6 +414,7 @@
       "TitleFor": "A new spell for {name}",
       "RequestLabel": "Generate a spell",
       "Formula": "Formula:",
+      "FormulaLine": "Formula: {formula}",
       "Reroll": "Roll this word again (one word only)",
       "RerollUsed": "One word has been rolled again already",
       "Rerolled": "rolled again",
@@ -468,6 +468,10 @@
     "SlotIndexTip": "The slot or slots this item sits in. Wounds fill slots from the bottom.",
     "ReorderHint": "Drag rows to reorder. The bottom rows are wounded and marked unusable or damaged first.",
     "NQuantity": "×{n}",
+    "SlotsUsed": "Slots {used} / {max}",
+    "XPAmount": "{n} XP",
+    "ACValue": "AC {ac}",
+    "WithAbility": "{name} ({ability})",
     "NAp": "{n} AP",
     "NSlots": {
       "one": "{n} slot",
@@ -1356,7 +1360,7 @@
     },
 
     "PrintSheet": {
-      "Def": "def",
+      "DefValue": "def {n}",
       "Spells": "Spells",
       "SlotCount": "{used} / {max} slots",
       "LevelLine": "Level {level}",
@@ -1391,7 +1395,7 @@
       "SelectAll": "Select all",
       "SelectNone": "Select none",
       "UsedBySystem": "used by the system",
-      "Missing": "Not read:",
+      "MissingLine": "Not read: {rows}",
       "Build": "Build the ticked tables",
       "NoneChosen": "No table is ticked.",
       "Done": "Rulebook tables: {created} created, {replaced} rebuilt, {kept} kept as you left them.",
@@ -1405,6 +1409,13 @@
     },
 
     "Welcome": {
+      "Credit": {
+        "LydiaPortraits": "Portraits and tokens",
+        "GameIconsBy": "many artists, each credited in art/game-icons/CREDITS.md",
+        "TwoKnaves": "The two knaves beside the title",
+        "WithPermission": "used with permission",
+        "AlegreyaFonts": "Alegreya fonts"
+      },
       "Title": "Welcome to Base Knavery",
       "By": "by {author} · version {version}",
       "Unofficial": "Base Knavery is an unofficial, fan-made Foundry VTT system for Knave, first and second editions.",

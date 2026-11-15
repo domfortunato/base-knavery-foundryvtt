@@ -234,7 +234,7 @@ export const wageRows = () => {
       amount: F(daily ? "KNAVERY.Wages.PerDay" : "KNAVERY.Wages.PerMonth", { wage: s.wage }),
       employer: employer?.name ?? L("KNAVERY.Wages.NoEmployer"), hasEmployer: !!employer,
     };
-  }).sort((x, y) => Number(y.overdue) - Number(x.overdue) || x.name.localeCompare(y.name));
+  }).sort((x, y) => Number(y.overdue) - Number(x.overdue) || x.name.localeCompare(y.name, game.i18n.lang));
 };
 
 /** Pay a month (or, by the day, every day owed): from the employer's coins; the due date moves on. GM only. */

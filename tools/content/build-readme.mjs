@@ -43,7 +43,10 @@ const knave1eBody = (href) => W("Knave1eBody", { license: `<a href="${href}">${e
 // The README keeps the credit only; its list of changes stays in the welcome window, the listing and
 // LICENSE.txt (user, 2026-11-14: keep the README tight).
 const knave1eCredit = (href) => knave1eBody(href).replace(/\s*Changes:.*$/s, "");
-const credit = (a, link) => `${link(a.url, esc(a.name))}, ${esc(a.by)}: ${a.licenseUrl ? link(a.licenseUrl, esc(a.license)) : esc(a.license)}`;
+const credit = (c, link) => {
+  const a = { ...c, name: c.nameKey ? L(c.nameKey) : c.name, by: c.byKey ? L(c.byKey) : c.by, license: c.licenseKey ? L(c.licenseKey) : c.license };
+  return `${link(a.url, esc(a.name))}, ${esc(a.by)}: ${a.licenseUrl ? link(a.licenseUrl, esc(a.license)) : esc(a.license)}`;
+};
 const AI = [["🖌️", "NoAiArt", "NoAiArtBody"], ["📜", "NoAiText", "NoAiTextBody"], ["🧠", "AiCode", null]];
 
 // ---- README.md ------------------------------------------------------------------------------

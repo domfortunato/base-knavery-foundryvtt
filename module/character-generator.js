@@ -92,7 +92,7 @@ export const weaponChoices = async () => {
   for (const pack of itemPacks({ only: true })) {
     for (const e of pack.index.filter((x) => x.type === "weapon")) if (!seen.has(e.name)) seen.set(e.name, { name: e.name, img: e.img });
   }
-  return [...seen.values()].sort((a, b) => a.name.localeCompare(b.name));
+  return [...seen.values()].sort((a, b) => a.name.localeCompare(b.name, game.i18n.lang));
 };
 
 const creationLevels = () => {

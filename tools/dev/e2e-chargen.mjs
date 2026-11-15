@@ -531,7 +531,7 @@ await withSettings(gm, async () => {
       out.on = { next: pc.system.nextXp, can: pc.system.canLevelUp };
       await pc.sheet.render({ force: true });
       await new Promise((res) => setTimeout(res, 800));
-      out.ladder = [...pc.sheet.element.querySelectorAll(".ladder-xp")].map((e) => parseInt(e.textContent, 10));
+      out.ladder = [...pc.sheet.element.querySelectorAll(".ladder-xp")].map((e) => parseInt(e.textContent.replace(/\D/g, ""), 10)); // "1,000 XP": digits only (0.4.0 formats numbers)
       await pc.sheet.close();
       out.built3 = (await buildCharacter({ level: 3, abilities: { STR: 3 } })).system?.xp;
       await set("knave1e-xp", false);
@@ -2267,7 +2267,7 @@ await withSettings(gm, async () => {
       return out;
     });
     await gm.screenshot({ path: `${SHOTS}/dashboard-xp-treasure.png` });
-    ok(x.shown && x.amountHidden && x.items === "Probe Gem,Probe Idol" && x.total === "Treasure worth 150c: 150 XP, split among 2 and 1 companion(s) at a half share.",
+    ok(x.shown && x.amountHidden && x.items === "Probe Gem,Probe Idol" && x.total === "Treasure worth 150c: 150 XP, split among 2 and 1 companion at a half share.",
       "the XP tab's Treasure brought back lists the chosen characters' treasure and adds the coins typed in", JSON.stringify(x));
     ok(x.xp === "60,60" && x.counted === "true,true" && x.card?.coins === 150 && x.companionLine && x.after === 0,
       "the award splits 150 XP among two and a companion at half; each item counts once", JSON.stringify(x));

@@ -2,7 +2,9 @@
  * What the welcome window, the README and the Foundry package listing share (user, 2026-11-14:
  * the welcome is also the README and the listing). Pure data, no Foundry globals, so
  * tools/content/build-readme.mjs can read it in Node. Names and licences are proper names,
- * so they live here, not in the language file; LICENSE.txt has the detail.
+ * so they live here, not in the language file; LICENSE.txt has the detail. A credit's words
+ * that are not names ("Portraits and tokens", "used with permission") are language keys too
+ * (`nameKey`, `byKey`, `licenseKey`; `name` stays the English identity art.js matches on).
  */
 
 /** The licence Knave's first edition is under (Knave 1.0, p1): its rules and tables ship with this system. */
@@ -14,12 +16,12 @@ export const CC_BY_URL = "https://creativecommons.org/licenses/by/4.0/";
  */
 export const ART_CREDITS = [
   { name: "Lemurs Portraits", by: "Jon Aspeheim", url: "https://jonaspeheim.itch.io/lemurs-portraits", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0/" },
-  { name: "Portraits and tokens", by: "Lydia Comer", url: "https://linktr.ee/lydiadidmyink", license: "CC BY-NC-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-nc-sa/4.0/" },
+  { name: "Portraits and tokens", nameKey: "KNAVERY.Welcome.Credit.LydiaPortraits", by: "Lydia Comer", url: "https://linktr.ee/lydiadidmyink", license: "CC BY-NC-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-nc-sa/4.0/" },
   { name: "Tlomdev's Tokens", by: "tlomdev", url: "https://tlomdev.itch.io/tlomdevs-tokens", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0/" },
-  { name: "Game-icons.net", by: "many artists, each credited in art/game-icons/CREDITS.md", url: "https://game-icons.net", license: "CC BY 3.0", licenseUrl: "https://creativecommons.org/licenses/by/3.0/" },
+  { name: "Game-icons.net", by: "many artists, each credited in art/game-icons/CREDITS.md", byKey: "KNAVERY.Welcome.Credit.GameIconsBy", url: "https://game-icons.net", license: "CC BY 3.0", licenseUrl: "https://creativecommons.org/licenses/by/3.0/" },
   // Her permission covers Base Knavery and promoting it (art/welcome/CREDITS.md), so the README and listing too.
-  { name: "The two knaves beside the title", by: "Lydia Comer", url: "https://linktr.ee/lydiadidmyink", license: "used with permission", licenseUrl: null },
-  { name: "Alegreya fonts", by: "The Alegreya Project Authors", url: "https://github.com/huertatipografica/Alegreya", license: "SIL OFL 1.1", licenseUrl: "https://openfontlicense.org/" },
+  { name: "The two knaves beside the title", nameKey: "KNAVERY.Welcome.Credit.TwoKnaves", by: "Lydia Comer", url: "https://linktr.ee/lydiadidmyink", license: "used with permission", licenseKey: "KNAVERY.Welcome.Credit.WithPermission", licenseUrl: null },
+  { name: "Alegreya fonts", nameKey: "KNAVERY.Welcome.Credit.AlegreyaFonts", by: "The Alegreya Project Authors", url: "https://github.com/huertatipografica/Alegreya", license: "SIL OFL 1.1", licenseUrl: "https://openfontlicense.org/" },
 ];
 
 /** The book ends either side of the title, each facing in toward it: the woman looks right, the knight left. */

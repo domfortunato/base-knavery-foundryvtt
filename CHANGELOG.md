@@ -12,6 +12,10 @@
   hidden key as well as by name, so a table or compendium entry in another language still works. The table
   importer has **Use as**: a pasted table under any name can stand in for one of the system's (a Careers table
   in your language, for example).
+- Ready for translations, step two: plurals follow each language's rules (Polish has three forms, for example),
+  lists of names read the language's way ("Alice, Bob and Carol"), coins and XP get the language's thousands
+  separator ("1,234 coins"), and a label and its number sit in one translatable phrase ("Slots 3 / 10").
+  `TRANSLATING.md` explains how to send a translation or publish one as a module.
 
 ## 0.3.0
 

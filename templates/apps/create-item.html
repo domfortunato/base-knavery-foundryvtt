@@ -19,7 +19,7 @@
       {{#if nameRoll}}<span class="kn-ci-roll-wrap" data-tooltip="{{nameRoll.tip}}"><button type="button" class="kn-ci-roll" data-action="rollName" data-tooltip="{{nameRoll.tip}}" aria-label="{{nameRoll.tip}}" {{#if nameRoll.disabled}}disabled{{/if}}><i class="fas fa-dice"></i></button></span>{{/if}}
     </div>
   </div>
-  {{#if is.spellbook}}{{#if data.formula}}<p class="hint kn-ci-formula">{{localize "KNAVERY.SpellGen.Formula"}} {{data.formula}}</p>{{/if}}{{/if}}
+  {{#if is.spellbook}}{{#if data.formula}}<p class="hint kn-ci-formula">{{localize "KNAVERY.SpellGen.FormulaLine" formula=data.formula}}</p>{{/if}}{{/if}}
 
   <div class="kn-ci-stats">
     {{#if is.weapon}}
@@ -27,8 +27,8 @@
       <div class="form-fields"><input type="text" id="kn-ci-damage-{{idp}}" name="damage" value="{{data.damage}}" /></div></div>
     <div class="form-group"><label for="kn-ci-attack-{{idp}}">{{localize "KNAVERY.AttackType"}}</label>
       <div class="form-fields"><select id="kn-ci-attack-{{idp}}" name="attackType">
-        <option value="melee" {{#if (eq data.attackType "melee")}}selected{{/if}}>{{localize "KNAVERY.Melee"}} ({{localize "KNAVERY.AbilityShort.STR"}})</option>
-        <option value="ranged" {{#if (eq data.attackType "ranged")}}selected{{/if}}>{{localize "KNAVERY.Ranged"}} ({{localize "KNAVERY.AbilityShort.WIS"}})</option>
+        <option value="melee" {{#if (eq data.attackType "melee")}}selected{{/if}}>{{localize "KNAVERY.WithAbility" name=(localize "KNAVERY.Melee") ability=(localize "KNAVERY.AbilityShort.STR")}}</option>
+        <option value="ranged" {{#if (eq data.attackType "ranged")}}selected{{/if}}>{{localize "KNAVERY.WithAbility" name=(localize "KNAVERY.Ranged") ability=(localize "KNAVERY.AbilityShort.WIS")}}</option>
       </select></div></div>
     <div class="form-group"><label for="kn-ci-hands-{{idp}}">{{localize "KNAVERY.Hands"}}</label>
       <div class="form-fields"><select id="kn-ci-hands-{{idp}}" name="hands" data-dtype="Number">{{#each hands}}<option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{this.value}}</option>{{/each}}</select></div></div>

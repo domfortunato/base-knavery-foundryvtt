@@ -288,7 +288,7 @@ const visibleTargets = (actor) => {
   const tokens = canvas.tokens.placeables.filter((t) => t.actor && t.visible && !own.includes(t)
     && (game.user.isGM || !t.document.hidden));
   const away = (t) => (from ? Math.hypot(t.center.x - from.center.x, t.center.y - from.center.y) : 0);
-  tokens.sort((a, b) => away(a) - away(b) || tokenName(a).localeCompare(tokenName(b)));
+  tokens.sort((a, b) => away(a) - away(b) || tokenName(a).localeCompare(tokenName(b), game.i18n.lang));
   const seen = new Map();
   return tokens.map((t) => {
     const name = tokenName(t);

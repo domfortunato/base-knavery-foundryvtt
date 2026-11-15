@@ -8,11 +8,11 @@
  * any form it leaves out.
  */
 
-/** The plural form of `key` for `count`, formatted with `{n}` = count and `data`. */
+/** The plural form of `key` for `count`, formatted with `{n}` = count (in the language's digits) and `data`. */
 export const P = (key, count, data = {}) => {
   const form = game.i18n.pluralRules.select(Math.abs(Number(count) || 0));
   const id = game.i18n.has(`${key}.${form}`) ? `${key}.${form}` : `${key}.other`;
-  return game.i18n.format(id, { n: count, ...data });
+  return game.i18n.format(id, { n: typeof count === "number" ? num(count) : count, ...data });
 };
 
 /** A list in the user's language: "a, b and c" (or "a, b or c" with type "disjunction"). */
@@ -21,8 +21,13 @@ export const listOf = (items, type = "conjunction") => game.i18n.getListFormatte
 /** A whole number in the user's language, with its thousands separator. */
 export const num = (n) => Math.round(Number(n) || 0).toLocaleString(game.i18n.lang);
 
-/** At init: {{knPlural "KEY" count a=b}} and {{knNum value}} for the templates. */
+/**
+ * At init: {{knPlural "KEY" count a=b}} and {{knNum value}} for the templates, and the page's
+ * language on <html> (Foundry leaves it unset): CSS scopes English-only casing with :lang(en),
+ * and the browser hyphenates and reads aloud in the right language.
+ */
 export const registerI18nHelpers = () => {
+  if (!document.documentElement.lang) document.documentElement.lang = game.i18n.lang;
   Handlebars.registerHelper("knPlural", (key, count, options) => P(key, count, options?.hash ?? {}));
   Handlebars.registerHelper("knNum", (n) => num(n));
 };

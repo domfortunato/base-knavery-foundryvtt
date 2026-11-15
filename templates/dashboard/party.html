@@ -12,7 +12,7 @@
         <span class="dash-party-stat hp" data-tooltip="KNAVERY.HP"><i class="fas fa-heart"></i> {{this.hp.value}}/{{this.hp.max}}{{#if this.status}} <em>{{this.status}}</em>{{/if}}</span>
         {{#if ../usesWounds}}<span class="dash-party-stat wounds{{#if this.wounds}} hurt{{/if}}" data-tooltip="KNAVERY.Party.Wounds"><i class="fas fa-droplet"></i> {{this.wounds}}</span>{{/if}}
         <span class="dash-party-stat slots{{#if this.over}} over{{/if}}" data-tooltip="{{#if this.over}}KNAVERY.Party.Overloaded{{else}}KNAVERY.Party.Slots{{/if}}"><i class="fas fa-box-open"></i> {{this.slotsUsed}}/{{this.slotsMax}}</span>
-        <span class="dash-party-stat coins" data-tooltip="KNAVERY.Coins"><i class="fas fa-coins"></i> {{this.coins}}</span>
+        <span class="dash-party-stat coins" data-tooltip="KNAVERY.Coins"><i class="fas fa-coins"></i> {{knNum this.coins}}</span>
         {{#if this.books}}<span class="dash-party-stat books" data-tooltip="KNAVERY.Party.BooksTip"><i class="fas fa-book"></i> {{this.booksLine}}</span>{{/if}}
       </div>
       {{#if this.lights.length}}

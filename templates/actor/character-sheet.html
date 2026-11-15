@@ -104,7 +104,7 @@
               {{/if}}
               <div class="knavery-xp-bar" data-tooltip="KNAVERY.NextLevelTip">
                 <div class="knavery-xp-fill" style="width: {{xpPercent}}%"></div>
-                <span>{{#if system.nextXp}}{{localize "KNAVERY.XpShort" xp=system.xp next=system.nextXp}}{{else}}{{localize "KNAVERY.XpTop" xp=system.xp}}{{/if}}</span>
+                <span>{{#if system.nextXp}}{{localize "KNAVERY.XpShort" xp=(knNum system.xp) next=(knNum system.nextXp)}}{{else}}{{localize "KNAVERY.XpTop" xp=(knNum system.xp)}}{{/if}}</span>
               </div>
             </div>
             <div class="band-row band-coins">
@@ -179,7 +179,7 @@
     <!-- Inventory: what the slots hold -->
     <div class="tab knavery-page knavery-page-inventory {{tabs.inventory.cssClass}}" data-group="primary" data-tab="inventory">
       <div class="knavery-summary-strip">
-        <span class="summary-item {{#if overburdened}}peril{{/if}}" data-tooltip="KNAVERY.SlotsTip"><i class="fas fa-weight-hanging"></i>{{localize "KNAVERY.Slots"}} {{slotsUsed}} / {{slotsMax}}</span>
+        <span class="summary-item {{#if overburdened}}peril{{/if}}" data-tooltip="KNAVERY.SlotsTip"><i class="fas fa-weight-hanging"></i>{{localize "KNAVERY.SlotsUsed" used=slotsUsed max=slotsMax}}</span>
         {{#if system.spellCap}}<span class="summary-item" data-tooltip="KNAVERY.SpellsLeftTip"><i class="fas fa-book"></i>{{localize "KNAVERY.SpellsLeft" n=spellsLeft max=system.spellsPerDay}}</span>{{/if}}
         <span class="summary-item summary-coins" data-tooltip="KNAVERY.CoinsTip"><i class="fas fa-coins"></i>{{knPlural "KNAVERY.CoinsCount" system.coins}}{{#if coinsTakeSlots}} · {{knPlural "KNAVERY.NSlots" system.coinSlots}}{{/if}}</span>
         {{#if usesWounds}}<span class="summary-item {{#if woundPeril}}peril{{/if}}" data-tooltip="KNAVERY.WoundsTip"><i class="fas fa-droplet"></i>{{localize "KNAVERY.WoundSlots" n=system.wounds}}</span>{{/if}}
@@ -193,7 +193,7 @@
         <div class="knavery-items-list-header"><div>{{localize "KNAVERY.Advancement"}}</div></div>
         <div class="knavery-xp-bar" data-tooltip="KNAVERY.NextLevelTip">
           <div class="knavery-xp-fill" style="width: {{xpPercent}}%"></div>
-          <span>{{#if system.nextXp}}{{localize "KNAVERY.XpProgress" xp=system.xp next=system.nextXp}}{{else}}{{localize "KNAVERY.XpTop" xp=system.xp}}{{/if}}</span>
+          <span>{{#if system.nextXp}}{{localize "KNAVERY.XpProgress" xp=(knNum system.xp) next=(knNum system.nextXp)}}{{else}}{{localize "KNAVERY.XpTop" xp=(knNum system.xp)}}{{/if}}</span>
         </div>
         {{#if levelRule}}<p class="knavery-level-rule"><i class="fas fa-circle-up"></i> {{levelRule}}</p>{{/if}}
         <ol class="knavery-level-ladder">
@@ -201,7 +201,7 @@
           <li class="{{#if this.current}}current{{/if}} {{#if this.reached}}reached{{/if}}">
             <span class="ladder-level">{{this.level}}</span>
             <span class="ladder-title">{{this.title}}</span>
-            <span class="ladder-xp">{{this.xp}} {{localize "KNAVERY.XP"}}</span>
+            <span class="ladder-xp">{{localize "KNAVERY.XPAmount" n=(knNum this.xp)}}</span>
           </li>
           {{/each}}
         </ol>

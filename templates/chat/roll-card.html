@@ -38,7 +38,7 @@
   <ul class="card-targets">
     {{#each targets}}
     <li class="{{this.cls}}"><span class="target-name">{{this.name}}</span>
-      {{#if this.ac}}<span class="target-ac">{{localize "KNAVERY.ACShort"}} {{this.ac}}</span>{{/if}}
+      {{#if this.ac}}<span class="target-ac">{{localize "KNAVERY.ACValue" ac=this.ac}}</span>{{/if}}
       <strong>{{this.label}}</strong>
       {{#if this.wear}}<button type="button" class="kn-wear-armor" data-kn-wear="{{this.uuid}}" data-tooltip="KNAVERY.Quality.WearHint"><i class="fas fa-shield-halved"></i> {{localize "KNAVERY.Quality.WearButton"}}</button>{{/if}}</li>
     {{/each}}

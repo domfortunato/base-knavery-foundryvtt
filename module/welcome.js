@@ -61,7 +61,10 @@ export class WelcomeWindow extends HandlebarsApplicationMixin(ApplicationV2) {
         license: `<a href="${CC_BY_URL}" target="_blank" rel="noopener">${L("KNAVERY.Welcome.Knave1eLicense")}</a>`,
       }),
       books: BOOKS,
-      art: ART_CREDITS,
+      // A credit's words in the user's language; names, licences and links as they are.
+      art: ART_CREDITS.map((a) => ({
+        ...a, name: a.nameKey ? L(a.nameKey) : a.name, by: a.byKey ? L(a.byKey) : a.by, license: a.licenseKey ? L(a.licenseKey) : a.license,
+      })),
       rules: currentRules(),
       thisWorld: F("KNAVERY.Welcome.ThisWorld", {
         // The first edition's title is just "Knave" (user, 2026-11-14).
