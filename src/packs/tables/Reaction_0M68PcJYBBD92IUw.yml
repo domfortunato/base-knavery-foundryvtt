@@ -23,7 +23,9 @@ results:
       - 2
       - 2
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Hostile
   - _id: WW2inoOPKW4AmmA3
     _key: '!tables.results!0M68PcJYBBD92IUw.WW2inoOPKW4AmmA3'
     type: text
@@ -36,7 +38,9 @@ results:
       - 3
       - 5
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Unfriendly
   - _id: DYr2qHJrgN6CCN0D
     _key: '!tables.results!0M68PcJYBBD92IUw.DYr2qHJrgN6CCN0D'
     type: text
@@ -49,7 +53,9 @@ results:
       - 6
       - 8
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Unsure
   - _id: Ce4ZjygujEd6cAG9
     _key: '!tables.results!0M68PcJYBBD92IUw.Ce4ZjygujEd6cAG9'
     type: text
@@ -62,7 +68,9 @@ results:
       - 9
       - 11
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Talkative
   - _id: BOArO6bDE9ywiCO5
     _key: '!tables.results!0M68PcJYBBD92IUw.BOArO6bDE9ywiCO5'
     type: text
@@ -75,7 +83,9 @@ results:
       - 12
       - 12
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Helpful
 flags:
   base-knavery:
     key: reaction

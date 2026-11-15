@@ -1,0 +1,838 @@
+{
+  "label": "Tables",
+  "entries": {
+    "Alignment": {
+      "name": "Alignment",
+      "description": "<p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>",
+      "results": {
+        "1-5": "Law",
+        "6-15": "Neutrality",
+        "16-20": "Chaos"
+      }
+    },
+    "Background": {
+      "name": "Background",
+      "description": "<p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>",
+      "results": {
+        "1-1": "Alchemist",
+        "2-2": "Beggar",
+        "3-3": "Butcher",
+        "4-4": "Burglar",
+        "5-5": "Charlatan",
+        "6-6": "Cleric",
+        "7-7": "Cook",
+        "8-8": "Cultist",
+        "9-9": "Gambler",
+        "10-10": "Herbalist",
+        "11-11": "Magician",
+        "12-12": "Mariner",
+        "13-13": "Mercenary",
+        "14-14": "Merchant",
+        "15-15": "Outlaw",
+        "16-16": "Performer",
+        "17-17": "Pickpocket",
+        "18-18": "Smuggler",
+        "19-19": "Student",
+        "20-20": "Tracker"
+      }
+    },
+    "Careers": {
+      "name": "Careers",
+      "description": "<p>Empty. The Game Master fills this table: GM Dashboard → Tables → Import.</p>",
+      "results": {
+        "1-100": "Empty. The Game Master fills this table: GM Dashboard → Tables → Import."
+      }
+    },
+    "Clothing": {
+      "name": "Clothing",
+      "description": "<p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>",
+      "results": {
+        "1-1": "Antique",
+        "2-2": "Bloody",
+        "3-3": "Ceremonial",
+        "4-4": "Decorated",
+        "5-5": "Eccentric",
+        "6-6": "Elegant",
+        "7-7": "Fashionable",
+        "8-8": "Filthy",
+        "9-9": "Flamboyant",
+        "10-10": "Stained",
+        "11-11": "Foreign",
+        "12-12": "Frayed",
+        "13-13": "Frumpy",
+        "14-14": "Livery",
+        "15-15": "Oversized",
+        "16-16": "Patched",
+        "17-17": "Perfumed",
+        "18-18": "Rancid",
+        "19-19": "Torn",
+        "20-20": "Undersized"
+      }
+    },
+    "Dungeoneering Gear (Knave 1e)": {
+      "name": "Dungeoneering Gear (Knave 1e)",
+      "description": "<p>Roll twice on this table, and once on each General Gear table.</p><p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>",
+      "results": {
+        "1-1": "Rope, 50ft",
+        "2-2": "Pulleys",
+        "3-3": "Candles, 5",
+        "4-4": "Chain, 10ft",
+        "5-5": "Chalk, 10",
+        "6-6": "Crowbar",
+        "7-7": "Tinderbox",
+        "8-8": "Grappling hook",
+        "9-9": "Hammer",
+        "10-10": "Waterskin",
+        "11-11": "Lantern",
+        "12-12": "Lamp oil",
+        "13-13": "Padlock",
+        "14-14": "Manacles",
+        "15-15": "Mirror",
+        "16-16": "Pole, 10ft",
+        "17-17": "Sack",
+        "18-18": "Tent",
+        "19-19": "Spikes, 5",
+        "20-20": "Torches, 5"
+      }
+    },
+    "Face": {
+      "name": "Face",
+      "description": "<p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>",
+      "results": {
+        "1-1": "Bloated",
+        "2-2": "Blunt",
+        "3-3": "Bony",
+        "4-4": "Chiseled",
+        "5-5": "Delicate",
+        "6-6": "Elongated",
+        "7-7": "Patrician",
+        "8-8": "Pinched",
+        "9-9": "Hawkish",
+        "10-10": "Broken",
+        "11-11": "Impish",
+        "12-12": "Narrow",
+        "13-13": "Ratlike",
+        "14-14": "Round",
+        "15-15": "Sunken",
+        "16-16": "Sharp",
+        "17-17": "Soft",
+        "18-18": "Square",
+        "19-19": "Wide",
+        "20-20": "Wolfish"
+      }
+    },
+    "General Gear 1 (Knave 1e)": {
+      "name": "General Gear 1 (Knave 1e)",
+      "description": "<p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>",
+      "results": {
+        "1-1": "Air bladder",
+        "2-2": "Bear trap",
+        "3-3": "Shovel",
+        "4-4": "Bellows",
+        "5-5": "Grease",
+        "6-6": "Saw",
+        "7-7": "Bucket",
+        "8-8": "Caltrops",
+        "9-9": "Chisel",
+        "10-10": "Drill",
+        "11-11": "Fishing rod",
+        "12-12": "Marbles",
+        "13-13": "Glue",
+        "14-14": "Pick",
+        "15-15": "Hourglass",
+        "16-16": "Net",
+        "17-17": "Tongs",
+        "18-18": "Lockpicks",
+        "19-19": "Metal file",
+        "20-20": "Nails"
+      }
+    },
+    "General Gear 2 (Knave 1e)": {
+      "name": "General Gear 2 (Knave 1e)",
+      "description": "<p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>",
+      "results": {
+        "1-1": "Incense",
+        "2-2": "Sponge",
+        "3-3": "Lens",
+        "4-4": "Perfume",
+        "5-5": "Horn",
+        "6-6": "Bottle",
+        "7-7": "Soap",
+        "8-8": "Spyglass",
+        "9-9": "Tar pot",
+        "10-10": "Twine",
+        "11-11": "Fake jewels",
+        "12-12": "Blank book",
+        "13-13": "Card deck",
+        "14-14": "Dice set",
+        "15-15": "Cook pots",
+        "16-16": "Face paint",
+        "17-17": "Whistle",
+        "18-18": "Instrument",
+        "19-19": "Quill & Ink",
+        "20-20": "Small bell"
+      }
+    },
+    "Hair": {
+      "name": "Hair",
+      "description": "<p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>",
+      "results": {
+        "1-1": "Bald",
+        "2-2": "Braided",
+        "3-3": "Bristly",
+        "4-4": "Cropped",
+        "5-5": "Curly",
+        "6-6": "Disheveled",
+        "7-7": "Dreadlocks",
+        "8-8": "Filthy",
+        "9-9": "Frizzy",
+        "10-10": "Greased",
+        "11-11": "Limp",
+        "12-12": "Long",
+        "13-13": "Luxurious",
+        "14-14": "Mohawk",
+        "15-15": "Oily",
+        "16-16": "Ponytail",
+        "17-17": "Silky",
+        "18-18": "Topknot",
+        "19-19": "Wavy",
+        "20-20": "Wispy"
+      }
+    },
+    "Helmets and Shields (Knave 1e)": {
+      "name": "Helmets and Shields (Knave 1e)",
+      "description": "<p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>",
+      "results": {
+        "1-13": "None",
+        "14-16": "Helmet",
+        "17-19": "Shield",
+        "20-20": "Helmet and Shield"
+      }
+    },
+    "Mannerisms": {
+      "name": "Mannerisms",
+      "description": "<p>Empty. The Game Master fills this table: GM Dashboard → Tables → Import.</p>",
+      "results": {
+        "1-100": "Empty. The Game Master fills this table: GM Dashboard → Tables → Import."
+      }
+    },
+    "Misfortune": {
+      "name": "Misfortune",
+      "description": "<p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>",
+      "results": {
+        "1-1": "Abandoned",
+        "2-2": "Addicted",
+        "3-3": "Blackmailed",
+        "4-4": "Condemned",
+        "5-5": "Cursed",
+        "6-6": "Defrauded",
+        "7-7": "Demoted",
+        "8-8": "Discredited",
+        "9-9": "Disowned",
+        "10-10": "Exiled",
+        "11-11": "Framed",
+        "12-12": "Haunted",
+        "13-13": "Kidnapped",
+        "14-14": "Mutilated",
+        "15-15": "Poor",
+        "16-16": "Pursued",
+        "17-17": "Rejected",
+        "18-18": "Replaced",
+        "19-19": "Robbed",
+        "20-20": "Suspected"
+      }
+    },
+    "Mishaps": {
+      "name": "Mishaps",
+      "description": "<p>Empty. The Game Master fills this table: GM Dashboard → Tables → Import.</p>",
+      "results": {
+        "1-20": "Empty. The Game Master fills this table: GM Dashboard → Tables → Import."
+      }
+    },
+    "Names": {
+      "name": "Names",
+      "description": "<p>Empty. The Game Master fills this table: GM Dashboard → Tables → Import.</p>",
+      "results": {
+        "1-100": "Empty. The Game Master fills this table: GM Dashboard → Tables → Import."
+      }
+    },
+    "Personalities": {
+      "name": "Personalities",
+      "description": "<p>Empty. The Game Master fills this table: GM Dashboard → Tables → Import.</p>",
+      "results": {
+        "1-100": "Empty. The Game Master fills this table: GM Dashboard → Tables → Import."
+      }
+    },
+    "Physique": {
+      "name": "Physique",
+      "description": "<p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>",
+      "results": {
+        "1-1": "Athletic",
+        "2-2": "Brawny",
+        "3-3": "Corpulent",
+        "4-4": "Delicate",
+        "5-5": "Gaunt",
+        "6-6": "Hulking",
+        "7-7": "Lanky",
+        "8-8": "Ripped",
+        "9-9": "Rugged",
+        "10-10": "Scrawny",
+        "11-11": "Short",
+        "12-12": "Sinewy",
+        "13-13": "Slender",
+        "14-14": "Flabby",
+        "15-15": "Statuesque",
+        "16-16": "Stout",
+        "17-17": "Tiny",
+        "18-18": "Towering",
+        "19-19": "Willowy",
+        "20-20": "Wiry"
+      }
+    },
+    "Reaction": {
+      "name": "Reaction",
+      "description": "<p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>",
+      "results": {
+        "2-2": "Hostile",
+        "3-5": "Unfriendly",
+        "6-8": "Unsure",
+        "9-11": "Talkative",
+        "12-12": "Helpful"
+      }
+    },
+    "Skin": {
+      "name": "Skin",
+      "description": "<p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>",
+      "results": {
+        "1-1": "Battle Scar",
+        "2-2": "Birthmark",
+        "3-3": "Burn Scar",
+        "4-4": "Dark",
+        "5-5": "Makeup",
+        "6-6": "Oily",
+        "7-7": "Pale",
+        "8-8": "Perfect",
+        "9-9": "Pierced",
+        "10-10": "Pockmarked",
+        "11-11": "Reeking",
+        "12-12": "Tattooed",
+        "13-13": "Rosy",
+        "14-14": "Rough",
+        "15-15": "Sallow",
+        "16-16": "Sunburned",
+        "17-17": "Tanned",
+        "18-18": "War Paint",
+        "19-19": "Weathered",
+        "20-20": "Whip Scar"
+      }
+    },
+    "Speech": {
+      "name": "Speech",
+      "description": "<p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>",
+      "results": {
+        "1-1": "Blunt",
+        "2-2": "Booming",
+        "3-3": "Breathy",
+        "4-4": "Cryptic",
+        "5-5": "Drawling",
+        "6-6": "Droning",
+        "7-7": "Flowery",
+        "8-8": "Formal",
+        "9-9": "Gravelly",
+        "10-10": "Hoarse",
+        "11-11": "Mumbling",
+        "12-12": "Precise",
+        "13-13": "Quaint",
+        "14-14": "Rambling",
+        "15-15": "Rapid-fire",
+        "16-16": "Dialect",
+        "17-17": "Slow",
+        "18-18": "Squeaky",
+        "19-19": "Stuttering",
+        "20-20": "Whispery"
+      }
+    },
+    "Spells": {
+      "name": "Spells",
+      "description": "<p>Empty. The Game Master fills this table: GM Dashboard → Tables → Import.</p>",
+      "results": {
+        "1-100": "Empty. The Game Master fills this table: GM Dashboard → Tables → Import."
+      }
+    },
+    "Spells (Knave 1e)": {
+      "name": "Spells (Knave 1e)",
+      "description": "<p>“L” is a number equal to the caster’s level, an item is an object able to be lifted with one hand, and an object is anything up to human size. Unless otherwise noted, all spells with ongoing effects last up to L×10 minutes, and have a range of up to 40 feet. If a spell directly affects another creature, the creature may make a save to avoid it. Success reduces or negates the spell’s effects.</p><p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>",
+      "results": {
+        "1-1": {
+          "name": "Adhere",
+          "description": "Object is covered in extremely sticky slime."
+        },
+        "2-2": {
+          "name": "Animate Object",
+          "description": "Object obeys your commands as best it can. It can walk 15ft per round."
+        },
+        "3-3": {
+          "name": "Anthropomorphize",
+          "description": "A touched animal either gains human intelligence or human appearance for L days."
+        },
+        "4-4": {
+          "name": "Arcane Eye",
+          "description": "You can see through a magical floating eyeball that flies around at your command."
+        },
+        "5-5": {
+          "name": "Astral Prison",
+          "description": "An object is frozen in time and space within an invulnerable crystal shell."
+        },
+        "6-6": {
+          "name": "Attract",
+          "description": "L+1 objects are strongly magnetically attracted to each other if they come within 10 feet."
+        },
+        "7-7": {
+          "name": "Auditory Illusion",
+          "description": "You create illusory sounds that seem to come from a direction of your choice."
+        },
+        "8-8": {
+          "name": "Babble",
+          "description": "A creature must loudly and clearly repeat everything you think. It is otherwise mute."
+        },
+        "9-9": {
+          "name": "Beast Form",
+          "description": "You and your possessions transform into a mundane animal."
+        },
+        "10-10": {
+          "name": "Befuddle",
+          "description": "L creatures of your choice are unable to form new short-term memories for the duration of the spell."
+        },
+        "11-11": {
+          "name": "Bend Fate",
+          "description": "Roll L+1 d20s. Whenever you must roll a d20 after casting the spell, you must choose and then discard one of the rolled results until they are all gone."
+        },
+        "12-12": {
+          "name": "Bird Person",
+          "description": "Your arms turn into huge bird wings."
+        },
+        "13-13": {
+          "name": "Body Swap",
+          "description": "You switch bodies with a creature you touch. If one body dies, the other dies as well."
+        },
+        "14-14": {
+          "name": "Catherine",
+          "description": "A woman wearing a blue dress appears until end of spell. She will obey polite, safe requests."
+        },
+        "15-15": {
+          "name": "Charm",
+          "description": "L creatures treat you like a friend."
+        },
+        "16-16": {
+          "name": "Command",
+          "description": "A creature obeys a single, three-word command that does not harm it."
+        },
+        "17-17": {
+          "name": "Comprehend",
+          "description": "You become fluent in all languages."
+        },
+        "18-18": {
+          "name": "Control Plants",
+          "description": "Nearby plants and trees obey you and gain the ability to move at 5 feet per round."
+        },
+        "19-19": {
+          "name": "Control Weather",
+          "description": "You may alter the type of weather at will, but you do not otherwise control it."
+        },
+        "20-20": {
+          "name": "Counterspell",
+          "description": "Make an opposed Intelligence save against the Intelligence of the caster of a nearby spell. You may do this out of turn as a reaction, or against an ongoing magical effect. On a success, you may cancel the spell."
+        },
+        "21-21": {
+          "name": "Deafen",
+          "description": "All nearby creatures are deafened."
+        },
+        "22-22": {
+          "name": "Detect Magic",
+          "description": "You hear nearby magical auras singing. Volume and harmony signify the aura’s power and refinement."
+        },
+        "23-23": {
+          "name": "Disassemble",
+          "description": "Any of your body parts may be detached and reattached at will, without causing pain or damage. You can still control them."
+        },
+        "24-24": {
+          "name": "Disguise",
+          "description": "You may alter the appearance of L characters at will as long as they remain humanoid. Attempts to duplicate other characters will seem uncanny."
+        },
+        "25-25": {
+          "name": "Displace",
+          "description": "An object appears to be up to L×10ft from its actual position."
+        },
+        "26-26": {
+          "name": "Earthquake",
+          "description": "The ground begins shaking violently. Structures may be damaged or collapse."
+        },
+        "27-27": {
+          "name": "Elasticity",
+          "description": "Your body can stretch up to L×10ft."
+        },
+        "28-28": {
+          "name": "Elemental Wall",
+          "description": "A straight wall of ice or fire L×40ft long and 10ft high rises from the ground."
+        },
+        "29-29": {
+          "name": "Filch",
+          "description": "L visible items teleport to your hands."
+        },
+        "30-30": {
+          "name": "Fog Cloud",
+          "description": "Dense fog spreads out from you."
+        },
+        "31-31": {
+          "name": "Frenzy",
+          "description": "L creatures erupt in a frenzy of violence."
+        },
+        "32-32": {
+          "name": "Gate",
+          "description": "A portal to a random plane opens."
+        },
+        "33-33": {
+          "name": "Gravity Shift",
+          "description": "You can change the direction of gravity (for yourself only) up to once per round."
+        },
+        "34-34": {
+          "name": "Greed",
+          "description": "L creatures develop an overwhelming urge to possess a visible item of your choice."
+        },
+        "35-35": {
+          "name": "Haste",
+          "description": "Your movement speed is tripled."
+        },
+        "36-36": {
+          "name": "Hatred",
+          "description": "L creatures develop a deep hatred of another creature or group of creatures and wish to destroy it."
+        },
+        "37-37": {
+          "name": "Hear Whispers",
+          "description": "You can hear faint sounds clearly."
+        },
+        "38-38": {
+          "name": "Hover",
+          "description": "An object hovers, frictionless, 2ft above the ground. It can hold up to L humanoids."
+        },
+        "39-39": {
+          "name": "Hypnotize",
+          "description": "A creature enters a trance and will truthfully answer L yes or no questions you ask it."
+        },
+        "40-40": {
+          "name": "Icy Touch",
+          "description": "A thick ice layer spreads across a touched surface, up to L×10ft in radius."
+        },
+        "41-41": {
+          "name": "Illuminate",
+          "description": "A floating light moves as you command."
+        },
+        "42-42": {
+          "name": "Increase Gravity",
+          "description": "The gravity in an area triples."
+        },
+        "43-43": {
+          "name": "Invisible Tether",
+          "description": "Two objects within 10ft of each other cannot be moved more than 10ft apart."
+        },
+        "44-44": {
+          "name": "Knock",
+          "description": "L nearby mundane or magical locks unlock."
+        },
+        "45-45": {
+          "name": "Leap",
+          "description": "You can jump up to L×10ft in the air."
+        },
+        "46-46": {
+          "name": "Liquid Air",
+          "description": "The air around you becomes swimmable."
+        },
+        "47-47": {
+          "name": "Magic Dampener",
+          "description": "All nearby magical effects have their effectiveness halved."
+        },
+        "48-48": {
+          "name": "Manse",
+          "description": "A sturdy, furnished cottage appears for L×12 hours. You can permit and forbid entry to it at will."
+        },
+        "49-49": {
+          "name": "Marble Madness",
+          "description": "Your pockets are full of marbles, and will refill every round."
+        },
+        "50-50": {
+          "name": "Masquerade",
+          "description": "L characters’ appearances and voices become identical to a touched character."
+        },
+        "51-51": {
+          "name": "Miniaturize",
+          "description": "You and L other touched creatures are reduced to the size of a mouse."
+        },
+        "52-52": {
+          "name": "Mirror Image",
+          "description": "L illusory duplicates of yourself appear under your control."
+        },
+        "53-53": {
+          "name": "Mirrorwalk",
+          "description": "A mirror becomes a gateway to another mirror that you looked into today."
+        },
+        "54-54": {
+          "name": "Multiarm",
+          "description": "You gain L extra arms."
+        },
+        "55-55": {
+          "name": "Night Sphere",
+          "description": "An L×40ft wide sphere of darkness displaying the night sky appears."
+        },
+        "56-56": {
+          "name": "Objectify",
+          "description": "You become any inanimate object between the size of a grand piano and an apple."
+        },
+        "57-57": {
+          "name": "Ooze Form",
+          "description": "You become a living jelly."
+        },
+        "58-58": {
+          "name": "Pacify",
+          "description": "L creatures have an aversion to violence."
+        },
+        "59-59": {
+          "name": "Phantom Coach",
+          "description": "A ghostly coach appears until end of spell. It moves unnaturally fast over any terrain, including water."
+        },
+        "60-60": {
+          "name": "Phobia",
+          "description": "L creatures become terrified of an object of your choice."
+        },
+        "61-61": {
+          "name": "Pit",
+          "description": "A pit 10ft wide and L×5ft deep opens in the ground."
+        },
+        "62-62": {
+          "name": "Primeval Surge",
+          "description": "An object grows to the size of an elephant. If it is an animal, it is enraged."
+        },
+        "63-63": {
+          "name": "Psychometry",
+          "description": "The referee answers L yes or no questions about a touched object."
+        },
+        "64-64": {
+          "name": "Pull",
+          "description": "An object of any size is pulled directly towards you with the strength of L men for one round."
+        },
+        "65-65": {
+          "name": "Push",
+          "description": "An object of any size is pushed directly away from you with the strength of L men for one round."
+        },
+        "66-66": {
+          "name": "Raise Dead",
+          "description": "L skeletons rise from the ground to serve you. They are incredibly stupid and can only obey simple orders."
+        },
+        "67-67": {
+          "name": "Raise Spirit",
+          "description": "The spirit of a dead body manifests and will answer L questions."
+        },
+        "68-68": {
+          "name": "Read Mind",
+          "description": "You can hear the surface thoughts of nearby creatures."
+        },
+        "69-69": {
+          "name": "Repel",
+          "description": "L+1 objects are strongly magnetically repelled from each other if they come within 10 feet."
+        },
+        "70-70": {
+          "name": "Scry",
+          "description": "You can see through the eyes of a creature you touched earlier today."
+        },
+        "71-71": {
+          "name": "Sculpt Elements",
+          "description": "All inanimate material behaves like clay in your hands."
+        },
+        "72-72": {
+          "name": "Shroud",
+          "description": "L creatures are invisible until they move."
+        },
+        "73-73": {
+          "name": "Shuffle",
+          "description": "L creatures instantly switch places. Determine where they end up randomly."
+        },
+        "74-74": {
+          "name": "Sleep",
+          "description": "L creatures fall into a light sleep."
+        },
+        "75-75": {
+          "name": "Smoke Form",
+          "description": "Your body becomes living smoke."
+        },
+        "76-76": {
+          "name": "Snail Knight",
+          "description": "10 minutes after casting, a knight sitting astride a giant snail rides into view. He is able to answer most questions related to quests and chivalry, and may aid you if he finds you worthy."
+        },
+        "77-77": {
+          "name": "Sniff",
+          "description": "You can smell even the faintest traces of scents."
+        },
+        "78-78": {
+          "name": "Sort",
+          "description": "Inanimate items sort themselves according to categories you set. The categories must be visually verifiable."
+        },
+        "79-79": {
+          "name": "Spectacle",
+          "description": "A clearly unreal but impressive illusion of your choice appears, under your control. It may be up to the size of a palace and has full motion and sound."
+        },
+        "80-80": {
+          "name": "Spellseize",
+          "description": "Cast this as a reaction to another spell going off to make a temporary copy of it that you can cast at any time before this spell ends."
+        },
+        "81-81": {
+          "name": "Spider Climb",
+          "description": "You can climb surfaces like a spider."
+        },
+        "82-82": {
+          "name": "Summon Cube",
+          "description": "Once per second, (6 times per round) you may summon or banish a 3-foot-wide cube of earth. New cubes must be affixed to the earth or to other cubes."
+        },
+        "83-83": {
+          "name": "Swarm",
+          "description": "You become a swarm of crows, rats, or piranhas. You only take damage from area effects."
+        },
+        "84-84": {
+          "name": "Telekinesis",
+          "description": "You may mentally move L items."
+        },
+        "85-85": {
+          "name": "Telepathy",
+          "description": "L+1 creatures can hear each other’s thoughts, no matter how far apart they move."
+        },
+        "86-86": {
+          "name": "Teleport",
+          "description": "An object disappears and reappears on the ground in a visible, clear area up to L×40ft away."
+        },
+        "87-87": {
+          "name": "Thaumaturgic Anchor",
+          "description": "Object becomes the target of every spell cast near it."
+        },
+        "88-88": {
+          "name": "Thicket",
+          "description": "A thicket of trees and dense brush up to L×40ft wide suddenly sprouts up."
+        },
+        "89-89": {
+          "name": "Time Jump",
+          "description": "An object disappears as it jumps L×10 minutes into the future. When it returns, it appears in the unoccupied area nearest to where it left."
+        },
+        "90-90": {
+          "name": "Summon Idol",
+          "description": "A carved stone statue the size of a four poster bed rises from the ground."
+        },
+        "91-91": {
+          "name": "Time Rush",
+          "description": "Time in a 40ft bubble starts moving 10 times faster."
+        },
+        "92-92": {
+          "name": "Time Slow",
+          "description": "Time in a 40ft bubble slows to 10%."
+        },
+        "93-93": {
+          "name": "True Sight",
+          "description": "You see through all nearby illusions."
+        },
+        "94-94": {
+          "name": "Upwell",
+          "description": "A spring of seawater appears."
+        },
+        "95-95": {
+          "name": "Vision",
+          "description": "You completely control what a creature sees."
+        },
+        "96-96": {
+          "name": "Visual Illusion",
+          "description": "A silent, immobile, illusion of your choice appears, up to the size of a bedroom."
+        },
+        "97-97": {
+          "name": "Ward",
+          "description": "A silver circle 40ft across appears on the ground. Choose one thing that cannot cross it: Living creatures, dead creatures, projectiles or metal."
+        },
+        "98-98": {
+          "name": "Web",
+          "description": "Your wrists can shoot thick webbing."
+        },
+        "99-99": {
+          "name": "Wizard Mark",
+          "description": "Your finger can shoot a stream of ulfire-colored paint. This paint is only visible to you, and can be seen at any distance, even through solid objects."
+        },
+        "100-100": {
+          "name": "X-Ray Vision",
+          "description": "You gain X-Ray vision."
+        }
+      }
+    },
+    "Starting Armor (Knave 1e)": {
+      "name": "Starting Armor (Knave 1e)",
+      "description": "<p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>",
+      "results": {
+        "1-3": "No armor",
+        "4-14": "Gambeson",
+        "15-19": "Brigandine",
+        "20-20": "Chain"
+      }
+    },
+    "Surnames": {
+      "name": "Surnames",
+      "description": "<p>Empty. The Game Master fills this table: GM Dashboard → Tables → Import.</p>",
+      "results": {
+        "1-100": "Empty. The Game Master fills this table: GM Dashboard → Tables → Import."
+      }
+    },
+    "Vice": {
+      "name": "Vice",
+      "description": "<p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>",
+      "results": {
+        "1-1": "Aggressive",
+        "2-2": "Arrogant",
+        "3-3": "Bitter",
+        "4-4": "Cowardly",
+        "5-5": "Cruel",
+        "6-6": "Deceitful",
+        "7-7": "Flippant",
+        "8-8": "Gluttonous",
+        "9-9": "Greedy",
+        "10-10": "Irascible",
+        "11-11": "Lazy",
+        "12-12": "Nervous",
+        "13-13": "Prejudiced",
+        "14-14": "Reckless",
+        "15-15": "Rude",
+        "16-16": "Suspicious",
+        "17-17": "Vain",
+        "18-18": "Vengeful",
+        "19-19": "Wasteful",
+        "20-20": "Whiny"
+      }
+    },
+    "Virtue": {
+      "name": "Virtue",
+      "description": "<p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>",
+      "results": {
+        "1-1": "Ambitious",
+        "2-2": "Cautious",
+        "3-3": "Courageous",
+        "4-4": "Courteous",
+        "5-5": "Curious",
+        "6-6": "Disciplined",
+        "7-7": "Focused",
+        "8-8": "Generous",
+        "9-9": "Gregarious",
+        "10-10": "Honest",
+        "11-11": "Honorable",
+        "12-12": "Humble",
+        "13-13": "Idealistic",
+        "14-14": "Just",
+        "15-15": "Loyal",
+        "16-16": "Merciful",
+        "17-17": "Righteous",
+        "18-18": "Serene",
+        "19-19": "Stoic",
+        "20-20": "Tolerant"
+      }
+    }
+  }
+}

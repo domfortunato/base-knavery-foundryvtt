@@ -347,8 +347,13 @@ for (const [name, rows] of Object.entries(KNAVE_1E_TRAITS)) {
 /* The rest of Knave 1e that sits with 2e without contradicting it (CC BY 4.0, as above). */
 const rangeRows = (rows) => rows.map(([lo, hi, name]) => ({ name, range: [lo, hi], weight: hi - lo + 1 }));
 const listRows = (names) => names.map((name, i) => ({ name, range: [i + 1, i + 1], weight: 1 }));
+/**
+ * Each Knave 1e row keeps its English text in `flags.base-knavery.en`: a translation (Babele) rewrites
+ * the row, and the starting-gear roll still finds the item the English row names (character-generator.js).
+ */
 const knave1e = (name, formula, results, intro = "") =>
-  tableDoc("tables", name, formula, results, { description: (intro ? `<p>${intro}</p>` : "") + KNAVE_1E_CREDIT });
+  tableDoc("tables", name, formula, results.map((r) => ({ ...r, flags: { ...(r.flags ?? {}), "base-knavery": { ...(r.flags?.["base-knavery"] ?? {}), en: r.name } } })),
+    { description: (intro ? `<p>${intro}</p>` : "") + KNAVE_1E_CREDIT });
 
 // Reaction, 2d6. Building Reaction from the 2e book makes a world table of the same name, which wins.
 knave1e("Reaction", "2d6", rangeRows([[2, 2, "Hostile"], [3, 5, "Unfriendly"], [6, 8, "Unsure"], [9, 11, "Talkative"], [12, 12, "Helpful"]]));

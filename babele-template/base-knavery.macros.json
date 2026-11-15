@@ -1,0 +1,29 @@
+{
+  "label": "GM Macros",
+  "entries": {
+    "Game Master's Dashboard": {
+      "name": "Game Master's Dashboard"
+    },
+    "Import a Table": {
+      "name": "Import a Table"
+    },
+    "Marketplace Manager": {
+      "name": "Marketplace Manager"
+    },
+    "Toggle Change Log": {
+      "name": "Toggle Change Log"
+    },
+    "Toggle Player Char Gen Mode": {
+      "name": "Toggle Player Char Gen Mode"
+    },
+    "Toggle Player Character Creation": {
+      "name": "Toggle Player Character Creation"
+    },
+    "Toggle Player Level & XP": {
+      "name": "Toggle Player Level & XP"
+    },
+    "Toggle Player Marketplace": {
+      "name": "Toggle Player Marketplace"
+    }
+  }
+}

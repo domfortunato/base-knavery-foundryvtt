@@ -318,27 +318,34 @@ const KNAVE_1E_ARMOR = { Gambeson: 1, Brigandine: 2, Chain: 3 };
  * items and one from each General Gear table. Items the gear packs know by
  * name (Gambeson, Helmet, Shield, Crowbar…) come from them; the rest are
  * plain one-slot items. Returns {items, names}.
+ *
+ * A shipped row keeps its English text in `flags.base-knavery.en`, so a translated table still
+ * gives the item its English row names (found by key, keys.js); the names shown are the row's own.
  */
 export const rollKnave1eGear = async () => {
   const T = TABLES.gear1e;
-  const names = [];
+  const picks = []; // { name: the English row text, label: as the table reads }
   for (const t of [T.armor, T.helmets, T.dungeon, T.dungeon, T.general1, T.general2]) {
     const r = await drawFrom(t, { warn: false });
     if (!r) continue;
-    if (r.text === "Helmet and Shield") names.push("Helmet", "Shield");
-    else if (!["No armor", "None"].includes(r.text)) names.push(r.text);
+    const en = r.result?.flags?.[FLAG_SCOPE]?.en ?? r.text;
+    if (en === "Helmet and Shield") picks.push({ name: "Helmet" }, { name: "Shield" });
+    else if (!["No armor", "None"].includes(en)) picks.push({ name: en, label: r.text });
   }
   const items = [];
-  for (const name of names) {
+  const names = [];
+  for (const { name, label } of picks) {
     // On the 1e price list the gear comes from it (with its price and quality), by the list's own name.
     const alias = usesPrices1e() ? GEAR_1E_ALIASES[name] : null;
     const known = await findItemByName(alias?.name ?? name);
+    const shown = label ?? name;
+    names.push(shown);
     if (known && alias?.quantity) items.push(itemData(known, { system: { quantity: alias.quantity, bundle: alias.quantity } }));
     else if (known) items.push(itemData(known));
     else if (KNAVE_1E_ARMOR[name]) {
       const n = KNAVE_1E_ARMOR[name];
-      items.push({ name, type: "armor", img: `${SYS_PATH}/icons/armor.svg`, system: { points: n, slots: n, armorType: "other" } });
-    } else items.push({ name, type: "item", img: `${SYS_PATH}/icons/generic-item.svg`, system: { slots: 1, quantity: 1 } });
+      items.push({ name: shown, type: "armor", img: `${SYS_PATH}/icons/armor.svg`, system: { points: n, slots: n, armorType: "other" } });
+    } else items.push({ name: shown, type: "item", img: `${SYS_PATH}/icons/generic-item.svg`, system: { slots: 1, quantity: 1 } });
   }
   return { items, names };
 };

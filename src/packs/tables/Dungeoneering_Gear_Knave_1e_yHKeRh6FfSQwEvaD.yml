@@ -23,7 +23,9 @@ results:
       - 1
       - 1
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Rope, 50ft
   - _id: pEgxawcm5ExOaphB
     _key: '!tables.results!yHKeRh6FfSQwEvaD.pEgxawcm5ExOaphB'
     type: text
@@ -36,7 +38,9 @@ results:
       - 2
       - 2
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Pulleys
   - _id: hNwDMwzQ7QNxgeCK
     _key: '!tables.results!yHKeRh6FfSQwEvaD.hNwDMwzQ7QNxgeCK'
     type: text
@@ -49,7 +53,9 @@ results:
       - 3
       - 3
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Candles, 5
   - _id: z5kPStf73AcVs1RF
     _key: '!tables.results!yHKeRh6FfSQwEvaD.z5kPStf73AcVs1RF'
     type: text
@@ -62,7 +68,9 @@ results:
       - 4
       - 4
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Chain, 10ft
   - _id: a6hDP41o9gwoA3qf
     _key: '!tables.results!yHKeRh6FfSQwEvaD.a6hDP41o9gwoA3qf'
     type: text
@@ -75,7 +83,9 @@ results:
       - 5
       - 5
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Chalk, 10
   - _id: AcgLCjrHQ06HPDwb
     _key: '!tables.results!yHKeRh6FfSQwEvaD.AcgLCjrHQ06HPDwb'
     type: text
@@ -88,7 +98,9 @@ results:
       - 6
       - 6
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Crowbar
   - _id: pmWXWsYPhH4PtPWF
     _key: '!tables.results!yHKeRh6FfSQwEvaD.pmWXWsYPhH4PtPWF'
     type: text
@@ -101,7 +113,9 @@ results:
       - 7
       - 7
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Tinderbox
   - _id: CbHjg4gx3Er6SgEv
     _key: '!tables.results!yHKeRh6FfSQwEvaD.CbHjg4gx3Er6SgEv'
     type: text
@@ -114,7 +128,9 @@ results:
       - 8
       - 8
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Grappling hook
   - _id: P1fOmjEQxKGKh7LM
     _key: '!tables.results!yHKeRh6FfSQwEvaD.P1fOmjEQxKGKh7LM'
     type: text
@@ -127,7 +143,9 @@ results:
       - 9
       - 9
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Hammer
   - _id: VcAYjrpNIcE2YUNg
     _key: '!tables.results!yHKeRh6FfSQwEvaD.VcAYjrpNIcE2YUNg'
     type: text
@@ -140,7 +158,9 @@ results:
       - 10
       - 10
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Waterskin
   - _id: rlNyt6Wq5fOEeTm5
     _key: '!tables.results!yHKeRh6FfSQwEvaD.rlNyt6Wq5fOEeTm5'
     type: text
@@ -153,7 +173,9 @@ results:
       - 11
       - 11
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Lantern
   - _id: 9Ag9PSkJWhm81Z13
     _key: '!tables.results!yHKeRh6FfSQwEvaD.9Ag9PSkJWhm81Z13'
     type: text
@@ -166,7 +188,9 @@ results:
       - 12
       - 12
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Lamp oil
   - _id: WKRXBYFBeY65ki4D
     _key: '!tables.results!yHKeRh6FfSQwEvaD.WKRXBYFBeY65ki4D'
     type: text
@@ -179,7 +203,9 @@ results:
       - 13
       - 13
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Padlock
   - _id: tkhw4R8siCZ9vADC
     _key: '!tables.results!yHKeRh6FfSQwEvaD.tkhw4R8siCZ9vADC'
     type: text
@@ -192,7 +218,9 @@ results:
       - 14
       - 14
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Manacles
   - _id: T6avWHJ5o8pXa8JZ
     _key: '!tables.results!yHKeRh6FfSQwEvaD.T6avWHJ5o8pXa8JZ'
     type: text
@@ -205,7 +233,9 @@ results:
       - 15
       - 15
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Mirror
   - _id: B9x4DGxNxKfwwE0X
     _key: '!tables.results!yHKeRh6FfSQwEvaD.B9x4DGxNxKfwwE0X'
     type: text
@@ -218,7 +248,9 @@ results:
       - 16
       - 16
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Pole, 10ft
   - _id: InZc1DWeiznv7pLR
     _key: '!tables.results!yHKeRh6FfSQwEvaD.InZc1DWeiznv7pLR'
     type: text
@@ -231,7 +263,9 @@ results:
       - 17
       - 17
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Sack
   - _id: E6TCEx1DN5eSldbT
     _key: '!tables.results!yHKeRh6FfSQwEvaD.E6TCEx1DN5eSldbT'
     type: text
@@ -244,7 +278,9 @@ results:
       - 18
       - 18
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Tent
   - _id: UmsUKRpMkj1dj9Xa
     _key: '!tables.results!yHKeRh6FfSQwEvaD.UmsUKRpMkj1dj9Xa'
     type: text
@@ -257,7 +293,9 @@ results:
       - 19
       - 19
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Spikes, 5
   - _id: iJ6IXM1jTgFkP9yw
     _key: '!tables.results!yHKeRh6FfSQwEvaD.iJ6IXM1jTgFkP9yw'
     type: text
@@ -270,7 +308,9 @@ results:
       - 20
       - 20
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Torches, 5
 flags:
   base-knavery:
     key: dungeoneering-gear-knave-1e

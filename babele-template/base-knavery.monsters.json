@@ -1,0 +1,339 @@
+{
+  "label": "Bestiary",
+  "mapping": {
+    "description": "system.description",
+    "attacksText": "system.attacksText"
+  },
+  "entries": {
+    "Animated Armor": {
+      "name": "Animated Armor",
+      "attacksText": "weapon (d8)",
+      "items": {
+        "Weapon": {
+          "name": "Weapon"
+        }
+      }
+    },
+    "Bandit": {
+      "name": "Bandit",
+      "attacksText": "weapon (d6)",
+      "items": {
+        "Weapon": {
+          "name": "Weapon"
+        }
+      }
+    },
+    "Basilisk": {
+      "name": "Basilisk",
+      "attacksText": "bite (d10)",
+      "items": {
+        "Bite": {
+          "name": "Bite"
+        }
+      }
+    },
+    "Black Pudding": {
+      "name": "Black Pudding",
+      "attacksText": "touch (3d8)",
+      "items": {
+        "Touch": {
+          "name": "Touch"
+        }
+      }
+    },
+    "Blink Dog": {
+      "name": "Blink Dog",
+      "attacksText": "bite (d6)",
+      "items": {
+        "Bite": {
+          "name": "Bite"
+        }
+      }
+    },
+    "Bugbear": {
+      "name": "Bugbear",
+      "attacksText": "weapon (d6)",
+      "items": {
+        "Weapon": {
+          "name": "Weapon"
+        }
+      }
+    },
+    "Bulette": {
+      "name": "Bulette",
+      "attacksText": "bite (4d12), 2 claw (3d6)",
+      "items": {
+        "Bite": {
+          "name": "Bite"
+        },
+        "Claw": {
+          "name": "Claw"
+        }
+      }
+    },
+    "Doppelganger": {
+      "name": "Doppelganger",
+      "attacksText": "bite (d12)",
+      "items": {
+        "Bite": {
+          "name": "Bite"
+        }
+      }
+    },
+    "Dragon": {
+      "name": "Dragon",
+      "attacksText": "2 claw (d8), bite (4d8)",
+      "items": {
+        "Claw": {
+          "name": "Claw"
+        },
+        "Bite": {
+          "name": "Bite"
+        }
+      }
+    },
+    "Expert": {
+      "name": "Expert",
+      "attacksText": "punch (d2)",
+      "items": {
+        "Punch": {
+          "name": "Punch"
+        }
+      }
+    },
+    "Gelatinous Cube": {
+      "name": "Gelatinous Cube",
+      "attacksText": "touch (2d4)",
+      "items": {
+        "Touch": {
+          "name": "Touch"
+        }
+      }
+    },
+    "Ghost": {
+      "name": "Ghost",
+      "attacksText": "life drain (d6)",
+      "items": {
+        "Life drain": {
+          "name": "Life drain"
+        }
+      }
+    },
+    "Ghoul": {
+      "name": "Ghoul",
+      "attacksText": "2 claw (d3), bite (d3)",
+      "items": {
+        "Claw": {
+          "name": "Claw"
+        },
+        "Bite": {
+          "name": "Bite"
+        }
+      }
+    },
+    "Giant": {
+      "name": "Giant",
+      "attacksText": "weapon (2d8), boulder (3d6)",
+      "items": {
+        "Weapon": {
+          "name": "Weapon"
+        },
+        "Boulder": {
+          "name": "Boulder"
+        }
+      }
+    },
+    "Giant Frog": {
+      "name": "Giant Frog",
+      "attacksText": "bite (d4)",
+      "items": {
+        "Bite": {
+          "name": "Bite"
+        }
+      }
+    },
+    "Giant Spider": {
+      "name": "Giant Spider",
+      "attacksText": "bite (d6)",
+      "items": {
+        "Bite": {
+          "name": "Bite"
+        }
+      }
+    },
+    "Gnoll": {
+      "name": "Gnoll",
+      "attacksText": "weapon (2d4)",
+      "items": {
+        "Weapon": {
+          "name": "Weapon"
+        }
+      }
+    },
+    "Goblin": {
+      "name": "Goblin",
+      "attacksText": "weapon (d6)",
+      "items": {
+        "Weapon": {
+          "name": "Weapon"
+        }
+      }
+    },
+    "Harpy": {
+      "name": "Harpy",
+      "attacksText": "2 claw (d4)",
+      "items": {
+        "Claw": {
+          "name": "Claw"
+        }
+      }
+    },
+    "Hireling": {
+      "name": "Hireling",
+      "attacksText": "punch (d2)",
+      "items": {
+        "Punch": {
+          "name": "Punch"
+        }
+      }
+    },
+    "Hobgoblin": {
+      "name": "Hobgoblin",
+      "attacksText": "weapon (d8)",
+      "items": {
+        "Weapon": {
+          "name": "Weapon"
+        }
+      }
+    },
+    "Kobold": {
+      "name": "Kobold",
+      "attacksText": "weapon (d4)",
+      "items": {
+        "Weapon": {
+          "name": "Weapon"
+        }
+      }
+    },
+    "Lich": {
+      "name": "Lich",
+      "attacksText": "touch (d10)",
+      "items": {
+        "Touch": {
+          "name": "Touch"
+        }
+      }
+    },
+    "Mercenary": {
+      "name": "Mercenary",
+      "attacksText": "weapon (d6)",
+      "items": {
+        "Weapon": {
+          "name": "Weapon"
+        }
+      }
+    },
+    "Mimic": {
+      "name": "Mimic",
+      "attacksText": "pseudopod (3d4)",
+      "items": {
+        "Pseudopod": {
+          "name": "Pseudopod"
+        }
+      }
+    },
+    "Ogre": {
+      "name": "Ogre",
+      "attacksText": "weapon (d10)",
+      "items": {
+        "Weapon": {
+          "name": "Weapon"
+        }
+      }
+    },
+    "Orc": {
+      "name": "Orc",
+      "attacksText": "weapon (d6)",
+      "items": {
+        "Weapon": {
+          "name": "Weapon"
+        }
+      }
+    },
+    "Owlbear": {
+      "name": "Owlbear",
+      "attacksText": "2 claw (d8), bite (d8)",
+      "items": {
+        "Claw": {
+          "name": "Claw"
+        },
+        "Bite": {
+          "name": "Bite"
+        }
+      }
+    },
+    "Purple Worm": {
+      "name": "Purple Worm",
+      "attacksText": "bite (2d8), sting (d8)",
+      "items": {
+        "Bite": {
+          "name": "Bite"
+        },
+        "Sting": {
+          "name": "Sting"
+        }
+      }
+    },
+    "Rust Monster": {
+      "name": "Rust Monster"
+    },
+    "Skeleton": {
+      "name": "Skeleton",
+      "attacksText": "weapon (d6)",
+      "items": {
+        "Weapon": {
+          "name": "Weapon"
+        }
+      }
+    },
+    "Treant": {
+      "name": "Treant",
+      "attacksText": "2 fist (2d6)",
+      "items": {
+        "Fist": {
+          "name": "Fist"
+        }
+      }
+    },
+    "Troll": {
+      "name": "Troll",
+      "attacksText": "2 claw (d6), bite (d10)",
+      "items": {
+        "Claw": {
+          "name": "Claw"
+        },
+        "Bite": {
+          "name": "Bite"
+        }
+      }
+    },
+    "Vampire": {
+      "name": "Vampire",
+      "attacksText": "touch (d10)",
+      "items": {
+        "Touch": {
+          "name": "Touch"
+        }
+      }
+    },
+    "Werewolf": {
+      "name": "Werewolf",
+      "attacksText": "bite (2d4)",
+      "items": {
+        "Bite": {
+          "name": "Bite"
+        }
+      }
+    }
+  }
+}

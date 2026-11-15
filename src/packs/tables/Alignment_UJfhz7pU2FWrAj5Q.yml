@@ -23,7 +23,9 @@ results:
       - 1
       - 5
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Law
   - _id: AWGfwei7WqzIi7qJ
     _key: '!tables.results!UJfhz7pU2FWrAj5Q.AWGfwei7WqzIi7qJ'
     type: text
@@ -36,7 +38,9 @@ results:
       - 6
       - 15
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Neutrality
   - _id: tJUye9iJKw0UzP1C
     _key: '!tables.results!UJfhz7pU2FWrAj5Q.tJUye9iJKw0UzP1C'
     type: text
@@ -49,7 +53,9 @@ results:
       - 16
       - 20
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Chaos
 flags:
   base-knavery:
     key: alignment

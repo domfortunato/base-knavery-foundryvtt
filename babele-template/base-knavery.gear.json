@@ -1,0 +1,182 @@
+{
+  "label": "Gear & Prices",
+  "mapping": {
+    "description": "system.description"
+  },
+  "entries": {
+    "Arm Plate": {
+      "name": "Arm Plate"
+    },
+    "Arrows": {
+      "name": "Arrows"
+    },
+    "Backpack": {
+      "name": "Backpack"
+    },
+    "Bedroll": {
+      "name": "Bedroll"
+    },
+    "Bow": {
+      "name": "Bow"
+    },
+    "Breastplate": {
+      "name": "Breastplate"
+    },
+    "Candles": {
+      "name": "Candles"
+    },
+    "Caravel": {
+      "name": "Caravel"
+    },
+    "Carriage": {
+      "name": "Carriage"
+    },
+    "Cart": {
+      "name": "Cart"
+    },
+    "Chalk": {
+      "name": "Chalk"
+    },
+    "Clothing (Humble)": {
+      "name": "Clothing (Humble)"
+    },
+    "Clothing (Major Noble)": {
+      "name": "Clothing (Major Noble)"
+    },
+    "Clothing (Minor Noble)": {
+      "name": "Clothing (Minor Noble)"
+    },
+    "Clothing (Poor)": {
+      "name": "Clothing (Poor)"
+    },
+    "Clothing (Respectable)": {
+      "name": "Clothing (Respectable)"
+    },
+    "Clothing (Royal)": {
+      "name": "Clothing (Royal)"
+    },
+    "Clothing (Wealthy)": {
+      "name": "Clothing (Wealthy)"
+    },
+    "Common Item": {
+      "name": "Common Item"
+    },
+    "Cow": {
+      "name": "Cow"
+    },
+    "Crowbar": {
+      "name": "Crowbar"
+    },
+    "Dog": {
+      "name": "Dog"
+    },
+    "Falcon": {
+      "name": "Falcon"
+    },
+    "Fishing Boat": {
+      "name": "Fishing Boat"
+    },
+    "Galleon": {
+      "name": "Galleon"
+    },
+    "Gambeson": {
+      "name": "Gambeson"
+    },
+    "Goat": {
+      "name": "Goat"
+    },
+    "Grappling Hook": {
+      "name": "Grappling Hook"
+    },
+    "Helmet": {
+      "name": "Helmet"
+    },
+    "Lantern": {
+      "name": "Lantern"
+    },
+    "Leg Plate": {
+      "name": "Leg Plate"
+    },
+    "Mail Shirt": {
+      "name": "Mail Shirt"
+    },
+    "Manacles": {
+      "name": "Manacles"
+    },
+    "Mule": {
+      "name": "Mule"
+    },
+    "Oil Flask": {
+      "name": "Oil Flask"
+    },
+    "One-Handed Weapon": {
+      "name": "One-Handed Weapon"
+    },
+    "Pig": {
+      "name": "Pig"
+    },
+    "Pole (10')": {
+      "name": "Pole (10')"
+    },
+    "Poultry": {
+      "name": "Poultry"
+    },
+    "Rare Item": {
+      "name": "Rare Item"
+    },
+    "Rations": {
+      "name": "Rations"
+    },
+    "Riding Horse": {
+      "name": "Riding Horse"
+    },
+    "Rope (50')": {
+      "name": "Rope (50')"
+    },
+    "Rowboat": {
+      "name": "Rowboat"
+    },
+    "Sack": {
+      "name": "Sack"
+    },
+    "Shield": {
+      "name": "Shield"
+    },
+    "Sling": {
+      "name": "Sling"
+    },
+    "Sling Stones": {
+      "name": "Sling Stones"
+    },
+    "Sloop": {
+      "name": "Sloop"
+    },
+    "Spyglass": {
+      "name": "Spyglass"
+    },
+    "Tent": {
+      "name": "Tent"
+    },
+    "Tinderbox": {
+      "name": "Tinderbox"
+    },
+    "Torch": {
+      "name": "Torch"
+    },
+    "Two-Handed Weapon": {
+      "name": "Two-Handed Weapon"
+    },
+    "Uncommon Item": {
+      "name": "Uncommon Item"
+    },
+    "Wagon": {
+      "name": "Wagon"
+    },
+    "War Horse": {
+      "name": "War Horse"
+    },
+    "Waterskin": {
+      "name": "Waterskin"
+    }
+  }
+}

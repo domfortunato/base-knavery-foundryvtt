@@ -1,0 +1,78 @@
+{
+  "label": "Marketplace",
+  "entries": {
+    "Market 1e: Animals & Transport": {
+      "name": "Market 1e: Animals & Transport",
+      "description": "<p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>",
+      "results": {
+        "21-21": "Ship, high quality (per ton)",
+        "22-22": "Ship, good quality (per ton)",
+        "23-23": "Ship, used quality (per ton)",
+        "24-24": "Ship, poor quality (per ton)"
+      }
+    },
+    "Market 1e: Armor": {
+      "name": "Market 1e: Armor",
+      "description": "<p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>"
+    },
+    "Market 1e: Buildings": {
+      "name": "Market 1e: Buildings",
+      "description": "<p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>",
+      "results": {
+        "1-1": "Hovel",
+        "2-2": "Row House",
+        "3-3": "Craftsman's House",
+        "4-4": "Merchant's House",
+        "5-5": "House with Courtyard",
+        "6-6": "Guildhall",
+        "7-7": "Stone Tower",
+        "8-8": "Temple",
+        "9-9": "Stronghold",
+        "10-10": "Cathedral",
+        "11-11": "Imperial Palace"
+      }
+    },
+    "Market 1e: Clothing": {
+      "name": "Market 1e: Clothing",
+      "description": "<p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>"
+    },
+    "Market 1e: Food": {
+      "name": "Market 1e: Food",
+      "description": "<p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>"
+    },
+    "Market 1e: Gear": {
+      "name": "Market 1e: Gear",
+      "description": "<p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>"
+    },
+    "Market 1e: Lodging & Meals": {
+      "name": "Market 1e: Lodging & Meals",
+      "description": "<p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>",
+      "results": {
+        "1-1": "Bed, per night",
+        "2-2": "Private room, per night",
+        "3-3": "Meal",
+        "4-4": "Hot bath",
+        "5-5": "Stabling and fodder"
+      }
+    },
+    "Market 1e: Weapons": {
+      "name": "Market 1e: Weapons",
+      "description": "<p>From <i>Knave</i> (first edition) by Ben Milton, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).</p>"
+    },
+    "Market: Animals & Transport": {
+      "name": "Market: Animals & Transport"
+    },
+    "Market: Armor": {
+      "name": "Market: Armor"
+    },
+    "Market: Clothing": {
+      "name": "Market: Clothing"
+    },
+    "Market: Gear": {
+      "name": "Market: Gear"
+    },
+    "Market: Weapons": {
+      "name": "Market: Weapons"
+    }
+  }
+}

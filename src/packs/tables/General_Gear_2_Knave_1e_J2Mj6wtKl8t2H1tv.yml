@@ -23,7 +23,9 @@ results:
       - 1
       - 1
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Incense
   - _id: TaHlO3pHHAKFSUm6
     _key: '!tables.results!J2Mj6wtKl8t2H1tv.TaHlO3pHHAKFSUm6'
     type: text
@@ -36,7 +38,9 @@ results:
       - 2
       - 2
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Sponge
   - _id: QEAuSMl9qpYYHxyU
     _key: '!tables.results!J2Mj6wtKl8t2H1tv.QEAuSMl9qpYYHxyU'
     type: text
@@ -49,7 +53,9 @@ results:
       - 3
       - 3
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Lens
   - _id: cxpUwvhTzpza2AVL
     _key: '!tables.results!J2Mj6wtKl8t2H1tv.cxpUwvhTzpza2AVL'
     type: text
@@ -62,7 +68,9 @@ results:
       - 4
       - 4
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Perfume
   - _id: csMF91jT7qZgZGwE
     _key: '!tables.results!J2Mj6wtKl8t2H1tv.csMF91jT7qZgZGwE'
     type: text
@@ -75,7 +83,9 @@ results:
       - 5
       - 5
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Horn
   - _id: 55LQm0Rv7888Mw56
     _key: '!tables.results!J2Mj6wtKl8t2H1tv.55LQm0Rv7888Mw56'
     type: text
@@ -88,7 +98,9 @@ results:
       - 6
       - 6
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Bottle
   - _id: hIfwXEGKYt2cMXlJ
     _key: '!tables.results!J2Mj6wtKl8t2H1tv.hIfwXEGKYt2cMXlJ'
     type: text
@@ -101,7 +113,9 @@ results:
       - 7
       - 7
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Soap
   - _id: RwVldJtSlzwFOCcm
     _key: '!tables.results!J2Mj6wtKl8t2H1tv.RwVldJtSlzwFOCcm'
     type: text
@@ -114,7 +128,9 @@ results:
       - 8
       - 8
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Spyglass
   - _id: tsCDxqdVnkbPKfo7
     _key: '!tables.results!J2Mj6wtKl8t2H1tv.tsCDxqdVnkbPKfo7'
     type: text
@@ -127,7 +143,9 @@ results:
       - 9
       - 9
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Tar pot
   - _id: ItuiMXuBXHKGmG9Y
     _key: '!tables.results!J2Mj6wtKl8t2H1tv.ItuiMXuBXHKGmG9Y'
     type: text
@@ -140,7 +158,9 @@ results:
       - 10
       - 10
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Twine
   - _id: Fjg3FqCiGGzjUwEA
     _key: '!tables.results!J2Mj6wtKl8t2H1tv.Fjg3FqCiGGzjUwEA'
     type: text
@@ -153,7 +173,9 @@ results:
       - 11
       - 11
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Fake jewels
   - _id: hqp3opNDC20lXNCA
     _key: '!tables.results!J2Mj6wtKl8t2H1tv.hqp3opNDC20lXNCA'
     type: text
@@ -166,7 +188,9 @@ results:
       - 12
       - 12
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Blank book
   - _id: gueQlEVQ7SibSoCM
     _key: '!tables.results!J2Mj6wtKl8t2H1tv.gueQlEVQ7SibSoCM'
     type: text
@@ -179,7 +203,9 @@ results:
       - 13
       - 13
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Card deck
   - _id: Wr3JPSIeWg2HBhZs
     _key: '!tables.results!J2Mj6wtKl8t2H1tv.Wr3JPSIeWg2HBhZs'
     type: text
@@ -192,7 +218,9 @@ results:
       - 14
       - 14
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Dice set
   - _id: 0gsktZDa1nsCGonY
     _key: '!tables.results!J2Mj6wtKl8t2H1tv.0gsktZDa1nsCGonY'
     type: text
@@ -205,7 +233,9 @@ results:
       - 15
       - 15
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Cook pots
   - _id: gNqByzfbp4tXLStU
     _key: '!tables.results!J2Mj6wtKl8t2H1tv.gNqByzfbp4tXLStU'
     type: text
@@ -218,7 +248,9 @@ results:
       - 16
       - 16
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Face paint
   - _id: 3g6f7B3HWLNT2FhN
     _key: '!tables.results!J2Mj6wtKl8t2H1tv.3g6f7B3HWLNT2FhN'
     type: text
@@ -231,7 +263,9 @@ results:
       - 17
       - 17
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Whistle
   - _id: A2mn6yjlrVVWpZvV
     _key: '!tables.results!J2Mj6wtKl8t2H1tv.A2mn6yjlrVVWpZvV'
     type: text
@@ -244,7 +278,9 @@ results:
       - 18
       - 18
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Instrument
   - _id: xUFWPVrHw7S6wgm7
     _key: '!tables.results!J2Mj6wtKl8t2H1tv.xUFWPVrHw7S6wgm7'
     type: text
@@ -257,7 +293,9 @@ results:
       - 19
       - 19
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Quill & Ink
   - _id: WJw9KW1m6Jh4k3yY
     _key: '!tables.results!J2Mj6wtKl8t2H1tv.WJw9KW1m6Jh4k3yY'
     type: text
@@ -270,7 +308,9 @@ results:
       - 20
       - 20
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Small bell
 flags:
   base-knavery:
     key: general-gear-2-knave-1e

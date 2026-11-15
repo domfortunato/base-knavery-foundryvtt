@@ -16,6 +16,9 @@
   lists of names read the language's way ("Alice, Bob and Carol"), coins and XP get the language's thousands
   separator ("1,234 coins"), and a label and its number sit in one translatable phrase ("Slots 3 / 10").
   `TRANSLATING.md` explains how to send a translation or publish one as a module.
+- Ready for translations, step three: `babele-template/` lists every translatable compendium entry (the Guide,
+  gear, bestiary and the Knave 1e tables and spells) for a Babele translation module, and a translated Knave 1e
+  starting-gear table still gives the right items.
 
 ## 0.3.0
 

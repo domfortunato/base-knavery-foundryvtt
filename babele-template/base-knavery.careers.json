@@ -1,0 +1,12 @@
+{
+  "label": "Careers",
+  "mapping": {
+    "description": "system.description"
+  },
+  "entries": {
+    "Example Career (duplicate me)": {
+      "name": "Example Career (duplicate me)",
+      "description": "<p>A template for a custom career or background. Duplicate it into your world, rename it, and edit it: the <b>starting items</b> are granted in Char Gen Mode, each <b>feature</b> becomes a field on the character sheet, and any <b>effect</b> applies to whoever holds the career.</p>"
+    }
+  }
+}

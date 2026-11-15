@@ -51,12 +51,15 @@ picker, change log and marketplace it ports.
   and output of `tools/dev/rulebook-tables-check.mjs --show` is never committed.
 
 ## Translations (user rulings 2026-11-15)
+- The goal: the interface and the Knave 1e rules the system ships can be fully localized. Knave 2e is
+  English only; if it is ever translated, we work with its translators on the 2e side (`TRANSLATING.md`).
 - Interface: we ship volunteers' language files, and fans may publish translation modules.
-- Shipped content: through Babele, keyed by the frozen ids. Never rename a document in the generator.
-- Knave 2e has no translations (user, 2026-11-15): the rulebook reader and table builder stay English-only.
-  Knave 1e is translated: those translations are what a GM in another language plays with.
-- Translated Knave 1e text ships only under its translator's licence and credit, approved per language.
-  Until one ships, a GM pastes their translated 1e tables with the importer's **Use as**.
+- Content: through Babele. `babele-template/` (`npm run build:babele`, checked by `npm run check`) holds every
+  translatable entry keyed by English name; never rename a document in the generator (the ids freeze it).
+  Knave 1e rows keep their English text in `flags.base-knavery.en` (the 1e gear roll reads it).
+- Published translations of Knave 1e (the user's French, German and Russian PDFs) are LEFT OUT: their
+  translators hold their rights. We ship volunteers' own translations of what the system ships, crediting
+  Ben Milton. Until then a GM pastes translated tables with the importer's **Use as**.
 - Human translations only; an AI draft needs a line in the welcome's AI disclosure.
 
 ## Layout

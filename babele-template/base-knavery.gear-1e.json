@@ -1,0 +1,422 @@
+{
+  "label": "Gear & Prices (Knave 1e)",
+  "mapping": {
+    "description": "system.description"
+  },
+  "entries": {
+    "Air Bladder": {
+      "name": "Air Bladder"
+    },
+    "Animal Feed (1 day)": {
+      "name": "Animal Feed (1 day)"
+    },
+    "Arrows (20)": {
+      "name": "Arrows (20)"
+    },
+    "Axe": {
+      "name": "Axe"
+    },
+    "Bacon, side of": {
+      "name": "Bacon, side of"
+    },
+    "Battle Axe": {
+      "name": "Battle Axe"
+    },
+    "Bear Trap": {
+      "name": "Bear Trap"
+    },
+    "Bedroll": {
+      "name": "Bedroll"
+    },
+    "Bellows": {
+      "name": "Bellows"
+    },
+    "Black Grease": {
+      "name": "Black Grease"
+    },
+    "Block and Tackle": {
+      "name": "Block and Tackle"
+    },
+    "Book (Blank)": {
+      "name": "Book (Blank)"
+    },
+    "Book (Reading)": {
+      "name": "Book (Reading)"
+    },
+    "Bottle/Vial": {
+      "name": "Bottle/Vial"
+    },
+    "Bow": {
+      "name": "Bow"
+    },
+    "Bread, 1 loaf": {
+      "name": "Bread, 1 loaf"
+    },
+    "Brigandine": {
+      "name": "Brigandine"
+    },
+    "Bucket": {
+      "name": "Bucket"
+    },
+    "Caltrops (bag)": {
+      "name": "Caltrops (bag)"
+    },
+    "Candle (4 hours)": {
+      "name": "Candle (4 hours)"
+    },
+    "Caravel": {
+      "name": "Caravel"
+    },
+    "Cards with an extra Ace": {
+      "name": "Cards with an extra Ace"
+    },
+    "Carriage": {
+      "name": "Carriage"
+    },
+    "Cart": {
+      "name": "Cart"
+    },
+    "Chain": {
+      "name": "Chain"
+    },
+    "Chain (10 ft)": {
+      "name": "Chain (10 ft)"
+    },
+    "Chalk (10 pieces)": {
+      "name": "Chalk (10 pieces)"
+    },
+    "Cheese, 1 lb": {
+      "name": "Cheese, 1 lb"
+    },
+    "Chicken": {
+      "name": "Chicken"
+    },
+    "Chisel": {
+      "name": "Chisel"
+    },
+    "Cider, 4 gallons": {
+      "name": "Cider, 4 gallons"
+    },
+    "Clothing (noble)": {
+      "name": "Clothing (noble)"
+    },
+    "Clothing (poor)": {
+      "name": "Clothing (poor)"
+    },
+    "Clothing (standard)": {
+      "name": "Clothing (standard)"
+    },
+    "Cod, whole": {
+      "name": "Cod, whole"
+    },
+    "Cookpots": {
+      "name": "Cookpots"
+    },
+    "Cow": {
+      "name": "Cow"
+    },
+    "Crossbow": {
+      "name": "Crossbow"
+    },
+    "Crowbar": {
+      "name": "Crowbar"
+    },
+    "Cudgel": {
+      "name": "Cudgel"
+    },
+    "Dagger": {
+      "name": "Dagger"
+    },
+    "Dog, hunting": {
+      "name": "Dog, hunting"
+    },
+    "Dog, small but vicious": {
+      "name": "Dog, small but vicious"
+    },
+    "Donkey/Pack Horse": {
+      "name": "Donkey/Pack Horse"
+    },
+    "Drill": {
+      "name": "Drill"
+    },
+    "Eggs, 24": {
+      "name": "Eggs, 24"
+    },
+    "Face Paint/Makeup": {
+      "name": "Face Paint/Makeup"
+    },
+    "Fake Jewels": {
+      "name": "Fake Jewels"
+    },
+    "Fishing Boat": {
+      "name": "Fishing Boat"
+    },
+    "Fishing Rod/Tackle": {
+      "name": "Fishing Rod/Tackle"
+    },
+    "Flail": {
+      "name": "Flail"
+    },
+    "Flour, 5 lbs": {
+      "name": "Flour, 5 lbs"
+    },
+    "Fruit, 1 lb": {
+      "name": "Fruit, 1 lb"
+    },
+    "Full Plate": {
+      "name": "Full Plate"
+    },
+    "Furs": {
+      "name": "Furs"
+    },
+    "Galleon": {
+      "name": "Galleon"
+    },
+    "Gambeson": {
+      "name": "Gambeson"
+    },
+    "Garlic, bunch": {
+      "name": "Garlic, bunch"
+    },
+    "Glass Marbles (bag)": {
+      "name": "Glass Marbles (bag)"
+    },
+    "Glue (bottle)": {
+      "name": "Glue (bottle)"
+    },
+    "Goat": {
+      "name": "Goat"
+    },
+    "Grain, 1 bushel (8 gal.)": {
+      "name": "Grain, 1 bushel (8 gal.)"
+    },
+    "Grappling Hook": {
+      "name": "Grappling Hook"
+    },
+    "Halberd": {
+      "name": "Halberd"
+    },
+    "Half Plate": {
+      "name": "Half Plate"
+    },
+    "Hammer": {
+      "name": "Hammer"
+    },
+    "Hawk": {
+      "name": "Hawk"
+    },
+    "Helmet": {
+      "name": "Helmet"
+    },
+    "Herbs, 1 bunch": {
+      "name": "Herbs, 1 bunch"
+    },
+    "Holy Water": {
+      "name": "Holy Water"
+    },
+    "Horn": {
+      "name": "Horn"
+    },
+    "Horse, riding": {
+      "name": "Horse, riding"
+    },
+    "Horse, war": {
+      "name": "Horse, war"
+    },
+    "Hourglass": {
+      "name": "Hourglass"
+    },
+    "Incense (packet)": {
+      "name": "Incense (packet)"
+    },
+    "Iron Tongs": {
+      "name": "Iron Tongs"
+    },
+    "Ladder (10 ft)": {
+      "name": "Ladder (10 ft)"
+    },
+    "Lamp Oil (4 hours)": {
+      "name": "Lamp Oil (4 hours)"
+    },
+    "Lantern": {
+      "name": "Lantern"
+    },
+    "Lard, 5 lbs": {
+      "name": "Lard, 5 lbs"
+    },
+    "Large Sponge": {
+      "name": "Large Sponge"
+    },
+    "Lens": {
+      "name": "Lens"
+    },
+    "Lockpicks": {
+      "name": "Lockpicks"
+    },
+    "Long Sword": {
+      "name": "Long Sword"
+    },
+    "Mace": {
+      "name": "Mace"
+    },
+    "Manacles": {
+      "name": "Manacles"
+    },
+    "Metal File": {
+      "name": "Metal File"
+    },
+    "Mirror (small, silver)": {
+      "name": "Mirror (small, silver)"
+    },
+    "Musical Instrument": {
+      "name": "Musical Instrument"
+    },
+    "Nails (12)": {
+      "name": "Nails (12)"
+    },
+    "Net": {
+      "name": "Net"
+    },
+    "Oilskin Bag": {
+      "name": "Oilskin Bag"
+    },
+    "Oilskin Trousers": {
+      "name": "Oilskin Trousers"
+    },
+    "Onions, 1 bushel": {
+      "name": "Onions, 1 bushel"
+    },
+    "Ox": {
+      "name": "Ox"
+    },
+    "Padlock and Key": {
+      "name": "Padlock and Key"
+    },
+    "Perfume": {
+      "name": "Perfume"
+    },
+    "Pick": {
+      "name": "Pick"
+    },
+    "Pig": {
+      "name": "Pig"
+    },
+    "Pole (10 ft)": {
+      "name": "Pole (10 ft)"
+    },
+    "Quill and Ink": {
+      "name": "Quill and Ink"
+    },
+    "Quiver": {
+      "name": "Quiver"
+    },
+    "Raft": {
+      "name": "Raft"
+    },
+    "Rations": {
+      "name": "Rations"
+    },
+    "Rope (50 ft)": {
+      "name": "Rope (50 ft)"
+    },
+    "Sack": {
+      "name": "Sack"
+    },
+    "Salt, 1 bushel": {
+      "name": "Salt, 1 bushel"
+    },
+    "Saw": {
+      "name": "Saw"
+    },
+    "Set of Loaded Dice": {
+      "name": "Set of Loaded Dice"
+    },
+    "Sheep": {
+      "name": "Sheep"
+    },
+    "Shield": {
+      "name": "Shield"
+    },
+    "Shovel": {
+      "name": "Shovel"
+    },
+    "Sickle": {
+      "name": "Sickle"
+    },
+    "Sling": {
+      "name": "Sling"
+    },
+    "Sloop": {
+      "name": "Sloop"
+    },
+    "Small Bell": {
+      "name": "Small Bell"
+    },
+    "Soap": {
+      "name": "Soap"
+    },
+    "Spear": {
+      "name": "Spear"
+    },
+    "Spices, 1 lb": {
+      "name": "Spices, 1 lb"
+    },
+    "Spike (iron)": {
+      "name": "Spike (iron)"
+    },
+    "Spike (wood)": {
+      "name": "Spike (wood)"
+    },
+    "Spiked Boots": {
+      "name": "Spiked Boots"
+    },
+    "Spyglass": {
+      "name": "Spyglass"
+    },
+    "Staff": {
+      "name": "Staff"
+    },
+    "Sugar, 1 lb": {
+      "name": "Sugar, 1 lb"
+    },
+    "Sword": {
+      "name": "Sword"
+    },
+    "Tar (pot)": {
+      "name": "Tar (pot)"
+    },
+    "Tent (3 man)": {
+      "name": "Tent (3 man)"
+    },
+    "Tent (personal)": {
+      "name": "Tent (personal)"
+    },
+    "Tinderbox": {
+      "name": "Tinderbox"
+    },
+    "Torch (1 hour)": {
+      "name": "Torch (1 hour)"
+    },
+    "Twine (300 ft)": {
+      "name": "Twine (300 ft)"
+    },
+    "Wagon": {
+      "name": "Wagon"
+    },
+    "War Hammer": {
+      "name": "War Hammer"
+    },
+    "Waterskin": {
+      "name": "Waterskin"
+    },
+    "Whistle": {
+      "name": "Whistle"
+    },
+    "Wine/Ale, bottle": {
+      "name": "Wine/Ale, bottle"
+    },
+    "Winter Clothing": {
+      "name": "Winter Clothing"
+    }
+  }
+}

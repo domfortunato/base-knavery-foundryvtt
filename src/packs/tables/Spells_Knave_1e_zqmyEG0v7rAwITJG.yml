@@ -23,7 +23,9 @@ results:
       - 1
       - 1
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Adhere
   - _id: xy5aoBXbn01NVGm4
     _key: '!tables.results!zqmyEG0v7rAwITJG.xy5aoBXbn01NVGm4'
     type: text
@@ -36,7 +38,9 @@ results:
       - 2
       - 2
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Animate Object
   - _id: fUoFIwkbdWMOqoT4
     _key: '!tables.results!zqmyEG0v7rAwITJG.fUoFIwkbdWMOqoT4'
     type: text
@@ -49,7 +53,9 @@ results:
       - 3
       - 3
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Anthropomorphize
   - _id: xW702X7aSRZAEyX3
     _key: '!tables.results!zqmyEG0v7rAwITJG.xW702X7aSRZAEyX3'
     type: text
@@ -62,7 +68,9 @@ results:
       - 4
       - 4
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Arcane Eye
   - _id: UtIYqc3Z5aYpRr27
     _key: '!tables.results!zqmyEG0v7rAwITJG.UtIYqc3Z5aYpRr27'
     type: text
@@ -75,7 +83,9 @@ results:
       - 5
       - 5
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Astral Prison
   - _id: sMzlhRODrtwfCtBf
     _key: '!tables.results!zqmyEG0v7rAwITJG.sMzlhRODrtwfCtBf'
     type: text
@@ -88,7 +98,9 @@ results:
       - 6
       - 6
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Attract
   - _id: fHSMhxHNIQhx6mDZ
     _key: '!tables.results!zqmyEG0v7rAwITJG.fHSMhxHNIQhx6mDZ'
     type: text
@@ -101,7 +113,9 @@ results:
       - 7
       - 7
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Auditory Illusion
   - _id: aBoFvWDXuVVCTTO9
     _key: '!tables.results!zqmyEG0v7rAwITJG.aBoFvWDXuVVCTTO9'
     type: text
@@ -114,7 +128,9 @@ results:
       - 8
       - 8
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Babble
   - _id: gL9nM3oUReSqPJPI
     _key: '!tables.results!zqmyEG0v7rAwITJG.gL9nM3oUReSqPJPI'
     type: text
@@ -127,7 +143,9 @@ results:
       - 9
       - 9
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Beast Form
   - _id: CscvkwEoeWcV4hsi
     _key: '!tables.results!zqmyEG0v7rAwITJG.CscvkwEoeWcV4hsi'
     type: text
@@ -140,7 +158,9 @@ results:
       - 10
       - 10
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Befuddle
   - _id: hljnYGkxi1mRcQAa
     _key: '!tables.results!zqmyEG0v7rAwITJG.hljnYGkxi1mRcQAa'
     type: text
@@ -153,7 +173,9 @@ results:
       - 11
       - 11
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Bend Fate
   - _id: wfUzuzfBEUpO19t9
     _key: '!tables.results!zqmyEG0v7rAwITJG.wfUzuzfBEUpO19t9'
     type: text
@@ -166,7 +188,9 @@ results:
       - 12
       - 12
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Bird Person
   - _id: QtGxGHBz6wl9yALB
     _key: '!tables.results!zqmyEG0v7rAwITJG.QtGxGHBz6wl9yALB'
     type: text
@@ -179,7 +203,9 @@ results:
       - 13
       - 13
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Body Swap
   - _id: 3gjxnfrrusH85T46
     _key: '!tables.results!zqmyEG0v7rAwITJG.3gjxnfrrusH85T46'
     type: text
@@ -192,7 +218,9 @@ results:
       - 14
       - 14
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Catherine
   - _id: LAiaCJ2B7kLeMIiS
     _key: '!tables.results!zqmyEG0v7rAwITJG.LAiaCJ2B7kLeMIiS'
     type: text
@@ -205,7 +233,9 @@ results:
       - 15
       - 15
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Charm
   - _id: NJJSrLb2o381wzCc
     _key: '!tables.results!zqmyEG0v7rAwITJG.NJJSrLb2o381wzCc'
     type: text
@@ -218,7 +248,9 @@ results:
       - 16
       - 16
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Command
   - _id: lEsF5vQOmQRWZpPd
     _key: '!tables.results!zqmyEG0v7rAwITJG.lEsF5vQOmQRWZpPd'
     type: text
@@ -231,7 +263,9 @@ results:
       - 17
       - 17
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Comprehend
   - _id: AZtUBM3qXaGP0XHc
     _key: '!tables.results!zqmyEG0v7rAwITJG.AZtUBM3qXaGP0XHc'
     type: text
@@ -244,7 +278,9 @@ results:
       - 18
       - 18
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Control Plants
   - _id: HawLCv4noW72IweA
     _key: '!tables.results!zqmyEG0v7rAwITJG.HawLCv4noW72IweA'
     type: text
@@ -257,7 +293,9 @@ results:
       - 19
       - 19
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Control Weather
   - _id: aijsDHYdiCCLgz0E
     _key: '!tables.results!zqmyEG0v7rAwITJG.aijsDHYdiCCLgz0E'
     type: text
@@ -270,7 +308,9 @@ results:
       - 20
       - 20
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Counterspell
   - _id: KpBivymiO8kz7guA
     _key: '!tables.results!zqmyEG0v7rAwITJG.KpBivymiO8kz7guA'
     type: text
@@ -283,7 +323,9 @@ results:
       - 21
       - 21
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Deafen
   - _id: JqguzjCAZQAaCcDD
     _key: '!tables.results!zqmyEG0v7rAwITJG.JqguzjCAZQAaCcDD'
     type: text
@@ -296,7 +338,9 @@ results:
       - 22
       - 22
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Detect Magic
   - _id: 4ylq6J6KrKiPnuZk
     _key: '!tables.results!zqmyEG0v7rAwITJG.4ylq6J6KrKiPnuZk'
     type: text
@@ -309,7 +353,9 @@ results:
       - 23
       - 23
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Disassemble
   - _id: XBZtjO3CgWacldc5
     _key: '!tables.results!zqmyEG0v7rAwITJG.XBZtjO3CgWacldc5'
     type: text
@@ -322,7 +368,9 @@ results:
       - 24
       - 24
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Disguise
   - _id: GWYsvuQKBWRusiIn
     _key: '!tables.results!zqmyEG0v7rAwITJG.GWYsvuQKBWRusiIn'
     type: text
@@ -335,7 +383,9 @@ results:
       - 25
       - 25
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Displace
   - _id: GjZMuZ98BHeoG6vK
     _key: '!tables.results!zqmyEG0v7rAwITJG.GjZMuZ98BHeoG6vK'
     type: text
@@ -348,7 +398,9 @@ results:
       - 26
       - 26
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Earthquake
   - _id: 9VFiIK6YJjfJJ6mY
     _key: '!tables.results!zqmyEG0v7rAwITJG.9VFiIK6YJjfJJ6mY'
     type: text
@@ -361,7 +413,9 @@ results:
       - 27
       - 27
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Elasticity
   - _id: isqwAmeWAnmEV8Gp
     _key: '!tables.results!zqmyEG0v7rAwITJG.isqwAmeWAnmEV8Gp'
     type: text
@@ -374,7 +428,9 @@ results:
       - 28
       - 28
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Elemental Wall
   - _id: Mf1IQFrCaBmSFDXN
     _key: '!tables.results!zqmyEG0v7rAwITJG.Mf1IQFrCaBmSFDXN'
     type: text
@@ -387,7 +443,9 @@ results:
       - 29
       - 29
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Filch
   - _id: WCeFudnNMn6A39tm
     _key: '!tables.results!zqmyEG0v7rAwITJG.WCeFudnNMn6A39tm'
     type: text
@@ -400,7 +458,9 @@ results:
       - 30
       - 30
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Fog Cloud
   - _id: HFJTYfyEHTOZXkAs
     _key: '!tables.results!zqmyEG0v7rAwITJG.HFJTYfyEHTOZXkAs'
     type: text
@@ -413,7 +473,9 @@ results:
       - 31
       - 31
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Frenzy
   - _id: jfLWlLErgTKj1Gee
     _key: '!tables.results!zqmyEG0v7rAwITJG.jfLWlLErgTKj1Gee'
     type: text
@@ -426,7 +488,9 @@ results:
       - 32
       - 32
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Gate
   - _id: cgNIjg6SrWmVWrvH
     _key: '!tables.results!zqmyEG0v7rAwITJG.cgNIjg6SrWmVWrvH'
     type: text
@@ -439,7 +503,9 @@ results:
       - 33
       - 33
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Gravity Shift
   - _id: 9XNpx4Sp3Hno0QiX
     _key: '!tables.results!zqmyEG0v7rAwITJG.9XNpx4Sp3Hno0QiX'
     type: text
@@ -452,7 +518,9 @@ results:
       - 34
       - 34
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Greed
   - _id: gCoTEWDHawwaMfOG
     _key: '!tables.results!zqmyEG0v7rAwITJG.gCoTEWDHawwaMfOG'
     type: text
@@ -465,7 +533,9 @@ results:
       - 35
       - 35
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Haste
   - _id: IaGkCGPWHN5AkvoS
     _key: '!tables.results!zqmyEG0v7rAwITJG.IaGkCGPWHN5AkvoS'
     type: text
@@ -478,7 +548,9 @@ results:
       - 36
       - 36
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Hatred
   - _id: LfAjBKuDYg7jz3Ws
     _key: '!tables.results!zqmyEG0v7rAwITJG.LfAjBKuDYg7jz3Ws'
     type: text
@@ -491,7 +563,9 @@ results:
       - 37
       - 37
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Hear Whispers
   - _id: vJciEK3ddmksJTce
     _key: '!tables.results!zqmyEG0v7rAwITJG.vJciEK3ddmksJTce'
     type: text
@@ -504,7 +578,9 @@ results:
       - 38
       - 38
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Hover
   - _id: VmgmNq7cCI0NazRS
     _key: '!tables.results!zqmyEG0v7rAwITJG.VmgmNq7cCI0NazRS'
     type: text
@@ -517,7 +593,9 @@ results:
       - 39
       - 39
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Hypnotize
   - _id: X41NdrmUNSWkA88g
     _key: '!tables.results!zqmyEG0v7rAwITJG.X41NdrmUNSWkA88g'
     type: text
@@ -530,7 +608,9 @@ results:
       - 40
       - 40
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Icy Touch
   - _id: OgmwnZQrOCrRnrYa
     _key: '!tables.results!zqmyEG0v7rAwITJG.OgmwnZQrOCrRnrYa'
     type: text
@@ -543,7 +623,9 @@ results:
       - 41
       - 41
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Illuminate
   - _id: 9f3sMG8MmUejwlW4
     _key: '!tables.results!zqmyEG0v7rAwITJG.9f3sMG8MmUejwlW4'
     type: text
@@ -556,7 +638,9 @@ results:
       - 42
       - 42
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Increase Gravity
   - _id: pfJCFTsAixH0TjMT
     _key: '!tables.results!zqmyEG0v7rAwITJG.pfJCFTsAixH0TjMT'
     type: text
@@ -569,7 +653,9 @@ results:
       - 43
       - 43
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Invisible Tether
   - _id: HRgPh46hNIWjDHbH
     _key: '!tables.results!zqmyEG0v7rAwITJG.HRgPh46hNIWjDHbH'
     type: text
@@ -582,7 +668,9 @@ results:
       - 44
       - 44
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Knock
   - _id: sGkDmTIjZBb4usjV
     _key: '!tables.results!zqmyEG0v7rAwITJG.sGkDmTIjZBb4usjV'
     type: text
@@ -595,7 +683,9 @@ results:
       - 45
       - 45
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Leap
   - _id: NOTLd29QH3S5o0O5
     _key: '!tables.results!zqmyEG0v7rAwITJG.NOTLd29QH3S5o0O5'
     type: text
@@ -608,7 +698,9 @@ results:
       - 46
       - 46
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Liquid Air
   - _id: EVDXWYHR3HZpYEl8
     _key: '!tables.results!zqmyEG0v7rAwITJG.EVDXWYHR3HZpYEl8'
     type: text
@@ -621,7 +713,9 @@ results:
       - 47
       - 47
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Magic Dampener
   - _id: 3FY0uXKxSk9PkZBC
     _key: '!tables.results!zqmyEG0v7rAwITJG.3FY0uXKxSk9PkZBC'
     type: text
@@ -634,7 +728,9 @@ results:
       - 48
       - 48
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Manse
   - _id: SwtbsRF6WsENUDog
     _key: '!tables.results!zqmyEG0v7rAwITJG.SwtbsRF6WsENUDog'
     type: text
@@ -647,7 +743,9 @@ results:
       - 49
       - 49
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Marble Madness
   - _id: nPX0cig868Z7MT7A
     _key: '!tables.results!zqmyEG0v7rAwITJG.nPX0cig868Z7MT7A'
     type: text
@@ -660,7 +758,9 @@ results:
       - 50
       - 50
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Masquerade
   - _id: USXKEBUyV6QBk1nz
     _key: '!tables.results!zqmyEG0v7rAwITJG.USXKEBUyV6QBk1nz'
     type: text
@@ -673,7 +773,9 @@ results:
       - 51
       - 51
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Miniaturize
   - _id: jHOzZuXAtzMqtJwQ
     _key: '!tables.results!zqmyEG0v7rAwITJG.jHOzZuXAtzMqtJwQ'
     type: text
@@ -686,7 +788,9 @@ results:
       - 52
       - 52
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Mirror Image
   - _id: WJWuM93chWTtT7mY
     _key: '!tables.results!zqmyEG0v7rAwITJG.WJWuM93chWTtT7mY'
     type: text
@@ -699,7 +803,9 @@ results:
       - 53
       - 53
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Mirrorwalk
   - _id: 7bS9QymJDMweHBWO
     _key: '!tables.results!zqmyEG0v7rAwITJG.7bS9QymJDMweHBWO'
     type: text
@@ -712,7 +818,9 @@ results:
       - 54
       - 54
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Multiarm
   - _id: IAAXoxFXPCXeX4bk
     _key: '!tables.results!zqmyEG0v7rAwITJG.IAAXoxFXPCXeX4bk'
     type: text
@@ -725,7 +833,9 @@ results:
       - 55
       - 55
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Night Sphere
   - _id: bwWY3grd5yr1NL9r
     _key: '!tables.results!zqmyEG0v7rAwITJG.bwWY3grd5yr1NL9r'
     type: text
@@ -738,7 +848,9 @@ results:
       - 56
       - 56
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Objectify
   - _id: 27lRPHdSd5CLchIF
     _key: '!tables.results!zqmyEG0v7rAwITJG.27lRPHdSd5CLchIF'
     type: text
@@ -751,7 +863,9 @@ results:
       - 57
       - 57
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Ooze Form
   - _id: E2jRoooj5hD8t4ys
     _key: '!tables.results!zqmyEG0v7rAwITJG.E2jRoooj5hD8t4ys'
     type: text
@@ -764,7 +878,9 @@ results:
       - 58
       - 58
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Pacify
   - _id: M9remcC79O37w4Vw
     _key: '!tables.results!zqmyEG0v7rAwITJG.M9remcC79O37w4Vw'
     type: text
@@ -777,7 +893,9 @@ results:
       - 59
       - 59
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Phantom Coach
   - _id: gMvyNZOB7TecEYxl
     _key: '!tables.results!zqmyEG0v7rAwITJG.gMvyNZOB7TecEYxl'
     type: text
@@ -790,7 +908,9 @@ results:
       - 60
       - 60
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Phobia
   - _id: OEO00LC91ODu4eEs
     _key: '!tables.results!zqmyEG0v7rAwITJG.OEO00LC91ODu4eEs'
     type: text
@@ -803,7 +923,9 @@ results:
       - 61
       - 61
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Pit
   - _id: NtKn6cGRi7imBySP
     _key: '!tables.results!zqmyEG0v7rAwITJG.NtKn6cGRi7imBySP'
     type: text
@@ -816,7 +938,9 @@ results:
       - 62
       - 62
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Primeval Surge
   - _id: QpnADeCzv9t1A8R6
     _key: '!tables.results!zqmyEG0v7rAwITJG.QpnADeCzv9t1A8R6'
     type: text
@@ -829,7 +953,9 @@ results:
       - 63
       - 63
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Psychometry
   - _id: 4A7ANj5qJxnoWGGN
     _key: '!tables.results!zqmyEG0v7rAwITJG.4A7ANj5qJxnoWGGN'
     type: text
@@ -842,7 +968,9 @@ results:
       - 64
       - 64
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Pull
   - _id: 595y1mKliR2Irk6A
     _key: '!tables.results!zqmyEG0v7rAwITJG.595y1mKliR2Irk6A'
     type: text
@@ -855,7 +983,9 @@ results:
       - 65
       - 65
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Push
   - _id: xrkcShbBHhbP7eQA
     _key: '!tables.results!zqmyEG0v7rAwITJG.xrkcShbBHhbP7eQA'
     type: text
@@ -868,7 +998,9 @@ results:
       - 66
       - 66
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Raise Dead
   - _id: ZAQE5E3nrayHu5Ym
     _key: '!tables.results!zqmyEG0v7rAwITJG.ZAQE5E3nrayHu5Ym'
     type: text
@@ -881,7 +1013,9 @@ results:
       - 67
       - 67
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Raise Spirit
   - _id: 7zaDV1m8nvSzuSTk
     _key: '!tables.results!zqmyEG0v7rAwITJG.7zaDV1m8nvSzuSTk'
     type: text
@@ -894,7 +1028,9 @@ results:
       - 68
       - 68
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Read Mind
   - _id: aRBNd0khRopgPS5a
     _key: '!tables.results!zqmyEG0v7rAwITJG.aRBNd0khRopgPS5a'
     type: text
@@ -907,7 +1043,9 @@ results:
       - 69
       - 69
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Repel
   - _id: vlTyHEyqo7TFRmER
     _key: '!tables.results!zqmyEG0v7rAwITJG.vlTyHEyqo7TFRmER'
     type: text
@@ -920,7 +1058,9 @@ results:
       - 70
       - 70
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Scry
   - _id: GtCzDcvGWGJmQ3WD
     _key: '!tables.results!zqmyEG0v7rAwITJG.GtCzDcvGWGJmQ3WD'
     type: text
@@ -933,7 +1073,9 @@ results:
       - 71
       - 71
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Sculpt Elements
   - _id: 5vuNQB3e7fvGDtjA
     _key: '!tables.results!zqmyEG0v7rAwITJG.5vuNQB3e7fvGDtjA'
     type: text
@@ -946,7 +1088,9 @@ results:
       - 72
       - 72
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Shroud
   - _id: p1nqZ0DLOSsV4Ulg
     _key: '!tables.results!zqmyEG0v7rAwITJG.p1nqZ0DLOSsV4Ulg'
     type: text
@@ -959,7 +1103,9 @@ results:
       - 73
       - 73
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Shuffle
   - _id: OzoCGtHPv0U9BwYf
     _key: '!tables.results!zqmyEG0v7rAwITJG.OzoCGtHPv0U9BwYf'
     type: text
@@ -972,7 +1118,9 @@ results:
       - 74
       - 74
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Sleep
   - _id: 2fPyLIyouNd7D4XY
     _key: '!tables.results!zqmyEG0v7rAwITJG.2fPyLIyouNd7D4XY'
     type: text
@@ -985,7 +1133,9 @@ results:
       - 75
       - 75
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Smoke Form
   - _id: rtRaEqlSCsmyPsKa
     _key: '!tables.results!zqmyEG0v7rAwITJG.rtRaEqlSCsmyPsKa'
     type: text
@@ -998,7 +1148,9 @@ results:
       - 76
       - 76
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Snail Knight
   - _id: qTi7g2XRD6uHh9al
     _key: '!tables.results!zqmyEG0v7rAwITJG.qTi7g2XRD6uHh9al'
     type: text
@@ -1011,7 +1163,9 @@ results:
       - 77
       - 77
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Sniff
   - _id: O0F4PPzr4cHoj48L
     _key: '!tables.results!zqmyEG0v7rAwITJG.O0F4PPzr4cHoj48L'
     type: text
@@ -1024,7 +1178,9 @@ results:
       - 78
       - 78
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Sort
   - _id: 2ClBjwdwlJktv3XV
     _key: '!tables.results!zqmyEG0v7rAwITJG.2ClBjwdwlJktv3XV'
     type: text
@@ -1037,7 +1193,9 @@ results:
       - 79
       - 79
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Spectacle
   - _id: xCdou3jFVPiXtQnR
     _key: '!tables.results!zqmyEG0v7rAwITJG.xCdou3jFVPiXtQnR'
     type: text
@@ -1050,7 +1208,9 @@ results:
       - 80
       - 80
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Spellseize
   - _id: jAjZ0nBu5P6TxAvR
     _key: '!tables.results!zqmyEG0v7rAwITJG.jAjZ0nBu5P6TxAvR'
     type: text
@@ -1063,7 +1223,9 @@ results:
       - 81
       - 81
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Spider Climb
   - _id: 6xK9OuFexgupHSzo
     _key: '!tables.results!zqmyEG0v7rAwITJG.6xK9OuFexgupHSzo'
     type: text
@@ -1076,7 +1238,9 @@ results:
       - 82
       - 82
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Summon Cube
   - _id: VHTYQRBUBSS9deJY
     _key: '!tables.results!zqmyEG0v7rAwITJG.VHTYQRBUBSS9deJY'
     type: text
@@ -1089,7 +1253,9 @@ results:
       - 83
       - 83
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Swarm
   - _id: Z2cCCX38wVC0BsIf
     _key: '!tables.results!zqmyEG0v7rAwITJG.Z2cCCX38wVC0BsIf'
     type: text
@@ -1102,7 +1268,9 @@ results:
       - 84
       - 84
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Telekinesis
   - _id: LrFOK2g0R0VIxiEc
     _key: '!tables.results!zqmyEG0v7rAwITJG.LrFOK2g0R0VIxiEc'
     type: text
@@ -1115,7 +1283,9 @@ results:
       - 85
       - 85
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Telepathy
   - _id: 74g4YfkVcc0Zlx4E
     _key: '!tables.results!zqmyEG0v7rAwITJG.74g4YfkVcc0Zlx4E'
     type: text
@@ -1128,7 +1298,9 @@ results:
       - 86
       - 86
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Teleport
   - _id: i9gtMt2k1guFGVye
     _key: '!tables.results!zqmyEG0v7rAwITJG.i9gtMt2k1guFGVye'
     type: text
@@ -1141,7 +1313,9 @@ results:
       - 87
       - 87
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Thaumaturgic Anchor
   - _id: BcOyKCtN2jKcCht4
     _key: '!tables.results!zqmyEG0v7rAwITJG.BcOyKCtN2jKcCht4'
     type: text
@@ -1154,7 +1328,9 @@ results:
       - 88
       - 88
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Thicket
   - _id: ioJ6qL4bND5Ff1pN
     _key: '!tables.results!zqmyEG0v7rAwITJG.ioJ6qL4bND5Ff1pN'
     type: text
@@ -1167,7 +1343,9 @@ results:
       - 89
       - 89
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Time Jump
   - _id: jCzZRHM1v5dhHAVS
     _key: '!tables.results!zqmyEG0v7rAwITJG.jCzZRHM1v5dhHAVS'
     type: text
@@ -1180,7 +1358,9 @@ results:
       - 90
       - 90
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Summon Idol
   - _id: CBWad6q6ZIZTL41x
     _key: '!tables.results!zqmyEG0v7rAwITJG.CBWad6q6ZIZTL41x'
     type: text
@@ -1193,7 +1373,9 @@ results:
       - 91
       - 91
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Time Rush
   - _id: 5sk5MH0QltSzlJum
     _key: '!tables.results!zqmyEG0v7rAwITJG.5sk5MH0QltSzlJum'
     type: text
@@ -1206,7 +1388,9 @@ results:
       - 92
       - 92
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Time Slow
   - _id: DM0dnSp2waZdC0py
     _key: '!tables.results!zqmyEG0v7rAwITJG.DM0dnSp2waZdC0py'
     type: text
@@ -1219,7 +1403,9 @@ results:
       - 93
       - 93
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: True Sight
   - _id: Hraq4KCDWrW9Dh0J
     _key: '!tables.results!zqmyEG0v7rAwITJG.Hraq4KCDWrW9Dh0J'
     type: text
@@ -1232,7 +1418,9 @@ results:
       - 94
       - 94
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Upwell
   - _id: 4Y3Xm4LndP4MqvqK
     _key: '!tables.results!zqmyEG0v7rAwITJG.4Y3Xm4LndP4MqvqK'
     type: text
@@ -1245,7 +1433,9 @@ results:
       - 95
       - 95
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Vision
   - _id: tHj6bs0DIsbMpNhd
     _key: '!tables.results!zqmyEG0v7rAwITJG.tHj6bs0DIsbMpNhd'
     type: text
@@ -1258,7 +1448,9 @@ results:
       - 96
       - 96
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Visual Illusion
   - _id: mZD3OImXuBsTMw7F
     _key: '!tables.results!zqmyEG0v7rAwITJG.mZD3OImXuBsTMw7F'
     type: text
@@ -1271,7 +1463,9 @@ results:
       - 97
       - 97
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Ward
   - _id: 1m0wJ9ZnXljLkkzF
     _key: '!tables.results!zqmyEG0v7rAwITJG.1m0wJ9ZnXljLkkzF'
     type: text
@@ -1284,7 +1478,9 @@ results:
       - 98
       - 98
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Web
   - _id: GfNbynCpY0T3d2R5
     _key: '!tables.results!zqmyEG0v7rAwITJG.GfNbynCpY0T3d2R5'
     type: text
@@ -1297,7 +1493,9 @@ results:
       - 99
       - 99
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Wizard Mark
   - _id: AMQnBWTFwOuBIca0
     _key: '!tables.results!zqmyEG0v7rAwITJG.AMQnBWTFwOuBIca0'
     type: text
@@ -1310,7 +1508,9 @@ results:
       - 100
       - 100
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: X-Ray Vision
 flags:
   base-knavery:
     key: spells-knave-1e

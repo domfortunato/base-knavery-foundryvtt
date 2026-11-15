@@ -23,7 +23,9 @@ results:
       - 1
       - 3
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: No armor
   - _id: 6SPAo6MXDyHVG4Il
     _key: '!tables.results!8wBN84EAiOdCxB6W.6SPAo6MXDyHVG4Il'
     type: text
@@ -36,7 +38,9 @@ results:
       - 4
       - 14
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Gambeson
   - _id: eZHMJFrJYpX1uQbH
     _key: '!tables.results!8wBN84EAiOdCxB6W.eZHMJFrJYpX1uQbH'
     type: text
@@ -49,7 +53,9 @@ results:
       - 15
       - 19
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Brigandine
   - _id: eAluoY04CNptona1
     _key: '!tables.results!8wBN84EAiOdCxB6W.eAluoY04CNptona1'
     type: text
@@ -62,7 +68,9 @@ results:
       - 20
       - 20
     drawn: false
-    flags: {}
+    flags:
+      base-knavery:
+        en: Chain
 flags:
   base-knavery:
     key: starting-armor-knave-1e
