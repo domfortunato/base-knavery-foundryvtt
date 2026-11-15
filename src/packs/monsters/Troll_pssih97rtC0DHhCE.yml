@@ -47,7 +47,7 @@ items:
     _stats:
       coreVersion: '14.370'
       systemId: base-knavery
-      systemVersion: 0.3.0
+      systemVersion: 0.4.0
   - _id: aCDqjVLBWnlLsg0O
     _key: '!actors.items!pssih97rtC0DHhCE.aCDqjVLBWnlLsg0O'
     name: Bite
@@ -66,10 +66,10 @@ items:
     _stats:
       coreVersion: '14.370'
       systemId: base-knavery
-      systemVersion: 0.3.0
+      systemVersion: 0.4.0
 effects: []
 flags: {}
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery
-  systemVersion: 0.3.0
+  systemVersion: 0.4.0
