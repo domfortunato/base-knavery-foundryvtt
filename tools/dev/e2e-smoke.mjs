@@ -233,7 +233,7 @@ const sidebar = await page.evaluate(async () => {
   await ui.settings.render({ force: true });
   return [...document.querySelectorAll("#settings .knavery-sidebar-tools button")].map((b) => b.textContent.trim());
 });
-ok(sidebar.length === 3, "Settings sidebar: welcome, rulebook and dashboard buttons", JSON.stringify(sidebar));
+ok(sidebar.length === 4 && sidebar.some((t) => /guide/i.test(t)), "Settings sidebar: welcome, rulebook, guide and dashboard buttons", JSON.stringify(sidebar));
 
 // Cleanup.
 await page.evaluate(async () => {

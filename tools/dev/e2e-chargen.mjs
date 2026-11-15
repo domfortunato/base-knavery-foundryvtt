@@ -1047,7 +1047,7 @@ await withSettings(gm, async () => {
     }));
     await gm.screenshot({ path: `${SHOTS}/chargen-create-npc.png` });
     await closeDialogs();
-    ok(npcWin.tiles.join() === "monster,person,hireling" && npcWin.monsters > 10, "Create NPC offers Monster, Person and Hireling, with the bestiary listed", JSON.stringify(npcWin));
+    ok(npcWin.tiles.join() === "monster,person,hireling,companion" && npcWin.monsters > 10, "Create NPC offers Monster, Person, Hireling and Companion, with the bestiary listed", JSON.stringify(npcWin));
     const npc = await gm.evaluate(async () => {
       const pack = game.packs.get("base-knavery.monsters");
       const first = [...(await pack.getIndex())][0];
