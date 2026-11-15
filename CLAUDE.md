@@ -50,6 +50,12 @@ picker, change log and marketplace it ports.
   (`module/rulebook-catalogue.js`) holds table names, pages and layout only,
   and output of `tools/dev/rulebook-tables-check.mjs --show` is never committed.
 
+## Wording: Game Master and GM (user ruling 2026-11-15)
+- "Game Master" in titles and labels, and at the first mention in a standalone message (a notification,
+  a chat card, a warning) or on a Guide page; "GM" after that, and in hints, tooltips and placeholders.
+- Names keep their own form: the Guide's page titles end in "(GM)" (their ids are frozen), and the
+  compendium is "GM Macros".
+
 ## Translations (user rulings 2026-11-15)
 - The goal: the interface and the Knave 1e rules the system ships can be fully localized. Knave 2e is
   English only; if it is ever translated, we work with its translators on the 2e side (`TRANSLATING.md`).

@@ -723,7 +723,7 @@ journal(GUIDE_NAME, [
   [PAGE.knave, `
 <p>Your sheet has four pages on a thumb rail at the window's edge, <b>Knave</b>, <b>Inventory</b>, <b>Growth</b> and <b>Description</b>, with an <b>Attack</b> button under them. Pop Out and Print are the icons in the title bar. Drag a weapon or a spellbook to Foundry's hotbar to attack or cast from there.</p>
 <h2>Create Character</h2>
-<p>In the Actors sidebar, click <b>Create Character</b>. Type a name or leave it blank for a random one, choose a level from the range the GM allows, and press <b>Randomly Generated</b>. Under Knave 2e you may first tick <b>Place the 3 ability points myself</b>; otherwise 3d6 place them. Under Knave 1e a window shows your six scores, each the lowest of 3d6, and lets you <b>Swap</b> two; then <b>Choose your weapon</b>. A whispered card lists every roll. If you may not create actors, the GM's client makes the character for you, so the GM must be online.</p>
+<p>In the Actors sidebar, click <b>Create Character</b>. Type a name or leave it blank for a random one, choose a level from the range the Game Master allows, and press <b>Randomly Generated</b>. Under Knave 2e you may first tick <b>Place the 3 ability points myself</b>; otherwise 3d6 place them. Under Knave 1e a window shows your six scores, each the lowest of 3d6, and lets you <b>Swap</b> two; then <b>Choose your weapon</b>. A whispered card lists every roll. If you may not create actors, the GM's client makes the character for you, so the GM must be online.</p>
 <h2>The Knave page</h2>
 <ul>
 <li><b>Portrait:</b> click it to choose one from the galleries. <b>Name</b> and <b>Pronouns</b> beside it; <b>Alignment</b> and <b>Background</b> when the GM shows them; under Knave 2e your two <b>Careers</b>.</li>
@@ -750,8 +750,8 @@ journal(GUIDE_NAME, [
   [PAGE.rolling, `
 <p>Every check, save and attack opens the same small window first: <b>Roll with Disadvantage</b>, <b>Straight Roll</b> or <b>Roll with Advantage</b>. Hover a button to see what it does in this world: +5 or −5 to the roll (Knave 2e), or two d20s keeping the higher or lower (Knave 1e).</p>
 <h2>Checks</h2>
-<p>Click the d20 by an ability. The target is 11 + <b>Difficulty</b>; 5 is the usual difficulty, so 16. The card says <b>Success</b> or <b>Failure</b>. A save is the matching ability's check; the GM asks for it.</p>
-<h2>The GM's requests</h2>
+<p>Click the d20 by an ability. The target is 11 + <b>Difficulty</b>; 5 is the usual difficulty, so 16. The card says <b>Success</b> or <b>Failure</b>. A save is the matching ability's check; the Game Master asks for it.</p>
+<h2>The Game Master's requests</h2>
 <p>When the GM asks for a roll, your window opens by itself with the reason, the difficulty filled in and, if the GM set the edge, one button only ("The GM set this roll"). A request to <b>Generate a spell</b> opens a window instead: a rolled formula and its words; roll one word again if you like, adjust the name, then <b>Add as a spellbook</b>. Its effect is yours and the GM's to agree.</p>
 <h2>The Attack window</h2>
 <p>Press <b>Attack</b> on the Knave page or the rail. Choose a <b>Weapon</b>: your equipped weapons, or <b>Improvised</b> (a fist or a rock: d4 with STR, no slot, nothing to break). Choose a <b>Target</b>: the tokens you can see, nearest first; your own targets when you have several; or no target. <b>Hide other player characters</b> keeps your friends out of the list. <b>Roll damage at the same time</b> puts the damage on the same card. Melee rolls d20 + STR, ranged d20 + WIS.</p>
@@ -824,7 +824,7 @@ journal(GUIDE_NAME, [
 <li><b>Roll damage with every attack:</b> pre-ticks <i>Roll damage at the same time</i> in the Attack window.</li>
 <li><b>Show traits:</b> the traits block on the Description page.</li>
 <li><b>Change log:</b> whispers you, and whoever else may observe the sheet, a card when someone edits it by hand: name, HP, coins, XP, level, wounds, AC, pronouns and abilities, items added, removed, counted or equipped. The system's own actions stay silent; Rest, Level Up and Heal Wound name themselves.</li>
-<li><b>Welcome window on start:</b> opens for the GM at every login and refresh. Players never see it unasked.</li>
+<li><b>Welcome window on start:</b> opens for the Game Master at every login and refresh. Players never see it unasked.</li>
 </ul>
 
 <p><i>Advantage and disadvantage</i> lives in Configure Rules, under Combat, with an edition value.</p>
@@ -942,7 +942,7 @@ journal(GUIDE_NAME, [
   [PAGE.combat, `
 <p>Fights run from the sheets' Attack windows and the chat cards, the dashboard's <b>Combat</b> page and the Combat Tracker. The player's side is ${gref(PAGE.rolling, "Rolling and Fighting")}; this page is what you do with the cards.</p>
 <h2>Damage cards</h2>
-<p>Whoever rolled the damage applies it: the card's author and the GM get <b>Apply</b> and, under Knave 2e, <b>Direct</b>. Apply goes to the targets the attack hit, else to the user's targeted or selected tokens. Targets the roller owns change in their own browser; the rest are relayed to the active GM, who accepts the request only from the card's author, for the card's total, at tokens they can see. An applied card says so and asks before applying again. A hidden token's damage card goes to the GMs only. Direct damage skips HP and wounds a character at once; a creature takes it tripled.</p>
+<p>Whoever rolled the damage applies it: the card's author and the Game Master get <b>Apply</b> and, under Knave 2e, <b>Direct</b>. Apply goes to the targets the attack hit, else to the user's targeted or selected tokens. Targets the roller owns change in their own browser; the rest are relayed to the active GM, who accepts the request only from the card's author, for the card's total, at tokens they can see. An applied card says so and asks before applying again. A hidden token's damage card goes to the GMs only. Direct damage skips HP and wounds a character at once; a creature takes it tripled.</p>
 <h2>Wounds, Unusable and hard mode</h2>
 <p>Under Knave 2e, damage past 0 HP fills slots with wounds from the bottom of the Inventory up: empty slots, then coin slots, then the lowest item, marked <b>Unusable</b> until the wound heals; whether it was dropped or broken is the table's call. Every slot wounded is death. A safe-haven rest heals one wound, and the Wounds bar's − heals one by hand. <i>Hard-mode wounds</i> (Configure Rules) breaks the item in a wounded slot instead. Under Knave 1e there are no wounds: 0 HP is unconscious, −1 dead, and the Direct button is gone.</p>
 <h2>Quality and breakage</h2>

@@ -256,7 +256,7 @@
       "TopLevel": "Highest level reached."
     },
     "GmNotes": "Game Master's notes",
-    "GmNotesPlaceholder": "Notes for this Knave's player. Only the Game Master can edit them.",
+    "GmNotesPlaceholder": "Notes for this Knave's player. Only the GM can edit them.",
 
     "Careers": "Careers",
     "NoCareers": "none yet",
@@ -421,9 +421,9 @@
       "Name": "The spell's name",
       "Hint": "Adjust the wording if you like. The spell's effect is yours and the GM's to agree.",
       "Add": "Add as a spellbook",
-      "Missing": "Generating a spell needs these tables, built from the Knave 2e book: {names}. The GM builds them on the dashboard's Tables tab, or imports them.",
+      "Missing": "Generating a spell needs these tables, built from the Knave 2e book: {names}. The Game Master builds them on the dashboard's Tables tab, or imports them.",
       "CardTitle": "A new spell",
-      "CardBody": "{name} adds it as a spellbook. Its effect is for the player and the GM to agree."
+      "CardBody": "{name} adds it as a spellbook. Its effect is for the player and the Game Master to agree."
     },
     "Sell": {
       "Hint": "Sell this: half its price, or its full value for treasure",
@@ -814,7 +814,7 @@
       "Title": "Marketplace: {name}",
       "Buy": "Buy",
       "Take": "Take",
-      "TakeHint": "Take it without paying (the Game Master, or Char Gen Mode).",
+      "TakeHint": "Take it without paying (the GM, or Char Gen Mode).",
       "Bought": "Bought {name} for {cost} coins.",
       "Service": "service",
       "ManagerHint": "Aisles are roll tables named \"Market: …\" (Knave 2e prices) or \"Market 1e: …\" (Knave 1e prices); the page shows the world's price list. Shipped aisles are read-only: Customize makes a world copy that replaces them.",
@@ -1161,7 +1161,7 @@
       "EmbeddedStartingItem": "That item belongs to an actor in a compendium. Drag it from the Items sidebar or an Items compendium instead.",
       "NoSettingsPermission": "Your user may not change world settings (core permission: Modify Configuration Settings).",
       "PurchaseFailed": "The purchase did not go through, and no coins were taken. See the browser console.",
-      "CreationFailed": "The Game Master's client could not create your character. Ask the Game Master to try again."
+      "CreationFailed": "The Game Master's client could not create your character. Ask the GM to try again."
     },
 
     "Settings": {
@@ -1353,7 +1353,7 @@
       "UploadFailed": "The rulebook could not be uploaded. See the browser console.",
       "NoUpload": "Your user may not upload files to this server (core permission: Upload New Files).",
       "NotPdf": "That is not a PDF.",
-      "NoCopy": "The GM has not shared a rulebook in this world.",
+      "NoCopy": "The Game Master has not shared a rulebook in this world.",
       "OtherEdition": "This PDF has {pages} pages; the page numbers here come from the {expected}-page Knave 2e PDF, so they may be off. Adjust the page offset in Configure Rulebook.",
       "OpenTab": "Open in a new tab",
       "ImporterHint": "This table is on p. {page} of your rulebook."
