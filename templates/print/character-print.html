@@ -1,107 +1,210 @@
 <!DOCTYPE html>
-{{!-- The printable sheet. Paper is white: this page is exempt from the
-      theme tokens. Self-contained: styles inline, images absolute. Text
-      fields render escaped; only enriched (server-sanitized) HTML is
-      triple-stashed. --}}
+{{!-- The printable sheet (module/print.js): one fixed 186 × 261 mm box, the A4 and Letter
+      intersection, so a knave is one page on either paper by construction. Paper is white:
+      this page is exempt from the theme tokens. Self-contained: styles inline, images absolute.
+      Black and two greys, no background fills (print dialogs ship with backgrounds off):
+      rules, borders, boxes and strike-through do the marking. Every row height is fixed in px,
+      so the page count never depends on the machine's fonts; Notes is the one elastic zone.
+      Text fields render escaped; only enriched (server-sanitized) HTML is triple-stashed. --}}
 <html lang="{{lang}}">
 <head>
 <meta charset="utf-8">
 <title>{{name}}</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: Georgia, "Times New Roman", serif; color: #000; background: #fff; max-width: 46rem;
-    margin: 0 auto; padding: 2rem 1.5rem; font-size: 12pt; line-height: 1.45; }
-  header.pc { display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1.5rem; }
-  header.pc .who { flex: 1; min-width: 0; }
-  header.pc img.portrait { width: 90px; height: 90px; object-fit: cover; border-radius: 50%; border: 2px solid #000; }
-  header.pc img.compat { width: 110px; height: auto; margin-left: auto; }
-  header.pc h1 { font-size: 2rem; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.1; }
-  header.pc .pronouns { font-size: 0.9rem; color: #444; font-style: italic; }
-  header.pc .level { font-size: 1.05rem; letter-spacing: 0.12em; text-transform: uppercase; color: #333; }
-  section { margin-bottom: 1.3rem; break-inside: avoid; }
-  h2 { font-size: 0.95rem; letter-spacing: 0.14em; text-transform: uppercase; border-bottom: 1px solid #000;
-    padding-bottom: 0.15rem; margin-bottom: 0.5rem; }
-  .band { display: grid; grid-template-columns: 11fr 9fr; column-gap: 2rem; align-items: start; }
-  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0.2rem 2rem; }
-  .stats .row { display: flex; justify-content: space-between; border-bottom: 1px dotted #999; }
-  .stats .row b { font-style: italic; }
-  ul.inv, ul.plain { list-style: none; }
-  ul.inv li { border-bottom: 1px dashed #999; padding: 0.1rem 0; display: flex; gap: 0.6rem; break-inside: avoid; }
-  ul.inv li .slot { width: 2.4rem; color: #555; }
-  ul.inv li .tags { color: #333; font-style: italic; margin-left: auto; }
-  ul.plain li { margin-bottom: 0.3rem; }
-  .prose p { margin-bottom: 0.5rem; }
+  /* Top and bottom 0: the only margins that starve Chromium's header and footer chrome (Air Bladder, 2026-08-11). */
+  @page { margin: 0 12mm;{{#if pageSize}} size: {{pageSize}};{{/if}} }
+  html, body { background: #fff; color: #000; }
+  body { font-family: Georgia, "Times New Roman", serif; font-size: {{bodySize}}; line-height: 16.5px; }
+  @media print { body { padding: 10mm 0 0; } }
+  @media screen { body { background: #ddd; padding: 12mm 0; } .sheet { background: #fff; box-shadow: 0 2px 14px rgba(0, 0, 0, 0.35); } }
   a { color: inherit; text-decoration: none; }
-  footer { margin-top: 2rem; font-size: 8.5pt; color: #444; border-top: 1px solid #999; padding-top: 0.4rem; }
-  @page { margin: 1.5cm; }
+  img { display: block; }
+  .sheet { width: 186mm; height: 261mm; margin: 0 auto; overflow: hidden; display: grid;
+    grid-template-columns: 104mm 76mm; grid-template-rows: auto auto minmax(0, 1fr) auto; column-gap: 6mm; }
+
+  /* Head */
+  .head { grid-column: 1 / -1; grid-row: 1; display: flex; align-items: flex-start; gap: 4mm; min-height: 82px; margin-bottom: 8px; }
+  .head .portrait { width: 18mm; height: 18mm; flex: none; border: 1px solid #000; overflow: hidden; }
+  .head .portrait img { width: 100%; height: 100%; object-fit: cover; }
+  .head .who { flex: 1 1 auto; min-width: 0; }
+  .head h1 { font-size: 20pt; line-height: 29px; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .head .line { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .head .k { font-size: 7pt; text-transform: uppercase; letter-spacing: 0.08em; color: #444; margin-right: 1px; }
+  .head .logo { width: 22mm; height: auto; flex: none; margin-left: auto; }
+
+  /* The two columns, Notes and the footer */
+  .col-l { grid-column: 1; grid-row: 2; min-width: 0; }
+  .col-r { grid-column: 2; grid-row: 2; min-width: 0; }
+  .notes { grid-column: 1 / -1; grid-row: 3; display: flex; flex-direction: column; min-height: 0; margin-top: 10px; }
+  footer { grid-column: 1 / -1; grid-row: 4; font-size: 7pt; line-height: 1.25; color: #555; border-top: 1px solid #999; padding-top: 3px; margin-top: 6px; }
+  footer p + p { margin-top: 1px; }
+  h2 { display: flex; justify-content: space-between; align-items: baseline; height: 14px; font-size: 7.5pt; line-height: 13px; font-weight: bold;
+    letter-spacing: 0.12em; text-transform: uppercase; border-bottom: 1px solid #000; margin-bottom: 6px; white-space: nowrap; }
+  h2 .note { font-weight: normal; letter-spacing: 0; text-transform: none; color: #444; margin-left: 8px; overflow: hidden; text-overflow: ellipsis; }
+  .block + .block { margin-top: 10px; }
+
+  /* Strips: six abilities; AC, HP, Wounds, Coins, Spells or Slots */
+  .strip { display: flex; height: 58px; border-top: 1px solid #000; border-bottom: 1px solid #000; }
+  .strip + .strip { margin-top: 6px; }
+  .strip + .block { margin-top: 10px; }
+  .strip .cell { flex: 1 1 0; min-width: 0; padding: 5px 3px 0; text-align: center; overflow: hidden; }
+  .strip .cell + .cell { border-left: 1px solid #ccc; }
+  .strip .lbl, .strip .sub { font-size: 7pt; line-height: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: #444; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .strip .sub { text-transform: none; letter-spacing: 0; }
+  .strip .val { font-size: 14pt; line-height: 24px; font-weight: bold; white-space: nowrap; overflow: hidden; }
+  .strip .val.boxes { padding-top: 7px; line-height: 10px; }
+
+  /* Marks: tick boxes, the equipped dot, chits, the wound cross; all borders, no fills */
+  .box { display: inline-block; width: 2.6mm; height: 2.6mm; border: 1px solid #000; vertical-align: -1px; position: relative; margin: 0 1px; }
+  .box.on::before, .box.on::after { content: ""; position: absolute; left: 50%; top: -2px; bottom: -2px; border-left: 1px solid #000; transform: rotate(45deg); }
+  .box.on::after { transform: rotate(-45deg); }
+  .dot { display: inline-block; width: 0; height: 0; border: 2.5px solid #000; border-radius: 50%; vertical-align: 1px; margin-left: 3px; }
+  .chit { display: inline-block; font-size: 7pt; line-height: 10px; padding: 0 3px; border: 1px solid #000; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
+  .chit.wound { font-weight: bold; }
+  .plus { display: inline-block; width: 7px; height: 7px; position: relative; margin-right: 3px; vertical-align: -1px; }
+  .plus::before { content: ""; position: absolute; left: 3px; top: 0; bottom: 0; border-left: 1px solid #000; }
+  .plus::after { content: ""; position: absolute; top: 3px; left: 0; right: 0; border-top: 1px solid #000; }
+
+  /* The slot list: one row per slot */
+  .slot { display: flex; align-items: center; height: 20.5px; border-bottom: 1px dotted #999; }
+  .slot .n { flex: none; width: 18px; margin-right: 6px; text-align: right; font-size: 8pt; color: #555; }
+  .slot.over .n { color: #000; font-weight: bold; }
+  .slot .name { flex: 1 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .slot .name.cont { color: #555; padding-left: 6px; }
+  .slot .name.coins { color: #333; }
+  .slot.unusable .name { text-decoration: line-through; }
+  .slot .tags { flex: none; display: flex; align-items: center; gap: 6px; margin-left: 8px; font-size: 8.5pt; color: #333; }
+  .slot .tags .lower, .kv .lower { text-transform: lowercase; }
+  .slot .tags .q { font-size: 7pt; color: #444; letter-spacing: 0.04em; }
+  .weightless { height: 22px; line-height: 22px; font-size: 8.5pt; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .more { height: 16px; line-height: 16px; font-size: 8.5pt; color: #333; }
+  .attacks { margin-top: 6px; font-size: 8.5pt; line-height: 15px; max-height: 45px; overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+  .attacks .k { font-size: 7pt; text-transform: uppercase; letter-spacing: 0.08em; color: #444; margin-right: 4px; }
+
+  /* Key: value grids (traits, career features, spells) */
+  /* Two key: value pairs a row; each label column as wide as its longest label, so no label truncates. */
+  .kv-grid { display: grid; grid-template-columns: max-content minmax(0, 1fr) max-content minmax(0, 1fr); column-gap: 4px; }
+  .kv-grid .kv { display: contents; }
+  .kv-grid .kv .k { width: auto; max-width: 84px; margin-right: 0; height: 15px; line-height: 15px; font-size: 6.5pt; letter-spacing: 0.03em; }
+  .kv-grid .kv .v { height: 15px; line-height: 15px; }
+  .kv-grid .kv:nth-child(odd) .v { padding-right: 6px; }
+  .kv { display: flex; align-items: baseline; height: 15px; line-height: 15px; font-size: 8.5pt; min-width: 0; }
+  .kv .k { flex: none; width: 58px; margin-right: 4px; font-size: 7pt; letter-spacing: 0.04em; text-transform: uppercase; color: #444; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .kv .k.wide { width: 74px; }
+  .kv .v { flex: 1 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .kv .r { flex: none; margin-left: 6px; white-space: nowrap; }
+  .kv .box { flex: none; align-self: center; margin-right: 5px; }
+  .kv .more-note { color: #333; }
+
+  /* Backstory: six lines at most */
+  .clamp { line-height: 16.5px; max-height: 99px; overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 6; }
+  .desc { max-height: 330px; overflow: hidden; }
+  .desc p + p, .desc ul, .desc ol, .notes .text p + p, .notes .text ul, .notes .text ol { margin-top: 3px; }
+  .desc ul, .desc ol, .notes .text ul, .notes .text ol { padding-left: 1.2em; }
+
+  /* Notes: the text, then ruled lines to the foot; "…continues on the sheet" when the text was cut */
+  .notes > h2 { flex: none; }
+  .notes .text { flex: 0 1 auto; min-height: 0; overflow: hidden; }
+  .notes .rules { flex: 1 1 0; min-height: 0; overflow: hidden; }
+  .notes .rules i { display: block; height: 6mm; border-bottom: 1px solid #bbb; }
+  .notes .continues { display: none; flex: none; height: 14px; line-height: 14px; font-size: 7pt; font-style: italic; color: #555; text-align: right; }
+  .notes.clipped .continues { display: block; }
 </style>
 </head>
 <body class="pc-print">
-<header class="pc">
-  {{#if portrait}}<img class="portrait" src="{{portrait}}" alt="">{{/if}}
-  <div class="who">
-    <h1>{{name}}</h1>
-    {{#if pronouns}}<div class="pronouns">{{pronouns}}</div>{{/if}}
-    {{#if isChar}}<div class="level">{{localize "KNAVERY.Level"}} {{level}} · {{levelTitle}}</div>{{/if}}
-  </div>
-  <img class="compat" src="{{logo}}" alt="{{localize 'KNAVERY.MadeForKnave'}}">
-</header>
+<div class="sheet">
+  <header class="head" data-zone="head">
+    <div class="portrait">{{#if portrait}}<img src="{{portrait}}" alt="">{{/if}}</div>
+    <div class="who">
+      <h1>{{name}}</h1>
+      <div class="line level">{{levelLine}}</div>
+      {{#if showCareers}}<div class="line careers"><span class="k">{{localize "KNAVERY.Careers"}}</span> {{careerNames}}</div>{{/if}}
+      {{#if traitsLine.length}}<div class="line head-traits">{{#each traitsLine}}{{#if @index}} · {{/if}}<span class="k">{{this.label}}</span> {{this.value}}{{/each}}</div>{{/if}}
+    </div>
+    <img class="logo" src="{{logo}}" alt="{{localize 'KNAVERY.MadeForKnave'}}">
+  </header>
 
-<div class="band">
-  <div>
-    <section>
-      <h2>{{localize "KNAVERY.Abilities"}}</h2>
-      <div class="stats">
-        {{#each abilities}}<div class="row"><b>{{this.label}}</b><span>+{{this.value}} ({{this.defense}})</span></div>{{/each}}
+  <section class="col-l" data-zone="left">
+    {{#if abilities.length}}
+    <div class="strip abilities">
+      {{#each abilities}}<div class="cell"><div class="lbl">{{this.label}}</div><div class="val">+{{this.value}}</div><div class="sub">{{localize "KNAVERY.PrintSheet.Def"}} {{this.defense}}</div></div>{{/each}}
+    </div>
+    {{/if}}
+    <div class="strip vitals">
+      {{#each vitals}}<div class="cell"><div class="lbl">{{this.label}}</div>{{#if this.boxes}}<div class="val boxes">{{#each this.boxes}}<i class="box{{#if this.on}} on{{/if}}"></i>{{/each}}</div>{{else}}<div class="val">{{this.value}}</div>{{/if}}{{#if this.sub}}<div class="sub">{{this.sub}}</div>{{/if}}</div>{{/each}}
+    </div>
+    {{#if attacks}}<div class="attacks"><span class="k">{{localize "KNAVERY.Attacks"}}</span>{{attacks}}</div>{{/if}}
+    {{#if slots.length}}
+    <div class="block inv">
+      <h2><span>{{localize "KNAVERY.Tab.Inventory"}}</span><span class="note">{{slotCount}}</span></h2>
+      {{#each slots}}
+      <div class="slot{{#if this.empty}} empty{{/if}}{{#if this.wounded}} wounded{{/if}}{{#if this.unusable}} unusable{{/if}}{{#if this.over}} over{{/if}}" data-slot="{{this.n}}">
+        <span class="n">{{this.n}}</span>
+        {{#if this.continued}}<span class="name cont">"</span>
+        {{else if this.coins}}<span class="name coins">{{this.coins}}</span>
+        {{else if this.name}}<span class="name">{{this.name}}{{#if this.equipped}}<i class="dot"></i>{{/if}}</span>
+        {{else}}<span class="name"></span>{{/if}}
+        <span class="tags">
+          {{#each this.tags}}<span class="tag{{#if this.lower}} lower{{/if}}">{{this.text}}</span>{{/each}}
+          {{#if this.quality}}<span class="q">{{localize "KNAVERY.PrintSheet.QualityShort"}} {{#each this.quality}}<i class="box{{#if this.on}} on{{/if}}"></i>{{/each}}</span>{{/if}}
+          {{#each this.chits}}<span class="chit">{{this}}</span>{{/each}}
+          {{#if this.unusable}}<span class="chit">{{localize "KNAVERY.Unusable"}}</span>{{/if}}
+          {{#if this.wounded}}<span class="chit wound"><i class="plus"></i>{{localize "KNAVERY.WoundSlot"}}</span>{{/if}}
+        </span>
       </div>
-    </section>
-    <section>
-      <div class="stats">
-        <div class="row"><b>{{localize "KNAVERY.HP"}}</b><span>{{hp.value}} / {{hp.max}}</span></div>
-        <div class="row"><b>{{localize "KNAVERY.AC"}}</b><span>{{ac}}</span></div>
-        {{#if isChar}}
-        <div class="row"><b>{{localize "KNAVERY.Wounds"}}</b><span>{{wounds}}</span></div>
-        <div class="row"><b>{{localize "KNAVERY.Coins"}}</b><span>{{coins}}</span></div>
-        <div class="row"><b>{{localize "KNAVERY.XP"}}</b><span>{{xp}}{{#if nextXp}} / {{nextXp}}{{/if}}</span></div>
-        <div class="row"><b>{{localize "KNAVERY.Slots"}}</b><span>{{slotsUsed}} / {{slotsMax}}</span></div>
-        {{/if}}
-      </div>
-    </section>
-    <section>
-      <h2>{{localize "KNAVERY.Tab.Inventory"}}</h2>
-      <ul class="inv">
-        {{#each items}}<li><span class="slot">{{this.slot}}</span><span>{{#if this.equipped}}<b>{{this.name}}</b>{{else}}{{this.name}}{{/if}}</span><span class="tags">{{this.tags}}</span></li>{{/each}}
-      </ul>
-    </section>
-  </div>
-  <div>
-    {{#if careers.length}}
-    <section>
-      <h2>{{localize "KNAVERY.Careers"}}</h2>
-      {{#each careers}}
-      <p><b>{{this.name}}</b></p>
-      {{#if this.description}}<div class="prose">{{{this.description}}}</div>{{/if}}
-      {{#if this.features.length}}<ul class="plain">{{#each this.features}}<li><i>{{this.label}}:</i> {{this.value}}</li>{{/each}}</ul>{{/if}}
       {{/each}}
-    </section>
+      {{#if more}}<div class="more">{{more}}</div>{{/if}}
+      {{#if weightless}}<div class="weightless">{{weightless}}</div>{{/if}}
+    </div>
     {{/if}}
-    {{#if isChar}}
-    <section>
-      <h2>{{localize "KNAVERY.Saves"}}</h2>
-      <ul class="plain">{{#each saves}}<li>{{this.label}} — {{this.ability}}</li>{{/each}}</ul>
-    </section>
-    {{/if}}
-    {{#if traits.length}}
-    <section>
-      <h2>{{localize "KNAVERY.Traits"}}</h2>
-      <ul class="plain">{{#each traits}}<li><i>{{this.label}}:</i> {{this.value}}</li>{{/each}}</ul>
-    </section>
-    {{/if}}
-  </div>
-</div>
+  </section>
 
-{{#if biography}}<section><h2>{{localize "KNAVERY.Biography"}}</h2><div class="prose">{{{biography}}}</div></section>{{/if}}
-{{#if notes}}<section class="notes-section"><h2>{{localize "KNAVERY.Tab.Notes"}}</h2><div class="prose">{{{notes}}}</div></section>{{/if}}
-<footer>{{disclaimer}}</footer>
+  <section class="col-r" data-zone="right">
+    {{#if traits.length}}
+    <div class="block traits">
+      <h2><span>{{localize "KNAVERY.Traits"}}</span></h2>
+      <div class="kv-grid">{{#each traits}}<div class="kv"><span class="k">{{this.label}}</span><span class="v">{{this.value}}</span></div>{{/each}}</div>
+    </div>
+    {{/if}}
+    {{#if careers.length}}
+    <div class="block careers">
+      <h2><span>{{localize "KNAVERY.Careers"}}</span></h2>
+      {{#each careers}}
+      {{#each this.features}}<div class="kv"><span class="k wide">{{#unless @index}}{{../name}}{{/unless}}</span><span class="v">{{this.label}}</span><span class="r">{{#if this.boxes}}{{#each this.boxes}}<i class="box{{#if this.on}} on{{/if}}"></i>{{/each}}{{else}}{{this.value}}{{/if}}</span></div>{{/each}}
+      {{#if this.more}}<div class="kv"><span class="k wide"></span><span class="v more-note">{{this.more}}</span></div>{{/if}}
+      {{/each}}
+    </div>
+    {{/if}}
+    {{#if spells.length}}
+    <div class="block spells">
+      <h2><span>{{localize "KNAVERY.PrintSheet.Spells"}}</span><span class="note">{{spellsNote}}</span></h2>
+      {{#each spells}}<div class="kv spell"><i class="box{{#if this.cast}} on{{/if}}"></i><span class="v">{{this.name}}</span><span class="r lower">{{this.tag}}</span></div>{{/each}}
+      {{#if spellsMore}}<div class="kv"><span class="v more-note">{{spellsMore}}</span></div>{{/if}}
+    </div>
+    {{/if}}
+    {{#if backstory}}
+    <div class="block backstory">
+      <h2><span>{{localize "KNAVERY.Biography"}}</span></h2>
+      <div class="clamp">{{backstory}}</div>
+    </div>
+    {{/if}}
+    {{#if description}}
+    <div class="block description">
+      <h2><span>{{localize "KNAVERY.Description"}}</span></h2>
+      <div class="desc">{{{description}}}</div>
+    </div>
+    {{/if}}
+  </section>
+
+  <section class="notes" data-zone="notes">
+    <h2><span>{{localize "KNAVERY.Tab.Notes"}}</span></h2>
+    <div class="text" data-elastic>{{{notes}}}</div>
+    <div class="rules">{{#if notesLines}}{{#each ruledLines}}<i></i>{{/each}}{{/if}}</div>
+    <div class="continues">{{localize "KNAVERY.PrintSheet.Continues"}}</div>
+  </section>
+
+  <footer data-zone="footer">{{#each footer}}<p>{{this}}</p>{{/each}}</footer>
+</div>
 </body>
 </html>

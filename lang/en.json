@@ -1006,7 +1006,7 @@
     "Settings": {
       "GroupGeneral": "General",
       "GroupGeneralButton": "Configure General",
-      "GroupGeneralHint": "Advantage, rolls, traits, the change log, the welcome window and the hazard dice.",
+      "GroupGeneralHint": "Advantage, rolls, traits, the change log, the welcome window, the hazard dice and printing.",
       "GroupGeneration": "Character Creation",
       "GroupGenerationButton": "Configure Creation",
       "GroupGenerationHint": "Who may create characters and change level or XP; starting levels; your portraits.",
@@ -1029,7 +1029,8 @@
         "combat": "Combat",
         "money": "Money",
         "advancement": "Advancement",
-        "hacks": "Hacks"
+        "hacks": "Hacks",
+        "printing": "Printing"
       },
       "CreationAbilities": "Abilities at creation",
       "CreationAbilitiesHint": "",
@@ -1155,6 +1156,21 @@
       "HardModeWoundsHint": "An item in a wounded slot breaks.",
       "ShowHazardDice": "Hazard dice on the Random page",
       "ShowHazardDiceHint": "",
+      "PrintPaper": "Paper",
+      "PrintPaperHint": "The printed sheet fits A4 and US Letter alike; Auto leaves the paper to the print dialog.",
+      "PrintPaperAuto": "Auto: the print dialog decides",
+      "PrintPaperA4": "A4",
+      "PrintPaperLetter": "US Letter",
+      "PrintTextSize": "Text size",
+      "PrintTextSizeHint": "The printed sheet's body text. One page at either size.",
+      "PrintTextSize95": "9.5 pt",
+      "PrintTextSize10": "10 pt",
+      "PrintCareerFeatures": "Career features",
+      "PrintCareerFeaturesHint": "Prints each career's features (Knave 2e); its description stays on the career.",
+      "PrintBackstory": "Backstory",
+      "PrintBackstoryHint": "Prints the backstory, six lines at most.",
+      "PrintNotesLines": "Ruled lines under the notes",
+      "PrintNotesLinesHint": "Pencil lines fill the room left under the notes.",
       "RulebookPdf": "Your rulebook PDF",
       "RulebookPdfHint": "Choose from this computer uploads your copy to the server's knavery-rulebook folder; the folder button picks one already there. Only the path is stored; anyone logged in who knows the address can fetch the file.",
       "RulebookForPlayers": "Players may read it",
@@ -1185,6 +1201,22 @@
       "OtherEdition": "This PDF has {pages} pages; the page numbers here come from the {expected}-page Knave 2e PDF, so they may be off. Adjust the page offset in Configure Rulebook.",
       "OpenTab": "Open in a new tab",
       "ImporterHint": "This table is on p. {page} of your rulebook."
+    },
+
+    "PrintSheet": {
+      "Def": "def",
+      "Spells": "Spells",
+      "SlotCount": "{used} / {max} slots",
+      "PerSlot": "{n} a slot",
+      "OfInt": "of INT {n}",
+      "SpellsPerDay": "{n} a day (INT)",
+      "OncePerDay": "each book once a day",
+      "TwoHanded": "2h",
+      "QualityShort": "Q",
+      "CoinRow": "Coins ({n})",
+      "Weightless": "Weightless: {names}",
+      "More": "+{n} more",
+      "Continues": "\u2026continues on the sheet"
     },
 
     "RulebookSpells": {
