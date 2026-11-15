@@ -25,6 +25,7 @@
     "dev:print": "node tools/dev/e2e-print.mjs",
     "dev:fresh": "node tools/dev/e2e-fresh.mjs",
     "dev:i18n": "node tools/dev/e2e-i18n.mjs",
+    "dev:listing": "node tools/dev/e2e-listing.mjs",
     "release": "node tools/release.mjs"
   },
   "author": "Dom Bosco (https://github.com/domfortunato)",
