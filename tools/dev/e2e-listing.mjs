@@ -1,9 +1,13 @@
 #!/usr/bin/env node
 /**
- * The screenshots for the Foundry package listing (2026-11-15), in both colour schemes: the character
- * sheet's Knave and Inventory pages, the Game Master's Dashboard (Party and Time), the Attack window and
- * its chat card, the welcome window and Create Character. One prepared knave with a portrait and gear;
- * the shots land in <MB_SHOTS>/listing/ with names fit to upload. Its checks only say each shot was taken.
+ * The three screenshots on the Foundry package listing (docs/listing/, 2026-11-15), dark scheme:
+ *   welcome.png          the welcome window in a world that plays Knave 1e with no PDF chosen, so it shows
+ *                        "This world plays Knave." and the box to upload the Knave 2e book (user, 2026-11-15:
+ *                        the listing's welcome must show a 1e world that can move up to 2e)
+ *   character-sheet.png  the character sheet's Knave page, one prepared knave
+ *   attack-window.png    the Attack window the player sees
+ * The world's rule settings are put back afterwards (withSettings). Shots land in <MB_SHOTS>/listing/;
+ * copy the ones that changed into docs/listing/. Its checks only say each shot was taken.
  *
  *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/e2e-listing.mjs   (npm run dev:listing; fleet only)
  */
@@ -21,7 +25,7 @@ const ok = (cond, label, extra = "") => {
 };
 
 const browser = await chromium.launch();
-watchdog(300000, "listing", () => browser.close());
+watchdog(240000, "listing", () => browser.close());
 const page = await browser.newPage({ viewport: { width: VIEWPORT.width, height: 1400 }, deviceScaleFactor: 2 });
 const errors = watchErrors(page);
 await joinAsGM(page);
@@ -35,87 +39,54 @@ const shot = async (selector, name) => {
   await loc.screenshot({ path: path.join(OUT, `${name}.png`) });
   taken.push(name);
 };
-const closeAll = () => page.evaluate(() => {
-  for (const app of [...foundry.applications.instances.values()]) if (app.id !== "sidebar" && !app.id?.startsWith?.("ui-") && app.options?.classes?.includes?.("knavery")) app.close();
-});
 
 await withSettings(page, async () => {
+  await page.evaluate(() => game.settings.set("core", "uiConfig", foundry.utils.mergeObject(game.settings.get("core", "uiConfig"), { colorScheme: { applications: "dark", interface: "dark" } })));
   const id = await page.evaluate(async () => {
     for (const a of game.actors.filter((x) => x.name.startsWith("Probe"))) await a.delete();
     const a = await game.knavery.createCharacter({ mode: "random", level: 3, name: "Probe Mirela Ashgrove" });
-    // Played, not being made: Char Gen Mode off; Alice owns her, so the Party page lists her.
-    const alice = game.users.getName("Alice");
+    // Played, not being made: Char Gen Mode off.
     await a.update({ name: "Mirela Ashgrove", "system.coins": 340, "system.xp": 2600, "system.pronouns": "she/her",
-      "system.generationEnabled": false, ...(alice ? { [`ownership.${alice.id}`]: 3 } : {}) }, { knCreation: true });
+      "system.generationEnabled": false }, { knCreation: true });
     await a.createEmbeddedDocuments("Item", [
       { name: "Sword", type: "weapon", system: { damage: "d6", attackType: "melee", equipped: true, slots: 1, hands: 1 } },
       { name: "Torch", type: "item", system: { slots: 1, quantity: 1, lit: true } },
     ]);
-    // A second knave, Bob's, so the Party page shows a party.
-    const bob = game.users.getName("Bob");
-    const b = await game.knavery.createCharacter({ mode: "random", level: 2, name: "Probe Tamsin Reed" });
-    await b.update({ name: "Tamsin Reed", "system.coins": 85, "system.generationEnabled": false, ...(bob ? { [`ownership.${bob.id}`]: 3 } : {}) }, { knCreation: true });
-    await b.update({ "system.hp.value": Math.max(1, b.system.hp.max - 3) });
-    window.__listingSecond = b.id;
     return a.id;
   });
-  const secondId = await page.evaluate(() => window.__listingSecond);
-  // Creation opens each new sheet: close them, so each shot finds one window.
+  // Creation opens the new sheet: close it, so each shot finds one window.
   await page.evaluate(() => { for (const app of [...foundry.applications.instances.values()]) if (app.document) app.close(); });
   await page.waitForTimeout(500);
-  const npcId = await page.evaluate(async () => (await Actor.create({ name: "Probe Goblin", type: "npc", system: { hp: { value: 4, max: 4 } } })).id);
 
-  for (const scheme of ["dark", "light"]) {
-    await page.evaluate((s) => game.settings.set("core", "uiConfig", foundry.utils.mergeObject(game.settings.get("core", "uiConfig"), { colorScheme: { applications: s, interface: s } })), scheme);
-    // The character sheet: the Knave page, then Inventory.
-    await page.evaluate(async (x) => { const s = game.actors.get(x).sheet; await s.render(true); s.setPosition({ height: 790 }); }, id);
-    await page.waitForSelector(".knavery.sheet.actor", { timeout: 15000 });
-    await shot(".knavery.sheet.actor", `01-sheet-knave-${scheme}`);
-    await page.locator('.knavery.sheet.actor nav.knavery-tab-rail button[data-tab="inventory"]').click();
-    await shot(".knavery.sheet.actor", `02-sheet-inventory-${scheme}`);
-    await page.locator('.knavery.sheet.actor nav.knavery-tab-rail button[data-tab="knave"]').click();
-    await page.evaluate((x) => game.actors.get(x).sheet.close(), id);
-    // The dashboard: Party, then Dice.
-    await page.evaluate(() => game.knavery.openDashboard());
-    await page.waitForSelector("#knavery-gm-dashboard", { timeout: 15000 });
-    for (const [tab, n] of [["party", "03"], ["time", "04"]]) {
-      // The window fits its page: the open page's height plus the title bar and padding.
-      await page.evaluate(async (t) => {
-        const app = foundry.applications.instances.get("knavery-gm-dashboard");
-        app.changeTab(t, "primary");
-        await new Promise((r) => setTimeout(r, 300));
-        const sec = app.element.querySelector("section.tab.active");
-        app.setPosition({ height: Math.min(1300, sec.scrollHeight + 90) });
-      }, tab);
-      await shot("#knavery-gm-dashboard", `${n}-dashboard-${tab}-${scheme}`);
-    }
-    await page.evaluate(() => foundry.applications.instances.get("knavery-gm-dashboard").close());
-    // The Attack window, then its roll in the chat.
-    await page.evaluate((x) => { import("/systems/base-knavery/module/rolls.js").then((m) => m.openAttack(game.actors.get(x))); }, id);
-    await page.waitForSelector(".knavery-roll-prompt", { timeout: 15000 });
-    await shot(".knavery-roll-prompt", `05-attack-window-${scheme}`);
-    await page.locator('.knavery-roll-prompt button[data-action="normal"]').click();
-    await page.evaluate(() => { ui.sidebar.expand?.(); ui.sidebar.changeTab("chat", "primary"); });
-    await page.waitForTimeout(1500);
-    await shot("#chat .chat-message", `06-attack-card-${scheme}`);
-    // The welcome window and Create Character.
-    await page.evaluate(() => game.knavery.openWelcome());
-    await page.waitForSelector("#knavery-welcome", { timeout: 15000 });
-    await shot("#knavery-welcome", `07-welcome-${scheme}`);
-    await page.evaluate(() => foundry.applications.instances.get("knavery-welcome")?.close());
-    await page.evaluate(() => { game.knavery.createCharacterInteractive(); });
-    await page.waitForSelector(".knavery-create", { timeout: 15000 }).catch(() => {});
-    await shot(".knavery-create", `08-create-character-${scheme}`);
-    await closeAll();
-    await page.evaluate(() => { for (const app of [...foundry.applications.instances.values()]) if (app instanceof foundry.applications.api.DialogV2) app.close(); });
-  }
-  await page.evaluate(async (ids) => {
-    for (const x of ids) await game.actors.get(x)?.delete();
-    for (const m of game.messages.filter((x) => x.timestamp > Date.now() - 600000 && x.speaker?.alias === "Mirela Ashgrove")) await m.delete();
-  }, [id, secondId, npcId]);
+  // The character sheet's Knave page.
+  await page.evaluate(async (x) => { const s = game.actors.get(x).sheet; await s.render(true); s.setPosition({ height: 790 }); }, id);
+  await page.waitForSelector(".knavery.sheet.actor", { timeout: 15000 });
+  await shot(".knavery.sheet.actor", "character-sheet");
+  await page.evaluate((x) => game.actors.get(x).sheet.close(), id);
+
+  // The Attack window.
+  await page.evaluate((x) => { import("/systems/base-knavery/module/rolls.js").then((m) => m.openAttack(game.actors.get(x))); }, id);
+  await page.waitForSelector(".knavery-roll-prompt", { timeout: 15000 });
+  await shot(".knavery-roll-prompt", "attack-window");
+  await page.evaluate(() => { for (const app of [...foundry.applications.instances.values()]) if (app.element?.classList?.contains("knavery-roll-prompt")) app.close(); });
+
+  // The welcome window: a Knave 1e world with no rulebook PDF chosen.
+  await page.evaluate(async () => {
+    const R = await import("/systems/base-knavery/module/rules.js");
+    await R.applyRules("1e");
+    await game.settings.set("base-knavery", "rulebook-pdf", "");
+    game.knavery.openWelcome();
+  });
+  await page.waitForSelector("#knavery-welcome .knavery-welcome-rulebook", { timeout: 15000 });
+  const world = await page.locator("#knavery-welcome .knavery-welcome-world").innerText();
+  ok(/Knave\.$/.test(world.trim()), `the welcome says the world plays Knave 1e ("${world.trim()}")`);
+  await shot("#knavery-welcome", "welcome");
+  await page.evaluate(() => foundry.applications.instances.get("knavery-welcome")?.close());
+
+  await page.evaluate(async (x) => { await game.actors.get(x)?.delete(); }, id);
 });
 
-ok(taken.length === 16, `the listing's 16 screenshots were taken (${OUT})`, `only: ${taken.join(", ")}`);
+ok(taken.length === 3, `the listing's 3 screenshots were taken (${OUT})`, `only: ${taken.join(", ")}`);
 const real = errors.flat().filter((e) => !/favicon|DEPRECATED/i.test(e));
 ok(real.length === 0, "no console errors", `\n    ${real.join("\n    ")}`);
 await browser.close();
