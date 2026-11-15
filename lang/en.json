@@ -165,8 +165,10 @@
     "Slots": "Slots",
     "SlotsTip": "Item slots: 10 + CON. Coins and wounds take slots too.",
     "CoinSlots": "Coin slots: {n}",
-    "CoinsCount": "{n} coins",
-    "CoinsCountSlots": "{n} coins · {slots} slots",
+    "CoinsCount": {
+      "one": "{n} coin",
+      "other": "{n} coins"
+    },
     "WoundSlots": "Wound slots: {n}",
     "Advancement": "Advancement",
     "XpProgress": "{xp} / {next} XP to the next level",
@@ -432,8 +434,10 @@
       "HalfHint": "A shop pays half an item's price.",
       "TreasureHint": "Treasure sells for its full value.",
       "Ok": "Sell",
-      "Sold": "Sold {name} for {price}c.",
-      "SoldMany": "Sold {n} × {name} for {price}c."
+      "Sold": {
+        "one": "Sold {name} for {price}c.",
+        "other": "Sold {n} × {name} for {price}c."
+      }
     },
     "Unusable": "Unusable",
     "UnusableTip": "A wound fills this slot: the item can't be used until the wound heals. Whether it was dropped or broken is the table's call.",
@@ -465,8 +469,10 @@
     "ReorderHint": "Drag rows to reorder. The bottom rows are wounded and marked unusable or damaged first.",
     "NQuantity": "×{n}",
     "NAp": "{n} AP",
-    "NSlots": "{n} slots",
-    "NSlot": "{n} slot",
+    "NSlots": {
+      "one": "{n} slot",
+      "other": "{n} slots"
+    },
     "Marketplace": "Marketplace",
     "MarketplaceHint": "Buy gear with your coins.",
 
@@ -592,8 +598,10 @@
       "Title": "{name} takes {n} damage",
       "DirectTitle": "{name} takes {n} direct damage",
       "HpLost": "−{n} HP",
-      "WoundsTaken": "{n} wounds",
-      "WoundsTakenOne": "{n} wound",
+      "WoundsTaken": {
+        "one": "{n} wound",
+        "other": "{n} wounds"
+      },
       "NoEffect": "No effect.",
       "Dead": "{name} is dead.",
       "Unconscious": "{name} is unconscious.",
@@ -606,8 +614,10 @@
       "ScrollUsed": "The scroll crumbles to dust.",
       "ChaosNote": "A chaos spellbook: it becomes a different spell at the next dawn.",
       "AlreadyCast": "{name} has already been used today.",
-      "DailyLimit": "You can only use {n} spellbooks per day.",
-      "DailyLimitOne": "You can only use {n} spellbook per day.",
+      "DailyLimit": {
+        "one": "You can only use {n} spellbook per day.",
+        "other": "You can only use {n} spellbooks per day."
+      },
       "LevelTitle": "Cast {name} at what level?",
       "LevelLabel": "Level",
       "LevelHint": "Up to your INT. The level sets the spell's power and its save.",
@@ -691,21 +701,34 @@
       "None": "No hirelings with a wage. Create NPC makes them, and a hireling's sheet names who pays.",
       "PerMonth": "{wage}c a month",
       "PerDay": "{wage}c a day",
-      "Owed": "{n} days owed ({total}c)",
-      "OwedOne": "1 day owed ({total}c)",
+      "Owed": {
+        "one": "{n} day owed ({total}c)",
+        "other": "{n} days owed ({total}c)"
+      },
       "PaidUp": "Paid up",
       "DueNow": "Due now",
       "DueTomorrow": "Due tomorrow",
-      "DueIn": "Due in {n} days",
-      "Overdue": "Overdue by {n} days",
+      "DueIn": {
+        "one": "Due in {n} day",
+        "other": "Due in {n} days"
+      },
+      "Overdue": {
+        "one": "Overdue by {n} day",
+        "other": "Overdue by {n} days"
+      },
       "NoEmployer": "no employer",
       "NeedEmployer": "Choose an employer on the hireling's sheet first.",
       "ChooseEmployer": "Choose who employs {name} on their sheet first.",
       "CannotPay": "{name} has {coins}c, not the {wage}c the wage needs.",
       "Pay": "Pay",
-      "Paid": "{employer} paid {name} {wage}c: wages for the next {days} days.",
-      "PaidDay": "{employer} paid {name} {wage}c: a day's wages.",
-      "PaidDays": "{employer} paid {name} {wage}c: wages for {days} days."
+      "Paid": {
+        "one": "{employer} paid {name} {wage}c: wages for the next day.",
+        "other": "{employer} paid {name} {wage}c: wages for the next {days} days."
+      },
+      "PaidDays": {
+        "one": "{employer} paid {name} {wage}c: a day's wages.",
+        "other": "{employer} paid {name} {wage}c: wages for {days} days."
+      }
     },
 
     "Time": {
@@ -726,8 +749,10 @@
       "ForageWho": "Who forages",
       "ForageGo": "Roll WIS",
       "ForageReason": "Foraging",
-      "ForageFound": "{name} forages: {n} rations found.",
-      "ForageFoundOne": "{name} forages: one ration found.",
+      "ForageFound": {
+        "one": "{name} forages: one ration found.",
+        "other": "{name} forages: {n} rations found."
+      },
       "ForageNothing": "{name} forages and finds nothing.",
       "Reset": "Start again",
       "DungeonHint": "Ending a turn moves the world clock on 10 minutes and rolls the dungeon hazard die. Fatigue, burn and depletion cards carry a button: nothing changes until you click it.",
@@ -881,7 +906,10 @@
       "TreasureHintGold": "Knave 1e, XP for gold: 1 XP per 100 copper of treasure brought back, split evenly among the characters who helped; a companion takes a half share. Tick who helped: their treasure is listed, and each item counts once.",
       "TreasureCoins": "Coins brought back",
       "TreasureTotal": "Treasure worth {coins}c: {xp} XP, split among {n}.",
-      "TreasureTotalCompanions": "Treasure worth {coins}c: {xp} XP, split among {n} and {companions} companion(s) at a half share.",
+      "TreasureTotalCompanions": {
+        "one": "Treasure worth {coins}c: {xp} XP, split among {n} and {companions} companion at a half share.",
+        "other": "Treasure worth {coins}c: {xp} XP, split among {n} and {companions} companions at a half share."
+      },
       "TreasureChoose": "Tick the characters who helped.",
       "TreasureNothing": "Nothing to award: tick who helped, and the treasure or coins they brought back.",
       "TreasureCardTitle": "XP for treasure",

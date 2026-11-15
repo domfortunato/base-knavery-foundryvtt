@@ -24,6 +24,7 @@ import {
 } from "./config.js";
 import { drawFrom, pickFromList, plainText, realResults, findTable, resultText, spellTableName } from "./compendium.js";
 import { docKey, isKind, keyOf } from "./keys.js";
+import { listOf } from "./i18n.js";
 import { firstLevelHpFormula, randomAbilityPicks, rollLevelHp } from "./level-up.js";
 import { levelLadder } from "./data-models.js";
 import { randomPortraitPair } from "./art.js";
@@ -410,7 +411,7 @@ export const buildCharacter = async ({ level = 1, abilities = null, rolled = nul
     const r = validRolled(rolled) ?? await rollLowestAbilities();
     values = { ...r.values };
     notes.push(F("KNAVERY.Gen.AbilityLowest", {
-      list: ABILITIES.map((k) => `${L(`KNAVERY.AbilityShort.${k}`)} ${Math.min(...r.rolls[k])} (${r.rolls[k].join("·")})`).join(", "),
+      list: listOf(ABILITIES.map((k) => `${L(`KNAVERY.AbilityShort.${k}`)} ${Math.min(...r.rolls[k])} (${r.rolls[k].join("·")})`)),
     }));
     if (r.swap) {
       notes.push(F("KNAVERY.Gen.AbilitySwapped", { a: L(`KNAVERY.AbilityShort.${r.swap[0]}`), b: L(`KNAVERY.AbilityShort.${r.swap[1]}`) }));
@@ -418,7 +419,7 @@ export const buildCharacter = async ({ level = 1, abilities = null, rolled = nul
   } else if (placed) {
     values = { ...placed };
     notes.push(F("KNAVERY.Gen.AbilityPoints", {
-      list: ABILITIES.filter((k) => placed[k]).map((k) => `${L(`KNAVERY.AbilityShort.${k}`)} ${placed[k]}`).join(", "),
+      list: listOf(ABILITIES.filter((k) => placed[k]).map((k) => `${L(`KNAVERY.AbilityShort.${k}`)} ${placed[k]}`)),
     }));
   } else {
     const rolled = await rollAbilities();
@@ -438,7 +439,7 @@ export const buildCharacter = async ({ level = 1, abilities = null, rolled = nul
     for (const k of picks) values[k] = Math.min(ABILITY_MAX, values[k] + 1);
     const hp = await rollLevelHp(l, hpMax);
     notes.push(F("KNAVERY.Gen.LevelStep", {
-      level: l, abilities: picks.map((k) => L(`KNAVERY.AbilityShort.${k}`)).join(", "), rolled: hp.rolled, max: hp.max,
+      level: l, abilities: listOf(picks.map((k) => L(`KNAVERY.AbilityShort.${k}`))), rolled: hp.rolled, max: hp.max,
     }));
     hpMax = hp.max;
   }
@@ -482,7 +483,7 @@ export const buildCharacter = async ({ level = 1, abilities = null, rolled = nul
   if (kit === "knave1e" || kit === "careers-1e-gear") {
     const gear = await rollKnave1eGear();
     items.push(...gear.items);
-    if (gear.names.length) notes.push(F("KNAVERY.Gen.Knave1eGear", { list: gear.names.join(", ") }));
+    if (gear.names.length) notes.push(F("KNAVERY.Gen.Knave1eGear", { list: listOf(gear.names) }));
   }
 
   // A Knave 1e kit is rolled, not bought: no coins.

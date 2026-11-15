@@ -16,6 +16,7 @@ import { FLAG_SCOPE, MARKET_1E_PREFIX, MARKET_PREFIX, SETTINGS_NS, SYS_PATH } fr
 import { usesPrices1e } from "./rules.js";
 import { findTablesByPrefix, isPlaceholder, plainText, resultText } from "./compendium.js";
 import { slotsForItem } from "./documents/actor.js";
+import { P } from "./i18n.js";
 
 const { DialogV2 } = foundry.applications.api;
 const esc = (s) => foundry.utils.escapeHTML(String(s ?? ""));
@@ -178,7 +179,7 @@ export const openMarketplace = async (actor) => {
     return `<div class="mkt-row" data-idx="${idx}" data-cost="${row.price}" data-name="${esc(row.name.toLowerCase())}">
       <div class="mkt-line">
         <div class="mkt-row-main"><img class="mkt-img" src="${esc(row.img)}" alt="" /><span class="mkt-name">${esc(row.name)}</span></div>
-        <span class="mkt-slots">${row.service ? esc(L("KNAVERY.Market.Service")) : esc(F(row.slots === 1 ? "KNAVERY.NSlot" : "KNAVERY.NSlots", { n: row.slots }))}</span>
+        <span class="mkt-slots">${row.service ? esc(L("KNAVERY.Market.Service")) : esc(P("KNAVERY.NSlots", row.slots))}</span>
         <span class="mkt-cost"><i class="fas fa-coins"></i> ${row.price}</span>
         <span class="mkt-actions">
           <button type="button" class="mkt-buy" data-idx="${idx}">${L("KNAVERY.Market.Buy")}</button>

@@ -6,7 +6,7 @@
   "globals": {
     "foundry": "readonly", "game": "readonly", "ui": "readonly", "canvas": "readonly", "CONFIG": "readonly", "CONST": "readonly",
     "Hooks": "readonly", "Actor": "readonly", "Item": "readonly", "ChatMessage": "readonly", "Roll": "readonly",
-    "RollTable": "readonly", "Macro": "readonly", "fromUuid": "readonly", "fromUuidSync": "readonly", "getDocumentClass": "readonly"
+    "RollTable": "readonly", "Macro": "readonly", "fromUuid": "readonly", "fromUuidSync": "readonly", "getDocumentClass": "readonly", "Handlebars": "readonly"
   },
   "rules": {
     "no-unused-vars": ["warn", { "args": "none" }],

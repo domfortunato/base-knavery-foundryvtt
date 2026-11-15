@@ -9,6 +9,7 @@
  */
 import { FLAG_SCOPE } from "./config.js";
 import { emit, onSocket } from "./socket.js";
+import { listOf } from "./i18n.js";
 
 const FLAG = "itemOffer";
 const esc = (s) => foundry.utils.escapeHTML(String(s ?? ""));
@@ -100,7 +101,7 @@ export const promptOfferTarget = async (item) => {
     if (!members.length) continue;
     rows += `<h4 class="knavery-offer-group">${esc(L(key))}</h4>`;
     for (const a of members) {
-      const players = answerersFor(a).map((u) => u.name).join(", ");
+      const players = listOf(answerersFor(a).map((u) => u.name));
       rows += `<label class="kn-pick-row"><input type="radio" name="offerTarget" value="${esc(a.uuid)}"${first ? " checked" : ""} />`
         + `<span class="kn-pick-label">${esc(a.name)}${players ? ` <em>(${esc(players)})</em>` : ""}</span></label>`;
       first = false;

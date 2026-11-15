@@ -181,7 +181,7 @@
       <div class="knavery-summary-strip">
         <span class="summary-item {{#if overburdened}}peril{{/if}}" data-tooltip="KNAVERY.SlotsTip"><i class="fas fa-weight-hanging"></i>{{localize "KNAVERY.Slots"}} {{slotsUsed}} / {{slotsMax}}</span>
         {{#if system.spellCap}}<span class="summary-item" data-tooltip="KNAVERY.SpellsLeftTip"><i class="fas fa-book"></i>{{localize "KNAVERY.SpellsLeft" n=spellsLeft max=system.spellsPerDay}}</span>{{/if}}
-        <span class="summary-item summary-coins" data-tooltip="KNAVERY.CoinsTip"><i class="fas fa-coins"></i>{{#if coinsTakeSlots}}{{localize "KNAVERY.CoinsCountSlots" n=system.coins slots=system.coinSlots}}{{else}}{{localize "KNAVERY.CoinsCount" n=system.coins}}{{/if}}</span>
+        <span class="summary-item summary-coins" data-tooltip="KNAVERY.CoinsTip"><i class="fas fa-coins"></i>{{knPlural "KNAVERY.CoinsCount" system.coins}}{{#if coinsTakeSlots}} · {{knPlural "KNAVERY.NSlots" system.coinSlots}}{{/if}}</span>
         {{#if usesWounds}}<span class="summary-item {{#if woundPeril}}peril{{/if}}" data-tooltip="KNAVERY.WoundsTip"><i class="fas fa-droplet"></i>{{localize "KNAVERY.WoundSlots" n=system.wounds}}</span>{{/if}}
       </div>
       {{> "systems/base-knavery/templates/parts/items-list.html"}}

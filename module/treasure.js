@@ -13,6 +13,7 @@
  */
 import { COMPANION_SHARE, SELL_RATE, TREASURE_COINS_PER_XP } from "./config.js";
 import { rule } from "./rules.js";
+import { P } from "./i18n.js";
 
 const L = (k) => game.i18n.localize(k);
 const F = (k, d) => game.i18n.format(k, d);
@@ -115,7 +116,7 @@ export const sellItem = async (item) => {
   await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor }),
     whisper: whisperOwners(actor),
-    content: `<div class="knavery-roll-card kind-sell"><p class="card-note"><i class="fas fa-coins"></i> ${esc(F(sold > 1 ? "KNAVERY.Sell.SoldMany" : "KNAVERY.Sell.Sold", { n: sold, name: item.name, price }))}</p></div>`,
+    content: `<div class="knavery-roll-card kind-sell"><p class="card-note"><i class="fas fa-coins"></i> ${esc(P("KNAVERY.Sell.Sold", sold, { name: item.name, price }))}</p></div>`,
   });
   return price;
 };

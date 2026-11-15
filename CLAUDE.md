@@ -53,9 +53,10 @@ picker, change log and marketplace it ports.
 ## Translations (user rulings 2026-11-15)
 - Interface: we ship volunteers' language files, and fans may publish translation modules.
 - Shipped content: through Babele, keyed by the frozen ids. Never rename a document in the generator.
-- A translated Knave 2e book is treated like the English one: the system stores its path and a page map
-  (numbers and table titles), never its text. A shared or shipped map carries no text.
+- Knave 2e has no translations (user, 2026-11-15): the rulebook reader and table builder stay English-only.
+  Knave 1e is translated: those translations are what a GM in another language plays with.
 - Translated Knave 1e text ships only under its translator's licence and credit, approved per language.
+  Until one ships, a GM pastes their translated 1e tables with the importer's **Use as**.
 - Human translations only; an AI draft needs a line in the welcome's AI disclosure.
 
 ## Layout

@@ -17,6 +17,7 @@ import {
   ABILITIES, ABILITY_MAX, CREATION_POINTS, FLAG_SCOPE, LEVEL_UP_ABILITIES, LOWEST_DIE_MAX, MAX_LEVEL, SETTINGS_NS, SYS_PATH,
 } from "./config.js";
 import { creationAbilities } from "./rules.js";
+import { listOf } from "./i18n.js";
 
 const L = (k) => game.i18n.localize(k);
 const F = (k, d) => game.i18n.format(k, d);
@@ -129,7 +130,7 @@ export const applyLevelUp = async (actor, picks = null) => {
     name: actor.name,
     level,
     title: L(`KNAVERY.LevelTitle.${level}`),
-    abilities: chosen.map((k) => L(`KNAVERY.AbilityShort.${k}`)).join(", "),
+    abilities: listOf(chosen.map((k) => L(`KNAVERY.AbilityShort.${k}`))),
     hpNote: hp.note,
     rollHtml: await hp.roll.render(),
   });

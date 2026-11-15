@@ -17,6 +17,7 @@
 import { FLAG_SCOPE } from "./config.js";
 import { usesQuality } from "./rules.js";
 import { onPcSide } from "./initiative.js";
+import { P, listOf } from "./i18n.js";
 
 const { DialogV2 } = foundry.applications.api;
 const L = (k) => game.i18n.localize(k);
@@ -66,7 +67,7 @@ const promptMorale = async (combat, reason, actors) => {
     whisper: gmIds(),
     content: `<div class="knavery-roll-card kind-morale-prompt"><header class="card-title"><h3>${esc(L("KNAVERY.MoraleTest.BreakingPoint"))}</h3></header>`
       + `<p class="roll-reason"><i class="fas fa-flag"></i> ${esc(reason)}</p>`
-      + `<p class="card-note">${esc(F("KNAVERY.MoraleTest.WhoTests", { names: actors.map((a) => a.name).join(", ") }))}</p>`
+      + `<p class="card-note">${esc(F("KNAVERY.MoraleTest.WhoTests", { names: listOf(actors.map((a) => a.name)) }))}</p>`
       + `<div class="card-apply card-morale-test"><button type="button" data-kn-morale-test='${esc(JSON.stringify(uuids))}'>`
       + `<i class="fas fa-dice"></i> ${esc(L("KNAVERY.MoraleTest.RollAll"))}</button></div></div>`,
     flags: { [FLAG_SCOPE]: { breaking: { combat: combat.id, reason } } },
@@ -221,12 +222,12 @@ export const wageRows = () => {
     const due = Number.isFinite(s.wageDue) ? s.wageDue : null;
     const days = due === null ? null : Math.ceil((due - now) / DAY_SECONDS);
     let status;
-    if (due === null || days <= 0) status = days !== null && days < 0 ? F("KNAVERY.Wages.Overdue", { n: -days }) : L("KNAVERY.Wages.DueNow");
-    else status = days === 1 ? L("KNAVERY.Wages.DueTomorrow") : F("KNAVERY.Wages.DueIn", { n: days });
+    if (due === null || days <= 0) status = days !== null && days < 0 ? P("KNAVERY.Wages.Overdue", -days) : L("KNAVERY.Wages.DueNow");
+    else status = days === 1 ? L("KNAVERY.Wages.DueTomorrow") : P("KNAVERY.Wages.DueIn", days);
     const daily = s.wagePeriod === "day";
     if (daily) {
       const owed = daysOwed(due, now);
-      status = owed ? F(owed === 1 ? "KNAVERY.Wages.OwedOne" : "KNAVERY.Wages.Owed", { n: owed, total: owed * s.wage }) : L("KNAVERY.Wages.PaidUp");
+      status = owed ? P("KNAVERY.Wages.Owed", owed, { total: owed * s.wage }) : L("KNAVERY.Wages.PaidUp");
     }
     return {
       id: a.id, name: a.name, img: a.img, wage: s.wage, status, overdue: daily ? daysOwed(due, now) > 0 : due === null || days <= 0,
@@ -259,7 +260,7 @@ export const payWage = async (hireling) => {
   await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor: employer }),
     whisper: [...gmIds(), ...owners],
-    content: `<div class="knavery-roll-card kind-wages"><p>${esc(F(daily ? (days === 1 ? "KNAVERY.Wages.PaidDay" : "KNAVERY.Wages.PaidDays") : "KNAVERY.Wages.Paid", { employer: employer.name, name: hireling.name, wage, days }))}</p></div>`,
+    content: `<div class="knavery-roll-card kind-wages"><p>${esc(P(daily ? "KNAVERY.Wages.PaidDays" : "KNAVERY.Wages.Paid", days, { employer: employer.name, name: hireling.name, wage, days }))}</p></div>`,
   });
   return due;
 };

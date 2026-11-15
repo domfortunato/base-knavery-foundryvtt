@@ -14,6 +14,7 @@ import {
 } from "./config.js";
 import { spellRule, usesQuality, usesWounds } from "./rules.js";
 import { wearItem } from "./quality.js";
+import { P, listOf } from "./i18n.js";
 
 const { DialogV2 } = foundry.applications.api;
 const L = (k) => game.i18n.localize(k);
@@ -70,7 +71,7 @@ export const promptEdge = async ({
     quality: attack && usesQuality(),
     weapons,
     targets: targetList,
-    targetsCurrent: targetList && current.length > 1 ? current.map((t) => tokenName(t)).join(", ") : null,
+    targetsCurrent: targetList && current.length > 1 ? listOf(current.map((t) => tokenName(t))) : null,
     hidePcsBox,
     // A player character already targeted on purpose stays in the list.
     hidePcs: hidePcsBox && !preset?.pc,
@@ -498,7 +499,7 @@ export const castSpell = async (actor, book) => {
   if (!s.scroll && actor.type === "character") {
     if (s.castToday) return ui.notifications.warn("KNAVERY.Spell.AlreadyCast", { format: { name: book.name } });
     if (actor.system.spellCap && actor.system.spellsCastToday >= int) {
-      return ui.notifications.warn(int === 1 ? "KNAVERY.Spell.DailyLimitOne" : "KNAVERY.Spell.DailyLimit", { format: { n: int } });
+      return ui.notifications.warn(P("KNAVERY.Spell.DailyLimit", int));
     }
   }
   let level = spellRule() === "book-per-day" && actor.type === "character" ? actor.system.level : int;

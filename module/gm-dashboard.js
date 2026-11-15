@@ -41,6 +41,7 @@ import { openSpellGenerator } from "./spell-generator.js";
 import { isLight, party } from "./hazard.js";
 import { customPortraitFolder, GALLERIES, galleryOn, getCustomPortraitPaths, randomPortraitSource, refreshCustomPortraits } from "./art.js";
 import { spellRule, usesQuality, usesWounds } from "./rules.js";
+import { P, listOf } from "./i18n.js";
 import { companionsOf, treasureCarried, treasureSplit, treasureXpOn, treasureXpRule, xpForTreasure } from "./treasure.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -217,7 +218,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       const owners = game.users.filter((u) => !u.isGM && a.testUserPermission(u, "OWNER"));
       return {
         id: a.id, name: a.name, img: a.img, level: a.system.level, xp: a.system.xp,
-        players: owners.map((u) => u.name).join(", "),
+        players: listOf(owners.map((u) => u.name)),
         online: owners.some((u) => u.active),
       };
     });
@@ -383,7 +384,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       const pcs = [...chosen].map((id) => game.actors.get(id)).filter(Boolean);
       const companions = companionsOf(pcs).length;
       box.querySelector(".dash-xp-treasure-total").textContent = pcs.length
-        ? F(companions ? "KNAVERY.Dashboard.TreasureTotalCompanions" : "KNAVERY.Dashboard.TreasureTotal", { coins, xp, n: pcs.length, companions })
+        ? (companions ? P("KNAVERY.Dashboard.TreasureTotalCompanions", companions, { coins, xp, n: pcs.length, companions }) : F("KNAVERY.Dashboard.TreasureTotal", { coins, xp, n: pcs.length }))
         : L("KNAVERY.Dashboard.TreasureChoose");
     };
     const showAll = () => { showMode(); showTreasure(); };
@@ -526,7 +527,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     await ChatMessage.create({
       speaker: { alias: L("KNAVERY.GameMaster") },
       content: `<div class="knavery-roll-card kind-request"><header class="card-title"><h3><i class="fas fa-bullhorn"></i> ${foundry.utils.escapeHTML(label)}</h3></header>`
-        + `<p>${foundry.utils.escapeHTML(entry.entries.map((e) => e.name).join(", "))} — ${foundry.utils.escapeHTML(F("KNAVERY.Roll.VsTarget", { target: entry.target }))}${edgeLabel ? `, ${foundry.utils.escapeHTML(edgeLabel)}` : ""}</p>`
+        + `<p>${foundry.utils.escapeHTML(listOf(entry.entries.map((e) => e.name)))} — ${foundry.utils.escapeHTML(F("KNAVERY.Roll.VsTarget", { target: entry.target }))}${edgeLabel ? `, ${foundry.utils.escapeHTML(edgeLabel)}` : ""}</p>`
         + (reason ? `<p class="roll-reason"><i class="fas fa-bullhorn"></i> ${foundry.utils.escapeHTML(reason)}</p>` : "") + "</div>",
     });
     this.render({ parts: ["requests"] });
@@ -786,7 +787,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       for (const k of ["_id", "folder", "ownership", "sort", "_stats"]) delete data[k];
       data.system = { ...data.system, quantity: n };
       await actor.addItems([data], { knNoLog: true });
-      line = F(n === 1 ? "KNAVERY.Time.ForageFoundOne" : "KNAVERY.Time.ForageFound", { name: actor.name, n });
+      line = P("KNAVERY.Time.ForageFound", n, { name: actor.name });
     } else line = F("KNAVERY.Time.ForageNothing", { name: actor.name });
     await ChatMessage.create({ speaker: { alias: L("KNAVERY.GameMaster") }, content: `<div class="knavery-roll-card kind-forage"><p>${esc(line)}</p></div>` });
     // The watch is spent: the clock moves and the travel hazard die rolls; no ground covered.
@@ -920,7 +921,7 @@ export const partyRows = () => {
     const slotsUsed = a.calcSlotsUsed();
     return {
       id: a.id, name: a.name, img: a.img, level: s.level,
-      players: owners.map((u) => u.name).join(", "),
+      players: listOf(owners.map((u) => u.name)),
       hp: { value: s.hp?.value ?? 0, max: s.hp?.max ?? 0 },
       dead: s.dead, unconscious: s.unconscious,
       status: s.dead ? L("KNAVERY.Party.Dead") : (s.unconscious ? L("KNAVERY.Party.Unconscious") : ""),

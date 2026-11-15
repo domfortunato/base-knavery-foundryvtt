@@ -90,7 +90,10 @@ export const isKind = (item, kind) => {
 /*  Setup                                        */
 /* -------------------------------------------- */
 
-/** At init: compendium indexes carry the keys, so a lookup never loads a document to read one. */
+/**
+ * At init: compendium indexes carry the keys, so a lookup never loads a document to read one.
+ * Foundry starts each pack with core's index fields only; `loadKeyIndexes` (at ready) fetches the rest.
+ */
 export const registerKeyIndexFields = () => {
   const add = (doc, ...fields) => {
     const list = CONFIG[doc].compendiumIndexFields ??= [];
@@ -100,6 +103,11 @@ export const registerKeyIndexFields = () => {
   add("Item", `flags.${FLAG_SCOPE}.key`, `flags.${FLAG_SCOPE}.kind`);
   add("JournalEntry", `flags.${FLAG_SCOPE}.key`);
 };
+
+/** At ready, on every client: the indexes of the table, item and journal packs, with the key fields. */
+export const loadKeyIndexes = () => Promise.all(game.packs
+  .filter((p) => ["RollTable", "Item", "JournalEntry"].includes(p.documentName))
+  .map((p) => p.getIndex().catch((err) => console.warn(`Base Knavery | index of ${p.collection}`, err))));
 
 /**
  * At the active GM's login: every world table without a key takes the key of its own name,

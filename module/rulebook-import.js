@@ -19,6 +19,7 @@
  */
 import { FLAG_SCOPE, SETTINGS_NS, SYS_PATH } from "./config.js";
 import { keyOf, worldTable } from "./keys.js";
+import { listOf } from "./i18n.js";
 import { COMBINED_TABLES, RULEBOOK_TABLES } from "./rulebook-catalogue.js";
 import { capitalise, pageItems, parseTable, splitNamed } from "./rulebook-tables.js";
 import { rulebookPath, hasRulebook } from "./rulebook.js";
@@ -372,7 +373,7 @@ export class RulebookTablesReview extends HandlebarsApplicationMixin(Application
     } });
     if (report.spells) ui.notifications.info("KNAVERY.RulebookSpells.Done", { format: report.spells });
     if (report.kept.length) {
-      ui.notifications.warn("KNAVERY.RulebookTables.KeptList", { format: { names: report.kept.join(", ") } });
+      ui.notifications.warn("KNAVERY.RulebookTables.KeptList", { format: { names: listOf(report.kept) } });
     }
     foundry.applications.instances.get("knavery-gm-dashboard")?.render();
     await this.close();

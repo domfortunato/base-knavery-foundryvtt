@@ -9,6 +9,7 @@ import {
 import { stripLockedChanges } from "../edit-gates.js";
 import { healingRule, usesWounds } from "../rules.js";
 import { isKind } from "../keys.js";
+import { P } from "../i18n.js";
 
 /** Food: an item of kind "rations" (keys.js: its flag, else its name). */
 export const isRations = (item) => isKind(item, "rations");
@@ -266,7 +267,7 @@ export class KnaveryActor extends Actor {
     const name = foundry.utils.escapeHTML(this.token?.name ?? this.prototypeToken?.name ?? this.name);
     const parts = [];
     if (out.hpLost) parts.push(game.i18n.format("KNAVERY.Damage.HpLost", { n: out.hpLost }));
-    if (out.wounds) parts.push(game.i18n.format(out.wounds === 1 ? "KNAVERY.Damage.WoundsTakenOne" : "KNAVERY.Damage.WoundsTaken", { n: out.wounds }));
+    if (out.wounds) parts.push(P("KNAVERY.Damage.WoundsTaken", out.wounds));
     if (!parts.length) parts.push(game.i18n.localize("KNAVERY.Damage.NoEffect"));
     const src = source ? `<p class="dmg-source">${foundry.utils.escapeHTML(source)}</p>` : "";
     const dead = out.dead
