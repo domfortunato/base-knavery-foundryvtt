@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **The Guide, rewritten.** Ten pages, each titled with its reader: Start Here (GM); Your Knave and Rolling and
+  Fighting (players); then the GM's Rules, Settings, the Game Master's Dashboard, Your Rulebook and the Tables,
+  Characters, NPCs and Monsters, Combat, Damage and Morale, and Items, Careers and the Marketplace. Every page
+  opens with where the thing is and what to click, names windows and buttons as they read on screen, and links
+  the other pages. **Open the guide** lands a player on Your Knave and the GM on Start Here; every Configure
+  window, the dashboard's rail and the Settings sidebar have a Guide button that opens their own page.
 - **The printed sheet is one page**, on A4 and US Letter alike, in both editions: the head (portrait, name, level,
   title and XP, then careers under Knave 2e or alignment and background under Knave 1e), the six abilities with
   their defenses, a vitals strip (AC, HP, wounds, coins, spells cast today as tick boxes), one numbered row per

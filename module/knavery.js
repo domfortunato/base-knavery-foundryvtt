@@ -30,7 +30,7 @@ import { rollAttack, rollCheck, rollDieOfFate, rollSave } from "./rolls.js";
 import {
   canReadRulebook, hasRulebook, openRulebook, registerRulebook, showRulebookPage, toggleRulebook,
 } from "./rulebook.js";
-import { maybeOpenWelcome, openWelcome } from "./welcome.js";
+import { maybeOpenWelcome, openGuide, openWelcome } from "./welcome.js";
 import { applyRules, currentRules, offerRulesSwitch, stampRules } from "./rules.js";
 import { openRulebookTablesReview } from "./rulebook-import.js";
 import { bindHazardCard, endTurn, registerClockSetting } from "./hazard.js";
@@ -285,6 +285,8 @@ Hooks.on("renderSettings", (_app, html) => {
   } else {
     btn("fa-solid fa-book-open", "KNAVERY.Rulebook.Title", () => {}, { disabled: true, tip: "KNAVERY.Rulebook.NoCopy" });
   }
+  // The Guide, on its reader's page (a player: Your Knave; the GM: Start Here), without the welcome.
+  btn("fa-solid fa-book-open-reader", "KNAVERY.Welcome.OpenGuide", () => openGuide());
   if (game.user.isGM) btn("fa-solid fa-clipboard-list", "KNAVERY.Dashboard.Title", () => openGmDashboard());
   info.after(section);
 });

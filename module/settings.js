@@ -283,7 +283,7 @@ export class SettingsGroupMenu extends HandlebarsApplicationMixin(ApplicationV2)
     window: { contentClasses: ["standard-form"], title: "", icon: "fa-solid fa-gears" },
     position: { width: 600, height: "auto" },
     form: { closeOnSubmit: true, handler: SettingsGroupMenu.#onSubmit },
-    actions: { resetDefaults: SettingsGroupMenu.#onResetDefaults },
+    actions: { resetDefaults: SettingsGroupMenu.#onResetDefaults, guide: SettingsGroupMenu.#onGuide },
   };
 
   static PARTS = {
@@ -335,6 +335,7 @@ export class SettingsGroupMenu extends HandlebarsApplicationMixin(ApplicationV2)
       preset,
       rootId: this.id,
       buttons: [
+        { type: "button", action: "guide", icon: "fa-solid fa-book-open-reader", label: "KNAVERY.Welcome.OpenGuide" },
         { type: "button", action: "resetDefaults", icon: "fa-solid fa-arrow-rotate-left", label: "SETTINGS.Reset" },
         { type: "submit", icon: "fa-solid fa-floppy-disk", label: "SETTINGS.Save" },
       ],
@@ -365,6 +366,13 @@ export class SettingsGroupMenu extends HandlebarsApplicationMixin(ApplicationV2)
         select.value = rulesFor(Object.fromEntries(keys.map((key) => [key, input(key) ? read(input(key)) : game.settings.get(ns, key)])));
       });
     }
+  }
+
+  /** The Guide's page for this window (welcome.js openGuide; the Guide's titles are fixed). */
+  static async #onGuide() {
+    const page = { hacks: "Rules: Knave, Knave 2e or a Mix (GM)", rulebook: "Your Rulebook and the Tables (GM)" }[this.constructor.GROUP.id]
+      ?? "Settings (GM)";
+    (await import("./welcome.js")).openGuide(page);
   }
 
   static async #onResetDefaults() {

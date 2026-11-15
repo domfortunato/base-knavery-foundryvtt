@@ -148,7 +148,11 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       rollEvent: GmDashboard.#onRollEvent,
       surprise: GmDashboard.#onSurprise,
       quickNpc: GmDashboard.#onQuickNpc,
-      openGuide: () => openGuide(),
+      // The rail's Guide opens the dashboard's page at the open page's section.
+      openGuide() {
+        const anchors = { requests: "requests", damage: "combat", time: "time", party: "party", dice: "random", xp: "xp", market: "marketplace", tools: "toggles", tables: "tables" };
+        return openGuide("The Game Master's Dashboard (GM)", { anchor: anchors[this.tabGroups?.primary] ?? null });
+      },
       importTable: GmDashboard.#onImportTable,
       // The Marketplace page's aisle actions (marketplace.js), run with the dashboard as `this`.
       ...MARKET_ACTIONS,

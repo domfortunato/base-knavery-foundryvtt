@@ -652,7 +652,6 @@ const journal = (name, pages) => {
  * Ten pages, each titled with its reader (user decisions D6 and D7, 2026-11-14): the GM's start
  * page, the two player pages, then the GM's depth, one page per window. The titles are what the
  * in-game Guide buttons open (module/welcome.js openGuide), so a rename there is a rename here.
- * `<!-- PLAN:item-N -->` marks a passage written against the 0.3.0 plan ahead of its code.
  */
 const GUIDE_NAME = "Base Knavery Guide";
 /** A content link to another Guide page by its title: the ids come from the names, so it never breaks. */
@@ -692,9 +691,9 @@ journal(GUIDE_NAME, [
 <p>Create Character while you allow it, their own sheet with its Attack window, Rest and the marketplace, your roll requests, other players' item offers, your rulebook while <b>Players may read it</b> is on, and two pages of this Guide: ${gref(PAGE.knave, "Your Knave")} and ${gref(PAGE.rolling, "Rolling and Fighting")}. Never the welcome window unasked, the dashboard, Create NPC or the Bestiary. Four switches on the dashboard's <b>Toggles</b> page set what else they may do: the marketplace, character creation, Char Gen Mode, and changing level and XP.</p>
 <h2>Shortcuts</h2>
 <p>The <b>GM Macros</b> compendium holds eight macros to drag to the hotbar: the four player switches and the change log, the dashboard, the Marketplace Manager and Import a Table. Anyone can drag a weapon or a spellbook from a sheet to the hotbar to attack or cast with it.</p>
-<!-- PLAN:item-4 -->
+
 <p>The Marketplace Manager macro opens the dashboard's <b>Marketplace</b> page; the manager has no window of its own any more.</p>
-<!-- /PLAN -->`],
+`],
   [PAGE.knave, `
 <p>Your sheet has four pages on a thumb rail at the window's edge, <b>Knave</b>, <b>Inventory</b>, <b>Growth</b> and <b>Description</b>, with an <b>Attack</b> button under them. Pop Out and Print are the icons in the title bar. Drag a weapon or a spellbook to Foundry's hotbar to attack or cast from there.</p>
 <h2>Create Character</h2>
@@ -719,9 +718,9 @@ journal(GUIDE_NAME, [
 <p>Your traits: Knave 2e's (Personality, Mannerism) when the GM's book is in, and Knave's (Physique to Misfortune). A <b>Backstory</b> with a counter that guides you to 35 words, never a limit. <b>Notes</b>.</p>
 <h2>Char Gen Mode</h2>
 <p>The toggle in the title bar, while the GM allows it. On, dice and pick-lists appear by the portrait, name, traits, careers, max HP and coins; <b>Roll Character</b> rerolls everything; the abilities can be typed, within the level's points (3 at level 1 and 3 more a level, no score above level + 2; Knave 1e's rolled scores are capped at 6 + one a level); level and XP too, if the GM allows; the marketplace offers <b>Take</b>. Careers change only at level 1, two at most.</p>
-<!-- PLAN:item-10 -->
+
 <p><b>Print</b> makes a one-page sheet, for A4 or Letter paper.</p>
-<!-- /PLAN -->`],
+`],
   [PAGE.rolling, `
 <p>Every check, save and attack opens the same small window first: <b>Roll with Disadvantage</b>, <b>Straight Roll</b> or <b>Roll with Advantage</b>. Hover a button to see what it does in this world: +5 or −5 to the roll (Knave 2e), or two d20s keeping the higher or lower (Knave 1e).</p>
 <h2>Checks</h2>
@@ -733,16 +732,16 @@ journal(GUIDE_NAME, [
 <h2>Reading the card</h2>
 <ul>
 <li>Each target reads <b>Hit</b> or <b>Miss</b>, and the chosen token becomes your target on the map.</li>
-<li>Knave 2e: 21 or more also earns a free maneuver. A natural 1 breaks the weapon when the GM's switch says so. <!-- PLAN:item-9 -->After a melee hit, <b>Make it a power attack</b> rolls the damage dice again, doubled, and breaks the weapon.<!-- /PLAN --></li>
-<li>Knave 1e: a natural 20 rolls one more damage die and puts a <b>Wear armor</b> button on the card for the target's owner, who picks the piece that loses a point of quality. A natural 1 costs your weapon a point; at 0 it is Broken. <!-- PLAN:item-9 -->A hit must beat the armor defense, not equal it.<!-- /PLAN --></li>
+<li>Knave 2e: 21 or more also earns a free maneuver. A natural 1 breaks the weapon when the GM's switch says so. Tick <b>Power attack</b> in the Attack window before the roll (a melee weapon, Knave 2e): the damage dice are doubled and the weapon breaks.</li>
+<li>Knave 1e: a natural 20 rolls one more damage die and puts a <b>Wear armor</b> button on the card for the target's owner, who picks the piece that loses a point of quality. A natural 1 costs your weapon a point; at 0 it is Broken. A hit must beat the armor defense, not equal it.</li>
 <li><b>Damage</b> under the roll, with <b>Apply</b> (and <b>Direct</b> under Knave 2e) for you and the GM: it goes to the targets hit, else to your targeted or selected tokens. <b>Roll damage</b> appears when you did not roll it at once.</li>
 </ul>
 <h2>Damage, wounds and death</h2>
 <p>Damage comes off HP first. Under Knave 2e, each point past 0 fills a slot with a wound, from the bottom of the Inventory up: empty slots, then coin slots, then the lowest item, which is <b>Unusable</b> until the wound heals (whether it was dropped or broken is the table's call). Every slot wounded is death. Direct damage skips HP. Under Knave 1e there are no wounds: at 0 HP you are unconscious, at −1 dead.</p>
 <h2>Rest</h2>
-<p>Press <b>Rest</b> and tick what is true: <b>Slept two watches</b>, <b>Ate a meal the night before</b>, <b>In a safe haven</b>. Knave 2e: sleep and a meal bring HP back to full, and a safe haven heals one wound too. Knave 1e: a night's rest after a meal heals d8 + CON; a safe haven, all HP. Spellbooks are ready again either way, and a card says what happened. <!-- PLAN:item-8 -->The meal eats one ration from your Inventory.<!-- /PLAN --></p>
+<p>Press <b>Rest</b> and tick what is true: <b>Slept two watches</b>, <b>Ate a meal the night before</b>, <b>In a safe haven</b>. Knave 2e: sleep and a meal bring HP back to full, and a safe haven heals one wound too. Knave 1e: a night's rest after a meal heals d8 + CON; a safe haven, all HP. Spellbooks are ready again either way, and a card says what happened. The meal eats one ration from your Inventory.</p>
 <h2>Casting</h2>
-<p>The hand on a spellbook's row. Knave 2e: as many books a day as your INT, each once, cast at your INT. Knave 1e: each book once a day, no total; L is your level. A scroll is cast by anyone, once, and crumbles. <!-- PLAN:item-8 -->Under Knave 2e choose the spell's level, 1 up to your INT, and the card carries a <b>Save</b> line with the target's roll.<!-- /PLAN --></p>
+<p>The hand on a spellbook's row. Knave 2e: as many books a day as your INT, each once, cast at your INT. Knave 1e: each book once a day, no total; L is your level. A scroll is cast by anyone, once, and crumbles. Under Knave 2e choose the spell's level, 1 up to your INT, and every cast card carries the <b>Save</b> line.</p>
 <h2>Die of Fate</h2>
 <p>A d6 for when fate, not skill, decides. Anyone can roll it from any sheet.</p>`],
   [PAGE.rules, `
@@ -750,7 +749,7 @@ journal(GUIDE_NAME, [
 <h2>Creation</h2>
 <ul>
 <li><b>Abilities at creation.</b> Knave 1e: each is the lowest of 3d6, rolled in order, and the player may swap two. Knave 2e: 3 points, rolled by 3d6 or placed.</li>
-<li><b>Starting kit.</b> Knave 1e: rolled armor and gear, two rations and a weapon of the player's choice; no coins, no spellbook. Knave 2e: two careers and their items, 3d6 × 10 coins, rations, rope and torches, and a random spellbook per point of INT. <i>Knave 2e careers + Knave 1e gear</i> adds the 1e gear tables to the careers. <!-- PLAN:item-8 -->A 2e kit with a missile weapon also gets 20 arrows, and the creation window carries the book's line about carrying any armor and weapons.<!-- /PLAN --></li>
+<li><b>Starting kit.</b> Knave 1e: rolled armor and gear, two rations and a weapon of the player's choice; no coins, no spellbook. Knave 2e: two careers and their items, 3d6 × 10 coins, rations, rope and torches, and a random spellbook per point of INT. <i>Knave 2e careers + Knave 1e gear</i> adds the 1e gear tables to the careers. A 2e kit with a missile weapon also gets a quiver of 20 arrows.</li>
 <li><b>Alignment</b> and <b>Background</b> (Knave 1e traits). On, each shows on the Knave page under the pronouns and is rolled for new characters; off, hidden and never rolled.</li>
 </ul>
 <h2>Hit points</h2>
@@ -771,15 +770,13 @@ journal(GUIDE_NAME, [
 </ul>
 <h2>Combat</h2>
 <ul>
-<li><b>Attacks.</b> Knave 1e: weapons have 3 quality, armor 1 to 7. A natural 20 adds one damage die, and the card's <i>Wear armor</i> button lets the target's owner pick the piece that loses a point; a natural 1 costs the weapon a point. At 0 the item is destroyed (marked Broken); Repair costs 10% of its price a point. No power attack, no free maneuver. Knave 2e: a power attack doubles the damage dice and breaks the weapon, and 21 or more earns a free maneuver. <!-- PLAN:item-9 -->Under Knave 1e a hit must beat the armor defense; under Knave 2e it equals or exceeds AC.<!-- /PLAN --></li>
+<li><b>Attacks.</b> Knave 1e: weapons have 3 quality, armor 1 to 7. A natural 20 adds one damage die, and the card's <i>Wear armor</i> button lets the target's owner pick the piece that loses a point; a natural 1 costs the weapon a point. At 0 the item is destroyed (marked Broken); Repair costs 10% of its price a point. No power attack, no free maneuver. Knave 2e: a power attack doubles the damage dice and breaks the weapon, and 21 or more earns a free maneuver. Under Knave 1e a hit must beat the armor defense; under Knave 2e it equals or exceeds AC.</li>
 <li><b>A natural 1 breaks the weapon.</b> Knave 2e attacks only; under Knave 1e a 1 costs quality. Off, a 1 is just a miss.</li>
-<li><b>Knave 1e group initiative.</b> You roll one d6 at the start of each round: 1–3 the enemies act first, 4–6 the player characters (characters, players' tokens and friendly tokens). Off, Foundry's own tracker rolls d20 + CHA per token. <!-- PLAN:item-9 -->This becomes <b>Initiative</b>, a choice: Knave 1e d6 by side; Knave 2e, one CHA check between the sides' leaders decides who acts first; or Individual, Foundry's roll per token. A world that rolled per token keeps Individual and still reads as 2e.<!-- /PLAN --></li>
-<!-- PLAN:item-8 -->
+<li><b>Knave 1e group initiative.</b> You roll one d6 at the start of each round: 1–3 the enemies act first, 4–6 the player characters (characters, players' tokens and friendly tokens). Off, Foundry's own tracker rolls d20 + CHA per token. This becomes <b>Initiative</b>, a choice: Knave 1e, one d6 a round by side; Knave 2e, one CHA check between the sides' leaders decides who acts first; or Individual, Foundry's roll per token.</li>
+
 <li><b>Advantage and disadvantage.</b> Knave 1e: two d20s, keep the higher or lower. Knave 2e: +5 or −5.</li>
-<!-- /PLAN -->
-<!-- PLAN:item-9 -->
-<li><b>Surprise bonus</b> (Knave 2e): off, a reminder on the card, or +5 filled in on the surprising side's combat checks in round 1.</li>
-<!-- /PLAN -->
+
+
 </ul>
 <h2>Money</h2>
 <ul>
@@ -804,13 +801,13 @@ journal(GUIDE_NAME, [
 <li><b>Change log:</b> whispers you, and whoever else may observe the sheet, a card when someone edits it by hand: name, HP, coins, XP, level, wounds, AC, pronouns and abilities, items added, removed, counted or equipped. The system's own actions stay silent; Rest, Level Up and Heal Wound name themselves.</li>
 <li><b>Welcome window on start:</b> opens for the GM at every login and refresh. Players never see it unasked.</li>
 <li><b>Hazard dice on the Random page:</b> off hides the hazard dice on Random and the Time page's clock; the Wages list stays.</li>
-<!-- PLAN:item-10 -->
+
 <li><b>Printing:</b> the paper (Auto, A4 or Letter), the text size, and whether career features, the backstory and the notes lines print. The sheet is one page at every setting.</li>
-<!-- /PLAN -->
+
 </ul>
-<!-- PLAN:item-8 -->
+
 <p><i>Advantage and disadvantage</i> lives in Configure Rules, under Combat, with an edition value.</p>
-<!-- /PLAN -->
+
 <h2>Configure Creation</h2>
 <ul>
 <li><b>Players may create characters:</b> shows Create Character to players. Off, only you make them.</li>
@@ -839,40 +836,34 @@ journal(GUIDE_NAME, [
 <p><b>Generate a spell</b> (Knave 2e p27): choose the characters, add a reason if you like, and send. Each player's window shows the rolled spell; they may roll one word again and adjust the wording, then <b>Add as a spellbook</b>. Its effect is left for the player and the GM to agree. A player who is away can have you generate it from the request's result line. The six tables (Spell Formulae, Wizard Names, Qualities, Effects, Elements, Forms) are Knave 2e text, so they do not ship: build them from your PDF, or import them by name.</p>
 <h2>Combat</h2>
 <p>The damage box: a dice formula under <b>Damage</b>, a <b>Source</b> the card names, <b>Direct</b> (skips HP; a creature takes it tripled), and <b>Apply to</b> the selected tokens, the targeted tokens or the characters you tick. <b>Roll and apply</b> rolls once and applies the total to each.</p>
-<!-- PLAN:item-9 -->
+
 <p>Above it, the fight: the round and the acting side, <b>Roll initiative</b> by the edition's rule, <b>Next side</b>, <b>Surprise</b> with its result buttons, <b>Set leaders</b>, <b>Mark defeated</b> and <b>Morale</b> for the selected tokens, and <b>Rally</b> (Knave 2e). See ${gref(PAGE.combat, "Combat, Damage and Morale")}.</p>
-<!-- /PLAN -->
-<!-- PLAN:item-8 -->
-<p>Hazard damage presets (Knave 2e p21: falling, fire, lightning, freezing, drowning, thirst, sleep loss, intoxication) fill the formula and Direct for you.</p>
-<!-- /PLAN -->
+
+<p>Hazard presets (Knave 2e p21: falling, fire, on fire, freezing, lightning) fill the formula and Direct for you.</p>
 <h2>Time</h2>
 <p>Choose <b>Dungeon: 10-minute turns</b> or <b>Travel: 4-hour watches</b>. <b>End the turn</b> (or <b>End the watch</b>) moves the world clock on and rolls the hazard die; the line above counts the turn, or the day, its watch of six and the watches travelled today. <b>Roll the hazard die only</b> leaves the clock alone; <b>Start again</b> resets the count. Tick <b>The party is resting</b> and fatigue is ignored; untick <b>Travelling this watch</b> for a watch in camp. More than three watches of travel in a day adds the forced-march note to the card: 1 direct damage unless a CON check is passed.</p>
 <p>The hazard card is whispered to you with the face and what it means. Three faces carry a button, and nothing on a sheet changes until you click it. <b>Deal the fatigue</b> lists the party (every character a player owns) so you can untick whoever rests, then deals 1 damage to the others. <b>Burn out the lit torches</b> uses up one torch from each lit stack and puts it out. <b>Roll for spoiled rations</b> rolls a d6 per ration and each 1 spoils. A second press asks first. Encounters, shifts and signs are yours to play out; the Random page helps.</p>
-<!-- PLAN:item-8 -->
-<p><b>Forage</b> (Knave 2e p8) spends a watch on a WIS check for d6 rations.</p>
-<!-- /PLAN -->
+<p><b>Forage</b> (Knave 2e p8) spends a watch on a WIS check for d6 rations; the watch then ends and the hazard die rolls.</p>
 <p><b>Wages</b> lists every hireling with a wage, who employs them and when it is due: a month is 30 days of the world clock, and a Knave 1e henchman is owed by the day. <b>Pay</b> takes the coins from the employer named on the hireling's sheet and moves the due date on, settling every day owed.</p>
 <h2>Party</h2>
 <p>Every player character at a glance: HP (and whether they are unconscious or dead), wounds, slots used, coins, their lights and which are lit, and the spellbooks still ready today. Click a name to open the sheet.</p>
 <h2>Random</h2>
 <p>Rolls for you, whispered. <b>Hazard dice</b>: the dungeon and travel dice alone, without moving the clock. <b>Encounters</b>: <b>Reaction (2d6)</b> on your Reaction table (Knave 1e's ships; one built from the 2e book wins), <b>Activity</b>, <b>Surprise</b> (sets up the closest PC's WIS check on Requests: tick that PC, type the closest creature's WIS as the difficulty and send; a win by 5 or more surprises), the encounter <b>Distance</b> in a dungeon or the wilderness, and <b>Morale: selected</b> for the NPC tokens you have selected. <b>Events</b>: weather, travel and delve shifts, signs, city events and disasters. <b>On the fly</b>: a <b>Monster</b>, and a quick <b>NPC</b> (a name, personality, profession and detail in one card). <b>Downtime</b>: a carousing mishap. A table's button stays off until the table exists: build it from your Knave 2e book or import it by name.</p>
-<!-- PLAN:item-8 -->
+
 <p><b>Carousing</b> (Knave 2e p52) is a window: the cost by settlement size, XP equal to the coins spent, the morning's CON check and the mishap on a failure.</p>
-<!-- /PLAN -->
+
 <h2>XP</h2>
 <p>Choose <b>How</b>: the same amount to each, a different amount to each (a box per character), a total split evenly, or, when the Rules give XP for treasure, <b>Treasure brought back</b>. Tick the characters and press <b>Award XP</b>; a card lists the awards. Treasure mode lists the treasure the ticked characters carry, each item once, adds the coins you type and splits the XP evenly; a companion of one of them takes a half share, noted on the card. See ${gref(PAGE.items, "Items, Careers and the Marketplace")}.</p>
-<!-- PLAN:item-4 -->
+
 <h2>Marketplace</h2>
 <p>Your side of the shop: the aisles, <b>Customize</b>, prices, stock and hiding, as ${gref(PAGE.items, "Items, Careers and the Marketplace")} describes.</p>
-<!-- /PLAN -->
+
 <h2>Toggles</h2>
 <p>Live switches, the same the macros flip: the player marketplace, player character creation, player Char Gen Mode, players changing level &amp; XP, and the change log.</p>
-<!-- PLAN:item-4 -->
+
 <p>Also here: <b>Players may read the rulebook</b> and <b>Hazard dice on the Random page</b>.</p>
-<!-- /PLAN -->
-<!-- PLAN:item-5 -->
-<p>One switch per portrait gallery (Yours, Portraits by Aspeheim, Lydia Comer, Tlomdev, Game Icons): a gallery that is off leaves the portrait picker and the random portraits. <b>Random portraits from</b>: any gallery that is on, or one named gallery, with the Yours folder's path and its Refresh beside it. Monsters keep Lydia Comer's monster set.</p>
-<!-- /PLAN -->
+
+<p>One switch per portrait gallery (Yours, Portraits by Aspeheim, Lydia Comer, Tlomdev, Icons): a gallery that is off leaves the portrait picker and the random portraits. <b>Random portraits from</b>: any gallery that is on, or one named gallery, with the Yours folder's path and a Rescan beside it. Random monster portraits come from Lydia Comer's monsters, Tlomdev's creatures and your folder, whichever are on.</p>
 <h2>Tables</h2>
 <p>Every table the system rolls on and every world table: its name, <i>shell</i> or <i>world</i>, its row count, a book icon that opens your rulebook at its page, a d20 that rolls it and an import icon that opens the importer at its name. <b>Import a table</b> at the top opens the importer blank. The <b>Rulebook</b> row: a page number with <b>Open</b> and <b>Show this page to players</b>, and <b>Build tables from the book</b>; without a PDF, <b>Choose from this computer</b>. See ${gref(PAGE.rulebook, "Your Rulebook and the Tables")}.</p>`],
   [PAGE.rulebook, `
@@ -905,27 +896,21 @@ journal(GUIDE_NAME, [
 <p><b>Create Character</b> and <b>Create NPC</b> are in the Actors sidebar. Players see Create Character while <i>Players may create characters</i> is on; Create NPC is yours.</p>
 <h2>Player characters</h2>
 <p>A player's Create Character makes a random knave at a level between your lowest and highest starting levels. A player who may not create actors sends the request to your client, which creates the actor, gives them ownership and opens it for them; you must be logged in, and the request is answered once, made or refused. The <b>Blank Sheet</b> tile is yours: an empty sheet with its traits rolled, to build by hand in Char Gen Mode. <b>Roll Character</b> on a sheet in Char Gen Mode rerolls it from scratch.</p>
-<p>Char Gen Mode from your side: your toggle works on any sheet whatever the players' switch says. With it on, the abilities hold to the level's points for you too (3 at level 1 and 3 more a level, no score above level + 2; under Knave 1e's rolled scores only the cap); with it off you type any score. Careers change at level 1 for players and at any level for you, two at most, and the marketplace's <b>Take</b> gives gear for free. <!-- PLAN:item-8 -->You may add a third career (Knave 2e's career training); the limit holds for players.<!-- /PLAN --></p>
+<p>Char Gen Mode from your side: your toggle works on any sheet whatever the players' switch says. With it on, the abilities hold to the level's points for you too (3 at level 1 and 3 more a level, no score above level + 2; under Knave 1e's rolled scores only the cap); with it off you type any score. Careers change at level 1 for players and at any level for you, two at most, and the marketplace's <b>Take</b> gives gear for free. You may add a third career (Knave 2e's career training); the limit holds for players.</p>
 <h2>Create NPC</h2>
 <p>Three tiles. <b>Monster</b>: one from the bestiary (or <i>Random</i>), with its HP rolled, a d8 per level or level × 4, and a whispered card with the roll. <b>Person</b>: someone met on the road, with a random name, traits and portrait, on the hireling's line (AC 11, HP 3, level 1). <b>Hireling</b>: a hireling (300c a month), mercenary (600c) or expert (600, 1,200 or 2,400c) with the book's AC, morale and attack; on Knave 1e's price list, the ten henchmen at their daily wages in copper, laborer to knight. Name it or leave the name blank.</p>
-<!-- PLAN:item-8 -->
-<p><b>Companion</b> (Knave 2e p53, p59) makes a character-type actor with the Companion role: made like a PC, levelling up, taking a half share of treasure, counted on the XP page, with the party's companion cap on the Party page.</p>
-<!-- /PLAN -->
-<!-- PLAN:item-12 -->
-<p><b>Create Item</b>, beside Create NPC: pick the kind (weapon, armor, gear or tool, potion, relic, spellbook, chaos spellbook) and the fields are pre-filled for it (the damage die by hands, slots, a price band, 1e quality, the badge). A Roll beside the name and the effect draws on your built tables (Potions, Textures, Tastes, Colors, Ingredients, Tools, Miscellaneous Items, Books, Clothing, Treasures, Materials, Weapons, Item Traits, Domains, Symbols, the spell formulae). Then <b>Create</b> into the Items directory, an actor's inventory or a marketplace aisle.</p>
-<!-- /PLAN -->
+<p><b>Companion</b> (Knave 2e p53, p59) makes an NPC with the Companion role and the knave it follows: no morale tests, and a half share when treasure XP is awarded on the XP page.</p>
+<p><b>Create Item</b>, in the Items directory's header and on the dashboard's Marketplace page: pick the kind (weapon, armor, gear or tool, potion, relic, spellbook, chaos spellbook) and the fields are pre-filled for it (the damage die by hands and reach, slots, a price band, 1e quality, the badge). A Roll beside the name and the effect draws on your built tables (Potions, Textures, Tastes, Colors, Ingredients, Tools, Miscellaneous Items, Books, Clothing Items, Treasures, Materials, Weapons, Item Traits, Domains, Symbols, the spell formulae); a table you have not built yet says so in the Roll's tooltip. Then <b>Create</b> into the Items directory, an actor's inventory or a marketplace aisle.</p>
 <h2>The NPC sheet</h2>
 <p>A Creature page, Inventory and Description. The head: portrait, name and pronouns, <b>Role</b> (Monster, NPC, Hireling, Companion), <b>MOV</b>, <b>NA</b> (number appearing, dungeon and wilderness), <b>ATK</b> as text, <b>LVL</b> and <b>MRL</b>. A hireling's head adds <b>Wage</b>, a month or a day, and <b>Employer</b>, the player character who pays. A creature adds its level to every check and attack; <b>Check</b> rolls one; tick <b>Ability scores</b> to give it real abilities instead. <b>AC</b> is typed, and worn armor adds to it. The <b>Attacks</b> list rolls each equipped weapon's d20 and its damage. Monsters have no item slots; hirelings and companions have 10. Monsters die at 0 HP and take direct damage tripled.</p>
-<!-- PLAN:item-9 -->
-<p><b>Roll all attacks</b> rolls every attack in the list at once.</p>
-<!-- /PLAN -->
+
 <h2>The Bestiary</h2>
 <p>The <b>Bestiary</b> compendium holds statistics only, under generic names: AC, HP, level, attacks, movement, morale and number appearing, and the three hirelings. Drag one to the scene, or let Create NPC roll its HP.</p>
 <h2>Portraits</h2>
 <p>Click a portrait to open the picker. Its tabs are the galleries: <b>Yours</b> (your portrait folder; <b>Rescan folder</b> after adding files, and players see the list you scanned), <b>Portraits</b> by Jon Aspeheim, <b>Lydia Comer</b> (people, or monsters for a monster), <b>Tlomdev</b> and <b>Icons</b> from game-icons.net, the last two in folders. Below: paste an image path or URL, or <b>Browse files</b>. Each gallery credits its artist with a link, and a shipped portrait brings its matching token. In Char Gen Mode a die rolls a random portrait: from your folder when it has files, else from the Aspeheim and Comer sets.</p>
-<!-- PLAN:item-5 -->
+
 <p>The Toggles page decides which galleries show, and where random portraits come from.</p>
-<!-- /PLAN -->`],
+`],
   [PAGE.combat, `
 <p>Fights run from the sheets' Attack windows and the chat cards, the dashboard's <b>Combat</b> page and the Combat Tracker. The player's side is ${gref(PAGE.rolling, "Rolling and Fighting")}; this page is what you do with the cards.</p>
 <h2>Damage cards</h2>
@@ -934,24 +919,20 @@ journal(GUIDE_NAME, [
 <p>Under Knave 2e, damage past 0 HP fills slots with wounds from the bottom of the Inventory up: empty slots, then coin slots, then the lowest item, marked <b>Unusable</b> until the wound heals; whether it was dropped or broken is the table's call. Every slot wounded is death. A safe-haven rest heals one wound, and the Wounds bar's − heals one by hand. <i>Hard-mode wounds</i> (Configure Rules) breaks the item in a wounded slot instead. Under Knave 1e there are no wounds: 0 HP is unconscious, −1 dead, and the Direct button is gone.</p>
 <h2>Quality and breakage</h2>
 <p>Knave 1e attacks: a weapon has 3 quality, a shield or helmet 1, body armor its armor points + 2 (the item sheet can set another maximum). A natural 20 rolls one more damage die and puts <b>Wear armor</b> on the card for each target hit: the target's owner (you, for a monster) picks the worn piece that loses a point, once per card. A natural 1 costs the weapon a point. At 0 the item is destroyed and marked Broken but kept; <b>Repair</b>, the hammer on the row or on the item sheet, restores every point at 10% of the price a point, from the owner's coins. A worn item shows "Quality 2/3" on its row. Knave 2e attacks: a natural 1 breaks the weapon while <i>A natural 1 breaks the weapon</i> is on, and a power attack breaks it always; Repair mends a Broken item for nothing, since the book has no repair rule. Broken armor gives no AC.</p>
-<!-- PLAN:item-9 -->
-<p>Under Knave 1e a hit must be above the armor defense, not equal to it, and the attack tooltip says so. A Knave 2e power attack is a button on the hit card: <b>Make it a power attack</b> rolls the dice again, doubled, and breaks the weapon. A 2e sneak attack is a tick in the Attack window (no roll, direct damage), and a ranged attack into a melee gets a reminder. The dashboard's Direct box is hidden under Knave 1e.</p>
-<!-- /PLAN -->
+<p>Under Knave 1e a hit must be above the armor defense, not equal to it, and the attack tooltip says so. A Knave 2e power attack is the <b>Power attack</b> tick in the Attack window (a melee weapon): the damage dice are doubled and the weapon breaks. A ranged weapon shows the melee reminder. The dashboard's Direct box is hidden when the world plays without wounds (Knave 1e death).</p>
 <h2>Initiative</h2>
 <p>With <i>Knave 1e group initiative</i> on, Begin Combat rolls one d6: 1–3 the enemies act first, 4–6 the player characters (characters, players' tokens and friendly tokens). The tracker sorts each side together, the round's result is posted, and every new round rolls again from your client, even when a player ends the last turn. Off, Foundry's tracker rolls d20 + CHA per token.</p>
-<!-- PLAN:item-9 -->
+
 <p>The <i>Initiative</i> rule is a choice. Knave 1e: the d6 by side. Knave 2e: one CHA check between the sides' leaders decides who acts first, and a side's creatures act in any order; Begin Combat picks the leaders (the highest CHA among the PCs, the highest level among the hostiles), both overridable with <b>Set leaders</b>. Individual: Foundry's roll per token. Under either side rule the tracker lists Player characters and Enemies as two groups, the acting side highlighted, a tick per combatant once it has acted, and a GM button <b>Next side</b>; no initiative numbers. A combatant at 0 HP (Knave 1e: Unconscious) is marked defeated once and cleared on healing; your own skull always wins.</p>
 <p><b>Surprise</b> (Knave 2e p19): within 80', the closest PC's WIS check against the closest creature's WIS; a win by 5 or more surprises. The Random page's Surprise sets up the request; the result card's buttons <i>They are surprised</i> and <i>We are surprised</i> set round 1 and post the +5 reminder, never added silently.</p>
-<!-- /PLAN -->
+
 <h2>Morale</h2>
 <p>Morale is 2d6 at or under the creature's MRL. Roll it from the creature's sheet (the die by MRL), from <b>Morale: selected</b> on the Random page for the NPC tokens you have selected, or from the breaking-point cards: in a running combat the active GM's client watches each side for its first casualty, half the side fallen, and an NPC left alone at half HP or less, each once a battle, and whispers you a card naming who tests, with a <b>Roll morale</b> button. A failed test puts <b>Leader rallies them (CHA check)</b> on its card: pick the leader, roll CHA, and a pass rerolls the morale; each side may try once a battle. Companions never test morale. A leader killed or a feared foe are your call.</p>
-<!-- PLAN:item-9 -->
-<p>Under Knave 1e the breaking points are the first edition's: half the group fallen, the leader defeated, one left at half HP, and hirelings unpaid or whose employer dies; there is no rally.</p>
-<!-- /PLAN -->
+<p>Under Knave 1e attacks the breaking points are the first edition's: half the group fallen, the leader defeated, one left at half HP; there is no first-casualty card and no rally.</p>
 <h2>Hazards in a fight</h2>
 <p>The hazard die's fatigue, burn and depletion are applied from the Time page's cards, never by themselves, and a watch of travel past the third adds the forced-march note. See ${gref(PAGE.dashboard, "The Game Master's Dashboard")}.</p>`],
   [PAGE.items, `
-<p>Items come in six types: item, weapon, armor, spellbook, career and transport. Make one with <b>Add item</b> on a sheet or in the Items sidebar, or duplicate one from <b>Gear &amp; Prices</b> (Knave 2e) or <b>Gear &amp; Prices (Knave 1e)</b>. <!-- PLAN:item-12 -->Or use <b>Create Item</b> beside Create NPC, which rolls one from your tables.<!-- /PLAN --></p>
+<p>Items come in six types: item, weapon, armor, spellbook, career and transport. Make one with <b>Add item</b> on a sheet or in the Items sidebar, or duplicate one from <b>Gear &amp; Prices</b> (Knave 2e) or <b>Gear &amp; Prices (Knave 1e)</b>. Or use <b>Create Item</b> (the Items directory's header, or the dashboard's Marketplace page), which rolls one from your tables.</p>
 <h2>The item sheet</h2>
 <ul>
 <li><b>Every inventory item:</b> <b>Slots</b> (0 for none), <b>Quantity</b>, <b>Price</b>, <b>Broken</b> (with <b>Repair</b> beside it), <b>Treasure</b> (loot: it counts once for treasure XP and sells at full value; <i>XP awarded</i> once counted), <b>Kind</b> (Ordinary, Magic, Relic or Potion: the badge on the Inventory row; magic weapons and armor keep their icon, glowing), <b>Effects</b> and a <b>Description</b>.</li>
@@ -975,7 +956,7 @@ journal(GUIDE_NAME, [
 <p>The coin icon on an Inventory row sells the item, or some of a stack: half its price, or its full value for treasure, into the character's coins, with a whispered note. Selling follows the player marketplace switch.</p>
 <h2>The marketplace</h2>
 <p>Players shop from the <b>Marketplace</b> button on the Inventory while <i>Players may use the marketplace</i> is on: the aisles, a filter, each row's slots and price, <b>Buy</b> (the coins go first) and <b>Take</b> for free (you, or Char Gen Mode).</p>
-<p>An aisle is a roll table named <code>Market: Weapons</code>, or <code>Market 1e: Weapons</code> on Knave 1e's price list, which shows its own aisles in copper (Weapons, Armor, Gear, Food, Animals &amp; Transport, Clothing; Lodging &amp; Meals and Buildings ship hidden, and their rows take the coins only). Shipped aisles are read-only. <!-- PLAN:item-4 -->Your side is the dashboard's <b>Marketplace</b> page.<!-- /PLAN --> Pick an aisle and <b>Customize</b> it: a world copy replaces the shipped one and can be edited. Then type an <b>Override</b> price on any row, drop items from the sidebar or a compendium onto the aisle to stock them, <b>Add a row by name</b> for a text row with a price (bought, it becomes a plain one-slot item), remove rows, rename or delete the aisle (a deleted shipped aisle comes back), and hide it from players with the eye, or show it again. <b>New aisle</b> makes an empty one.</p>`],
+<p>An aisle is a roll table named <code>Market: Weapons</code>, or <code>Market 1e: Weapons</code> on Knave 1e's price list, which shows its own aisles in copper (Weapons, Armor, Gear, Food, Animals &amp; Transport, Clothing; Lodging &amp; Meals and Buildings ship hidden, and their rows take the coins only). Shipped aisles are read-only. Your side is the dashboard's <b>Marketplace</b> page. Pick an aisle and <b>Customize</b> it: a world copy replaces the shipped one and can be edited. Then type an <b>Override</b> price on any row, drop items from the sidebar or a compendium onto the aisle to stock them, <b>Add a row by name</b> for a text row with a price (bought, it becomes a plain one-slot item), remove rows, rename or delete the aisle (a deleted shipped aisle comes back), and hide it from players with the eye, or show it again. <b>New aisle</b> makes an empty one.</p>`],
 ]);
 
 /* -------------------------------------------- */
