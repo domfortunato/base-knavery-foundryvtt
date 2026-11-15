@@ -200,6 +200,11 @@ picker, change log and marketplace it ports.
   3. The tag mirrors to GitHub, and Actions attaches `system.json` and
      `system.zip`.
   4. Merge `master` back into `dev`.
+  5. Retake the Foundry listing's welcome picture so its version line shows the new release (user
+     ruling 2026-11-15, from 0.4.3 on): on the fleet, `--probes listing --ref <the release commit>`; show
+     the user `welcome.png` before pushing; once approved, replace `docs/listing/welcome.png` under the
+     SAME name (the submitted listing links that address) on `dev`, fast-forward `master` and push both.
+     Only that picture; the character sheet and Attack window stay unless asked.
 - **Never tag or release on GitHub directly.**
 
 ## House rulings on the rules (the user's, recorded so they are not "fixed")
