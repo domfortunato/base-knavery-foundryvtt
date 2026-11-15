@@ -67,7 +67,7 @@ const inspect = async (selector, name) => {
   const loc = page.locator(selector).first();
   if (!(await loc.count())) { report.english.set(`${name}: (window not found: ${selector})`, 1); return; }
   await loc.screenshot({ path: path.join(OUT, `${name}.png`) }).catch(() => {});
-  const found = await page.evaluate((sel) => {
+  const found = await page.evaluate(async (sel) => {
     const root = document.querySelector(sel);
     const names = new Set();
     const addName = (n) => { for (const w of String(n ?? "").split(/[^\p{L}]+/u)) if (w) names.add(w.toLowerCase()); };
@@ -76,13 +76,17 @@ const inspect = async (selector, name) => {
     for (const p of game.packs) for (const e of p.index) addName(e.name);
     for (const t of game.tables) for (const r of t.results) addName(r.name);
     addName(game.world.title); addName(game.system.title);
+    // The art credits' artists, works and licences are proper names: they stay as written.
+    const { ART_CREDITS } = await import("/systems/base-knavery/module/welcome-data.js");
+    for (const a of ART_CREDITS) { addName(a.name); addName(a.by); addName(a.license); addName(a.url); }
     // Text of form fields is data, not interface.
     const text = [...root.querySelectorAll("*")].filter((el) => !el.closest("input, textarea, select, .editor-content, .prosemirror, [contenteditable]"))
       .flatMap((el) => [...el.childNodes].filter((n) => n.nodeType === Node.TEXT_NODE).map((n) => n.textContent))
       .concat([...root.querySelectorAll("[data-tooltip-text], [placeholder], [aria-label], [title]")].map((el) => el.getAttribute("data-tooltip-text") || el.getAttribute("placeholder") || el.getAttribute("aria-label") || el.getAttribute("title") || ""))
       .join("\n");
     // Marks can span several text nodes (a string with <b> inside): remove everything inside ⟦…⟧ first.
-    const outside = text.replace(/⟦[\s\S]*?⟧/g, " ").replace(/[⟦⟧]/g, " ");
+    // Raw keys core leaves in its own elements (FILES.BrowseTooltip in the file picker) are not ours.
+    const outside = text.replace(/⟦[\s\S]*?⟧/g, " ").replace(/[⟦⟧]/g, " ").replace(/\b[A-Z][A-Z0-9]+(\.[A-Za-z0-9]+)+\b/g, " ");
     const english = [...new Set(outside.match(/\p{L}{3,}/gu) ?? [])].filter((w) => !names.has(w.toLowerCase()) && !/[^\x00-\x7F]/.test(w));
     const clipped = [...root.querySelectorAll("label, button, span, th, td, h1, h2, h3, h4, a, .form-group > *, li")]
       .filter((el) => el.offsetParent && el.clientWidth > 0 && el.scrollWidth > el.clientWidth + 2)
@@ -116,7 +120,11 @@ await withSettings(page, async () => {
   await page.evaluate((x) => game.actors.get(x).sheet.render(true), npcId);
   await inspect(".knavery.sheet.actor", "npc-sheet");
   await page.evaluate((x) => game.actors.get(x).sheet.close(), npcId);
-  await page.evaluate((x) => game.actors.get(x).items.find((i) => i.type === "weapon")?.sheet.render(true), id);
+  await page.evaluate(async (x) => {
+    const a = game.actors.get(x);
+    const w = a.items.find((i) => i.type === "weapon") ?? (await a.createEmbeddedDocuments("Item", [{ name: "Probe Spear", type: "weapon", system: { damage: "d6" } }]))[0];
+    w.sheet.render(true);
+  }, id);
   await inspect(".knavery.sheet.item", "item-sheet");
   await page.evaluate(() => { for (const app of foundry.applications.instances.values()) if (app.document instanceof Item) app.close(); });
 
