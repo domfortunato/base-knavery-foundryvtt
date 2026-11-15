@@ -47,7 +47,7 @@ items:
     _stats:
       coreVersion: '14.370'
       systemId: base-knavery
-      systemVersion: 0.2.0
+      systemVersion: 0.3.0
   - _id: IMGvg17MKU1VPC9u
     _key: '!actors.items!9Mbf9yT4DmFi7rm8.IMGvg17MKU1VPC9u'
     name: Boulder
@@ -66,10 +66,10 @@ items:
     _stats:
       coreVersion: '14.370'
       systemId: base-knavery
-      systemVersion: 0.2.0
+      systemVersion: 0.3.0
 effects: []
 flags: {}
 _stats:
   coreVersion: '14.370'
   systemId: base-knavery
-  systemVersion: 0.2.0
+  systemVersion: 0.3.0

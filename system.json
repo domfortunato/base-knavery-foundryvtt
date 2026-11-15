@@ -2,7 +2,7 @@
   "id": "base-knavery",
   "title": "Base Knavery",
   "description": "A Foundry VTT system for Knave, first and second editions. Knave 1e plays out of the box, its rules and tables built in (CC BY 4.0); Knave 2e comes with your own book, and any rule can be mixed. Built for running OSR modules and Knave hacks. Base Knavery is an independent production of Dom Bosco and is not affiliated with Questing Beast LLC.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "authors": [
     {
       "name": "Dom Bosco",
