@@ -23,6 +23,7 @@ import { createCharacter, createCharacterInteractive, registerCreationSocket, up
 import { createNpc, createNpcInteractive } from "./npc-generator.js";
 import { openSpellGenerator } from "./spell-generator.js";
 import { GmDashboard, openGmDashboard, openMarketplaceManager, registerPartyRefresh, registerRequestSocket, setToggle } from "./gm-dashboard.js";
+import { openCreateItem } from "./create-item.js";
 import { openMarketplace } from "./marketplace.js";
 import { openTableImporter, importRows, parseRows } from "./table-importer.js";
 import { rollAttack, rollCheck, rollDieOfFate, rollSave } from "./rolls.js";
@@ -93,6 +94,7 @@ Hooks.once("init", () => {
     openDashboard: openGmDashboard,
     openMarketplace,
     openMarketplaceManager,
+    openCreateItem,
     openTableImporter,
     importRows,
     parseRows,
@@ -160,6 +162,23 @@ Hooks.on("createChatMessage", (message) => {
 /* -------------------------------------------- */
 /*  The actors sidebar: Create Character         */
 /* -------------------------------------------- */
+
+/* The Items directory: the GM's Create Item window (create-item.js, 0.3.0). */
+Hooks.on("renderItemDirectory", (_app, html) => {
+  if (!game.user.isGM) return;
+  html.querySelector("#knavery-item-directory-buttons")?.remove();
+  const header = html.querySelector(".directory-header");
+  if (!header) return;
+  const row = document.createElement("div");
+  row.id = "knavery-item-directory-buttons";
+  row.className = "header-actions action-buttons flexrow";
+  const b = document.createElement("button");
+  b.type = "button";
+  b.innerHTML = `<i class="fas fa-box-open"></i> ${L("KNAVERY.ItemMaker.Title")}`;
+  b.addEventListener("click", () => openCreateItem());
+  row.append(b);
+  header.append(row);
+});
 
 Hooks.on("renderActorDirectory", (_app, html) => {
   html.querySelector("#knavery-directory-buttons")?.remove();

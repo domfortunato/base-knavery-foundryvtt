@@ -252,3 +252,39 @@ export const HENCHMEN_1E = {
 
 /** A Knave 1e score is the lowest of 3d6 (p1): 1 to 6 at level 1. */
 export const LOWEST_DIE_MAX = 6;
+
+/* -------------------------------------------- */
+/*  Create Item (create-item.js, 0.3.0)          */
+/* -------------------------------------------- */
+
+/**
+ * The Create Item window's pre-filled numbers, by the world's price list (rule `price-list`:
+ * Knave 2e's coins or Knave 1e's copper, the shipped gear's lines): six price bands, cheapest
+ * first; a weapon's die, slots and price by its reach and hands; an armor piece's points, slots
+ * and price by its type (a type with no 1e line takes `other`).
+ */
+export const PRICE_BANDS = {
+  knave2e: [5, 20, 50, 100, 500, 1000],
+  knave1e: [1, 5, 10, 20, 50, 100],
+};
+export const WEAPON_LINES = {
+  knave2e: {
+    melee: { 1: { damage: "d6", slots: 1, cost: 50 }, 2: { damage: "d8", slots: 2, cost: 100 } },
+    ranged: { 1: { damage: "d4", slots: 1, cost: 50 }, 2: { damage: "d6", slots: 2, cost: 100 } },
+  },
+  knave1e: {
+    melee: { 1: { damage: "d6", slots: 1, cost: 5 }, 2: { damage: "d10", slots: 3, cost: 20 } },
+    ranged: { 1: { damage: "d4", slots: 1, cost: 5 }, 2: { damage: "d6", slots: 2, cost: 15 } },
+  },
+};
+export const ARMOR_LINES = {
+  knave2e: {
+    shield: { points: 1, slots: 1, cost: 100 }, helmet: { points: 1, slots: 1, cost: 100 }, gambeson: { points: 1, slots: 1, cost: 100 },
+    mail: { points: 1, slots: 1, cost: 200 }, breastplate: { points: 1, slots: 1, cost: 500 }, armPlate: { points: 1, slots: 1, cost: 500 },
+    legPlate: { points: 1, slots: 1, cost: 500 }, other: { points: 1, slots: 1, cost: 100 },
+  },
+  knave1e: {
+    shield: { points: 1, slots: 1, cost: 40 }, helmet: { points: 1, slots: 1, cost: 40 }, gambeson: { points: 1, slots: 1, cost: 60 },
+    mail: { points: 3, slots: 3, cost: 1200 }, other: { points: 2, slots: 2, cost: 500 },
+  },
+};

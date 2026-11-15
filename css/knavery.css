@@ -5080,3 +5080,29 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 .knavery-gm-dashboard .dash-combat-state { margin: 2px 0 6px; font-weight: bold; }
 .knavery-gm-dashboard .dash-leaders { display: flex; flex-direction: column; gap: 4px; margin: 6px 0; }
 .knavery-gm-dashboard .dash-leaders .form-group > label { flex: 0 0 120px; }
+/* ---- Create Item (create-item.js, 0.3.0): kind tiles, a Roll beside a field, the stats grid ---- */
+/* Seven small tiles choose the kind (the radio itself is hidden; the tile is its label); the
+   chosen one glows in the accent, as Create NPC's tiles do on hover. */
+.knavery-create-item .kn-ci { display: flex; flex-direction: column; gap: 8px; }
+.knavery-create-item .kn-ci-kinds { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.knavery-create-item .kn-ci-kind {
+    position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+    padding: 6px 2px; border: 1px solid var(--kn-rule); border-radius: 4px; cursor: pointer;
+    font-size: 12px; line-height: 1.15; text-align: center; color: var(--kn-muted);
+}
+.knavery-create-item .kn-ci-kind input { position: absolute; appearance: none; width: 0; height: 0; margin: 0; opacity: 0; }
+.knavery-create-item .kn-ci-kind i { font-size: 20px; }
+.knavery-create-item .kn-ci-kind:hover { background: var(--kn-wash); }
+.knavery-create-item .kn-ci-kind.active,
+.knavery-create-item .kn-ci-kind:has(input:checked) { border-color: var(--kn-accent); box-shadow: 0 0 6px var(--kn-accent); color: var(--kn-ink); }
+/* A Roll beside its field keeps the die's width; the name source and the price band give the field the room. */
+.knavery-create-item .kn-ci-roll-wrap { flex: 0 0 auto; display: inline-flex; }
+.knavery-create-item .kn-ci-roll { flex: 0 0 auto; width: auto; padding: 0 8px; }
+.knavery-create-item .kn-ci-source,
+.knavery-create-item .kn-ci-band { flex: 0 1 11em; }
+.knavery-create-item .kn-ci-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 12px; }
+.knavery-create-item .kn-ci-stats .form-group { margin: 0; }
+.knavery-create-item .kn-ci-effect textarea { min-height: 4em; resize: vertical; }
+.knavery-create-item .kn-ci-effect .form-fields { align-items: flex-start; }
+.knavery-create-item .kn-ci-formula,
+.knavery-create-item .kn-ci-chaos { margin: -4px 0 0; }

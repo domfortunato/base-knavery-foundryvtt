@@ -27,7 +27,7 @@ export const playerMarketClosed = () => !game.user.isGM && !game.settings.get(SE
 
 /** The aisle tables' prefix for the world's price list. */
 export const marketPrefix = () => (usesPrices1e() ? MARKET_1E_PREFIX : MARKET_PREFIX);
-const aisleName = (table) => table.name.slice((table.name.startsWith(MARKET_1E_PREFIX) ? MARKET_1E_PREFIX : MARKET_PREFIX).length).trim();
+export const aisleName = (table) => table.name.slice((table.name.startsWith(MARKET_1E_PREFIX) ? MARKET_1E_PREFIX : MARKET_PREFIX).length).trim();
 /** Each price list hides its own aisles (both have a "Weapons"); 1e's services ship hidden. */
 const hiddenKey = () => (usesPrices1e() ? "market-hidden-aisles-1e" : "market-hidden-aisles");
 const hiddenAisles = () => new Set(game.settings.get(SETTINGS_NS, hiddenKey()) ?? []);

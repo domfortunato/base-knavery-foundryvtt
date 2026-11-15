@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- **Create Item** (Game Master): in the Items directory and on the dashboard's Marketplace page. Pick a kind,
+  weapon, armor, gear or tool, potion, relic, spellbook or chaos spellbook, and its fields come filled in for
+  your price list: the die by hands and reach, armor points by type, slots, a price band, the magic, relic or
+  potion badge, and under Knave 1e attacks its quality. Roll beside the name or the effect draws on the tables
+  you built from your own book (Weapons, Tools, Miscellaneous Items, Books, Clothing Items, Treasures, Potions
+  with their textures, tastes, colors and ingredients, Item Traits, Materials, Symbols and Domains, the spell
+  formulae); a table you have not built yet says so in the Roll's tooltip. Create puts the item in the Items
+  directory, in a character's or NPC's inventory, or on one of your marketplace aisles, and opens its sheet.
 - **A rest eats a ration** (the stack with the fewest left), and says so; an empty pack is said too.
 - **A new knave always has a name:** when the Names table is still a shell (a Knave 1e world, or a 2e world before
   its book is built) the system's own list of names steps in. No more "Nameless Knave".

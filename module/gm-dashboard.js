@@ -29,6 +29,7 @@ import { drawFrom, findTable } from "./compendium.js";
 import { openGuide } from "./welcome.js";
 import { openTableImporter } from "./table-importer.js";
 import { bindMarketPage, MARKET_ACTIONS, marketPageContext } from "./marketplace.js";
+import { openCreateItem } from "./create-item.js";
 import { hasRulebook, openRulebook, pickLocalRulebook, showRulebookPage, tablePage } from "./rulebook.js";
 import { clock, clockLabel, endTurn, resetClock, setClock, TRAVEL_WATCHES_FREE } from "./hazard.js";
 import { payWage, rally, wageRows } from "./hirelings.js";
@@ -151,6 +152,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       importTable: GmDashboard.#onImportTable,
       // The Marketplace page's aisle actions (marketplace.js), run with the dashboard as `this`.
       ...MARKET_ACTIONS,
+      createItem: () => openCreateItem(),
       toggleSetting: GmDashboard.#onToggleSetting,
       toggleGallery: GmDashboard.#onToggleGallery,
       rescanPortraits: GmDashboard.#onRescanPortraits,
