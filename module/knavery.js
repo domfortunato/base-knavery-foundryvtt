@@ -21,8 +21,8 @@ import { rebuildChangeLogCard } from "./change-log.js";
 import { createCharacter, createCharacterInteractive, registerCreationSocket, updateCareerIcons } from "./character-generator.js";
 import { createNpc, createNpcInteractive } from "./npc-generator.js";
 import { openSpellGenerator } from "./spell-generator.js";
-import { GmDashboard, openGmDashboard, registerPartyRefresh, registerRequestSocket, setToggle } from "./gm-dashboard.js";
-import { openMarketplace, openMarketplaceManager } from "./marketplace.js";
+import { GmDashboard, openGmDashboard, openMarketplaceManager, registerPartyRefresh, registerRequestSocket, setToggle } from "./gm-dashboard.js";
+import { openMarketplace } from "./marketplace.js";
 import { openTableImporter, importRows, parseRows } from "./table-importer.js";
 import { rollAttack, rollCheck, rollDieOfFate, rollSave } from "./rolls.js";
 import {

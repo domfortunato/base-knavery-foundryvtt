@@ -17,7 +17,7 @@ import { usesPrices1e } from "./rules.js";
 import { findTablesByPrefix, isPlaceholder, plainText, resultText } from "./compendium.js";
 import { slotsForItem } from "./documents/actor.js";
 
-const { ApplicationV2, HandlebarsApplicationMixin, DialogV2 } = foundry.applications.api;
+const { DialogV2 } = foundry.applications.api;
 const esc = (s) => foundry.utils.escapeHTML(String(s ?? ""));
 const L = (k) => game.i18n.localize(k);
 const F = (k, d) => game.i18n.format(k, d);
@@ -252,102 +252,91 @@ export const openMarketplace = async (actor) => {
 };
 
 /* -------------------------------------------- */
-/*  The GM's Marketplace Manager                 */
+/*  The GM's Marketplace page (gm-dashboard.js)  */
 /* -------------------------------------------- */
+/*
+ * The aisles and their rows are the dashboard's Marketplace page (user, 2026-11-14; a
+ * window of its own before 0.3.0). The dashboard keeps the chosen aisle in
+ * `marketSelected`; the handlers in MARKET_ACTIONS run with the dashboard as `this`,
+ * as AppV2 calls an application's actions.
+ */
 
-export class MarketplaceManager extends HandlebarsApplicationMixin(ApplicationV2) {
-  static DEFAULT_OPTIONS = {
-    id: "knavery-marketplace-manager",
-    classes: ["knavery", "knavery-market-manager"],
-    window: { title: "KNAVERY.Market.ManagerTitle", icon: "fas fa-store", resizable: true },
-    position: { width: 720, height: 700 },
-    actions: {
-      newAisle: MarketplaceManager.#onNewAisle,
-      customize: MarketplaceManager.#onCustomize,
-      toggleHidden: MarketplaceManager.#onToggleHidden,
-      renameAisle: MarketplaceManager.#onRename,
-      deleteAisle: MarketplaceManager.#onDelete,
-      openTable: MarketplaceManager.#onOpenTable,
-      addTextRow: MarketplaceManager.#onAddTextRow,
-      removeRow: MarketplaceManager.#onRemoveRow,
-      selectAisle: MarketplaceManager.#onSelect,
-    },
-  };
-
-  static PARTS = { body: { template: `${SYS_PATH}/templates/apps/market-manager.html`, scrollable: [".mm-rows"] } };
-
-  #selected = null;
-
-  async _prepareContext() {
-    const hidden = hiddenAisles();
-    const tables = await marketTables({ includeHidden: true });
-    const aisles = tables.map((t) => ({
-      uuid: t.uuid, name: aisleName(t), world: !t.pack, hidden: hidden.has(aisleName(t)), count: t.results.size,
-    }));
-    if (!this.#selected || !aisles.some((a) => a.uuid === this.#selected)) this.#selected = aisles[0]?.uuid ?? null;
-    const table = this.#selected ? await fromUuid(this.#selected) : null;
-    const rows = [];
-    if (table) {
-      const linked = await linkedDocuments(table.results);
-      for (const r of [...table.results].sort((a, b) => (a.range?.[0] ?? 0) - (b.range?.[0] ?? 0))) {
-        if (isPlaceholder(r)) continue;
-        const item = r.documentUuid ? (linked.get(r.documentUuid) ?? null) : null;
-        const override = r.getFlag(FLAG_SCOPE, "price");
-        rows.push({
-          id: r.id,
-          name: item?.name ?? plainText(resultText(r)),
-          img: item?.img ?? r.img,
-          base: item?.system?.cost ?? null,
-          override: override ?? "",
-          linked: !!item,
-        });
-      }
+/** The page's context: every aisle, and the chosen one's rows. */
+export const marketPageContext = async (app) => {
+  const hidden = hiddenAisles();
+  const tables = await marketTables({ includeHidden: true });
+  const aisles = tables.map((t) => ({
+    uuid: t.uuid, name: aisleName(t), world: !t.pack, hidden: hidden.has(aisleName(t)), count: t.results.size,
+  }));
+  if (!app.marketSelected || !aisles.some((a) => a.uuid === app.marketSelected)) app.marketSelected = aisles[0]?.uuid ?? null;
+  const table = app.marketSelected ? await fromUuid(app.marketSelected) : null;
+  const rows = [];
+  if (table) {
+    const linked = await linkedDocuments(table.results);
+    for (const r of [...table.results].sort((a, b) => (a.range?.[0] ?? 0) - (b.range?.[0] ?? 0))) {
+      if (isPlaceholder(r)) continue;
+      const item = r.documentUuid ? (linked.get(r.documentUuid) ?? null) : null;
+      const override = r.getFlag(FLAG_SCOPE, "price");
+      rows.push({
+        id: r.id,
+        name: item?.name ?? plainText(resultText(r)),
+        img: item?.img ?? r.img,
+        base: item?.system?.cost ?? null,
+        override: override ?? "",
+        linked: !!item,
+      });
     }
-    return {
-      aisles: aisles.map((a) => ({ ...a, selected: a.uuid === this.#selected })),
-      table: table ? { uuid: table.uuid, name: aisleName(table), world: !table.pack } : null,
-      rows,
-    };
   }
+  return {
+    aisles: aisles.map((a) => ({ ...a, selected: a.uuid === app.marketSelected })),
+    table: table ? { uuid: table.uuid, name: aisleName(table), world: !table.pack } : null,
+    rows,
+  };
+};
 
-  _onRender(context, options) {
-    super._onRender(context, options);
-    const root = this.element;
-    root.querySelectorAll("input.mm-price").forEach((input) => input.addEventListener("change", async () => {
-      const table = await fromUuid(this.#selected);
-      if (!table || table.pack) return;
-      const v = input.value.trim();
-      await table.updateEmbeddedDocuments("TableResult", [{
-        _id: input.dataset.rowId,
-        [`flags.${FLAG_SCOPE}.price`]: v === "" ? null : Math.max(0, Math.ceil(Number(v) || 0)),
-      }]);
-    }));
-    const drop = root.querySelector(".mm-drop");
-    drop?.addEventListener("dragover", (e) => e.preventDefault());
-    drop?.addEventListener("drop", async (e) => {
-      e.preventDefault();
-      const data = foundry.applications.ux.TextEditor.implementation.getDragEventData(e);
-      if (data?.type !== "Item") return;
-      const table = await fromUuid(this.#selected);
-      if (!table) return;
-      if (table.pack) return ui.notifications.warn("KNAVERY.Market.CustomizeFirst", { localize: true });
-      const item = await fromUuid(data.uuid);
-      if (!item) return;
-      const n = nextRow(table);
-      await table.createEmbeddedDocuments("TableResult", [{
-        type: CONST.TABLE_RESULT_TYPES.DOCUMENT, documentUuid: item.uuid, name: item.name, img: item.img, range: [n, n], weight: 1,
-      }]);
-      await renumberAisle(table);
-      this.render();
-    });
-  }
+const rerender = (app) => app.render({ parts: ["market"] });
 
-  static #onSelect(_e, target) {
-    this.#selected = target.dataset.uuid;
-    this.render();
-  }
+/** Wire the page after a render: a price override on change, items dropped onto the aisle. */
+export const bindMarketPage = (app) => {
+  const root = app.element?.querySelector('section[data-tab="market"]');
+  if (!root) return;
+  root.querySelectorAll("input.mm-price").forEach((input) => input.addEventListener("change", async () => {
+    const table = await fromUuid(app.marketSelected);
+    if (!table || table.pack) return;
+    const v = input.value.trim();
+    await table.updateEmbeddedDocuments("TableResult", [{
+      _id: input.dataset.rowId,
+      [`flags.${FLAG_SCOPE}.price`]: v === "" ? null : Math.max(0, Math.ceil(Number(v) || 0)),
+    }]);
+  }));
+  const drop = root.querySelector(".mm-drop");
+  drop?.addEventListener("dragover", (e) => e.preventDefault());
+  drop?.addEventListener("drop", async (e) => {
+    e.preventDefault();
+    const data = foundry.applications.ux.TextEditor.implementation.getDragEventData(e);
+    if (data?.type !== "Item") return;
+    const table = await fromUuid(app.marketSelected);
+    if (!table) return;
+    if (table.pack) return ui.notifications.warn("KNAVERY.Market.CustomizeFirst", { localize: true });
+    const item = await fromUuid(data.uuid);
+    if (!item) return;
+    const n = nextRow(table);
+    await table.createEmbeddedDocuments("TableResult", [{
+      type: CONST.TABLE_RESULT_TYPES.DOCUMENT, documentUuid: item.uuid, name: item.name, img: item.img, range: [n, n], weight: 1,
+    }]);
+    await renumberAisle(table);
+    rerender(app);
+  });
+};
 
-  static async #onNewAisle() {
+/** The page's actions; `this` is the dashboard. */
+export const MARKET_ACTIONS = {
+  selectAisle(_e, target) {
+    this.marketSelected = target.dataset.uuid;
+    rerender(this);
+  },
+
+  async newAisle() {
     const name = await DialogV2.prompt({
       classes: ["knavery"],
       window: { title: L("KNAVERY.Market.NewAisle") },
@@ -357,31 +346,31 @@ export class MarketplaceManager extends HandlebarsApplicationMixin(ApplicationV2
     });
     if (!name) return;
     const table = await RollTable.create({ name: `${marketPrefix()}${name}`, formula: "1d1", replacement: true });
-    this.#selected = table.uuid;
-    this.render();
-  }
+    this.marketSelected = table.uuid;
+    rerender(this);
+  },
 
   /** Copy a shipped aisle into the world so it can be edited; the copy shadows it. */
-  static async #onCustomize(_e, target) {
+  async customize(_e, target) {
     const src = await fromUuid(target.closest("[data-uuid]").dataset.uuid);
     if (!src?.pack) return;
     const data = game.tables.fromCompendium(src);
     const copy = await RollTable.create(data);
-    this.#selected = copy.uuid;
+    this.marketSelected = copy.uuid;
     ui.notifications.info("KNAVERY.Market.Customized", { format: { name: aisleName(copy) } });
-    this.render();
-  }
+    rerender(this);
+  },
 
-  static async #onToggleHidden(_e, target) {
+  async toggleHidden(_e, target) {
     const name = target.closest("[data-name]").dataset.name;
     const hidden = hiddenAisles();
     if (hidden.has(name)) hidden.delete(name);
     else hidden.add(name);
     await game.settings.set(SETTINGS_NS, hiddenKey(), [...hidden]);
-    this.render();
-  }
+    rerender(this);
+  },
 
-  static async #onRename(_e, target) {
+  async renameAisle(_e, target) {
     const table = await fromUuid(target.closest("[data-uuid]").dataset.uuid);
     if (!table || table.pack) return;
     const name = await DialogV2.prompt({
@@ -392,10 +381,10 @@ export class MarketplaceManager extends HandlebarsApplicationMixin(ApplicationV2
       rejectClose: false,
     });
     if (name) await table.update({ name: `${table.name.startsWith(MARKET_1E_PREFIX) ? MARKET_1E_PREFIX : MARKET_PREFIX}${name}` });
-    this.render();
-  }
+    rerender(this);
+  },
 
-  static async #onDelete(_e, target) {
+  async deleteAisle(_e, target) {
     const table = await fromUuid(target.closest("[data-uuid]").dataset.uuid);
     if (!table || table.pack) return;
     const ok = await DialogV2.confirm({
@@ -404,15 +393,15 @@ export class MarketplaceManager extends HandlebarsApplicationMixin(ApplicationV2
       content: `<p>${esc(F("KNAVERY.Market.DeleteAisleConfirm", { name: aisleName(table) }))}</p>`,
     });
     if (ok) await table.delete();
-    this.render();
-  }
+    rerender(this);
+  },
 
-  static async #onOpenTable(_e, target) {
+  async openTable(_e, target) {
     (await fromUuid(target.closest("[data-uuid]").dataset.uuid))?.sheet.render(true);
-  }
+  },
 
-  static async #onAddTextRow() {
-    const table = await fromUuid(this.#selected);
+  async addTextRow() {
+    const table = await fromUuid(this.marketSelected);
     if (!table || table.pack) return ui.notifications.warn("KNAVERY.Market.CustomizeFirst", { localize: true });
     const res = await DialogV2.prompt({
       classes: ["knavery"],
@@ -429,35 +418,29 @@ export class MarketplaceManager extends HandlebarsApplicationMixin(ApplicationV2
       flags: { [FLAG_SCOPE]: { price: Math.max(0, Math.ceil(res.price)) } },
     }]);
     await renumberAisle(table);
-    this.render();
-  }
+    rerender(this);
+  },
 
-  static async #onRemoveRow(_e, target) {
-    const table = await fromUuid(this.#selected);
+  async removeRow(_e, target) {
+    const table = await fromUuid(this.marketSelected);
     if (!table || table.pack) return;
     await table.deleteEmbeddedDocuments("TableResult", [target.closest("[data-row-id]").dataset.rowId]);
     await renumberAisle(table);
-    this.render();
-  }
-}
+    rerender(this);
+  },
+};
 
 /** The face after an aisle's highest row. */
-const nextRow = (table) => Math.max(0, ...table.results.map((r) => r.range?.[1] ?? 0)) + 1;
+export const nextRow = (table) => Math.max(0, ...table.results.map((r) => r.range?.[1] ?? 0)) + 1;
 
 /**
  * Number an aisle's rows 1…n in shelf order, one face each, and set its die to
  * match, so a removed row leaves no gap and an added one shares no face.
  */
-const renumberAisle = async (table) => {
+export const renumberAisle = async (table) => {
   const rows = [...table.results].sort((a, b) => (a.range?.[0] ?? 0) - (b.range?.[0] ?? 0));
   const updates = rows.map((r, i) => ({ _id: r.id, range: [i + 1, i + 1], weight: 1 }))
     .filter((u, i) => rows[i].range?.[0] !== u.range[0] || rows[i].range?.[1] !== u.range[1] || rows[i].weight !== 1);
   if (updates.length) await table.updateEmbeddedDocuments("TableResult", updates);
   await table.update({ formula: `1d${Math.max(1, rows.length)}` });
-};
-
-export const openMarketplaceManager = () => {
-  if (!game.user.isGM) return;
-  const app = foundry.applications.instances.get("knavery-marketplace-manager") ?? new MarketplaceManager();
-  app.render(true);
 };

@@ -1,3 +1,7 @@
+{{!-- The Marketplace page (marketplace.js marketPageContext, MARKET_ACTIONS, bindMarketPage): the
+      aisles on the left, the chosen aisle's rows with their prices on the right. A window of its
+      own before 0.3.0 (user, 2026-11-14). --}}
+<section class="tab {{tab.cssClass}}" data-tab="market" data-group="primary">
 <div class="mm-layout">
   <aside class="mm-aisles">
     <h3>{{localize "KNAVERY.Market.Aisles"}}</h3>
@@ -16,7 +20,7 @@
     <button type="button" data-action="newAisle"><i class="fas fa-plus"></i> {{localize "KNAVERY.Market.NewAisle"}}</button>
     <p class="hint">{{localize "KNAVERY.Market.ManagerHint"}}</p>
   </aside>
-  <section class="mm-detail">
+  <div class="mm-detail">
     {{#if table}}
     <header class="mm-head" data-uuid="{{table.uuid}}">
       <h3>{{table.name}}</h3>
@@ -49,5 +53,6 @@
     <p class="hint">{{localize "KNAVERY.Market.CustomizeFirst"}}</p>
     {{/if}}
     {{/if}}
-  </section>
+  </div>
 </div>
+</section>

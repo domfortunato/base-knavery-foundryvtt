@@ -1,4 +1,6 @@
-{{!-- Player Tools: the live switches for the players' tools, and their shop's manager. --}}
+{{!-- Toggles (Player Tools before 0.3.0): the live switches for the players' tools, the rulebook
+      reader and the Random page's hazard dice; the portrait galleries and where random portraits
+      come from (art.js GALLERIES, randomPortraitPair). --}}
 <section class="tab {{tab.cssClass}}" data-tab="tools" data-group="primary">
   <h3>{{localize "KNAVERY.Dashboard.PlayerTools"}}</h3>
   <div class="dash-toggles">
@@ -8,7 +10,22 @@
     </button>
     {{/each}}
   </div>
-  <div class="dash-buttons">
-    <button type="button" data-action="marketManager"><i class="fas fa-store"></i> {{localize "KNAVERY.Market.ManagerTitle"}}</button>
+  <h3>{{localize "KNAVERY.Dashboard.Galleries"}}</h3>
+  <div class="dash-toggles">
+    {{#each galleries}}
+    <button type="button" class="dash-toggle {{#if this.on}}on{{/if}}" data-action="toggleGallery" data-id="{{this.id}}">
+      <i class="fas {{this.icon}}"></i> {{localize this.label}} <i class="fas {{#if this.on}}fa-toggle-on{{else}}fa-toggle-off{{/if}}"></i>
+    </button>
+    {{/each}}
   </div>
+  <div class="form-group dash-random-source">
+    <label for="kn-random-source">{{localize "KNAVERY.Dashboard.RandomFrom"}}</label>
+    <div class="form-fields">
+      <select name="randomPortraitSource" id="kn-random-source">
+        {{#each randomSource.choices}}<option value="{{this.id}}"{{#if (eq this.id ../randomSource.value)}} selected{{/if}}>{{this.label}}</option>{{/each}}
+      </select>
+    </div>
+  </div>
+  <p class="hint dash-yours-folder">{{localize "KNAVERY.Dashboard.YoursFolder" folder=customFolder.path count=customFolder.count}}
+    <a data-action="rescanPortraits"><i class="fas fa-rotate"></i> {{localize "KNAVERY.Art.Refresh"}}</a></p>
 </section>

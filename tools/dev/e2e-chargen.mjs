@@ -2478,7 +2478,7 @@ await withSettings(gm, async () => {
       return {
         active: !!app.querySelector('section[data-tab="tools"].active .dash-toggles'),
         toggles: app.querySelectorAll('section[data-tab="tools"] .dash-toggle').length,
-        manager: !!app.querySelector('section[data-tab="tools"] [data-action="marketManager"]'),
+        manager: !!app.querySelector('section[data-tab="market"] .mm-aisles') && !app.querySelector('section[data-tab="tools"] [data-action="marketManager"]'),
         tablesClean: !app.querySelector('section[data-tab="tables"] .dash-toggles, section[data-tab="tables"] [data-action="marketManager"]'),
         tablesImport: !!app.querySelector('section[data-tab="tables"] [data-action="importTable"]'),
       };
@@ -2486,10 +2486,10 @@ await withSettings(gm, async () => {
     await gm.screenshot({ path: `${SHOTS}/dashboard-rail.png` });
     ok(hud.there && hud.inColumn && hud.before && hud.clear && hud.size >= 48 && !aliceHud,
       "the GM has a big dashboard button atop the left toolbar, clear of the scene controls; Alice has none", JSON.stringify({ hud, aliceHud }));
-    ok(rail.tabs === "requests,damage,time,party,dice,xp,tools,tables" && rail.strips === 0 && rail.outside && rail.visible && rail.guide === 3 && rail.random === "Random" && rail.events === 6,
+    ok(rail.tabs === "requests,damage,time,party,dice,xp,market,tools,tables" && rail.strips === 0 && rail.outside && rail.visible && rail.guide === 3 && rail.random === "Random" && rail.events === 6,
       "the dashboard's pages are on a thumb rail off its edge, with no tab strip; Requests shows the difficulty guide; Random has the six events", JSON.stringify(rail));
-    ok(tools.active && tools.toggles === 5 && tools.manager && tools.tablesClean && tools.tablesImport,
-      "Player Tools holds the five switches and the Marketplace Manager; Tables keeps the importer", JSON.stringify(tools));
+    ok(tools.active && tools.toggles === 7 && tools.manager && tools.tablesClean && tools.tablesImport,
+      "Toggles holds the seven switches; the Marketplace page holds the aisles; Tables keeps the importer", JSON.stringify(tools));
     await gm.evaluate(() => foundry.applications.instances.get("knavery-gm-dashboard")?.close());
   });
 
@@ -2620,6 +2620,59 @@ await withSettings(gm, async () => {
       "Rules has its seven section headings and Inventory its Hacks heading", JSON.stringify({ hacks: r.hacks.headings, inventory: r.inventory.headings }));
     ok(all.every((m) => m.knavery), "the Configure windows carry the knavery class, so the shared window rules apply", each("knavery"));
     ok(r.hacks.rows >= 20 && r.hacks.hintless >= 4 && r.inventory.rows === 4, "the Rules window lists every rule, some without a hint; Inventory has four rows", JSON.stringify({ hacks: r.hacks.rows, hintless: r.hacks.hintless, inventory: r.inventory.rows }));
+  });
+
+  /* ------------------------------------------------------------------ */
+  await section("33. Toggles (0.3.0): portrait galleries on and off, the random-portrait source, the Marketplace page.", async () => {
+    const r = await gm.evaluate(async (sys) => {
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+      const art = await import(`${sys}/art.js`);
+      const { openGmDashboard } = await import(`${sys}/gm-dashboard.js`);
+      const ns = "base-knavery";
+      const before = { galleries: foundry.utils.deepClone(game.settings.get(ns, "portrait-galleries")), source: game.settings.get(ns, "random-portrait-source") };
+      const out = {};
+      await openGmDashboard("tools");
+      await wait(700);
+      const app = document.getElementById("knavery-gm-dashboard");
+      out.galleryButtons = app.querySelectorAll('section[data-tab="tools"] [data-action="toggleGallery"]').length;
+      out.sourceSelect = !!app.querySelector('section[data-tab="tools"] select[name="randomPortraitSource"]');
+      // Lydia off: her tab leaves the picker and no random pick comes from her.
+      app.querySelector('[data-action="toggleGallery"][data-id="lydia"]').click();
+      await wait(700);
+      out.lydiaOff = game.settings.get(ns, "portrait-galleries").lydia === false;
+      const lydiaDir = (await art.getLydiaManifest()).sets.characters.portraitDir;
+      const picks = [];
+      for (let i = 0; i < 25; i++) picks.push((await art.randomPortraitPair("person"))?.img ?? "");
+      out.noLydia = picks.every((p) => p && !p.startsWith(lydiaDir));
+      const dlg = await art.pickArt({ current: "", title: "Probe", kind: "person", onPick: async () => {} });
+      out.tabs = [...dlg.element.querySelectorAll(".knavery-portrait-tab")].map((b) => b.dataset.tab);
+      await dlg.close();
+      // Source = Portraits (Aspeheim): every pick comes from there.
+      await game.settings.set(ns, "random-portrait-source", "shipped");
+      const shippedDir = (await art.getPortraitManifest()).portraitDir;
+      const picks2 = [];
+      for (let i = 0; i < 15; i++) picks2.push((await art.randomPortraitPair("person"))?.img ?? "");
+      out.allShipped = picks2.every((p) => p.startsWith(shippedDir));
+      // Source = Yours with nothing in the folder: a pick still comes, never a blank.
+      const customList = game.settings.get(ns, "custom-portrait-list");
+      await game.settings.set(ns, "custom-portrait-list", []);
+      await game.settings.set(ns, "random-portrait-source", "custom");
+      out.fallback = !!(await art.randomPortraitPair("person"))?.img;
+      await game.settings.set(ns, "custom-portrait-list", customList);
+      // The Marketplace page lists the aisles.
+      await openGmDashboard("market");
+      await wait(700);
+      out.market = app.querySelectorAll('section[data-tab="market"].active .mm-aisle').length;
+      await game.settings.set(ns, "portrait-galleries", before.galleries);
+      await game.settings.set(ns, "random-portrait-source", before.source);
+      foundry.applications.instances.get("knavery-gm-dashboard")?.close();
+      return out;
+    }, SYS);
+    ok(r.galleryButtons === 5 && r.sourceSelect, "Toggles lists the five galleries and the random-portrait source", JSON.stringify(r));
+    ok(r.lydiaOff && r.noLydia && !r.tabs.includes("lydia") && r.tabs.includes("shipped"), "a gallery switched off leaves the picker and the random pool", JSON.stringify(r));
+    ok(r.allShipped, "a named source gives every random portrait from that gallery", JSON.stringify(r));
+    ok(r.fallback, "an empty Yours folder as the source still gives a portrait (from the rest, with a warning)", JSON.stringify(r));
+    ok(r.market >= 1, "the Marketplace page lists the aisles", JSON.stringify(r));
   });
 
   // Cleanup.

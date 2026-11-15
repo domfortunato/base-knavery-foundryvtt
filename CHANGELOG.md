@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **The dashboard's Player Tools page is Toggles,** and it gains two switches (Players may read the rulebook,
+  Hazard dice on the Random page), one switch per **portrait gallery** (Yours, Portraits, Lydia Comer, Tlomdev,
+  Icons: a gallery that is off leaves the portrait picker and the random portraits) and **Random portraits
+  from:** any gallery that is on, or one named gallery, with your own folder's path and a Rescan. Your folder no
+  longer takes over random portraits silently whenever it has files; choose it as the source instead.
+- **A Marketplace page on the dashboard** (a stack of coins on the rail) holds the aisles, their rows and
+  prices; the separate Marketplace Manager window is gone.
 - **Configure windows that scroll, align and say less.** Every Base Knavery Configure window scrolls its rows
   under a Save button that stays in reach; a checkbox sits on its label's line; a thin rule separates the
   rows; every choice fits its box ("Knave 1e: …" / "Knave 2e: …"); a hint is one short sentence or absent.

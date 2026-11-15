@@ -227,6 +227,10 @@ export const registerSettings = () => {
   game.settings.register(SETTINGS_NS, "custom-portrait-list", {
     scope: "world", config: false, type: Array, default: [],
   });
+  // Which portrait galleries are on ({id: false} switches one off) and where random portraits come
+  // from ("any" or a gallery id): the dashboard's Toggles page (art.js GALLERIES; user, 2026-11-14).
+  game.settings.register(SETTINGS_NS, "portrait-galleries", { scope: "world", config: false, type: Object, default: {} });
+  game.settings.register(SETTINGS_NS, "random-portrait-source", { scope: "world", config: false, type: String, default: "any" });
   // Which edition this world was stamped with at its first GM login on 0.2.0 or later (rules.js stampRules).
   game.settings.register(SETTINGS_NS, "rules-stamp", {
     scope: "world", config: false, type: String, default: "",

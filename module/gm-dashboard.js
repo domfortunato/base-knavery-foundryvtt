@@ -28,13 +28,14 @@ import { actorFromUuid } from "./damage.js";
 import { drawFrom, findTable } from "./compendium.js";
 import { openGuide } from "./welcome.js";
 import { openTableImporter } from "./table-importer.js";
-import { openMarketplaceManager } from "./marketplace.js";
+import { bindMarketPage, MARKET_ACTIONS, marketPageContext } from "./marketplace.js";
 import { hasRulebook, openRulebook, pickLocalRulebook, showRulebookPage, tablePage } from "./rulebook.js";
 import { clock, clockLabel, endTurn, resetClock, setClock, TRAVEL_WATCHES_FREE } from "./hazard.js";
 import { payWage, wageRows } from "./hirelings.js";
 import { placeRail, placeRailSoon } from "./sheets/tab-rail.js";
 import { openSpellGenerator } from "./spell-generator.js";
 import { isLight, party } from "./hazard.js";
+import { customPortraitFolder, GALLERIES, galleryOn, getCustomPortraitPaths, randomPortraitSource, refreshCustomPortraits } from "./art.js";
 import { spellRule, usesWounds } from "./rules.js";
 import { companionsOf, treasureCarried, treasureSplit, treasureXpOn, treasureXpRule, xpForTreasure } from "./treasure.js";
 
@@ -72,9 +73,15 @@ const TOGGLES = [
   { key: "allow-player-randomization", label: "KNAVERY.Macro.CreationTools", icon: "fa-dice-d20" },
   { key: "allow-player-level-xp", label: "KNAVERY.Macro.LevelXp", icon: "fa-arrow-up-1-9" },
   { key: "change-log", label: "KNAVERY.Macro.ChangeLog", icon: "fa-clipboard-list" },
+  // Two more live switches (user, 2026-11-14, D3): the rulebook for players, the Random page's hazard dice.
+  { key: "rulebook-for-players", label: "KNAVERY.Macro.Rulebook", icon: "fa-book-open" },
+  { key: "show-hazard-dice", label: "KNAVERY.Macro.HazardDice", icon: "fa-dice-d6" },
 ];
 
 export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
+  /** The aisle open on the Marketplace page (marketplace.js marketPageContext). */
+  marketSelected = null;
+
   static DEFAULT_OPTIONS = {
     id: "knavery-gm-dashboard",
     tag: "form",
@@ -103,8 +110,11 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       quickNpc: GmDashboard.#onQuickNpc,
       openGuide: () => openGuide(),
       importTable: GmDashboard.#onImportTable,
-      marketManager: () => openMarketplaceManager(),
+      // The Marketplace page's aisle actions (marketplace.js), run with the dashboard as `this`.
+      ...MARKET_ACTIONS,
       toggleSetting: GmDashboard.#onToggleSetting,
+      toggleGallery: GmDashboard.#onToggleGallery,
+      rescanPortraits: GmDashboard.#onRescanPortraits,
       selectAll: GmDashboard.#onSelectAll,
       openSheet: (_e, target) => game.actors.get(target.dataset.id)?.sheet.render(true),
       openRulebook: GmDashboard.#onOpenRulebook,
@@ -123,6 +133,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
     party: { template: `${SYS_PATH}/templates/dashboard/party.html`, scrollable: [".dash-party"] },
     dice: { template: `${SYS_PATH}/templates/dashboard/dice.html` },
     xp: { template: `${SYS_PATH}/templates/dashboard/xp.html`, scrollable: [".dash-xp-rows"] },
+    market: { template: `${SYS_PATH}/templates/dashboard/market.html`, scrollable: [".mm-rows"] },
     tools: { template: `${SYS_PATH}/templates/dashboard/tools.html` },
     tables: { template: `${SYS_PATH}/templates/dashboard/tables.html`, scrollable: [".table-list"] },
   };
@@ -136,6 +147,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
         { id: "party", icon: "fas fa-users", label: "KNAVERY.Dashboard.TabParty" },
         { id: "dice", icon: "fas fa-dice", label: "KNAVERY.Dashboard.TabDice" },
         { id: "xp", icon: "fas fa-star", label: "KNAVERY.Dashboard.TabXp" },
+        { id: "market", icon: "fas fa-coins", label: "KNAVERY.Dashboard.TabMarket" },
         { id: "tools", icon: "fas fa-sliders", label: "KNAVERY.Dashboard.TabTools" },
         { id: "tables", icon: "fas fa-table-list", label: "KNAVERY.Dashboard.TabTables" },
       ],
@@ -146,6 +158,7 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
   async _preparePartContext(partId, context, options) {
     context = await super._preparePartContext(partId, context, options);
     context.tab = context.tabs?.[partId];
+    if (partId === "market") Object.assign(context, await marketPageContext(this));
     return context;
   }
 
@@ -209,6 +222,13 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
       tables,
       rulebook,
       toggles: TOGGLES.map((t) => ({ ...t, on: game.settings.get(SETTINGS_NS, t.key) })),
+      // Toggles: the portrait galleries and where random portraits come from (art.js).
+      galleries: GALLERIES.map((g) => ({ ...g, on: galleryOn(g.id) })),
+      randomSource: {
+        value: randomPortraitSource(),
+        choices: [{ id: "any", label: L("KNAVERY.Dashboard.AnyGallery") }, ...GALLERIES.filter((g) => g.id !== "gameicons").map((g) => ({ id: g.id, label: L(g.label) }))],
+      },
+      customFolder: { path: customPortraitFolder(), count: getCustomPortraitPaths().length },
     });
   }
 
@@ -234,6 +254,10 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
   _onRender(context, options) {
     super._onRender(context, options);
     placeRailSoon(this);
+    bindMarketPage(this);
+    this.element.querySelector('select[name="randomPortraitSource"]')?.addEventListener("change", (e) => {
+      game.settings.set(SETTINGS_NS, "random-portrait-source", e.target.value);
+    });
     if (this.window?.title) this.window.title.textContent = this.title;
     const diff = this.element.querySelector('[name="difficulty"]');
     const out = this.element.querySelector(".request-target");
@@ -632,6 +656,24 @@ export class GmDashboard extends HandlebarsApplicationMixin(ApplicationV2) {
   static async #onToggleSetting(_e, target) {
     const key = target.dataset.key;
     await setToggle(key, !game.settings.get(SETTINGS_NS, key));
+    // The hazard-dice switch also redraws the Random page, whose top it governs.
+    this.render({ parts: key === "show-hazard-dice" ? ["tools", "dice"] : ["tools"] });
+  }
+
+  /** Toggles: a portrait gallery on or off; one switched off stops being the random source. */
+  static async #onToggleGallery(_e, target) {
+    const id = target.dataset.id;
+    const now = { ...game.settings.get(SETTINGS_NS, "portrait-galleries") };
+    now[id] = !galleryOn(id);
+    await game.settings.set(SETTINGS_NS, "portrait-galleries", now);
+    if (!now[id] && randomPortraitSource() === id) await game.settings.set(SETTINGS_NS, "random-portrait-source", "any");
+    this.render({ parts: ["tools"] });
+  }
+
+  /** Toggles: walk the GM's portrait folder again. */
+  static async #onRescanPortraits(_e, target) {
+    target.classList.add("disabled");
+    await refreshCustomPortraits();
     this.render({ parts: ["tools"] });
   }
 }
@@ -724,11 +766,15 @@ export const setToggle = async (key, value) => {
   ui.notifications.info(value ? "KNAVERY.Macro.TurnedOn" : "KNAVERY.Macro.TurnedOff", { format: { what: L(t?.label ?? key) } });
 };
 
-export const openGmDashboard = () => {
+/** Open the dashboard, on a page when one is named (a tab id: "market", "tools"...). */
+export const openGmDashboard = async (tab = null) => {
   if (!game.user.isGM) return;
   const app = foundry.applications.instances.get("knavery-gm-dashboard") ?? new GmDashboard();
-  app.render(true);
+  await app.render({ force: true });
+  if (tab) app.changeTab(tab, "primary");
 };
+/** The Marketplace Manager of old (`game.knavery` API, probes): the dashboard's Marketplace page. */
+export const openMarketplaceManager = () => openGmDashboard("market");
 
 /* -------------------------------------------- */
 /*  The player side of a request                 */

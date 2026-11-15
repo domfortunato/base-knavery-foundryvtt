@@ -38,6 +38,29 @@ export const getTlomdevManifest = () => manifest("tlomdev-manifest.json", { cate
 export const getLydiaManifest = () => manifest("lydia-manifest.json", { sets: {} });
 
 /* -------------------------------------------- */
+/*  Galleries: on or off, and the random source  */
+/* -------------------------------------------- */
+
+/** Every gallery in the picker's order; the GM switches each on or off (the dashboard's Toggles, 0.3.0). */
+export const GALLERIES = [
+  { id: "custom", label: "KNAVERY.Art.TabCustom", icon: "fa-folder-open" },
+  { id: "shipped", label: "KNAVERY.Art.TabAspeheim", icon: "fa-user" },
+  { id: "lydia", label: "KNAVERY.Art.TabLydia", icon: "fa-paintbrush" },
+  { id: "tlomdev", label: "KNAVERY.Art.TabTlomdev", icon: "fa-chess-knight" },
+  { id: "gameicons", label: "KNAVERY.Art.TabGameIcons", icon: "fa-icons" },
+];
+const galleriesSetting = () => { try { return game.settings.get(SETTINGS_NS, "portrait-galleries") ?? {}; } catch { return {}; } };
+/** Whether a gallery is on: on unless the GM switched it off. */
+export const galleryOn = (id) => galleriesSetting()[id] !== false;
+/** Where random portraits come from: "any" (every gallery that is on) or one gallery's id. */
+export const randomPortraitSource = () => {
+  try { return String(game.settings.get(SETTINGS_NS, "random-portrait-source") || "any"); } catch { return "any"; }
+};
+/** Tlomdev's folders that hold people; the rest are creatures (statues and oddments sit out). */
+const TLOMDEV_PEOPLE = ["human-npcs-for-itmod", "kettlewright-portraits"];
+const TLOMDEV_NEITHER = ["statues", "other"];
+
+/* -------------------------------------------- */
 /*  The GM's custom folder                       */
 /* -------------------------------------------- */
 
@@ -66,22 +89,47 @@ export const refreshCustomPortraits = async () => {
 /*  Random portraits                             */
 /* -------------------------------------------- */
 
-/** A random portrait (and its paired token) for a person or a monster. */
-export const randomPortraitPair = async (kind = "person") => {
-  const custom = getCustomPortraitPaths();
-  if (custom.length) {
-    const p = custom[Math.floor(Math.random() * custom.length)];
-    return { img: p, token: p };
-  }
+/** One gallery's portraits, with their tokens, for a person or a monster. */
+const galleryPairs = async (id, kind) => {
   const pairs = [];
-  if (kind === "person") {
+  if (id === "custom") {
+    for (const p of getCustomPortraitPaths()) pairs.push({ img: p, token: p });
+  } else if (id === "shipped" && kind === "person") {
     const m = await getPortraitManifest();
     for (const n of m.names ?? []) pairs.push({ img: `${m.portraitDir}/${n}`, token: `${m.tokenDir}/${n}` });
+  } else if (id === "lydia") {
+    const l = (await getLydiaManifest())?.sets?.[kind === "monster" ? "monsters" : "characters"];
+    for (const p of l?.pairs ?? []) pairs.push({ img: `${l.portraitDir}/${p.portrait}`, token: `${l.tokenDir}/${p.token}` });
+  } else if (id === "tlomdev") {
+    const t = await getTlomdevManifest();
+    for (const c of t.categories ?? []) {
+      if (TLOMDEV_NEITHER.includes(c.key) || TLOMDEV_PEOPLE.includes(c.key) !== (kind === "person")) continue;
+      for (const n of c.names ?? []) { const p = `${t.artDir}/${c.key}/${n}`; pairs.push({ img: p, token: p }); }
+    }
   }
-  const l = (await getLydiaManifest())?.sets?.[kind === "monster" ? "monsters" : "characters"];
-  for (const p of l?.pairs ?? []) pairs.push({ img: `${l.portraitDir}/${p.portrait}`, token: `${l.tokenDir}/${p.token}` });
-  if (!pairs.length) return null;
-  return pairs[Math.floor(Math.random() * pairs.length)];
+  return pairs;
+};
+
+/**
+ * A random portrait (and its paired token) for a person or a monster, from the GM's chosen source
+ * (Toggles): one gallery, or every gallery that is on. A chosen gallery with nothing to give falls
+ * back to the rest with a warning, never to a blank portrait (user, 2026-11-14).
+ */
+export const randomPortraitPair = async (kind = "person") => {
+  const source = randomPortraitSource();
+  const draw = async (ids) => {
+    const pairs = [];
+    for (const id of ids) pairs.push(...await galleryPairs(id, kind));
+    return pairs.length ? pairs[Math.floor(Math.random() * pairs.length)] : null;
+  };
+  if (source !== "any") {
+    const pair = await draw([source]);
+    if (pair) return pair;
+    if (game.user.isGM) {
+      ui.notifications.warn("KNAVERY.Art.SourceEmpty", { format: { gallery: L(GALLERIES.find((g) => g.id === source)?.label ?? "") } });
+    }
+  }
+  return draw(GALLERIES.map((g) => g.id).filter((id) => id !== "gameicons" && galleryOn(id)));
 };
 
 /** The token that belongs with a shipped portrait, or null. */
@@ -156,7 +204,8 @@ export async function pickArt({ current, title, kind = "person", onPick, onRoll 
   const tlom = await getTlomdevManifest();
   const custom = getCustomPortraitPaths();
 
-  if (kind !== "item" && custom.length + (isGM ? 1 : 0) > 0) {
+  // Each gallery only while it is on (Toggles).
+  if (kind !== "item" && galleryOn("custom") && custom.length + (isGM ? 1 : 0) > 0) {
     panes.push({
       id: "custom",
       label: L("KNAVERY.Art.TabCustom"),
@@ -165,7 +214,7 @@ export async function pickArt({ current, title, kind = "person", onPick, onRoll 
         ${isGM ? `<button type="button" class="knavery-portrait-refresh"><i class="fas fa-rotate"></i> ${L("KNAVERY.Art.Refresh")}</button>` : ""}`,
     });
   }
-  if (kind === "person" && shipped.names?.length) {
+  if (kind === "person" && shipped.names?.length && galleryOn("shipped")) {
     panes.push({
       id: "shipped",
       label: L("KNAVERY.Art.TabAspeheim"),
@@ -174,7 +223,7 @@ export async function pickArt({ current, title, kind = "person", onPick, onRoll 
     });
   }
   const lset = lydia.sets?.[kind === "monster" ? "monsters" : "characters"];
-  if (kind !== "item" && lset?.pairs?.length) {
+  if (kind !== "item" && lset?.pairs?.length && galleryOn("lydia")) {
     panes.push({
       id: "lydia",
       label: L("KNAVERY.Art.TabLydia"),
@@ -183,10 +232,10 @@ export async function pickArt({ current, title, kind = "person", onPick, onRoll 
         <div class="knavery-portrait-credit">${creditHtml("KNAVERY.Art.CreditLydia")}</div>`,
     });
   }
-  if (tlom.categories?.length && kind !== "item") {
+  if (tlom.categories?.length && kind !== "item" && galleryOn("tlomdev")) {
     panes.push({ id: "tlomdev", label: L("KNAVERY.Art.TabTlomdev"), body: folderPane(tlom.artDir, tlom.categories, "KNAVERY.Art.CreditTlomdev") });
   }
-  if (icons.categories?.length) {
+  if (icons.categories?.length && galleryOn("gameicons")) {
     panes.push({ id: "gameicons", label: L("KNAVERY.Art.TabGameIcons"), body: folderPane(icons.iconDir, icons.categories, "KNAVERY.Art.CreditGameIcons") });
   }
 

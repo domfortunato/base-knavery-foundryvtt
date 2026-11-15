@@ -168,8 +168,8 @@ await page.waitForSelector(".knavery-marketplace .mkt-row", { timeout: 10000 });
 ok(await page.locator(".knavery-marketplace .mkt-cat").count() >= 4, "marketplace shows the shipped aisles");
 await page.locator(".knavery-marketplace").screenshot({ path: path.join(OUT, "marketplace.png") });
 await page.evaluate(() => game.knavery.openMarketplaceManager());
-await page.waitForSelector("#knavery-marketplace-manager .mm-aisle", { timeout: 10000 });
-await page.locator("#knavery-marketplace-manager").screenshot({ path: path.join(OUT, "market-manager.png") });
+await page.waitForSelector('#knavery-gm-dashboard section[data-tab="market"].active .mm-aisle', { timeout: 10000 });
+await page.locator("#knavery-gm-dashboard").screenshot({ path: path.join(OUT, "market-manager.png") });
 ok(true, "marketplace manager opens");
 
 // 11. Table importer: a world copy overrides the shell.

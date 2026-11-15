@@ -84,7 +84,9 @@ picker, change log and marketplace it ports.
     (Char Gen Mode and the GM's level & XP switch); the sheet disables, and
     `KnaveryActor._preUpdate` drops the rest (client-side only)
   - `gm-dashboard.js` (its pages on the same thumb-tab rail, frame class `knavery-railed`;
-    opened from the GM's big button atop the left toolbar, `#knavery-dashboard-hud`),
+    opened from the GM's big button atop the left toolbar, `#knavery-dashboard-hud`; pages: Requests, Damage,
+    Time, Party, Random, XP, Marketplace (the aisles; `marketplace.js` `MARKET_ACTIONS`), Toggles (the players'
+    switches, the portrait galleries and the random-portrait source; `art.js` `GALLERIES`), Tables),
     `table-importer.js`, `art.js`, `change-log.js`,
     `print.js`
   - `rulebook.js`: the GM's PDF in Foundry's bundled pdf.js viewer (an iframe

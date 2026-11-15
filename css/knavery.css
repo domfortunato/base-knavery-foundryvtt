@@ -4212,21 +4212,21 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
 
 /* ---- Marketplace ---------------------------------------------------------- */
 .knavery-marketplace .mkt-img { width: 22px; height: 22px; border: none; vertical-align: middle; margin-right: 4px; }
-.knavery-market-manager .mm-layout { display: grid; grid-template-columns: 200px 1fr; gap: 12px; height: 100%; }
-.knavery-market-manager .mm-aisles ul { list-style: none; padding: 0; margin: 0 0 8px; }
-.knavery-market-manager .mm-aisle { display: flex; align-items: center; gap: 4px; padding: 2px 4px; border-radius: 3px; }
-.knavery-market-manager .mm-aisle a[data-action="selectAisle"] { flex: 1; cursor: pointer; }
-.knavery-market-manager .mm-aisle.active { background: var(--kn-accent-wash); font-weight: bold; }
-.knavery-market-manager .mm-aisle.hidden-aisle a[data-action="selectAisle"] { text-decoration: line-through; opacity: 0.6; }
-.knavery-market-manager .mm-count { font-size: 11px; color: var(--kn-faint); }
-.knavery-market-manager .mm-badge { font-size: 10px; border: 1px solid var(--kn-chip-border); border-radius: 3px; padding: 0 3px; }
-.knavery-market-manager .mm-head { display: flex; align-items: center; gap: 8px; }
-.knavery-market-manager .mm-head h3 { flex: 1; margin: 0; }
-.knavery-market-manager .mm-rows { overflow-y: auto; max-height: 460px; }
-.knavery-market-manager .mm-row { display: grid; grid-template-columns: 26px 1fr 60px 80px 20px; gap: 6px; align-items: center; padding: 2px 0; border-bottom: 1px solid var(--kn-hairline); }
-.knavery-market-manager .mm-row img { width: 24px; height: 24px; border: none; }
-.knavery-market-manager .mm-row-head { font-weight: bold; font-size: 12px; }
-.knavery-market-manager .mm-drop { border: 2px dashed var(--kn-rule-strong); border-radius: 6px; padding: 12px; text-align: center; margin: 8px 0; color: var(--kn-muted); }
+.knavery-gm-dashboard .mm-layout { display: grid; grid-template-columns: 160px 1fr; gap: 12px; align-items: start; }
+.knavery-gm-dashboard .mm-aisles ul { list-style: none; padding: 0; margin: 0 0 8px; }
+.knavery-gm-dashboard .mm-aisle { display: flex; align-items: center; gap: 4px; padding: 2px 4px; border-radius: 3px; }
+.knavery-gm-dashboard .mm-aisle a[data-action="selectAisle"] { flex: 1; cursor: pointer; }
+.knavery-gm-dashboard .mm-aisle.active { background: var(--kn-accent-wash); font-weight: bold; }
+.knavery-gm-dashboard .mm-aisle.hidden-aisle a[data-action="selectAisle"] { text-decoration: line-through; opacity: 0.6; }
+.knavery-gm-dashboard .mm-count { font-size: 11px; color: var(--kn-faint); }
+.knavery-gm-dashboard .mm-badge { font-size: 10px; border: 1px solid var(--kn-chip-border); border-radius: 3px; padding: 0 3px; }
+.knavery-gm-dashboard .mm-head { display: flex; align-items: center; gap: 8px; }
+.knavery-gm-dashboard .mm-head h3 { flex: 1; margin: 0; }
+.knavery-gm-dashboard .mm-rows { overflow-y: auto; max-height: 400px; }
+.knavery-gm-dashboard .mm-row { display: grid; grid-template-columns: 26px 1fr 60px 80px 20px; gap: 6px; align-items: center; padding: 2px 0; border-bottom: 1px solid var(--kn-hairline); }
+.knavery-gm-dashboard .mm-row img { width: 24px; height: 24px; border: none; }
+.knavery-gm-dashboard .mm-row-head { font-weight: bold; font-size: 12px; }
+.knavery-gm-dashboard .mm-drop { border: 2px dashed var(--kn-rule-strong); border-radius: 6px; padding: 12px; text-align: center; margin: 8px 0; color: var(--kn-muted); }
 
 /* ---- Game Master's Dashboard --------------------------------------------- */
 .knavery-gm-dashboard .window-content { overflow-y: auto; }
@@ -5061,3 +5061,9 @@ header.character-generator.directory-header .header-actions > button:not(.knaver
     color: var(--kn-ink); border-bottom: 1px solid var(--kn-rule); padding-bottom: 1px;
 }
 .knavery-settings-menu .knavery-settings-rows > .knavery-settings-section:first-child { margin-top: 0; }
+
+/* ---- Toggles: the random-portrait source and the Yours folder line (0.3.0) ------------ */
+.knavery-gm-dashboard .dash-random-source { margin: 8px 0 4px; }
+.knavery-gm-dashboard .dash-random-source > label { flex: 0 0 auto; }
+.knavery-gm-dashboard .dash-yours-folder a { color: var(--kn-accent); cursor: pointer; margin-left: 4px; }
+.knavery-gm-dashboard .dash-yours-folder a.disabled { opacity: 0.5; pointer-events: none; }
