@@ -154,6 +154,13 @@ let listingFile = "";
 try { listingFile = readFileSync(listingPath, "utf8"); } catch { /* first build */ }
 
 const stale = [nextReadme !== readme && "README.md", listing !== lf(listingFile) && "docs/foundry-listing.html"].filter(Boolean);
+// The Install section (hand-written) names the Foundry build system.json requires: never stale.
+const need = manifest.compatibility?.minimum;
+const major = String(need ?? "").split(".")[0];
+if (need && !readme.includes(`**Foundry VTT version ${major}** (build ${need} or later)`)) {
+  console.error(`readme: the Install section must say "Requires **Foundry VTT version ${major}** (build ${need} or later)" (system.json compatibility.minimum).`);
+  process.exit(1);
+}
 if (check) {
   if (stale.length) {
     console.error(`readme: out of date with the welcome window: ${stale.join(", ")}. Run npm run build:readme.`);

@@ -27,6 +27,8 @@ Both editions of Knave were written by Ben Milton.
 
 ## Install
 
+Requires **Foundry VTT version 14** (build 14.365 or later).
+
 In Foundry's **Game Systems → Install System**, paste the manifest URL:
 
 ```
