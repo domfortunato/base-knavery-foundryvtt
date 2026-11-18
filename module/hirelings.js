@@ -6,7 +6,8 @@
  * and an NPC left alone on its side at half HP or less. Each whispers the GM a card
  * whose button rolls morale for that side's NPCs. A failed morale test offers the
  * leader's CHA check for a reroll, once per side per battle. Companions never test
- * morale (p59). A leader killed or a feared foe are the GM's call.
+ * morale (p59). The side's leader falling is a breaking point too, in both editions; a feared
+ * foe is the GM's call.
  *
  * Wages: a hireling's sheet names the character who employs them. The Time tab lists
  * each hireling's monthly wage and when it is due (a month is 30 days of the world

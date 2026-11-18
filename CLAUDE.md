@@ -187,7 +187,7 @@ picker, change log and marketplace it ports.
   `--refresh` after a release retakes every box's `pristine`. The report quotes
   each failing check, and a failing probe's screenshots come back with it. The
   probes read `MB_SHOTS` and `MB_TIME_SCALE` from the fleet (`tools/dev/lib.mjs`).
-- `npm run check` (manifest, fields, i18n) and `npm run lint` run locally.
+- `npm run check` (manifest, fields, i18n, readme, ids, babele) and `npm run lint` run locally.
 
 ## Git and releases
 - Remotes: `origin` is `gitea@<private-gitea>:fortunato/base-knavery-foundryvtt.git`

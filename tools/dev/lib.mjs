@@ -1,7 +1,7 @@
 /**
  * Helpers for driving a local Foundry instance from Playwright.
  * Setup, and which probes run before tagging vs after publishing:
- * `docs/release-testing.md`.
+ * docs/MAINTAINING.md, section 3.6.
  */
 
 import path from "node:path";

@@ -1,7 +1,7 @@
 /**
  * Base Knavery — entry point.
  *
- * A Foundry VTT system compatible with Knave 2e. Base Knavery is an
+ * A Foundry VTT system for Knave, first and second editions. Base Knavery is an
  * independent production of Dom Bosco and is not affiliated with Questing
  * Beast LLC.
  */

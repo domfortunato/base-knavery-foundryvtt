@@ -1,7 +1,7 @@
 {
   "name": "base-knavery",
   "version": "1.0.0",
-  "description": "Base Knavery - a Foundry VTT system compatible with Knave 2e",
+  "description": "Base Knavery - a Foundry VTT system for Knave, first and second editions",
   "type": "module",
   "scripts": {
     "lint": "eslint --ext .js ./module",

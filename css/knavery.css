@@ -23,7 +23,8 @@
  * PALETTE. Every colour the system chooses for itself is named here, once.
  *
  * DECIDED 2026-07-28: the sheets FOLLOW THE VIEWER'S COLOUR SCHEME. They are not
- * pinned to `theme-light`. See docs/theming.md for the decision and its evidence;
+ * pinned to `theme-light`. Air Bladder's docs/theming.md, where this stylesheet comes from, has the
+ * decision and its evidence;
  * the short version is that ApplicationV1 force-tags every window `themed
  * theme-light` (client/appv1/api/application-v1.mjs:79-81) and ApplicationV2 does
  * not, so porting a sheet hands us a dark mode whether we want one or not. The
@@ -943,7 +944,7 @@
 /* `.knavery-section-label` lived here and had no caller left once the NPC
    description heading went (2026-08-20, user ask) — the Features list header,
    its only other user, went on 2026-08-09. The Foundry fact it carried is
-   REAL and is now in docs/theming.md: a bare heading tag on an AppV2 sheet
+   REAL and is recorded in Air Bladder's docs/theming.md: a bare heading tag on an AppV2 sheet
    renders 28px Signika, so a heading added here must state its own face. What
    that comment got wrong is WHY — it blamed `body.game .app h1..h6`, and an
    AppV2 sheet does not match `.app` at all (measured). */
@@ -2379,7 +2380,7 @@ textarea.omen-input {
 
 /* The GM's Damage dialog: the dice builder under the Damage field. It
    wears the core dialog skin; these rules are layout plus a disabled state,
-   no colours of their own (docs/theming.md — inherit, don't restate). */
+   no colours of their own (Air Bladder's docs/theming.md — inherit, don't restate). */
 .knavery-gm-damage .wd-dice-builder {
     display: flex;
     flex-direction: column;

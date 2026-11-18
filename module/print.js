@@ -13,7 +13,7 @@
  * box cannot reach a second page, and `markClipped` says on the paper when Notes was cut.
  *
  * The window is opened SYNCHRONOUSLY in the click handler: a popup blocker allows window.open
- * only inside the user gesture, before any await. The Printing settings (Configure General)
+ * only inside the user gesture, before any await. The Printing settings (Configure Printing)
  * choose the paper, the type size and what the paper carries; the page count holds at every one.
  */
 import { ABILITIES, SETTINGS_NS, SYS_PATH, TABLES } from "./config.js";
