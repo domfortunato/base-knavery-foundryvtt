@@ -9,7 +9,7 @@
  * The world's rule settings are put back afterwards (withSettings). Shots land in <MB_SHOTS>/listing/;
  * copy the ones that changed into docs/listing/. Its checks only say each shot was taken.
  *
- *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/e2e-listing.mjs   (npm run dev:listing; fleet only)
+ *   FOUNDRY_URL=http://<your-foundry-host>:30000 node tools/dev/e2e-listing.mjs   (npm run dev:listing; fleet only)
  */
 import fs from "node:fs";
 import path from "node:path";

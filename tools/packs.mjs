@@ -186,7 +186,7 @@ const MARKER_FORMAT = 3;
  *
  * An unreadable pack is UNKNOWN, and unknown refuses (ported from Air Bladder,
  * review #34 finding 19). Skipping it held only on Windows, where a running
- * server's open handles make the build's rmSync fail. On Linux (CT 127, where
+ * server's open handles make the build's rmSync fail. On Linux (the dev server, where
  * the deploy builds packs) rmSync unlinks a LevelDB the server holds open and
  * compilePack writes a fresh one, while LevelDB's lock still fails the extract
  * here, so the guard compared nothing and the build destroyed the edits.

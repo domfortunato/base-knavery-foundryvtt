@@ -3,7 +3,7 @@
  * Smoke probe against a live world: joins as the GM, exercises the core
  * mechanics through the system's own API, and screenshots the main windows.
  *
- *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/e2e-smoke.mjs   (npm run dev:smoke)
+ *   FOUNDRY_URL=http://<your-foundry-host>:30000 node tools/dev/e2e-smoke.mjs   (npm run dev:smoke)
  *
  * Leaves no documents behind (everything it makes is named "Probe …" and
  * deleted at the end). Screenshots land in tools/dev/out/, or MB_SHOTS on the fleet.

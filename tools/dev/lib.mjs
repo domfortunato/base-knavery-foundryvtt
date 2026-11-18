@@ -12,8 +12,8 @@ export const FOUNDRY_URL = process.env.FOUNDRY_URL ?? "http://localhost:30000";
 export const VIEWPORT = { width: 1600, height: 1000 };
 
 /**
- * The probe fleet (foundry-ops scripts/fleet-gpu/probe.sh) runs each probe in a
- * container on VM 200 with MB_TIME_SCALE=2 and MB_SHOTS set: every watchdog
+ * The private probe fleet runs each probe in a
+ * container with MB_TIME_SCALE=2 and MB_SHOTS set: every watchdog
  * stretches by the scale, and screenshots go where the fleet collects a failing
  * probe's. From a workstation both are unset: scale 1, tools/dev/out.
  */

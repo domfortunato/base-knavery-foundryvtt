@@ -3,7 +3,7 @@
  * Screenshots of every main window, in both colour schemes, plus functional
  * checks of careers (features, starting items, effects).
  *
- *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/e2e-screens.mjs   (npm run dev:screens)
+ *   FOUNDRY_URL=http://<your-foundry-host>:30000 node tools/dev/e2e-screens.mjs   (npm run dev:screens)
  */
 import fs from "node:fs";
 import path from "node:path";

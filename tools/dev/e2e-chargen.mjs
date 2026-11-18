@@ -12,7 +12,7 @@
  * the Knave 1e rules (part 26) and their second bundle: quality and wear, copper prices, coin slots, daily wages (part 27); the Party tab, treasure to XP, selling and free repair (part 28); generating a spell at the GM's request (part 29); the dashboard's button, rail and Player Tools (part 30). GM, Alice and Bob
  * in three browsers.
  *
- *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/e2e-chargen.mjs   (npm run dev:chargen)
+ *   FOUNDRY_URL=http://<your-foundry-host>:30000 node tools/dev/e2e-chargen.mjs   (npm run dev:chargen)
  *
  * Runs on the probe fleet, never from the workstation (CLAUDE.md). Everything
  * it makes is named "Probe …" (or remembered, for the Careers and Spells tables

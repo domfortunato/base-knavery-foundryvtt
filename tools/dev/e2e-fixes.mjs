@@ -3,7 +3,7 @@
  * The fixes of Foundry review #1 (2026-11-13), each driven the way a table
  * would meet it: the GM and two players (Alice, Bob) in three browsers.
  *
- *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/e2e-fixes.mjs   (npm run dev:fixes)
+ *   FOUNDRY_URL=http://<your-foundry-host>:30000 node tools/dev/e2e-fixes.mjs   (npm run dev:fixes)
  *
  * Runs on the probe fleet, never from the workstation (CLAUDE.md). Everything
  * it makes is named "Probe …" and deleted at the end; settings it touches are

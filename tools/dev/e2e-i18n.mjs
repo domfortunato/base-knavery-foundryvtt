@@ -13,7 +13,7 @@
  * Leftover English fails; clipping is listed as notes with its screenshot (the layout is judged
  * by eye first, then the worst cases fixed and turned into checks).
  *
- *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/e2e-i18n.mjs   (npm run dev:i18n; fleet only)
+ *   FOUNDRY_URL=http://<your-foundry-host>:30000 node tools/dev/e2e-i18n.mjs   (npm run dev:i18n; fleet only)
  */
 import fs from "node:fs";
 import path from "node:path";

@@ -2,7 +2,7 @@
 /**
  * The printed sheet: one page on US Letter and A4, both editions (plan item 10, 2026-11-14).
  *
- *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/e2e-print.mjs   (npm run dev:print)
+ *   FOUNDRY_URL=http://<your-foundry-host>:30000 node tools/dev/e2e-print.mjs   (npm run dev:print)
  *
  * Page COUNT is not DOM-observable, so the gate is a real PDF: headless Chromium prints the
  * popup with `page.pdf()` as Letter and as A4, and the count of page objects in the PDF must be

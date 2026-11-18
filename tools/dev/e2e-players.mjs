@@ -2,7 +2,7 @@
 /**
  * Multi-user probe: the GM and two players (Alice, Bob) in three browsers.
  *
- *   FOUNDRY_URL=http://<private-ip>:30000 node tools/dev/e2e-players.mjs
+ *   FOUNDRY_URL=http://<your-foundry-host>:30000 node tools/dev/e2e-players.mjs
  *
  *   1. GM asks Alice for a save with a reason; Alice's client prompts with
  *      the reason and a locked difficulty; the result lands on the dashboard.

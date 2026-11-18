@@ -3,9 +3,12 @@
 A Foundry VTT **v14** game system (id `base-knavery`) for Knave, first and second
 editions: Knave 1e plays out of the box, Knave 2e with the GM's own book (user
 rulings 2026-11-14). ApplicationV2 and TypeDataModel only. Keep the code free of deprecated APIs so
-it moves to v16 unchanged. Sibling of Air Bladder
-(`c:\Users\domin\code\air-bladder`), whose sheet layout, CSS, item offers, art
-picker, change log and marketplace it ports.
+it moves to v16 unchanged. Sibling of Air Bladder (the `air-bladder` repository),
+whose sheet layout, CSS, item offers, art picker, change log and marketplace it ports.
+
+**Never put private infrastructure in this repository** (user, 2026-11-18): no IP addresses,
+hostnames, box or VM numbers, SSH or fleet commands, the private origin's URL, or local paths. The
+repository mirrors publicly. Those details live in the maintainer's notes outside the repository.
 
 ## Content policy (non-negotiable)
 - **No Knave 2e text.** Its licence allows mechanics and numbers, not
@@ -160,38 +163,23 @@ picker, change log and marketplace it ports.
   (`tools/content/build-content.mjs`). **Edit the generator, not the YAML.**
   `packs/` is gitignored and built by `npm run build:packs`.
 
-## Dev loop (CT 127)
-- Box: `foundry-v14-knavery-127`, <private-ip>.
-  - Dev app on :30000 runs `dev` (world `knavery-dev`, users Gamemaster, Alice
-    and Bob, no passwords).
-  - Test app on :30001 runs `master`.
-  - Runbook: `c:\Users\domin\code\foundry\runbooks\foundry-ct127-knavery.md`.
-- Push `dev`, then either:
-  - `sh tools/dev/pull-127.sh` for JS, template, CSS or lang changes (reload
-    the browser), or
-  - from `c:\Users\domin\code\foundry`, `scripts/deploy-system.sh 127
-    base-knavery --yes` when `system.json` or the packs change.
-- Probes (`tools/dev/e2e-*.mjs`, the `dev:*` scripts) run on the **probe
-  fleet, never from the workstation** (user ruling 2026-11-13): VM 200's GPU
-  drives the browsers against the eleven probe boxes, conducted from CT 120, as
-  project `base-knavery` of foundry-ops `fleet/projects.tsv` (rows for Foundry
-  14.370, 14.369 and 14.368; world `knavery-dev` staged from CT 127). Keep all
-  three green before merging to master. **Day to day run only
-  `--project base-knavery`** (the newest build); the `base-knavery-14369` and
-  `-14368` rows run before a release, not on every change (user ruling
-  2026-11-13).
-  ```
-  ssh fleet@<private-ip> foundry/scripts/fleet-runner.sh start --project base-knavery --ref <sha> [--probes smoke,players,screens]
-  ssh fleet@<private-ip> foundry/scripts/fleet-runner.sh last
-  ```
-  `--refresh` after a release retakes every box's `pristine`. The report quotes
+## Dev loop
+- The dev server runs `dev` (world `knavery-dev`, users Gamemaster, Alice and Bob,
+  no passwords); a test server runs `master`. How to reach them, pull and deploy is
+  in the maintainer's private notes, not here.
+- Push `dev`, then pull on the dev server for JS, template, CSS or lang changes
+  (reload the browser), or redeploy the system when `system.json` or the packs change.
+- Probes (`tools/dev/e2e-*.mjs`, the `dev:*` scripts) run on the **private probe
+  fleet, never from the workstation** (user ruling 2026-11-13), one row per
+  supported Foundry build (14.370, 14.369, 14.368). Keep all three green before
+  merging to master. **Day to day run only the newest build**; the older rows run
+  before a release, not on every change (user ruling 2026-11-13). The report quotes
   each failing check, and a failing probe's screenshots come back with it. The
   probes read `MB_SHOTS` and `MB_TIME_SCALE` from the fleet (`tools/dev/lib.mjs`).
 - `npm run check` (manifest, fields, i18n, readme, ids, babele) and `npm run lint` run locally.
 
 ## Git and releases
-- Remotes: `origin` is `gitea@<private-gitea>:fortunato/base-knavery-foundryvtt.git`
-  (private). Gitea push-mirrors to the public
+- Remotes: `origin` is a private Gitea, which push-mirrors to the public
   `github.com/domfortunato/base-knavery-foundryvtt`.
 - Branches: work on `dev`; `master` is the released state.
 - To release:
