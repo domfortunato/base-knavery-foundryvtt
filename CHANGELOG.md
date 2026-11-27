@@ -2,11 +2,8 @@
 
 ## 0.4.3
 
-- **Validated for Foundry 14.371.** Tested on Foundry 14.371, 14.370, 14.369 and 14.368, including a new world
-  no Game Master has opened yet. The system still installs on 14.365 and later.
-- Fixed: on Foundry 14.371, building tables from your Knave 2e PDF stopped with an error after reading the book,
-  and no tables were built. It works again, and still works on older Foundry builds.
-- Each release now also appears on the Foundry package listing as soon as it is published.
+- **Validated for Foundry 14.371.** Tested on Foundry 14.371, 14.370, 14.369 and 14.368. Minimum version for install is 14.365 and later.
+- Fixed: on Foundry 14.371, building tables from your Knave 2e PDF stopped with an error after reading the book, and no tables were built.
 
 ## 0.4.2
 
