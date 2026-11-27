@@ -62,7 +62,10 @@ const shapeRow = (kind, row) => {
 export const readRulebookTables = async ({ path = rulebookPath(), specs = RULEBOOK_TABLES, offset, combined = COMBINED_TABLES } = {}) => {
   const lib = await loadPdfjs();
   const url = URL.parse(path) ? path : foundry.utils.getRoute(path);
-  const doc = await lib.getDocument({ url }).promise;
+  // Keep the loading task: it is what gets destroyed. pdf.js 6 (Foundry 14.371) removed the document's own
+  // destroy(), which was only ever an alias for this one.
+  const task = lib.getDocument({ url });
+  const doc = await task.promise;
   const off = offset ?? (Number(game.settings.get(SETTINGS_NS, "rulebook-page-offset")) || 0);
   const cache = {};
   const page = async (index) => {
@@ -94,7 +97,7 @@ export const readRulebookTables = async ({ path = rulebookPath(), specs = RULEBO
     tables.push({ ...c, first: 1, last, rows, missing: parts.flatMap((p) => p.missing), duplicates: [], combined: true });
   }
   const pages = doc.numPages;
-  await doc.destroy();
+  await task.destroy();
   return { tables, pages };
 };
 
