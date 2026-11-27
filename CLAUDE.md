@@ -171,7 +171,8 @@ repository mirrors publicly. Those details live in the maintainer's notes outsid
   (reload the browser), or redeploy the system when `system.json` or the packs change.
 - Probes (`tools/dev/e2e-*.mjs`, the `dev:*` scripts) run on the **private probe
   fleet, never from the workstation** (user ruling 2026-11-13), one row per
-  supported Foundry build (14.370, 14.369, 14.368). Keep all three green before
+  supported Foundry build (14.371, 14.370, 14.369, 14.368), plus a fresh-world row on the newest
+  build (a world no GM has opened). Keep them all green before
   merging to master. **Day to day run only the newest build**; the older rows run
   before a release, not on every change (user ruling 2026-11-13). The report quotes
   each failing check, and a failing probe's screenshots come back with it. The
