@@ -433,8 +433,10 @@ exist only there.
    body read from the tag. Its last step adds the version to the Foundry package listing through
    Foundry's Package Release API ([foundry-release.mjs](../tools/foundry-release.mjs)), using the
    package's release token from the repository secret `FOUNDRY_RELEASE_TOKEN`. Without the secret it
-   leaves a notice; a version the listing already has is a notice too. To test the token, run the
-   workflow by hand on an existing tag with **Foundry listing: only check** ticked.
+   leaves a notice; a version the listing already has is a notice too. A wrong token fails only this
+   last step, after the GitHub release is complete; add that version on the listing by hand. A manual
+   run of the workflow (on a tag from 0.4.3 on) can tick **Foundry listing: only check** to test the
+   request without saving it, but it also rebuilds that release's files.
 5. Check the manifest URL answers, then merge `master` back into `dev`.
 6. Retake the Foundry listing's welcome picture, so its version line shows the new release: run the
    `listing` probe ([e2e-listing.mjs](../tools/dev/e2e-listing.mjs)) at the release commit and replace
