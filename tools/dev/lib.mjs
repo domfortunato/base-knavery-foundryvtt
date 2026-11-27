@@ -117,6 +117,27 @@ export async function dismissChrome(page) {
   await page.evaluate(() => {
     document.querySelectorAll(".tour-overlay, .tour.active").forEach(e => e.remove());
   }).catch(() => {});
+  // A tour can also start LATER: in a new world (no actors, scenes, items or journal entries) Foundry's
+  // welcome tour waits for its default Scene and a pan, two seconds or more after `ready`, so the sweep above
+  // has already run (the fresh-world probe, Foundry 14.371, 2026-11-27: the tour covered the Knave 2e
+  // rules prompt). Keep watching for the page's life: whatever tour starts is completed (so it never
+  // restarts) and its nodes removed.
+  await page.evaluate(() => {
+    if (globalThis.__knaveryTourGuard) return;
+    globalThis.__knaveryTourGuard = true;
+    const clear = () => {
+      try {
+        for (const t of globalThis.game?.tours?.contents ?? []) {
+          if (t.status === "in-progress") { t.exit(); t.complete?.().catch?.(() => {}); }
+        }
+      } catch { /* no tours here */ }
+      document.querySelectorAll(".tour-overlay, .tour.active").forEach(e => e.remove());
+    };
+    new MutationObserver((records) => {
+      if (records.some(r => [...r.addedNodes].some(n => n.nodeType === 1
+        && (n.matches?.(".tour-overlay, .tour") || n.querySelector?.(".tour-overlay, .tour"))))) clear();
+    }).observe(document.body, { childList: true, subtree: true });
+  }).catch(() => {});
 
   // Notifications, which are NOT chrome you can ignore. Headless Chromium always
   // raises a PERMANENT hardware-acceleration warning, and it renders in the
