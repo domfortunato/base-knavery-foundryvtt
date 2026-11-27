@@ -430,7 +430,11 @@ exist only there.
 3. On `master`: `npm run release X.Y.Z`. Preview first with `npm run release X.Y.Z -- --dry-run`.
 4. Wait for the tag to reach GitHub. The **Release Creation** workflow builds the packs, runs
    `npm run check` and `npm run lint`, and attaches `system.json` and `system.zip`, with the release
-   body read from the tag.
+   body read from the tag. Its last step adds the version to the Foundry package listing through
+   Foundry's Package Release API ([foundry-release.mjs](../tools/foundry-release.mjs)), using the
+   package's release token from the repository secret `FOUNDRY_RELEASE_TOKEN`. Without the secret it
+   leaves a notice; a version the listing already has is a notice too. To test the token, run the
+   workflow by hand on an existing tag with **Foundry listing: only check** ticked.
 5. Check the manifest URL answers, then merge `master` back into `dev`.
 6. Retake the Foundry listing's welcome picture, so its version line shows the new release: run the
    `listing` probe ([e2e-listing.mjs](../tools/dev/e2e-listing.mjs)) at the release commit and replace

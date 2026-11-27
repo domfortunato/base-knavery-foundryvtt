@@ -186,7 +186,8 @@ repository mirrors publicly. Those details live in the maintainer's notes outsid
   1. Write a `## X.Y.Z` section in CHANGELOG.md.
   2. On `master`, run `npm run release X.Y.Z`.
   3. The tag mirrors to GitHub, and Actions attaches `system.json` and
-     `system.zip`.
+     `system.zip`, then adds the version to the Foundry package listing
+     (`tools/foundry-release.mjs`, secret `FOUNDRY_RELEASE_TOKEN`; 2026-11-27).
   4. Merge `master` back into `dev`.
   5. Retake the Foundry listing's welcome picture so its version line shows the new release (user
      ruling 2026-11-15, from 0.4.3 on): on the fleet, `--probes listing --ref <the release commit>`; show

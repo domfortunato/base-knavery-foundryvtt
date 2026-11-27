@@ -13,6 +13,10 @@ on:
       tag:
         description: "Existing release tag to (re)build and attach system.json + system.zip to (e.g. 0.1.0)"
         required: true
+      foundry_dry_run:
+        description: "Foundry listing: only check the request, save nothing"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -75,3 +79,13 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           artifacts: "./system.json, ./system.zip"
           tag: ${{ env.RELEASE_TAG }}
+
+      # After the release has its files, so the version's manifest URL answers. Without the
+      # FOUNDRY_RELEASE_TOKEN secret this step only leaves a notice; a version the listing
+      # already has (a rebuild of an old tag) is a notice too.
+      - name: Add the version to the Foundry package listing
+        env:
+          FOUNDRY_RELEASE_TOKEN: ${{ secrets.FOUNDRY_RELEASE_TOKEN }}
+          FOUNDRY_DRY_RUN: ${{ inputs.foundry_dry_run && 'true' || 'false' }}
+          REPO: ${{ github.repository }}
+        run: node tools/foundry-release.mjs
